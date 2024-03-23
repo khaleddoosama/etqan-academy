@@ -15,7 +15,8 @@
         "mcamara/laravel-localization": "^2.0",
         "spatie/laravel-permission": "^6.4",
         "tymon/jwt-auth": "^2.1",
-        "yoeunes/toastr": "^2.3"
+        "yoeunes/toastr": "^2.3",
+        "ext-gd": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -1,0 +1,83 @@
+@startuml ERD
+  USER ||--o{ COURSE : "enrolls in"
+  USER ||--o{ REVIEW : "writes a review on"
+  COURSE ||--o{ SECTION : "includes"
+  SECTION ||--o{ LECTURE : "contains"
+  COURSE ||--o{ REVIEW : "has"
+  COURSE ||--|| CATEGORY : "categorized in"
+  CATEGORY ||--|| CATEGORY : "subcategorized"
+  questions_answers ||--o{ USER : "asks"
+  LECTURE ||--o{ questions_answers : "has"
+
+  class USER {
+    string id PK
+    string name
+    string slug
+    string bio
+    string email
+    string password
+    string picture
+    string phone
+    string country
+    string address
+    string gender
+    date dob
+    enum role { student, instructor, admin }
+    integer status
+    date approved_at
+    date rejected_at
+    date removed_at
+    string rejection_reason
+    date created_at
+    date updated_at
+  }
+
+  class CATEGORY {
+    int id PK
+    string name
+    string slug
+    int parent_id
+  }
+
+  
+  class COURSE {
+    int id PK
+    string title
+    string slug
+    string description
+    int category_id
+    int instructor_id
+    string language
+  }
+
+  class SECTION {
+    int id PK
+    string title
+    string slug
+    int course_id
+  }
+
+  class LECTURE {
+    int id PK
+    string title
+    string video_url
+    int section_id
+  }
+
+  class REVIEW {
+    int id PK
+    string content
+    float rating
+    int student_id
+    int course_id
+  }
+
+  class questions_answers {
+    int id PK
+    string content
+    int student_id
+    int lecture_id
+    int parent_id
+  }
+
+@enduml

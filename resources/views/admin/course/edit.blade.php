@@ -71,14 +71,14 @@
                                                         {{-- if first iteration --}}
                                                         @if ($loop->first)
                                                             <!-- plus button -->
-                                                            <div class="top-0 mb-3 position-absolute end-0"
+                                                            <div class="mb-3 position-absolute end-0"
                                                                 style="margin-right: -5px">
                                                                 <button type="button" class="btn btn-primary "
                                                                     onclick="addSection()">+</button>
                                                             </div>
                                                         @else
                                                             <!-- minus button -->
-                                                            <div class="top-0 mb-3 position-absolute end-0"
+                                                            <div class="mb-3 position-absolute end-0"
                                                                 style="margin-right: -5px">
                                                                 <button type="button" class="btn btn-danger "
                                                                     onclick="removeSection(this)">-</button>
@@ -194,7 +194,7 @@
                     <x-custom.form-group class="col-md-6" type="text"
                         name="sections[${count}][description]" />
                     {{-- subtract button --}}
-                    <div class="top-0 mb-3 position-absolute end-0"
+                    <div class="mb-3 position-absolute end-0"
                             style="margin-right: -5px">
                         <button type="button" class=" btn btn-danger" style="padding: 6px 14px;"
                             onclick="removeSection(this)">-</button>

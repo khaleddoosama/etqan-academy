@@ -50,13 +50,12 @@
                                                 <div class="align-items-end row position-relative">
                                                     <x-custom.form-group class="col-md-6" type="text"
                                                         name="sections[0][title]" />
-                                                    
+
                                                     <x-custom.form-group class="col-md-6" type="text"
                                                         name="sections[0][description]" />
-                                                    
+
                                                     <!-- plus button -->
-                                                    <div class="top-0 mb-3 position-absolute end-0"
-                                                        style="margin-right: -5px">
+                                                    <div class="mb-3 position-absolute end-0" style="margin-right: -5px">
                                                         <button type="button" class="btn btn-primary "
                                                             onclick="addSection()">+</button>
                                                     </div>
@@ -177,7 +176,7 @@
                     <x-custom.form-group class="col-md-6" type="text"
                         name="sections[${count}][description]" />
                     {{-- subtract button --}}
-                    <div class="top-0 mb-3 position-absolute end-0"
+                    <div class="mb-3 position-absolute end-0"
                             style="margin-right: -5px">
                         <button type="button" class=" btn btn-danger" style="padding: 6px 14px;"
                             onclick="removeSection(this)">-</button>

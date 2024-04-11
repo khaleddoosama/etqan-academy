@@ -12,6 +12,6 @@ trait ApiResponseTrait
             'status' => $status,
         ];
 
-        return response($array, 200);
+        return response($array, $status ?? 400);
     }
 }

@@ -7,6 +7,9 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 // use Validator;
@@ -21,32 +24,25 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('jwt.verify', ['except' => ['login', 'register']]);
     }
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:8',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            // return response()->json($validator->errors(), 422);
+            return $this->apiResponse(null, $validator->errors()->first(), 422);
         }
         if (!$token = auth('api')->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            // return response()->json(['error' => 'Unauthorized'], 401);
+            return $this->apiResponse(null, 'Unauthorized', 401);
         }
         return $this->createNewToken($token);
     }
-    /**
-     * Register a User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -55,50 +51,35 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
         ]);
+
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return $this->apiResponse(null, $validator->errors()->first(), 400);
         }
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)]
         ));
 
-        return $this->apiResponse(new UserResource($user), 'ok', 201);
+        return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
     }
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout()
     {
         auth('api')->logout();
-        return $this->apiResponse(null, 'logged out', 200);
+        return $this->apiResponse(null, 'Logged out successfully', 200);
     }
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function refresh()
     {
         return $this->createNewToken(auth('api')->refresh());
     }
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function userProfile()
     {
         return $this->apiResponse(new UserResource(auth('api')->user()), 'ok', 200);
     }
-    /**
-     * Update the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
+
     public function updateProfile(Request $request)
     {
 
@@ -113,20 +94,18 @@ class AuthController extends Controller
             ]);
 
             $user->update($attributes->validated());
-            
-            return $this->apiResponse(new UserResource($user), 'ok', 200);
-        } catch (\Throwable $th) {
-            return $this->apiResponse(null, $th->getMessage(), 500);
+
+            return $this->apiResponse(new UserResource($user), 'Profile updated successfully', 200);
+        } catch (QueryException $e) {
+            return $this->apiResponse(null, 'An error occurred while updating the profile: ' . $e->getMessage(), 500);
+        } catch (ModelNotFoundException $e) {
+            return $this->apiResponse(null, 'User not found', 404);
+        } catch (Exception $e) {
+            return $this->apiResponse(null, 'An error occurred while updating the profile: ' . $e->getMessage(), 500);
         }
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     protected function createNewToken($token)
     {
         // return response()->json([

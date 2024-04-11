@@ -12,6 +12,7 @@ class SectionController extends Controller
     public function show(Section $section)
     {
         $section->load('lectures');
-        return view('admin.section.show', compact('section'));
+        $sections = Section::where('course_id', $section->course_id)->get();
+        return view('admin.section.show', compact('section', 'sections'));
     }
 }

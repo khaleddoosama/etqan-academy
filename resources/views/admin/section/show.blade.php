@@ -79,12 +79,14 @@
                                                                             <div id="status-{{ $loop->iteration }}"
                                                                                 class="flex items-center justify-between px-3 pt-2">
                                                                                 <p id="statusText"></p>
-                                                                                <button type="button" id="cancelUpload-{{ $loop->iteration }}"
+                                                                                <button type="button"
+                                                                                    id="cancelUpload-{{ $loop->iteration }}"
                                                                                     class="mb-3 btn btn-danger btn-xs">Cancel
                                                                                     Upload</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="editVideoModalLabel">
                                                                             {{ __('buttons.add_video') }}
@@ -96,11 +98,31 @@
                                                                     </div>
                                                                     <div class="modal-body">
 
-                                                                        <input type="hidden" name="section_id"
-                                                                            value="{{ $section->id }}">
 
                                                                         <x-custom.form-group type="text" name="title"
                                                                             value="{{ $lecture->title }}" />
+
+                                                                        <div class='form-group row'>
+                                                                            <x-input-label
+                                                                                for="input-section-{{ $loop->iteration }}"
+                                                                                class="col-sm-12 col-form-label">{{ __('main.transfer_lecture') }}</x-input-label>
+                                                                            <div class="col-sm-12" style="font-weight: 200">
+                                                                                <select class="form-control select2"
+                                                                                    style="width: 100%;" name="section_id">
+                                                                                    <option selected="selected" disabled>
+                                                                                        {{ __('buttons.choose') }}</option>
+                                                                                    @foreach ($sections as $option)
+                                                                                        <option value="{{ $option->id }}"
+                                                                                            @if ($section->id == $option->id)
+                                                                                                selected
+                                                                                            @endif>
+                                                                                            {{ $option->title }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                            <x-input-error :messages="$errors->get('section_id')"
+                                                                                style="padding: 0 7.5px;margin: 0;" />
+                                                                        </div>
 
                                                                         <div class='form-group row'>
                                                                             <x-input-label
@@ -119,6 +141,45 @@
                                                                                         data-browse="{{ __('buttons.browse') }}">{{ __('buttons.choose') }}</x-input-label>
                                                                                 </div>
                                                                             </div>
+                                                                        </div>
+
+                                                                        {{-- show video --}}
+                                                                        <div class="form-group" style="display: none"
+                                                                            id="showVideo-{{ $loop->iteration }}">
+                                                                            <video width="320" height="240" controls
+                                                                                id="video">
+                                                                                <source src="" type="video/mp4">
+                                                                                Your browser does not support the video
+                                                                                tag.
+                                                                            </video>
+                                                                        </div>
+
+
+                                                                        <div class='form-group row'>
+                                                                            <x-input-label
+                                                                                for="input-thumbnail-{{ $loop->iteration }}"
+                                                                                class="col-sm-12 col-form-label">{{ __('attributes.thumbnail') }}</x-input-label>
+
+                                                                            <div class="input-group col-sm-12">
+                                                                                <div class="custom-file">
+                                                                                    <input type="file" name="thumbnail"
+                                                                                        id="input-thumbnail-{{ $loop->iteration }}"
+                                                                                        class="custom-file-input"
+                                                                                        accept="image/*">
+                                                                                    <x-input-label
+                                                                                        for="input-thumbnail-{{ $loop->iteration }}"
+                                                                                        class="custom-file-label col-form-label"
+                                                                                        data-browse="{{ __('buttons.browse') }}">{{ __('buttons.choose') }}</x-input-label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {{-- show thumbnail --}}
+                                                                        <div class="form-group" style="display: none"
+                                                                            id="showThumbnail-{{ $loop->iteration }}">
+                                                                            <img src="" alt=""
+                                                                                id="thumbnail" class="img-thumbnail"
+                                                                                style="height: 240px">
                                                                         </div>
 
                                                                     </div>
@@ -141,15 +202,28 @@
                                             </div>
 
                                             <div id="collapse-{{ $loop->iteration }}" class="collapse"
-                                                aria-labelledby="heading-{{ $loop->iteration }}" data-parent="#accordion">
-                                                <div class="card-body">
+                                                aria-labelledby="heading-{{ $loop->iteration }}"
+                                                data-parent="#accordion">
+                                                <div class="card-body d-flex justify-content-between align-items-center">
                                                     {{ $lecture->description }}
 
-                                                    <video width="320" height="240" controls>
-                                                        <source src="{{ asset('storage/240p-' . $lecture->video) }}"
-                                                            type="video/mp4">
-                                                        Your browser does not support the video tag.
-                                                    </video>
+                                                    {{-- show video --}}
+                                                    <div class="mx-3 my-3 callout callout-info">
+                                                        <h5>{{ __('attributes.video') }}:</h5>
+                                                        <video style="height: 240px" controls
+                                                            id="video-{{ $loop->iteration }}">
+                                                            <source src="{{ asset($lecture->video) }}" type="video/mp4">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </div>
+
+                                                    {{-- show thumbnail --}}
+                                                    <div class="mx-3 my-3 callout callout-info">
+                                                        <h5>{{ __('attributes.thumbnail') }}:</h5>
+                                                        <img src="{{ asset($lecture->thumbnail) }}"
+                                                            alt="{{ $lecture->title }}" class="img-thumbnail"
+                                                            style="height: 240px">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -161,8 +235,6 @@
                                 aria-labelledby="createVideoModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
-                                        {{-- <form id="form1" action="{{ route('admin.lectures.store') }}" method="POST"
-                                            enctype="multipart/form-data"> --}}
                                         <form action="{{ route('admin.lectures.store') }}" method="POST" id="form1"
                                             enctype="multipart/form-data">
                                             @csrf
@@ -207,6 +279,7 @@
 
                                                 <x-custom.form-group type="text" name="title" />
 
+
                                                 <div class='form-group row'>
                                                     <x-input-label for="input-video"
                                                         class="col-sm-12 col-form-label">{{ __('attributes.video') }}</x-input-label>
@@ -222,108 +295,21 @@
                                                     </div>
                                                 </div>
 
-                                                {{-- <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="card card-default">
-                                                            <div class="card-header">
-                                                                <h3 class="card-title">{{ __('attributes.video') }}
-                                                                    <small><em>
-                                                                            {{ __('messages.drag_and_drop') }}</em></small>
-                                                                </h3>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <div id="actions" class="row">
-                                                                    <div class="col-lg-6">
-                                                                        <div class="btn-group w-100">
-                                                                            <span
-                                                                                class="btn btn-success col fileinput-button">
-                                                                                <i class="fas fa-plus"></i>
-                                                                                <span>Add files</span>
-                                                                            </span>
-                                                                            <button type="button"
-                                                                                class="btn btn-primary col start">
-                                                                                <i class="fas fa-upload"></i>
-                                                                                <span>Start upload</span>
-                                                                            </button>
-                                                                            <button type="reset"
-                                                                                class="btn btn-warning col cancel">
-                                                                                <i class="fas fa-times-circle"></i>
-                                                                                <span>Cancel upload</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6 d-flex align-items-center">
-                                                                        <div class="fileupload-process w-100">
-                                                                            <div id="total-progress"
-                                                                                class="progress progress-striped active"
-                                                                                role="progressbar" aria-valuemin="0"
-                                                                                aria-valuemax="100" aria-valuenow="0">
-                                                                                <div class="progress-bar progress-bar-success"
-                                                                                    style="width:0%;"
-                                                                                    data-dz-uploadprogress></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="table table-striped files" id="previews">
-                                                                    <div id="template" class="mt-2 row">
-                                                                        <div class="col-auto">
-                                                                            <span class="preview"><img src="data:,"
-                                                                                    alt=""
-                                                                                    data-dz-thumbnail /></span>
-                                                                        </div>
-                                                                        <div class="col d-flex align-items-center">
-                                                                            <p class="mb-0">
-                                                                                <span class="lead" data-dz-name></span>
-                                                                                (<span data-dz-size></span>)
-                                                                            </p>
-                                                                            <strong class="error text-danger"
-                                                                                data-dz-errormessage></strong>
-                                                                        </div>
-                                                                        <div class="col-4 d-flex align-items-center">
-                                                                            <div class="progress progress-striped active w-100"
-                                                                                role="progressbar" aria-valuemin="0"
-                                                                                aria-valuemax="100" aria-valuenow="0">
-                                                                                <div class="progress-bar progress-bar-success"
-                                                                                    style="width:0%;"
-                                                                                    data-dz-uploadprogress></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-auto d-flex align-items-center">
-                                                                            <div class="btn-group">
-                                                                                <button class="btn btn-primary start">
-                                                                                    <i class="fas fa-upload"></i>
-                                                                                    <span>Start</span>
-                                                                                </button>
-                                                                                <button data-dz-remove
-                                                                                    class="btn btn-warning cancel">
-                                                                                    <i class="fas fa-times-circle"></i>
-                                                                                    <span>Cancel</span>
-                                                                                </button>
-                                                                                <button data-dz-remove
-                                                                                    class="btn btn-danger delete">
-                                                                                    <i class="fas fa-trash"></i>
-                                                                                    <span>Delete</span>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- /.card-body -->
-
-                                                        </div>
-                                                        <!-- /.card -->
-                                                    </div>
-                                                </div> --}}
-
                                                 {{-- show video --}}
-                                                {{-- <div class="form-group">
-                                                    <video width="320" height="240" controls  id="video">
+                                                <div class="form-group" style="display: none" id="showVideo">
+                                                    <video width="320" height="240" controls id="video">
                                                         <source src="" type="video/mp4">
                                                         Your browser does not support the video tag.
                                                     </video>
-                                                </div> --}}
+                                                </div>
+
+                                                <x-custom.form-group type="file" name="thumbnail" />
+
+                                                {{-- show thumbnail --}}
+                                                <div class="form-group" style="display: none" id="showThumbnail">
+                                                    <img src="" alt="" id="thumbnail"
+                                                        class="img-thumbnail" style="height: 240px">
+                                                </div>
                                             </div>
 
                                             <div class="modal-footer">
@@ -552,11 +538,13 @@
                                                 elapsedTime) /
                                             1024 / 1024 * 8).toFixed(
                                             2); // Speed in Mbps
-                                        $('#progressBar-{{ $loop->iteration }}').width(percentComplete +
-                                            '%');
-                                        $('#progressText-{{ $loop->iteration }}').html(
-                                            percentComplete + '%'
-                                        )
+                                        $('#progressBar-{{ $loop->iteration }}')
+                                            .width(percentComplete +
+                                                '%');
+                                        $('#progressText-{{ $loop->iteration }}')
+                                            .html(
+                                                percentComplete + '%'
+                                            )
                                         $('#status-{{ $loop->iteration }} p').html(
                                             `(${uploadedMB}MB of ${totalMB}MB)`
                                         );
@@ -568,14 +556,16 @@
                             success: function(response) {
                                 // Handle success
                                 console.log('Success:', response);
-                                $('#status-{{ $loop->iteration }} p').html(response.message);
+                                $('#status-{{ $loop->iteration }} p').html(response
+                                    .message);
                                 // reload page
                                 location.reload();
                             },
                             error: function(xhr, status, error) {
                                 // Handle error
                                 console.log('Error:', error);
-                                $('#status-{{ $loop->iteration }} p').html("Error uploading file.");
+                                $('#status-{{ $loop->iteration }} p').html(
+                                    "Error uploading file.");
                             }
                         });
 
@@ -618,7 +608,52 @@
         // };
     </script>
 
+    <script>
+        // when upload thumbnail show the thumbnail preview
+        $('#input-thumbnail').change(function() {
+            $('#showThumbnail').show('blind');
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#showThumbnail img').attr('src', e.target
+                    .result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+        // when upload video show the video preview
+        $('#input-video').change(function() {
+            $('#showVideo').show('blind');
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#showVideo video').attr('src', e.target
+                    .result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
 
+        // when upload video show the video preview
+        @foreach ($section->lectures as $lecture)
+            $('#input-video-{{ $loop->iteration }}').change(function() {
+                $('#showVideo-{{ $loop->iteration }}').show('blind');
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#showVideo-{{ $loop->iteration }} video').attr('src', e.target
+                        .result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            });
+
+            // when upload thumbnail show the thumbnail preview
+            $('#input-thumbnail-{{ $loop->iteration }}').change(function() {
+                $('#showThumbnail-{{ $loop->iteration }}').show('blind');
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#showThumbnail-{{ $loop->iteration }} img').attr('src', e.target
+                        .result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            });
+        @endforeach
+    </script>
     {{-- <script src="{{ asset('asset/admin/dist/js/dropzone.js') }}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {

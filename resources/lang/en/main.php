@@ -6,4 +6,5 @@
   "old_password" => "Old Password",
   "new_password" => "New Password",
   "new_password_confirmation" => "New Password Confirmation",
+  "transfer_lecture" => "Transfer Lecture",
 );

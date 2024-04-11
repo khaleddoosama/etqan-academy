@@ -37,10 +37,10 @@ class Lecture extends Model
     public function setVideoAttribute(UploadedFile $video)
     {
         // to lower case $this->section->course->title
-        $folderName = 'lectures/' . str_replace(' ', '-', strtolower($this->section->course->title)) . '/' . str_replace(' ', '-', strtolower($this->section->title)) . '/videos';
-        
+        $folderName = 'courses/' . str_replace(' ', '-', strtolower($this->section->course->title)) . '/sections/' . str_replace(' ', '-', strtolower($this->section->title)). '/lectures/'. str_replace(' ', '-', strtolower($this->title)) . '/videos';
+
         $this->deleteIfExists($this->video); // Delete the old image if it exists
-        
+
         $this->attributes['video'] = $this->uploadFile($video, $folderName);
     }
 }

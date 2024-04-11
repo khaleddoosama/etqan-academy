@@ -40,7 +40,7 @@ class Course extends Model
     // set Image Attribute
     public function setThumbnailAttribute(UploadedFile $thumbnail)
     {
-        $folderName = 'course/thumbnails';
+        $folderName = 'courses/' . str_replace(' ', '-', strtolower($this->title)) . '/thumbnails';
         $this->deleteIfExists($this->thumbnail); // Delete the old thumbnail if it exists
         $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480);
     }

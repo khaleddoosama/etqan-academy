@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LectureRequest;
+use App\Jobs\ConvertVideoForStreaming;
 use App\Models\Lecture;
 use App\Services\LectureService;
 use Illuminate\Http\Request;
@@ -33,12 +34,13 @@ class LectureController extends Controller
     public function store(LectureRequest $request)
     {
         $data = $request->validated();
-
         $lecture = $this->lectureService->createLecture($data);
 
-        Toastr::success(__('messages.lecture_created'), __('status.success'));
 
-        return redirect()->back();
+        ConvertVideoForStreaming::dispatch($lecture);
+
+        Toastr::success(__('messages.lecture_created'), __('status.success'));
+        return response()->json(['message' => __('messages.lecture_created')]);
     }
 
 
@@ -58,9 +60,14 @@ class LectureController extends Controller
     {
         $data = $request->validated();
 
-        $this->lectureService->updateLecture($lecture, $data) ? Toastr::success(__('messages.lecture_updated'), __('status.success')) : '';
+        // $this->lectureService->updateLecture($lecture, $data) ? Toastr::success(__('messages.lecture_updated'), __('status.success')) : '';
+        $lecture = $this->lectureService->updateLecture($lecture, $data);
 
-        return redirect()->back();
+        ConvertVideoForStreaming::dispatch($lecture);
+
+        Toastr::success(__('messages.lecture_updated'), __('status.success'));
+        
+        return response()->json(['message' => __('messages.lecture_updated')]);
     }
     public function destroy(string $id)
     {

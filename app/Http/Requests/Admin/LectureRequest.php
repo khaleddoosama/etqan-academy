@@ -4,6 +4,8 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\AttributesTrait;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class LectureRequest extends FormRequest
 {
@@ -17,11 +19,23 @@ class LectureRequest extends FormRequest
 
     public function rules(): array
     {
+        $lecture = $this->lecture; // This assumes you're passing the lecture ID in the request somehow.
+
         $rules = [
+            //unique for title and section
+            'title' => [
+                'required',
+                // Use Rule::unique() to define a more complex uniqueness rule.
+                Rule::unique('lectures')->where(function ($query) {
+                    $query->where('section_id', $this->section_id);
+                    if ($this->lecture) {
+                        $query->where('id', '!=', $this->lecture->id);
+                    }
+                }),
+            ],
             'section_id' => 'required|exists:sections,id',
-            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable|image|max:2048'
         ];
 
         // Check if video is being updated

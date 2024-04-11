@@ -34,6 +34,13 @@
     'role_permission_updated' => 'Role permission updated successfully.',
     'role_permission_deleted' => 'Role permission deleted successfully.',
 
+    'dont_close_or_reload' => 'Please don\'t close or reload this page. When the process is completed, the page will be automatically reloaded.',
+
+    'lecture_created' => 'Lecture created successfully.',
+    'lecture_updated' => 'Lecture updated successfully.',
+    'lecture_deleted' => 'Lecture deleted successfully.',
+
+    'drag_and_drop' => 'Drag and drop.',
     // auth views
     "secure_area_confirm_password_to_proceed" => "This is a secure area of the application. Please confirm your password before continuing.",
     "forgot_password_no_worries_enter_your_email_we_will_send_a_reset_link" => "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",

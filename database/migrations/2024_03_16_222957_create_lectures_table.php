@@ -18,10 +18,25 @@ return new class extends Migration
             $table->string('video')->nullable();
             $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();
-            $table->unsignedBigInteger('section_id');
-            $table->timestamps();
+            $table->string('disk')->default('public');
 
-            $table->foreign('section_id')->references('id')->on('sections');
+            $table->foreignId('section_id')->constrained()->onDelete('cascade');
+
+            $table->integer('hours')->nullable();
+            $table->integer('minutes')->nullable();
+            $table->integer('seconds')->nullable();
+
+            $table->string('quality')->nullable();
+
+            $table->boolean('processed')->default(false);
+            $table->boolean('longitudinal')->default(false);
+
+            $table->integer('status')->default(0);
+
+            //unique for title and section
+            $table->unique(['title', 'section_id']);
+
+            $table->timestamps();
         });
     }
 

@@ -29,9 +29,14 @@ trait UploadTrait
     // upload file (pdf)
     public function uploadFile(UploadedFile $file, $folderName)
     {
+
         $name_gen = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
         $path = "uploads/{$folderName}/{$name_gen}";
-        $file->move(public_path("uploads/{$folderName}/"), $name_gen);
+        // $file->move(public_path("uploads/{$folderName}/"), $name_gen);
+
+        $this->ensureDirectoryExists($folderName);
+
+        $file->storeAs("uploads/{$folderName}/", $name_gen, 'public');
 
         return $path;
     }

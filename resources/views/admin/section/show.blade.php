@@ -52,13 +52,39 @@
                                                     <div class="modal fade" id="editVideoModal-{{ $loop->iteration }}"
                                                         tabindex="-1" role="dialog" aria-labelledby="editVideoModalLabel"
                                                         aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
+                                                        <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content">
-                                                                <form id="form1"
+                                                                <form id="editForm-{{ $loop->iteration }}"
                                                                     action="{{ route('admin.lectures.update', $lecture) }}"
                                                                     method="POST" enctype="multipart/form-data">
                                                                     @method('PUT')
                                                                     @csrf
+                                                                    <div class="toggler">
+                                                                        <div id="effect-{{ $loop->iteration }}"
+                                                                            class="text-center ui-widget-content ui-corner-all bg-primary">
+                                                                            <p>
+                                                                                <strong>{{ __('messages.dont_close_or_reload') }}</strong>
+                                                                            </p>
+
+                                                                            <div id="progressBarContainer-{{ $loop->iteration }}"
+                                                                                class="relative w-100 bg-light">
+                                                                                <div id="progressBar-{{ $loop->iteration }}"
+                                                                                    style="height: 20px; background-color: #4CAF50; width: 0%;">
+                                                                                </div>
+                                                                                <p id="progressText-{{ $loop->iteration }}"
+                                                                                    class="position-absolute"
+                                                                                    style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                                                </p>
+                                                                            </div>
+                                                                            <div id="status-{{ $loop->iteration }}"
+                                                                                class="flex items-center justify-between px-3 pt-2">
+                                                                                <p id="statusText"></p>
+                                                                                <button type="button" id="cancelUpload-{{ $loop->iteration }}"
+                                                                                    class="mb-3 btn btn-danger btn-xs">Cancel
+                                                                                    Upload</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="editVideoModalLabel">
                                                                             {{ __('buttons.add_video') }}
@@ -79,9 +105,9 @@
                                                                         <div class='form-group row'>
                                                                             <x-input-label
                                                                                 for="input-video-{{ $loop->iteration }}"
-                                                                                class="'col-sm-12 col-form-label">{{ __('attributes.video') }}</x-input-label>
+                                                                                class="col-sm-12 col-form-label">{{ __('attributes.video') }}</x-input-label>
 
-                                                                            <div class="input-group col-sm-12'">
+                                                                            <div class="input-group col-sm-12">
                                                                                 <div class="custom-file">
                                                                                     <input type="file" name="video"
                                                                                         id="input-video-{{ $loop->iteration }}"
@@ -107,6 +133,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
+
                                                 </h5>
 
 
@@ -118,7 +146,8 @@
                                                     {{ $lecture->description }}
 
                                                     <video width="320" height="240" controls>
-                                                        <source src="{{ asset($lecture->video) }}" type="video/mp4">
+                                                        <source src="{{ asset('storage/240p-' . $lecture->video) }}"
+                                                            type="video/mp4">
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 </div>
@@ -130,11 +159,39 @@
 
                             <div class="modal fade" id="createVideoModal" tabindex="-1" role="dialog"
                                 aria-labelledby="createVideoModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
+                                <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
-                                        <form id="form1" action="{{ route('admin.lectures.store') }}" method="POST"
+                                        {{-- <form id="form1" action="{{ route('admin.lectures.store') }}" method="POST"
+                                            enctype="multipart/form-data"> --}}
+                                        <form action="{{ route('admin.lectures.store') }}" method="POST" id="form1"
                                             enctype="multipart/form-data">
                                             @csrf
+                                            <div class="toggler">
+                                                <div id="effect"
+                                                    class="text-center ui-widget-content ui-corner-all bg-primary">
+                                                    <p>
+                                                        <strong>{{ __('messages.dont_close_or_reload') }}</strong>
+                                                    </p>
+
+                                                    <div id="progressBarContainer" class="relative w-100 bg-light">
+                                                        <div id="progressBar"
+                                                            style="height: 20px; background-color: #4CAF50; width: 0%;">
+                                                        </div>
+                                                        <p id="progressText" class="position-absolute"
+                                                            style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                        </p>
+                                                    </div>
+                                                    <div id="status"
+                                                        class="flex items-center justify-between px-3 pt-2">
+                                                        <p id="statusText"></p>
+                                                        <button type="button" id="cancelUpload"
+                                                            class="mb-3 btn btn-danger btn-xs">Cancel Upload</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="createVideoModalLabel">
                                                     {{ __('buttons.add_video') }}
@@ -152,9 +209,9 @@
 
                                                 <div class='form-group row'>
                                                     <x-input-label for="input-video"
-                                                        class="'col-sm-12 col-form-label">{{ __('attributes.video') }}</x-input-label>
+                                                        class="col-sm-12 col-form-label">{{ __('attributes.video') }}</x-input-label>
 
-                                                    <div class="input-group col-sm-12'">
+                                                    <div class="input-group col-sm-12">
                                                         <div class="custom-file">
                                                             <input type="file" name="video" id="input-video"
                                                                 class="custom-file-input" accept="video/*">
@@ -164,6 +221,101 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                {{-- <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="card card-default">
+                                                            <div class="card-header">
+                                                                <h3 class="card-title">{{ __('attributes.video') }}
+                                                                    <small><em>
+                                                                            {{ __('messages.drag_and_drop') }}</em></small>
+                                                                </h3>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div id="actions" class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="btn-group w-100">
+                                                                            <span
+                                                                                class="btn btn-success col fileinput-button">
+                                                                                <i class="fas fa-plus"></i>
+                                                                                <span>Add files</span>
+                                                                            </span>
+                                                                            <button type="button"
+                                                                                class="btn btn-primary col start">
+                                                                                <i class="fas fa-upload"></i>
+                                                                                <span>Start upload</span>
+                                                                            </button>
+                                                                            <button type="reset"
+                                                                                class="btn btn-warning col cancel">
+                                                                                <i class="fas fa-times-circle"></i>
+                                                                                <span>Cancel upload</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6 d-flex align-items-center">
+                                                                        <div class="fileupload-process w-100">
+                                                                            <div id="total-progress"
+                                                                                class="progress progress-striped active"
+                                                                                role="progressbar" aria-valuemin="0"
+                                                                                aria-valuemax="100" aria-valuenow="0">
+                                                                                <div class="progress-bar progress-bar-success"
+                                                                                    style="width:0%;"
+                                                                                    data-dz-uploadprogress></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table table-striped files" id="previews">
+                                                                    <div id="template" class="mt-2 row">
+                                                                        <div class="col-auto">
+                                                                            <span class="preview"><img src="data:,"
+                                                                                    alt=""
+                                                                                    data-dz-thumbnail /></span>
+                                                                        </div>
+                                                                        <div class="col d-flex align-items-center">
+                                                                            <p class="mb-0">
+                                                                                <span class="lead" data-dz-name></span>
+                                                                                (<span data-dz-size></span>)
+                                                                            </p>
+                                                                            <strong class="error text-danger"
+                                                                                data-dz-errormessage></strong>
+                                                                        </div>
+                                                                        <div class="col-4 d-flex align-items-center">
+                                                                            <div class="progress progress-striped active w-100"
+                                                                                role="progressbar" aria-valuemin="0"
+                                                                                aria-valuemax="100" aria-valuenow="0">
+                                                                                <div class="progress-bar progress-bar-success"
+                                                                                    style="width:0%;"
+                                                                                    data-dz-uploadprogress></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-auto d-flex align-items-center">
+                                                                            <div class="btn-group">
+                                                                                <button class="btn btn-primary start">
+                                                                                    <i class="fas fa-upload"></i>
+                                                                                    <span>Start</span>
+                                                                                </button>
+                                                                                <button data-dz-remove
+                                                                                    class="btn btn-warning cancel">
+                                                                                    <i class="fas fa-times-circle"></i>
+                                                                                    <span>Cancel</span>
+                                                                                </button>
+                                                                                <button data-dz-remove
+                                                                                    class="btn btn-danger delete">
+                                                                                    <i class="fas fa-trash"></i>
+                                                                                    <span>Delete</span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.card-body -->
+
+                                                        </div>
+                                                        <!-- /.card -->
+                                                    </div>
+                                                </div> --}}
 
                                                 {{-- show video --}}
                                                 {{-- <div class="form-group">
@@ -177,8 +329,8 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">{{ __('buttons.close') }}</button>
-                                                <button type="submit"
-                                                    class="btn btn-primary">{{ __('buttons.save') }}</button>
+                                                <x-custom.form-submit text="{{ __('buttons.save') }}"
+                                                    class=" btn-primary" />
                                             </div>
                                         </form>
                                     </div>
@@ -189,6 +341,7 @@
                             <div class="card-footer">
                                 <x-custom.form-submit text="{{ __('buttons.add_lecture') }}" class=" btn-primary"
                                     attr='data-toggle=modal data-target=#createVideoModal' />
+
                             </div>
                             <!-- form start -->
 
@@ -205,19 +358,34 @@
 @endsection
 
 @section('scripts')
+    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/min/dropzone.min.css" rel="stylesheet"> --}}
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/min/dropzone.min.js"></script> --}}
+
     <!-- Page specific script -->
     <script>
         $(function() {
+            // store lecture
+            $("#effect").hide();
+            var activeUploadRequest = null; // This will hold the current upload request
+
             $('#form1').validate({
                 rules: {
-                    name: {
+                    title: {
                         required: true,
                     },
+                    video: {
+                        required: true,
+                        accept: "video/*"
+                    }
                 },
                 messages: {
-                    name: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.name')]) }}"
+                    title: {
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.title')]) }}"
                     },
+                    video: {
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.video')]) }}",
+                        accept: "{{ __('validation.accept', ['attribute' => __('attributes.video')]) }}"
+                    }
                 },
                 errorElement: 'span',
                 errorPlacement: function(error, element) {
@@ -230,24 +398,238 @@
                 },
                 unhighlight: function(element, errorClass, validClass) {
                     $(element).removeClass('is-invalid');
+                }, // when everything is ok, send ajax request
+                submitHandler: function(form) {
+                    console.log(11);
+                    var formData = new FormData(form);
+                    var startTime = Date.now(); // Capture the start time of the upload
+
+                    activeUploadRequest = $.ajax({
+                        url: '{{ route('admin.lectures.store') }}',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        xhr: function() {
+                            var xhr = new window.XMLHttpRequest();
+                            $('#effect').show('blind');
+
+                            xhr.upload.addEventListener("progress", function(evt) {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = evt.loaded / evt.total;
+                                    percentComplete = parseInt(percentComplete *
+                                        100);
+                                    var uploadedMB = (evt.loaded / 1024 / 1024)
+                                        .toFixed(2); // Convert bytes to MB
+                                    var totalMB = (evt.total / 1024 / 1024).toFixed(
+                                        2); // Convert bytes to MB
+                                    var elapsedTime = (Date.now() - startTime) /
+                                        1000; // Calculate elapsed time in seconds
+                                    var speedMbps = ((evt.loaded / elapsedTime) /
+                                        1024 / 1024 * 8).toFixed(
+                                        2); // Speed in Mbps
+                                    $('#progressBar').width(percentComplete + '%');
+                                    $('#progressText').html(
+                                        percentComplete + '%'
+                                    )
+                                    $('#status p').html(
+                                        `(${uploadedMB}MB of ${totalMB}MB)`
+                                    );
+
+                                }
+                            }, false);
+                            return xhr;
+                        },
+                        success: function(response) {
+                            // Handle success
+                            console.log('Success:', response);
+                            $('#status p').html(response.message);
+                            // reload page
+                            location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error
+                            console.log('Error:', error);
+                            $('#status p').html("Error uploading file.");
+                        }
+                    });
+
                 }
+
+            });
+
+            // cancel upload
+            $('#cancelUpload').click(function() {
+                if (activeUploadRequest) {
+                    activeUploadRequest.abort(); // Abort the active request
+                    activeUploadRequest = null; // Reset the variable
+                }
+                $("#effect").hide('blind');
+                $('#progressBar').width('0%');
+                $('#progressText').html('0%');
+                $('#status p').html('');
+
+
+                $('#form1').trigger("reset");
+                $('#form1').validate().resetForm();
             });
         });
     </script>
 
-    {{-- <script>
-        // when user selects a file #videoInputFile must be show in video with id = #profilePicture
-        $(document).ready(function() {
-            $('#input-video').on('change', function(event) {
-                console.log(11);
-                const input = event.target;
-                const video = $('#video');
-                
-                const url = URL.createObjectURL(input.files[0]);
+    <script>
+        $(function() {
+            // edit lecture
+            @foreach ($section->lectures as $lecture)
+                $("#effect-{{ $loop->iteration }}").hide();
+                var activeUploadRequest{{ $loop->iteration }} = null; // This will hold the current upload request
 
-                video.attr('src', url);
-                // remove class d-none
-            });
+                $('#editForm-{{ $loop->iteration }}').validate({
+                    rules: {
+                        title: {
+                            required: true,
+                        },
+                        video: {
+                            accept: "video/*"
+                        }
+                    },
+                    messages: {
+                        title: {
+                            required: "{{ __('validation.required', ['attribute' => __('attributes.title')]) }}"
+                        },
+                        video: {
+                            accept: "{{ __('validation.accept', ['attribute' => __('attributes.video')]) }}"
+                        }
+                    },
+                    errorElement: 'span',
+                    errorPlacement: function(error, element) {
+                        error.addClass('invalid-feedback');
+                        error.css('padding', '0 7.5px');
+                        element.closest('.form-group').append(error);
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid');
+                    }, // when everything is ok, send ajax request
+                    submitHandler: function(form) {
+                        console.log(form);
+                        var formData = new FormData(form);
+                        var startTime = Date.now(); // Capture the start time of the upload
+                        formData.append('_method', 'PUT');
+                        activeUploadRequest{{ $loop->iteration }} = $.ajax({
+                            url: "{{ route('admin.lectures.update', $lecture) }}",
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            xhr: function() {
+                                var xhr = new window.XMLHttpRequest();
+                                // check if the video has been uploaded 
+                                if ($('#input-video-{{ $loop->iteration }}').val() == '') {
+                                    $('#effect-{{ $loop->iteration }}').hide('blind');
+                                    return xhr;
+                                }
+                                $('#effect-{{ $loop->iteration }}').show('blind');
+
+                                xhr.upload.addEventListener("progress", function(evt) {
+                                    if (evt.lengthComputable) {
+                                        var percentComplete = evt.loaded / evt
+                                            .total;
+                                        percentComplete = parseInt(percentComplete *
+                                            100);
+                                        var uploadedMB = (evt.loaded / 1024 / 1024)
+                                            .toFixed(2); // Convert bytes to MB
+                                        var totalMB = (evt.total / 1024 / 1024)
+                                            .toFixed(
+                                                2); // Convert bytes to MB
+                                        var elapsedTime = (Date.now() - startTime) /
+                                            1000; // Calculate elapsed time in seconds
+                                        var speedMbps = ((evt.loaded /
+                                                elapsedTime) /
+                                            1024 / 1024 * 8).toFixed(
+                                            2); // Speed in Mbps
+                                        $('#progressBar-{{ $loop->iteration }}').width(percentComplete +
+                                            '%');
+                                        $('#progressText-{{ $loop->iteration }}').html(
+                                            percentComplete + '%'
+                                        )
+                                        $('#status-{{ $loop->iteration }} p').html(
+                                            `(${uploadedMB}MB of ${totalMB}MB)`
+                                        );
+
+                                    }
+                                }, false);
+                                return xhr;
+                            },
+                            success: function(response) {
+                                // Handle success
+                                console.log('Success:', response);
+                                $('#status-{{ $loop->iteration }} p').html(response.message);
+                                // reload page
+                                location.reload();
+                            },
+                            error: function(xhr, status, error) {
+                                // Handle error
+                                console.log('Error:', error);
+                                $('#status-{{ $loop->iteration }} p').html("Error uploading file.");
+                            }
+                        });
+
+                    }
+                });
+
+                // cancel upload
+                $('#cancelUpload-{{ $loop->iteration }}').click(function() {
+                    if (activeUploadRequest{{ $loop->iteration }}) {
+                        activeUploadRequest{{ $loop->iteration }}.abort(); // Abort the active request
+                        activeUploadRequest{{ $loop->iteration }} = null; // Reset the variable
+                    }
+                    $("#effect-{{ $loop->iteration }}").hide('blind');
+                    $('#progressBar-{{ $loop->iteration }}').width('0%');
+                    $('#progressText-{{ $loop->iteration }}').html('0%');
+                    $('#status-{{ $loop->iteration }} p').html('');
+                });
+            @endforeach
+
+        });
+    </script>
+
+    <script>
+        // Dropzone.options.videoDropzone = { // Make sure this name matches the ID of your form
+        //     paramName: "video", // The name that will be used to transfer the file
+        //     maxFilesize: 1024, // MB
+        //     acceptedFiles: 'video/*',
+        // maxFiles: 1,
+
+        //     dictDefaultMessage: 'Drop videos here to upload (or click)',
+        //     init: function() {
+        //         this.on("success", function(file, response) {
+        //             console.log(file, response, 'success');
+        //         });
+
+        //         this.on("error", function(file, response) {
+        //             console.log(file, response, 'error');
+        //         });
+        //     }
+        // };
+    </script>
+
+
+    {{-- <script src="{{ asset('asset/admin/dist/js/dropzone.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Example initialization for two different forms on the same page
+            initializeDropzone("#form1", "{{ route('admin.lectures.store') }}", "{{ $section->id }}");
+            // editForm initialization
+            @foreach ($section->lectures as $lecture)
+                initializeDropzone("#editForm-{{ $loop->iteration }}",
+                    "{{ route('admin.lectures.update', $lecture) }}", "{{ $section->id }}", "PUT");
+            @endforeach
+
         });
     </script> --}}
 @endsection

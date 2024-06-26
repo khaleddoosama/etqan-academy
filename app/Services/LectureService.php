@@ -58,4 +58,18 @@ class LectureService
     {
         return $lecture->delete();
     }
+
+    public function duplicateLecture(int $lectureId, int $sectionId)
+    {
+        $lecture = Lecture::find($lectureId);
+
+        // Create a new lecture instance and copy the properties from the original lecture
+        $newLecture = $lecture->replicate();
+        $newLecture->section_id = $sectionId;
+
+        // Save the new lecture
+        $newLecture->save();
+        
+        return $lecture;
+    }
 }

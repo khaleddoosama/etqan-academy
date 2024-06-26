@@ -66,11 +66,18 @@ class LectureController extends Controller
         ConvertVideoForStreaming::dispatch($lecture);
 
         Toastr::success(__('messages.lecture_updated'), __('status.success'));
-        
+
         return response()->json(['message' => __('messages.lecture_updated')]);
     }
     public function destroy(string $id)
     {
         //
+    }
+
+    public function duplicate(Request $request)
+    {
+        $lecture = $this->lectureService->duplicateLecture($request->lecture_id, $request->section_id);
+        Toastr::success(__('messages.lecture_duplicated'), __('status.success'));
+        return response()->json(['message' => __('messages.lecture_duplicated')]);
     }
 }

@@ -113,9 +113,7 @@
                                                                                         {{ __('buttons.choose') }}</option>
                                                                                     @foreach ($sections as $option)
                                                                                         <option value="{{ $option->id }}"
-                                                                                            @if ($section->id == $option->id)
-                                                                                                selected
-                                                                                            @endif>
+                                                                                            @if ($section->id == $option->id) selected @endif>
                                                                                             {{ $option->title }}</option>
                                                                                     @endforeach
                                                                                 </select>
@@ -323,11 +321,67 @@
                                 </div>
                             </div>
 
+                            <div class="modal fade" id="getVideoModal" tabindex="-1" role="dialog"
+                                aria-labelledby="getVideoModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <form action="{{ route('admin.lectures.duplicate') }}" method="POST"
+                                            id="form2" enctype="multipart/form-data">
+                                            @csrf
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="createVideoModalLabel">
+                                                    {{ __('buttons.get_video') }}
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <input type="hidden" name="section_id" value="{{ $section->id }}">
+
+
+                                                <div class='form-group row'>
+                                                    <x-input-label for="input-lecture"
+                                                        class="col-sm-12 col-form-label">{{ __('main.duplicate_lecture') }}</x-input-label>
+                                                    <div class="col-sm-12" style="font-weight: 200">
+                                                        <select class="form-control select2" style="width: 100%;"
+                                                            name="lecture_id">
+                                                            <option selected="selected" disabled>
+                                                                {{ __('buttons.choose') }}</option>
+                                                            @foreach ($lectures as $option)
+                                                                <option value="{{ $option->id }}">
+                                                                    {{ $option->section->title }} - {{ $option->title }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <x-input-error :messages="$errors->get('lecture_id')" style="padding: 0 7.5px;margin: 0;" />
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">{{ __('buttons.close') }}</button>
+                                                <x-custom.form-submit text="{{ __('buttons.save') }}"
+                                                    class=" btn-primary" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="card-footer">
                                 <x-custom.form-submit text="{{ __('buttons.add_lecture') }}" class=" btn-primary"
                                     attr='data-toggle=modal data-target=#createVideoModal' />
 
+                                <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class=" btn-secondary"
+                                    attr='data-toggle=modal data-target=#getVideoModal' />
                             </div>
                             <!-- form start -->
 
@@ -514,7 +568,7 @@
                             },
                             xhr: function() {
                                 var xhr = new window.XMLHttpRequest();
-                                // check if the video has been uploaded 
+                                // check if the video has been uploaded
                                 if ($('#input-video-{{ $loop->iteration }}').val() == '') {
                                     $('#effect-{{ $loop->iteration }}').hide('blind');
                                     return xhr;

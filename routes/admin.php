@@ -16,7 +16,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 
 //----------------------------- Admin Routes -----------------------------//
-    
+
 
 
 Route::group(
@@ -68,7 +68,7 @@ Route::group(
             Route::resource('lectures', LectureController::class)->except(['show'])->missing(function () {
                 return redirect()->route('admin.lectures.index');
             });
-
+            Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
 
 
 

@@ -377,10 +377,10 @@
 
 
                             <div class="card-footer">
-                                <x-custom.form-submit text="{{ __('buttons.add_lecture') }}" class=" btn-primary"
+                                <x-custom.form-submit text="{{ __('buttons.add_lecture') }}" class="mb-3 btn-primary"
                                     attr='data-toggle=modal data-target=#createVideoModal' />
 
-                                <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class=" btn-secondary"
+                                <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class="btn-secondary"
                                     attr='data-toggle=modal data-target=#getVideoModal' />
                             </div>
                             <!-- form start -->

@@ -21,7 +21,7 @@ class CourseRequest extends FormRequest
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'thumbnail' => 'nullable|image|max:2048',
-            'sections' => 'nullable|array',
+            'sections' => 'required|array',
             'sections.*.title' => 'required|string|max:255',
             'sections.*.description' => 'required|string',
             'sections.*.id' => 'nullable|exists:sections,id',

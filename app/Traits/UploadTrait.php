@@ -5,6 +5,7 @@ namespace App\Traits;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
 
 trait UploadTrait
@@ -14,13 +15,16 @@ trait UploadTrait
     {
 
         $name_gen = hexdec(uniqid()) . '.' . $picture->getClientOriginalExtension();
-        $path = "uploads/{$folderName}/{$name_gen}";
+        $path = "{$folderName}/{$name_gen}";
 
         // Ensure the directory exists or create it
-        $this->ensureDirectoryExists($folderName);
+        // $this->ensureDirectoryExists($folderName);
 
         // Image::make($picture)->resize($width, $height)->save(public_path("{$path}"));
-        Image::read($picture)->resize($width, $height)->save(public_path("{$path}"));
+        // Image::read($picture)->resize($width, $height)->save(public_path("{$path}"));
+
+        $image = Image::read($picture)->resize($width, $height);
+        Storage::put($path, (string) $image->encode());
 
         return $path;
     }
@@ -31,12 +35,12 @@ trait UploadTrait
     {
 
         $name_gen = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
-        $path = "uploads/{$folderName}/{$name_gen}";
-        // $file->move(public_path("uploads/{$folderName}/"), $name_gen);
+        $path = "{$folderName}/{$name_gen}";
+        // $file->move(public_path("{$folderName}/"), $name_gen);
 
-        $this->ensureDirectoryExists($folderName);
+        // $this->ensureDirectoryExists($folderName);
 
-        $file->storeAs("uploads/{$folderName}/", $name_gen, 'public');
+        $file->storeAs("{$folderName}/", $name_gen, 'public');
 
         return $path;
     }
@@ -44,9 +48,15 @@ trait UploadTrait
     // delete Image
     public function deleteIfExists($path)
     {
-        if (File::exists(public_path($path))) {
+        if ($path && File::exists(public_path($path))) {
             File::delete(public_path($path));
         }
+
+        if ($path && Storage::exists($path)) {
+            Storage::delete($path);
+        }
+
+        return true;
     }
 
     // upload attachments (audios, videos) must return json
@@ -55,8 +65,8 @@ trait UploadTrait
         $attachmentData = [];
         foreach ($attachments as $attachment) {
             $name_gen = hexdec(uniqid()) . '.' . $attachment->getClientOriginalExtension();
-            $path = "uploads/{$folderName}/{$name_gen}";
-            $attachment->move(public_path("uploads/{$folderName}/"), $name_gen);
+            $path = "{$folderName}/{$name_gen}";
+            $attachment->move(public_path("{$folderName}/"), $name_gen);
             $attachmentData[] = $path;
         }
         // Encode the attachment data as JSON
@@ -74,10 +84,10 @@ trait UploadTrait
     }
 
     // Ensure the directory exists or create it
-    public function ensureDirectoryExists($folderName)
-    {
-        if (!is_dir(public_path("uploads/{$folderName}/"))) {
-            mkdir(public_path("uploads/{$folderName}/"), 0755, true);
-        }
-    }
+    // public function ensureDirectoryExists($folderName)
+    // {
+    //     if (!is_dir(public_path("uploads/{$folderName}/"))) {
+    //         mkdir(public_path("uploads/{$folderName}/"), 0755, true);
+    //     }
+    // }
 }

@@ -51,5 +51,12 @@ class SectionSeeder extends Seeder
             'description' => 'الختام',
             'course_id' => 2
         ]);
+
+        DB::table('sections')->insert([
+            'title' => 'المقدمة',
+            'slug' => 's3-mmd',
+            'description' => 'مقدمة',
+            'course_id' => 3
+        ]);
     }
 }

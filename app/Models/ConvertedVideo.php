@@ -10,4 +10,9 @@ class ConvertedVideo extends Model
     use HasFactory;
 
     public $guarded = [];
+
+    public function lecture()
+    {
+        return $this->belongsTo(Lecture::class);
+    }
 }

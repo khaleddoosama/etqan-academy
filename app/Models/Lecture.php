@@ -31,13 +31,20 @@ class Lecture extends Model
     }
 
 
+    // convertedvideo
+    public function convertedVideo()
+    {
+        return $this->hasOne(ConvertedVideo::class, 'lecture_id');
+    }
+
+
 
     /* methods */
     // set video Attribute
     public function setVideoAttribute(UploadedFile $video)
     {
         // to lower case $this->section->course->title
-        $folderName = 'courses/' . str_replace(' ', '-', strtolower($this->section->course->title)) . '/sections/' . str_replace(' ', '-', strtolower($this->section->title)). '/lectures/'. str_replace(' ', '-', strtolower($this->title)) . '/videos';
+        $folderName = str_replace(' ', '-', strtolower($this->section->course->title)) . '/' . str_replace(' ', '-', strtolower($this->section->title)) . '/' . str_replace(' ', '-', strtolower($this->title)) . '/videos';
 
         $this->deleteIfExists($this->video); // Delete the old image if it exists
 
@@ -48,8 +55,8 @@ class Lecture extends Model
     // set thumbnail Attribute
     public function setThumbnailAttribute(UploadedFile $thumbnail)
     {
-        // to lower case $this->section->course->title  
-        $folderName = 'courses/' . str_replace(' ', '-', strtolower($this->section->course->title)) . '/sections/' . str_replace(' ', '-', strtolower($this->section->title)). '/lectures/'. str_replace(' ', '-', strtolower($this->title)) . '/thumbnails';
+        // to lower case $this->section->course->title
+        $folderName = str_replace(' ', '-', strtolower($this->section->course->title)) . '/' . str_replace(' ', '-', strtolower($this->section->title)) . '/' . str_replace(' ', '-', strtolower($this->title)) . '/thumbnails';
         $this->deleteIfExists($this->thumbnail);
         $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480);
     }

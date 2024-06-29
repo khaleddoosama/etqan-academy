@@ -71,23 +71,28 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         $this->names = array(
             array(
-                '1080p-' . $this->getFileName($this->lecture->video, 'mp4'), '1080p-' . $this->getFileName($this->lecture->video, 'webm'),
+                // '1080p-' . $this->getFileName($this->lecture->video, 'mp4'), '1080p-' . $this->getFileName($this->lecture->video, 'webm'),
+                $this->getFileName($this->lecture->video, 'mp4', '1080p'), $this->getFileName($this->lecture->video, 'webm', '1080p'),
             ),
 
             array(
-                '720p-' . $this->getFileName($this->lecture->video, 'mp4'), '720p-' . $this->getFileName($this->lecture->video, 'webm'),
+                // '720p-' . $this->getFileName($this->lecture->video, 'mp4'), '720p-' . $this->getFileName($this->lecture->video, 'webm'),
+                $this->getFileName($this->lecture->video, 'mp4', '720p'), $this->getFileName($this->lecture->video, 'webm', '720p'),
             ),
 
             array(
-                '480p-' . $this->getFileName($this->lecture->video, 'mp4'), '480p-' . $this->getFileName($this->lecture->video, 'webm'),
+                // '480p-' . $this->getFileName($this->lecture->video, 'mp4'), '480p-' . $this->getFileName($this->lecture->video, 'webm'),
+                $this->getFileName($this->lecture->video, 'mp4', '480p'), $this->getFileName($this->lecture->video, 'webm', '480p'),
             ),
 
             array(
-                '360p-' . $this->getFileName($this->lecture->video, 'mp4'), '360p-' . $this->getFileName($this->lecture->video, 'webm'),
+                // '360p-' . $this->getFileName($this->lecture->video, 'mp4'), '360p-' . $this->getFileName($this->lecture->video, 'webm'),
+                $this->getFileName($this->lecture->video, 'mp4', '360p'), $this->getFileName($this->lecture->video, 'webm', '360p'),
             ),
 
             array(
-                '240p-' . $this->getFileName($this->lecture->video, 'mp4'), '240p-' . $this->getFileName($this->lecture->video, 'webm'),
+                // '240p-' . $this->getFileName($this->lecture->video, 'mp4'), '240p-' . $this->getFileName($this->lecture->video, 'webm'),
+                $this->getFileName($this->lecture->video, 'mp4', '240p'), $this->getFileName($this->lecture->video, 'webm', '240p'),
             )
         );
 
@@ -102,6 +107,7 @@ class ConvertVideoForStreaming implements ShouldQueue
                         $filters->resize(new Dimension($this->videoWidth[$this->i], $this->videoHeight[$this->i]));
                     })
                     ->save($this->names[$this->i][$j]);
+                
             }
         }
     }
@@ -184,8 +190,9 @@ class ConvertVideoForStreaming implements ShouldQueue
         ]);
     }
 
-    public function getFileName($fileName, $type)
+    public function getFileName($fileName, $type, $quality)
     {
-        return preg_replace('/\\.[^.\\s]{3,4}$/', '', $fileName) . '.' . $type;
+        // return preg_replace('/\\.[^.\\s]{3,4}$/', '', $fileName) . '.' . $type;
+        return preg_replace('/\\.[^.\\s]{3,4}$/', '', $fileName) . '-' . $quality . '.' . $type;
     }
 }

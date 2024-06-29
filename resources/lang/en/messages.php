@@ -41,6 +41,7 @@
     'lecture_deleted' => 'Lecture deleted successfully.',
 
     'drag_and_drop' => 'Drag and drop.',
+    "processing" => "Processing...",
     // auth views
     "secure_area_confirm_password_to_proceed" => "This is a secure area of the application. Please confirm your password before continuing.",
     "forgot_password_no_worries_enter_your_email_we_will_send_a_reset_link" => "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",

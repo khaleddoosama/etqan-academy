@@ -198,32 +198,80 @@
 
 
                                             </div>
+                                            @if ($lecture->processed)
+                                                <div id="collapse-{{ $loop->iteration }}" class="collapse"
+                                                    aria-labelledby="heading-{{ $loop->iteration }}"
+                                                    data-parent="#accordion">
+                                                    <div
+                                                        class="card-body d-flex justify-content-between align-items-center">
+                                                        {{ $lecture->description }}
 
-                                            <div id="collapse-{{ $loop->iteration }}" class="collapse"
-                                                aria-labelledby="heading-{{ $loop->iteration }}"
-                                                data-parent="#accordion">
-                                                <div class="card-body d-flex justify-content-between align-items-center">
-                                                    {{ $lecture->description }}
+                                                        {{-- show video --}}
+                                                        <div class="mx-3 my-3 callout callout-info">
+                                                            <h5>{{ __('attributes.video') }}:</h5>
+                                                            <video style="height: 240px" controls
+                                                                id="video-{{ $loop->iteration }}">
+                                                                @if ($lecture->quality == 1080)
+                                                                    <source id="webm-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->webm_Format_1080) }}"
+                                                                        type="video/webm">
+                                                                    <source id="mp4-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->mp4_Format_1080) }}"
+                                                                        type="video/mp4">
+                                                                @elseif ($lecture->quality == 720)
+                                                                    <source id="webm-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->webm_Format_720) }}"
+                                                                        type="video/webm">
+                                                                    <source id="mp4-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->mp4_Format_720) }}"
+                                                                        type="video/mp4">
+                                                                @elseif ($lecture->quality == 480)
+                                                                    <source id="webm-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->webm_Format_480) }}"
+                                                                        type="video/webm">
+                                                                    <source id="mp4-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->mp4_Format_480) }}"
+                                                                        type="video/mp4">
+                                                                @elseif ($lecture->quality == 360)
+                                                                    <source id="webm-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->webm_Format_360) }}"
+                                                                        type="video/webm">
+                                                                    <source id="mp4-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->mp4_Format_360) }}"
+                                                                        type="video/mp4">
+                                                                @else
+                                                                    <source id="webm-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->webm_Format_240) }}"
+                                                                        type="video/webm">
+                                                                    <source id="mp4-source"
+                                                                        src="{{ Storage::url($lecture->convertedVideo->mp4_Format_240) }}"
+                                                                        type="video/mp4">
+                                                                @endif
+                                                            </video>
+                                                        </div>
 
-                                                    {{-- show video --}}
-                                                    <div class="mx-3 my-3 callout callout-info">
-                                                        <h5>{{ __('attributes.video') }}:</h5>
-                                                        <video style="height: 240px" controls
-                                                            id="video-{{ $loop->iteration }}">
-                                                            <source src="{{ asset($lecture->video) }}" type="video/mp4">
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                    </div>
-
-                                                    {{-- show thumbnail --}}
-                                                    <div class="mx-3 my-3 callout callout-info">
-                                                        <h5>{{ __('attributes.thumbnail') }}:</h5>
-                                                        <img src="{{ asset($lecture->thumbnail) }}"
-                                                            alt="{{ $lecture->title }}" class="img-thumbnail"
-                                                            style="height: 240px">
+                                                        {{-- show thumbnail --}}
+                                                        @if ($lecture->thumbnail)
+                                                            <div class="mx-3 my-3 callout callout-info">
+                                                                <h5>{{ __('attributes.thumbnail') }}:</h5>
+                                                                <img src="{{ Storage::url($lecture->thumbnail) }}"
+                                                                    alt="{{ $lecture->title }}" class="img-thumbnail"
+                                                                    style="height: 240px">
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @else
+                                                <div id="collapse-{{ $loop->iteration }}" class="collapse"
+                                                    aria-labelledby="heading-{{ $loop->iteration }}"
+                                                    data-parent="#accordion">
+                                                    <div
+                                                        class="card-body d-flex justify-content-between align-items-center">
+                                                        {{ __('messages.processing') }}
+                                                    </div>
+                                                </div>
+                                            @endif
+
                                         </div>
                                     @endforeach
                                 </div>
@@ -569,7 +617,8 @@
                             xhr: function() {
                                 var xhr = new window.XMLHttpRequest();
                                 // check if the video has been uploaded
-                                if ($('#input-video-{{ $loop->iteration }}').val() == '') {
+                                if ($('#input-video-{{ $loop->iteration }}').val() ==
+                                    '') {
                                     $('#effect-{{ $loop->iteration }}').hide('blind');
                                     return xhr;
                                 }
@@ -599,9 +648,10 @@
                                             .html(
                                                 percentComplete + '%'
                                             )
-                                        $('#status-{{ $loop->iteration }} p').html(
-                                            `(${uploadedMB}MB of ${totalMB}MB)`
-                                        );
+                                        $('#status-{{ $loop->iteration }} p')
+                                            .html(
+                                                `(${uploadedMB}MB of ${totalMB}MB)`
+                                            );
 
                                     }
                                 }, false);

@@ -35,7 +35,7 @@ class LectureRequest extends FormRequest
             ],
             'section_id' => 'required|exists:sections,id',
             'description' => 'nullable|string',
-            'thumbnail' => 'nullable|image|max:2048'
+            'thumbnail' => 'nullable|image|max:10240',// max 10mb
         ];
 
         // Check if video is being updated

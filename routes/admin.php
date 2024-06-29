@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\LectureController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoleController;
@@ -71,6 +72,12 @@ Route::group(
             Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
 
 
+            // Inquiry Controller
+            Route::controller(InquiryController::class)->group(function () {
+                Route::get('/inquiries', 'index')->name('inquiries.index');
+                Route::get('/inquiries/{id}', 'show')->name('inquiries.show');
+                Route::put('/inquiries/{id}/reply', 'reply')->name('inquiries.reply');
+            });
 
             // Permission controller (resource)
             // Route::resource('permission', RolePermissionController::class)->except(['show']);

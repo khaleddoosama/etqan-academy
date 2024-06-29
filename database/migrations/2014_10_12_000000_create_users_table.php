@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            //username
+
             $table->string('username')->unique()->nullable();
+            $table->string('code')->unique();
             $table->string('slug')->unique()->nullable();
 
             $table->text('bio')->nullable();
@@ -32,7 +33,7 @@ return new class extends Migration
             $table->date('dob')->nullable()->comment('Date of Birth');
 
             $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
-            $table->integer('status')->default(0)->comment('0: pending, 1: approved, 2: rejected, 3: removed');
+            $table->integer('status')->default(1)->comment('1: approved, 2: rejected, 3: removed');
             $table->timestamp('approved_at')->default(now());
             $table->timestamp('rejected_at')->nullable();
             $table->timestamp('removed_at')->nullable();

@@ -20,20 +20,16 @@ class CourseRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric',
+            'number_of_levels' => 'required|integer',
+            'instructor_id' => 'nullable|exists:instructors,id',
+            'programs[]' => 'nullable|array',
+            'programs.*' => 'nullable|exists:programs,id',
             'thumbnail' => 'nullable|image|max:2048',
             'sections' => 'required|array',
             'sections.*.title' => 'required|string|max:255',
             'sections.*.description' => 'required|string',
             'sections.*.id' => 'nullable|exists:sections,id',
         ];
-    }
-
-
-    public function validated($key = null, $default = null)
-    {
-        $data = parent::validated();
-        $data['instructor_id'] = auth()->user()->id;
-
-        return $data;
     }
 }

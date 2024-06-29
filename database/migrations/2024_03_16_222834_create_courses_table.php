@@ -17,16 +17,21 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('instructor_id');
+            $table->unsignedBigInteger('instructor_id')->nullable();
+            $table->integer('number_of_levels')->default(1);
             $table->enum('language', ['ar', 'en'])->default('ar');
             $table->string('thumbnail')->nullable();
             $table->float('price')->default(0);
             $table->float('discount_price')->default(0);
             $table->integer('status')->default(1);
+
+            // array of programs
+            $table->json('programs')->nullable();
+
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories');
-            $table->foreign('instructor_id')->references('id')->on('users');
+            $table->foreign('instructor_id')->references('id')->on('instructors');
         });
     }
 

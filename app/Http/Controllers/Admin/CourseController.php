@@ -8,7 +8,10 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Services\CategoryService;
 use App\Services\CourseService;
+use App\Services\InstructorService;
+use App\Services\ProgramService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\In;
 use Yoeunes\Toastr\Facades\Toastr;
 
 class CourseController extends Controller
@@ -16,11 +19,15 @@ class CourseController extends Controller
 
     protected CourseService $courseService;
     protected CategoryService $categoryService;
+    protected ProgramService $programService;
+    protected InstructorService $instructorService;
 
-    public function __construct(CourseService $courseService, CategoryService $categoryService)
+    public function __construct(CourseService $courseService, CategoryService $categoryService, ProgramService $programService, InstructorService $instructorService)
     {
         $this->courseService = $courseService;
         $this->categoryService = $categoryService;
+        $this->programService = $programService;
+        $this->instructorService = $instructorService;
         // course.list course.create course.edit course.delete
         // $this->middleware('permission:course.list')->only('index');
         // $this->middleware('permission:course.create')->only('create', 'store');
@@ -38,7 +45,9 @@ class CourseController extends Controller
     public function create()
     {
         $categories = $this->categoryService->getCategories();
-        return view('admin.course.create', compact('categories'));
+        $programs = $this->programService->getPrograms();
+        $instructors = $this->instructorService->getInstructors();
+        return view('admin.course.create', compact('categories', 'programs', 'instructors'));
     }
 
     public function store(CourseRequest $request)
@@ -57,7 +66,9 @@ class CourseController extends Controller
     {
         $course->load('sections');
         $categories = $this->categoryService->getCategories();
-        return view('admin.course.edit', compact('course', 'categories'));
+        $programs = $this->programService->getPrograms();
+        $instructors = $this->instructorService->getInstructors();
+        return view('admin.course.edit', compact('course', 'categories', 'programs', 'instructors'));
     }
 
     public function update(CourseRequest $request, Course $course)

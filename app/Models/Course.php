@@ -23,6 +23,11 @@ class Course extends Model
         ];
     }
 
+    protected $casts = [
+        'programs' => 'array',
+    ];
+
+
 
     // relations
     public function category()
@@ -33,6 +38,12 @@ class Course extends Model
     public function sections()
     {
         return $this->hasMany(Section::class);
+    }
+
+    // programs
+    public function programs()
+    {
+        return $this->belongsToMany(Program::class);
     }
 
 

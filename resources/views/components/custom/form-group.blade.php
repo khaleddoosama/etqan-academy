@@ -1,4 +1,4 @@
-@props(['name', 'type', 'value', 'COLINPUT', 'COLLABEL', 'options', 'selected'])
+@props(['name', 'type', 'value', 'COLINPUT', 'COLLABEL', 'options', 'selected', 'multiple' => false])
 
 @php
     //example sections[0][title] must be transformed to sections_title
@@ -25,6 +25,13 @@
     $error = str_replace('..', '.', $error);
 
     $errorsForName = $errors->get($error);
+
+    // selected
+    if (isset($selected)) {
+        $selectedArray = is_array($selected) ? $selected : explode(',', $selected);
+    } else {
+        $selectedArray = [];
+    }
 @endphp
 
 <div {{ $attributes->merge(['class' => 'form-group row']) }}>
@@ -42,17 +49,18 @@
         </div>
     @elseif ($type === 'select')
         <div class="{{ $COLINPUT ?? 'col-sm-12' }}">
-            <select class="form-control select2" style="width: 100%;" name="{{ $name }}">
-                <option selected="selected" disabled>{{ __('buttons.choose') }}</option>
+            <select class="form-control select2" style="width: 100%;" name="{{ $name }}"
+                {{ $multiple ? 'multiple' : '' }}>
+                <option {{ $multiple ? '' : 'selected' }} disabled>{{ __('buttons.choose') }}</option>
                 @foreach ($options as $option)
                     <option value="{{ $option->id }}" {{-- check if selected is exist --}}
-                        @if (isset($selected)) @if ($selected == $option->id)
-                                selected @endif
-                        @endif
-                        >
+                        {{ in_array($option->id, $selectedArray) ? 'selected' : '' }}>
+
+
                         {{ $option->name }}</option>
                 @endforeach
             </select>
+
         </div>
     @elseif ($type === 'textarea')
         <div class="{{ $COLINPUT ?? 'col-sm-12' }}">

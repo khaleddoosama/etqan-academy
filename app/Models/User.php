@@ -13,6 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\UploadedFile;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -41,7 +42,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    
+
     public function sluggable(): array
     {
         return [
@@ -96,5 +97,18 @@ class User extends Authenticatable implements JWTSubject
 
         $this->deleteIfExists($this->picture); // Delete the old image if it exists
         $this->attributes['picture'] = $this->uploadImage($picture, $folderName);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+           $user->code = strtoupper(Str::random(15));
+        });
+
+        // static::created(function ($user) {
+
+        // });
     }
 }

@@ -17,7 +17,7 @@ class CourseSeeder extends Seeder
             'slug' => 'tkn-mal',
             'description' => 'تكنولوجيا المعلومات',
             'category_id' => 1,
-            'instructor_id' => 1
+            
         ]);
 
         DB::table('courses')->insert([
@@ -25,7 +25,7 @@ class CourseSeeder extends Seeder
             'slug' => 'tsmym-jr-fyk-y',
             'description' => 'التصميم الجرافيكي',
             'category_id' => 1,
-            'instructor_id' => 1
+            
         ]);
 
         DB::table('courses')->insert([
@@ -33,7 +33,7 @@ class CourseSeeder extends Seeder
             'slug' => 'tsmym-wb',
             'description' => 'التصميم الويب',
             'category_id' => 1,
-            'instructor_id' => 1
+            
         ]);
     }
 }

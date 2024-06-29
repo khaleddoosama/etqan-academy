@@ -43,7 +43,22 @@
                                         value="{{ $course->description }}" />
 
                                     <x-custom.form-group class="col-md-6" type="select" name="category_id"
-                                        :options="$categories" selected="{{ $course->category->id }}" />
+                                        :options="$categories" selected="{{ $course->category_id }}" />
+
+                                    <x-custom.form-group class="col-md-6" type="number" name="price"
+                                        value="{{ $course->price }}" />
+
+                                    <x-custom.form-group class="col-md-6" type="number" name="number_of_levels"
+                                        value="{{ $course->number_of_levels }}" />
+
+
+                                    <x-custom.form-group class="col-md-6" type="select" name="programs[]" :options="$programs"
+                                        multiple="true"
+                                        selected="{{ implode(', ', $course->programs ? $course->programs : []) }}" />
+
+                                    <x-custom.form-group class="col-md-6" type="select" name="instructor_id"
+                                        :options="$instructors" selected="{{ $course->instructor_id }}" />
+
 
                                     <x-custom.form-group class="col-md-6" type="file" name="thumbnail" />
 
@@ -211,7 +226,7 @@
 
     {{-- <script>
         function addSection() {
-            // add this <x-custom.dynamic-section component 
+            // add this <x-custom.dynamic-section component
             $('#sections').append(
                 `<x-custom.dynamic-section :inputs="3" :types="['text', 'email', 'number']" :names="['Name', 'Email', 'Age']" />`
             );

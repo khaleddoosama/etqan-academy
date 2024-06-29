@@ -40,6 +40,15 @@
                                     <x-custom.form-group class="col-md-6" type="select" name="category_id"
                                         :options="$categories" />
 
+                                    <x-custom.form-group class="col-md-6" type="number" name="price" />
+
+                                    <x-custom.form-group class="col-md-6" type="number" name="number_of_levels" value=1/>
+
+                                    <x-custom.form-group class="col-md-6" type="select" name="programs[]"
+                                        :options="$programs" multiple="true" />
+
+                                    <x-custom.form-group class="col-md-6" type="select" name="instructor_id" :options="$instructors" />
+
                                     <x-custom.form-group class="col-md-6" type="file" name="thumbnail" />
 
                                     {{-- sections --}}
@@ -193,7 +202,7 @@
 
     {{-- <script>
         function addSection() {
-            // add this <x-custom.dynamic-section component 
+            // add this <x-custom.dynamic-section component
             $('#sections').append(
                 `<x-custom.dynamic-section :inputs="3" :types="['text', 'email', 'number']" :names="['Name', 'Email', 'Age']" />`
             );

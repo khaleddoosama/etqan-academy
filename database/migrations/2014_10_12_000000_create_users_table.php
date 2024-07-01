@@ -29,8 +29,10 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('country')->nullable();
             $table->string('address')->nullable();
+            $table->string('job_title')->nullable();
             $table->string('gender')->nullable();
-            $table->date('dob')->nullable()->comment('Date of Birth');
+            $table->integer('age')->nullable();
+            $table->decimal('points', 8, 2)->default(0);
 
             $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
             $table->integer('status')->default(1)->comment('1: approved, 2: rejected, 3: removed');

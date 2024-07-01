@@ -80,6 +80,8 @@
 
     <!-- jQuery -->
     <script src="{{ asset('asset/admin/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('asset/admin/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+
     <!-- Bootstrap 4 -->
     <script src="{{ asset('asset/admin/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- DataTables  & Plugins -->

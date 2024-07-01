@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('disk')->default('public');
+            $table->string('index')->default('0');
 
             $table->foreignId('section_id')->constrained()->onDelete('cascade');
 

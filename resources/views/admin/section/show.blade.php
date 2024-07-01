@@ -32,10 +32,10 @@
                                 <h5>{{ __('attributes.lectures') }}:</h5>
                                 <div id="accordion">
                                     @foreach ($section->lectures as $lecture)
-                                        <div class="card">
+                                        <div class="card" data-id="{{ $lecture->id }}">
                                             <div class="card-header" id="heading-{{ $loop->iteration }}">
                                                 <h5 class="mb-0 row justify-content-between align-items-center">
-                                                    <button class="btn btn-link" data-toggle="collapse"
+                                                    <button class="btn btn-link btnn" data-toggle="collapse"
                                                         data-target="#collapse-{{ $loop->iteration }}" aria-expanded="false"
                                                         aria-controls="collapse-{{ $loop->iteration }}">
                                                         {{ __('attributes.video') }} #{{ $loop->iteration }}:
@@ -693,26 +693,6 @@
     </script>
 
     <script>
-        // Dropzone.options.videoDropzone = { // Make sure this name matches the ID of your form
-        //     paramName: "video", // The name that will be used to transfer the file
-        //     maxFilesize: 1024, // MB
-        //     acceptedFiles: 'video/*',
-        // maxFiles: 1,
-
-        //     dictDefaultMessage: 'Drop videos here to upload (or click)',
-        //     init: function() {
-        //         this.on("success", function(file, response) {
-        //             console.log(file, response, 'success');
-        //         });
-
-        //         this.on("error", function(file, response) {
-        //             console.log(file, response, 'error');
-        //         });
-        //     }
-        // };
-    </script>
-
-    <script>
         // when upload thumbnail show the thumbnail preview
         $('#input-thumbnail').change(function() {
             $('#showThumbnail').show('blind');
@@ -758,17 +738,39 @@
             });
         @endforeach
     </script>
-    {{-- <script src="{{ asset('asset/admin/dist/js/dropzone.js') }}"></script>
+
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Example initialization for two different forms on the same page
-            initializeDropzone("#form1", "{{ route('admin.lectures.store') }}", "{{ $section->id }}");
-            // editForm initialization
-            @foreach ($section->lectures as $lecture)
-                initializeDropzone("#editForm-{{ $loop->iteration }}",
-                    "{{ route('admin.lectures.update', $lecture) }}", "{{ $section->id }}", "PUT");
-            @endforeach
+        $(function() {
+            $('#accordion').sortable({
+                update: function(event, ui) {
+                    var lectureOrder = [];
+                    $('#accordion .card').each(function(index) {
+                        lectureOrder.push($(this).data('id'));
+                    });
+
+                    $.ajax({
+                        url: '{{ route('admin.lectures.updateOrder') }}',
+                        method: 'Post',
+                        data: {
+                            lectures: lectureOrder,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            // toastr.success
+                            toastr.success('Order updated successfully');
+                            //btnn rewrite the order
+                            $('#accordion .card').each(function(index) {
+                                $(this).find('.btnn').text(`{{ __('attributes.video') }} #${index + 1}: ${$(this).find('.btnn').text().split(':')[1]}`);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
 
         });
-    </script> --}}
+    </script>
 @endsection

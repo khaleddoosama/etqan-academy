@@ -80,4 +80,21 @@ class LectureController extends Controller
         Toastr::success(__('messages.lecture_duplicated'), __('status.success'));
         return response()->json(['message' => __('messages.lecture_duplicated')]);
     }
+
+    public function updateOrder(Request $request)
+    {
+
+        $lectures = $request->get('lectures');
+
+        foreach ($lectures as $order => $id) {
+            $lecture = Lecture::find($id);
+            $lecture->index = $order;
+            $lecture->save();
+        }
+
+        return response()->json([
+            'message' => __('messages.lectures_order_updated'),
+            'status' => 200
+        ]);
+    }
 }

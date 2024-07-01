@@ -70,6 +70,7 @@ Route::group(
                 return redirect()->route('admin.lectures.index');
             });
             Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
+            Route::post('/lectures/update-order', [LectureController::class, 'updateOrder'])->name('lectures.updateOrder');
 
 
             // Inquiry Controller

@@ -72,5 +72,8 @@
     "register" => "Register",
     "reset_password" => "Reset Password",
     "resend_verification_email" => "Resend Verification Email",
-
+    "get_started" => "Get Started",
+    "get_lecture" => "Get Lecture",
+    "duplicate" => "Duplicate",
+    "duplicate_lecture" => "Duplicate Lecture",
 );

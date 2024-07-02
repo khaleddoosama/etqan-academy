@@ -42,12 +42,17 @@
                                                         {{ $lecture->title }}
                                                     </button>
 
-                                                    <button type="button" class="btn btn-primary"
-                                                        title="{{ __('buttons.edit') }}" data-toggle='modal'
-                                                        data-target='#editVideoModal-{{ $loop->iteration }}'
-                                                        style="color: white; text-decoration: none;">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
+                                                    <div>
+                                                        <button type="button" class="btn btn-primary"
+                                                            title="{{ __('buttons.edit') }}" data-toggle='modal'
+                                                            data-target='#editVideoModal-{{ $loop->iteration }}'
+                                                            style="color: white; text-decoration: none;">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+
+                                                        {{-- get compoent called delete-button --}}
+                                                        <x-custom.delete-button :route="'admin.lectures.destroy'" :id="$lecture->id" />
+                                                    </div>
 
                                                     <div class="modal fade" id="editVideoModal-{{ $loop->iteration }}"
                                                         tabindex="-1" role="dialog" aria-labelledby="editVideoModalLabel"
@@ -761,7 +766,9 @@
                             toastr.success('Order updated successfully');
                             //btnn rewrite the order
                             $('#accordion .card').each(function(index) {
-                                $(this).find('.btnn').text(`{{ __('attributes.video') }} #${index + 1}: ${$(this).find('.btnn').text().split(':')[1]}`);
+                                $(this).find('.btnn').text(
+                                    `{{ __('attributes.video') }} #${index + 1}: ${$(this).find('.btnn').text().split(':')[1]}`
+                                );
                             });
                         },
                         error: function(xhr, status, error) {

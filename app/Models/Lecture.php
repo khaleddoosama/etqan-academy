@@ -46,7 +46,19 @@ class Lecture extends Model
         // to lower case $this->section->course->title
         $folderName = str_replace(' ', '-', strtolower($this->section->course->title)) . '/' . str_replace(' ', '-', strtolower($this->section->title)) . '/' . str_replace(' ', '-', strtolower($this->title)) . '/videos';
 
-        $this->deleteIfExists($this->video); // Delete the old image if it exists
+        $this->deleteIfExists($this->video); // Delete the old video if it exists
+
+        $this->deleteIfExists($this->convertedVideo?->mp4_Format_240); // Delete the old video if it
+        $this->deleteIfExists($this->convertedVideo?->mp4_Format_360); // Delete the old video if it
+        $this->deleteIfExists($this->convertedVideo?->mp4_Format_480); // Delete the old video if it
+        $this->deleteIfExists($this->convertedVideo?->mp4_Format_720); // Delete the old video if it
+        $this->deleteIfExists($this->convertedVideo?->mp4_Format_1080); // Delete the old video if it
+
+        $this->deleteIfExists($this->convertedVideo?->webm_Format_240); // Delete the old video if it
+        $this->deleteIfExists($this->convertedVideo?->webm_Format_360); // Delete the old video if it
+        $this->deleteIfExists($this->convertedVideo?->webm_Format_480); // Delete the old video if it
+        $this->deleteIfExists($this->convertedVideo?->webm_Format_720); // Delete the old video if it
+        $this->deleteIfExists($this->convertedVideo?->webm_Format_1080); // Delete the old video if it
 
         $this->attributes['video'] = $this->uploadFile($video, $folderName);
     }

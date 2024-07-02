@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
@@ -107,7 +108,6 @@ class ConvertVideoForStreaming implements ShouldQueue
                         $filters->resize(new Dimension($this->videoWidth[$this->i], $this->videoHeight[$this->i]));
                     })
                     ->save($this->names[$this->i][$j]);
-                
             }
         }
     }
@@ -171,21 +171,38 @@ class ConvertVideoForStreaming implements ShouldQueue
         // delete old video
         Storage::disk($this->lecture->disk)->delete($this->lecture->video);
 
-        $converted_video = new ConvertedVideo();
+        // $converted_video = new ConvertedVideo();
 
-        for ($i = 0; $i < count($this->names); $i++) {
-            $converted_video->{'mp4_Format_' . $this->videoHeight[$i]} = $this->names[$i][0];
-            $converted_video->{'webm_Format_' . $this->videoHeight[$i]} = $this->names[$i][1];
-        }
+        // for ($i = 0; $i < count($this->names); $i++) {
+        //     $converted_video->{'mp4_Format_' . $this->videoHeight[$i]} = $this->names[$i][0];
+        //     $converted_video->{'webm_Format_' . $this->videoHeight[$i]} = $this->names[$i][1];
+        // }
 
-        $converted_video->lecture_id = $this->lecture->id;
-        $converted_video->save();
+        // $converted_video->lecture_id = $this->lecture->id;
+        // $converted_video->save();
+
+        // update or create converted video
+        ConvertedVideo::updateOrCreate(
+            ['lecture_id' => $this->lecture->id],
+            [
+                'mp4_Format_1080' => $this->names[0][0],
+                'webm_Format_1080' => $this->names[0][1],
+                'mp4_Format_720' => $this->names[1][0],
+                'webm_Format_720' => $this->names[1][1],
+                'mp4_Format_480' => $this->names[2][0],
+                'webm_Format_480' => $this->names[2][1],
+                'mp4_Format_360' => $this->names[3][0],
+                'webm_Format_360' => $this->names[3][1],
+                'mp4_Format_240' => $this->names[4][0],
+                'webm_Format_240' => $this->names[4][1],
+            ]
+        );
 
         $this->lecture->update([
             'processed' => true,
-            'hours' => $durationInSeconds / 3600,
-            'minutes' => $durationInSeconds / 60,
-            'seconds' => $durationInSeconds,
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds,
             'quality' => $quality
         ]);
     }

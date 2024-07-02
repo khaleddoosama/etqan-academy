@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Lecture;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class LectureService
 {
@@ -46,16 +47,31 @@ class LectureService
         return $lecture;
     }
 
-    public function updateLecture(Lecture $lecture, array $data): bool
+    public function updateLecture(Lecture $lecture, array $data)
     {
         $lecture->update($data);
 
 
-        return $lecture->wasChanged();
+        return $lecture;
     }
 
     public function deleteLecture(Lecture $lecture): bool
     {
+        $convertedVideo = $lecture->convertedVideo;
+        
+        Storage::delete($convertedVideo->mp4_Format_240);
+        Storage::delete($convertedVideo->mp4_Format_360);
+        Storage::delete($convertedVideo->mp4_Format_480);
+        Storage::delete($convertedVideo->mp4_Format_720);
+        Storage::delete($convertedVideo->mp4_Format_1080);
+        Storage::delete($convertedVideo->webm_Format_240);
+        Storage::delete($convertedVideo->webm_Format_360);
+        Storage::delete($convertedVideo->webm_Format_480);
+        Storage::delete($convertedVideo->webm_Format_720);
+        Storage::delete($convertedVideo->webm_Format_1080);
+        Storage::delete($lecture->thumbnail);
+
+
         return $lecture->delete();
     }
 
@@ -66,10 +82,11 @@ class LectureService
         // Create a new lecture instance and copy the properties from the original lecture
         $newLecture = $lecture->replicate();
         $newLecture->section_id = $sectionId;
-
+        $newLecture->slug = $newLecture->slug . '-' . $newLecture->id;
+        $newLecture->processed = 0;
         // Save the new lecture
         $newLecture->save();
-        
-        return $lecture;
+
+        return [$lecture, $newLecture];
     }
 }

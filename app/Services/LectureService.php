@@ -58,7 +58,7 @@ class LectureService
     public function deleteLecture(Lecture $lecture): bool
     {
         $convertedVideo = $lecture->convertedVideo;
-        
+
         Storage::delete($convertedVideo->mp4_Format_240);
         Storage::delete($convertedVideo->mp4_Format_360);
         Storage::delete($convertedVideo->mp4_Format_480);

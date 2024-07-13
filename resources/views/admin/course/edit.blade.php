@@ -39,8 +39,19 @@
                                     <x-custom.form-group class="col-md-6" type="text" name="title"
                                         value="{{ $course->title }}" />
 
-                                    <x-custom.form-group class="col-md-6" type="textarea" name="description"
-                                        value="{{ $course->description }}" />
+                                    {{-- <x-custom.form-group class="col-md-6" type="textarea" name="description"
+                                        value="{{ $course->description }}" /> --}}
+
+                                    <div class='row form-group col-md-12'>
+                                        <x-input-label for="summernote"
+                                            class='col-sm-12 col-form-label'>{{ __('attributes.description') }}</x-input-label>
+
+                                        <div class='col-sm-12'>
+                                            <textarea name="description" id="summernote" class="form-control" rows="1">
+                                                {{ old('description') ?? ($course->description ?? '') }}
+                                            </textarea>
+                                        </div>
+                                    </div>
 
                                     <x-custom.form-group class="col-md-6" type="select" name="category_id"
                                         :options="$categories" selected="{{ $course->category_id }}" />

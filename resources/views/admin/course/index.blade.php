@@ -35,16 +35,17 @@
                                             <tr>
                                                 <td>{{ $course->id }}</td>
                                                 <td>{{ $course->title }}</td>
-                                                <td>{{ $course->description }}</td>
+                                                <td>{{ Str::limit(strip_tags($course->description), 100) }}</td>
+
                                                 <td>{{ $course->category->name }}</td>
                                                 <td>
                                                     @foreach ($course->sections as $section)
                                                         <a href="{{ route('admin.sections.show', $section) }}" title="show {{ $section->title }}">
-                                                            {{ $section->title }} <i class="fas fa-eye"></i> 
+                                                            {{ $section->title }} <i class="fas fa-eye"></i>
                                                             <span class="sr-only">(current)</span>
                                                             <br>
                                                         </a>
-                                                        
+
                                                     @endforeach
 
                                                 </td>

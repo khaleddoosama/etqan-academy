@@ -35,19 +35,28 @@
 
                                     <x-custom.form-group class="col-md-6" type="text" name="title" />
 
-                                    <x-custom.form-group class="col-md-6" type="textarea" name="description" />
-
                                     <x-custom.form-group class="col-md-6" type="select" name="category_id"
                                         :options="$categories" />
 
+                                    <div class='row form-group col-md-12'>
+                                        <x-input-label for="summernote"
+                                            class='col-sm-12 col-form-label'>{{ __('attributes.description') }}</x-input-label>
+
+                                        <div class='col-sm-12'>
+                                            <textarea name="description" id="summernote" class="form-control" rows="1">{{ old('description') ?? ($value ?? '') }}</textarea>
+                                        </div>
+                                    </div>
+
+
                                     <x-custom.form-group class="col-md-6" type="number" name="price" />
 
-                                    <x-custom.form-group class="col-md-6" type="number" name="number_of_levels" value=1/>
+                                    <x-custom.form-group class="col-md-6" type="number" name="number_of_levels" value=1 />
 
-                                    <x-custom.form-group class="col-md-6" type="select" name="programs[]"
-                                        :options="$programs" multiple="true" />
+                                    <x-custom.form-group class="col-md-6" type="select" name="programs[]" :options="$programs"
+                                        multiple="true" />
 
-                                    <x-custom.form-group class="col-md-6" type="select" name="instructor_id" :options="$instructors" />
+                                    <x-custom.form-group class="col-md-6" type="select" name="instructor_id"
+                                        :options="$instructors" />
 
                                     <x-custom.form-group class="col-md-6" type="file" name="thumbnail" />
 

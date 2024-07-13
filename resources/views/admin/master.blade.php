@@ -48,10 +48,33 @@
     <!-- Toastr -->
     <link rel="stylesheet" href="{{ asset('asset/admin/plugins/toastr/toastr.min.css') }}">
 
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{ asset('asset/admin/plugins/summernote/summernote-bs4.min.css') }}">
+
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
         integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
 
+    <style>
+        .note-editable ul {
+            list-style-type: disc;
+            /* التأكد من أن نوع القائمة غير المرتبة هو نقطي */
+            list-style-position: inside;
+            /* يمكن تغيير هذا الخيار حسب رغبتك */
+        }
+
+        .note-editable ol {
+            list-style-type: decimal;
+            /* التأكد من أن نوع القائمة المرتبة هو رقمي */
+            list-style-position: inside;
+            /* يمكن تغيير هذا الخيار حسب رغبتك */
+        }
+
+        .note-editable li {
+            display: list-item;
+            /* تأكد من أن العناصر تظهر كعناصر قائمة */
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -124,6 +147,9 @@
     <script src="{{ asset('asset/admin/plugins/chart.js/Chart.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('asset/admin/dist/js/adminlte.min.js') }}"></script>
+    <!-- Summernote -->
+    <script src="{{ asset('asset/admin/plugins/summernote/summernote-bs4.min.js') }}"></script>
+    <script src="{{ asset('asset/admin/plugins/summernote/lang/summernote-ar-AR.min.js') }}"></script>
     <!-- FLOT CHARTS -->
     <script src="{{ asset('asset/admin/plugins/flot/jquery.flot.js') }}"></script>
     <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
@@ -365,9 +391,29 @@
             showConfirmButton: false,
             timer: 3000
         });
-
     </script>
-
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                lang: 'ar-AR', // تعيين اللغة العربية
+                height: 200, // تعيين ارتفاع المحرر
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                placeholder: 'أدخل وصف الدورة هنا...',
+                direction: 'rtl' // تعيين اتجاه النص إلى اليمين إلى اليسار
+            });
+        });
+    </script>
 
     @yield('scripts')
 </body>

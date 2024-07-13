@@ -88,12 +88,19 @@ class User extends Authenticatable implements JWTSubject
         return $query->where('role', 'student')->where('status', 2)->orWhere('status', 3);
     }
 
+    // relations
+    // gallery
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class);
+    }
+
     /* methods */
     // set Picture Attribute
     public function setPictureAttribute(UploadedFile $picture)
     {
 
-        $folderName = $this->role . '/pictures';
+        $folderName = $this->role . '/'. $this->code .'/pictures';
 
         $this->deleteIfExists($this->picture); // Delete the old image if it exists
         $this->attributes['picture'] = $this->uploadImage($picture, $folderName);

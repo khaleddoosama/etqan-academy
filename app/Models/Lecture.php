@@ -70,7 +70,7 @@ class Lecture extends Model
         // to lower case $this->section->course->title
         $folderName = str_replace(' ', '-', strtolower($this->section->course->title)) . '/' . str_replace(' ', '-', strtolower($this->section->title)) . '/' . str_replace(' ', '-', strtolower($this->title)) . '/thumbnails';
         $this->deleteIfExists($this->thumbnail);
-        $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480);
+        $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 's3');
     }
 
     // on change section_id

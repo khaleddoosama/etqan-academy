@@ -11,7 +11,7 @@ use Intervention\Image\Laravel\Facades\Image;
 trait UploadTrait
 {
     // upload Image
-    public function uploadImage(UploadedFile $picture, $folderName, $width = 640, $height = 480)
+    public function uploadImage(UploadedFile $picture, $folderName, $width = 640, $height = 480, $disk = 'public')
     {
 
         $name_gen = hexdec(uniqid()) . '.' . $picture->getClientOriginalExtension();
@@ -24,7 +24,7 @@ trait UploadTrait
         // Image::read($picture)->resize($width, $height)->save(public_path("{$path}"));
 
         $image = Image::read($picture)->resize($width, $height);
-        Storage::put($path, (string) $image->encode());
+        Storage::disk($disk)->put($path, (string) $image->encode());
 
         return $path;
     }
@@ -52,8 +52,12 @@ trait UploadTrait
             File::delete(public_path($path));
         }
 
-        if ($path && Storage::exists($path)) {
-            Storage::delete($path);
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        if ($path && Storage::disk('s3')->exists($path)) {
+            Storage::disk('s3')->delete($path);
         }
 
         return true;

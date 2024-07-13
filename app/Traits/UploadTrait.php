@@ -31,7 +31,7 @@ trait UploadTrait
 
 
     // upload file (pdf)
-    public function uploadFile(UploadedFile $file, $folderName)
+    public function uploadFile(UploadedFile $file, $folderName, $disk = 'public')
     {
 
         $name_gen = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
@@ -40,8 +40,8 @@ trait UploadTrait
 
         // $this->ensureDirectoryExists($folderName);
 
-        $file->storeAs("{$folderName}/", $name_gen, 'public');
-
+        // $file->storeAs("{$folderName}/", $name_gen, 'public');
+        Storage::disk($disk)->put($path, file_get_contents($file));
         return $path;
     }
 

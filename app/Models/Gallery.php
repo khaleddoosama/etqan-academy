@@ -19,13 +19,13 @@ class Gallery extends Model
     }
 
     /* methods */
-    // set Picture Attribute
-    public function setPathAttribute(UploadedFile $picture)
+    // set file Attribute
+    public function setPathAttribute(UploadedFile $file)
     {
 
         $folderName = $this->role . '/'. $this->code .'/galleries';
 
-        $this->deleteIfExists($this->picture); // Delete the old image if it exists
-        $this->attributes['picture'] = $this->uploadImage($picture, $folderName);
+        $this->deleteIfExists($this->path); // Delete the old image if it exists
+        $this->attributes['path'] = $this->uploadFile($file, $folderName);
     }
 }

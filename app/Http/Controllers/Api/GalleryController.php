@@ -20,6 +20,6 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $gallery = $this->galleryService->createGallery($request->all());
-        return $this->apiSuccessResponse($gallery);
+        return $this->apiResponse($gallery, 'Gallery created successfully', 201);
     }
 }

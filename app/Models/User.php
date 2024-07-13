@@ -47,7 +47,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [
             'slug' => [
-                'source' => 'username'
+                'source' => ['first_name', 'last_name']
             ]
         ];
     }
@@ -104,7 +104,7 @@ class User extends Authenticatable implements JWTSubject
         parent::boot();
 
         static::creating(function ($user) {
-           $user->code = strtoupper(Str::random(15));
+            $user->code = strtoupper(Str::random(15));
         });
 
         // static::created(function ($user) {

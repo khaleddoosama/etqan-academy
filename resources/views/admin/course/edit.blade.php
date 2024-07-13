@@ -39,8 +39,8 @@
                                     <x-custom.form-group class="col-md-6" type="text" name="title"
                                         value="{{ $course->title }}" />
 
-                                    {{-- <x-custom.form-group class="col-md-6" type="textarea" name="description"
-                                        value="{{ $course->description }}" /> --}}
+                                    <x-custom.form-group class="col-md-6" type="select" name="category_id"
+                                        :options="$categories" selected="{{ $course->category_id }}" />
 
                                     <div class='row form-group col-md-12'>
                                         <x-input-label for="summernote"
@@ -53,8 +53,6 @@
                                         </div>
                                     </div>
 
-                                    <x-custom.form-group class="col-md-6" type="select" name="category_id"
-                                        :options="$categories" selected="{{ $course->category_id }}" />
 
                                     <x-custom.form-group class="col-md-6" type="number" name="price"
                                         value="{{ $course->price }}" />

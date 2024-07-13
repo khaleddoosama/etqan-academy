@@ -126,7 +126,7 @@ class LectureController extends Controller
 
         foreach ($lectures as $order => $id) {
             $lecture = Lecture::find($id);
-            $lecture->index = $order;
+            $lecture->position = $order;
             $lecture->save();
         }
 

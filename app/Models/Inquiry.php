@@ -13,7 +13,7 @@ class Inquiry extends Model
     protected $guarded = [];
 
 
-    // Apply a global scope to order by created_at desc.
+    // Apply a global scope to order by status desc.
     public function newQuery()
     {
         return parent::newQuery()->orderBy('status', 'desc');

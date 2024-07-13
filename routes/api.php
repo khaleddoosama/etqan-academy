@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\SectionController;
 use Illuminate\Http\Request;
@@ -30,6 +31,8 @@ Route::group([
     Route::put('/update-profile', [AuthController::class, 'updateProfile']);
 });
 
+// send Inquiry
+Route::post('send-inquiry', [InquiryController::class, 'sendInquiry']);
 
 Route::middleware('jwt.verify')->group(function () {
     // show courses

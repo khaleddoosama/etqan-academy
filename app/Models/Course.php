@@ -43,7 +43,25 @@ class Course extends Model
     // programs
     public function programs()
     {
-        return $this->belongsToMany(Program::class);
+        $programIds = $this->programs ?? [];
+        return Program::whereIn('id', $programIds)->get();
+    }
+
+    // count number of lectures in course
+    public function countLectures()
+    {
+        return $this->sections->map(function ($section) {
+            return $section->lectures->count();
+        })->sum();
+    }
+
+
+    // calculate total duration of lectures in course
+    public function totalDuration()
+    {
+        return $this->sections->map(function ($section) {
+            return $section->totalDuration();
+        })->sum();
     }
 
 

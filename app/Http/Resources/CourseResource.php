@@ -18,9 +18,13 @@ class CourseResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,
-            'image' => $this->thumbnail,
+            // 'image' => $this->thumbnail,
             'category' => $this->category->name,
+            'num_of_levels' => $this->number_of_levels,
+            'programs' => $this->programs ? ProgramResource::collection($this->programs()) : [],
             'sections' => SectionResource::collection($this->sections),
+            'count_lectures' => $this->countLectures(),
+            'total_duration' => $this->totalDuration(),
         ];
     }
 }

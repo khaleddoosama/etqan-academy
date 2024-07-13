@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
 
             $table->string('username')->unique()->nullable();
             $table->string('code')->unique();
@@ -33,6 +34,8 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->integer('age')->nullable();
             $table->decimal('points', 8, 2)->default(0);
+
+            $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
 
             $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
             $table->integer('status')->default(1)->comment('1: approved, 2: rejected, 3: removed');

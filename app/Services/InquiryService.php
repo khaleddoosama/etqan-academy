@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Models\Inquiry;
 use Illuminate\Database\Eloquent\Collection;
-use Yoeunes\Toastr\Facades\Toastr;
 
 class InquiryService
 {
@@ -26,5 +25,11 @@ class InquiryService
         $inquiry->status = "replied";
         $inquiry->save();
         return true;
+    }
+
+    public function sendInquiry(array $data)
+    {
+        $inquiry = Inquiry::create($data);
+        return $inquiry;
     }
 }

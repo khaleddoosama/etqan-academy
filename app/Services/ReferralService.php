@@ -17,14 +17,13 @@ class ReferralService
     }
 
     // add
-    public function add(User $newUser, $parent_code, $points, $reason = null)
+    public function add(User $newUser, $parent_code, $points)
     {
         $parent_user = $this->userService->getUserByCode($parent_code);
 
         $referral = $parent_user->referralsParent()->create([
             'new_user' => $newUser->id,
             'points' => $points,
-            'reason' => $reason,
         ]);
 
         $parent_user->increment('points', $points);

@@ -68,7 +68,7 @@ class AuthController extends Controller
 
             // add points to user who referred this user
             if ($request->parent_code) {
-                $this->ReferralService->add($user, $request->parent_code, 30, 'Referral');
+                $this->ReferralService->add($user, $request->parent_code, 30);
             }
             DB::commit();
             return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);

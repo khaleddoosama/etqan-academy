@@ -7,9 +7,11 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Services\ReferralService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 // use Validator;
@@ -17,14 +19,11 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     use ApiResponseTrait;
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    protected $ReferralService;
+    public function __construct(ReferralService $ReferralService)
     {
         $this->middleware('jwt.verify', ['except' => ['login', 'register']]);
+        $this->ReferralService = $ReferralService;
     }
 
     public function login(Request $request)
@@ -45,27 +44,38 @@ class AuthController extends Controller
     }
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|between:2,100',
-            'last_name' => 'required|string|between:2,100',
-            'age' => 'required|integer',
-            'gender' => 'required|string|between:2,100',
-            'job_title' => 'required|string|between:2,100',
-            'category_id' => 'required|integer',
-            // 'username' => 'required|string|between:2,100|alpha_dash|unique:users',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-        ]);
+        DB::beginTransaction();
+        try {
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|string|between:2,100',
+                'last_name' => 'required|string|between:2,100',
+                'age' => 'required|integer',
+                'gender' => 'required|string|between:2,100',
+                'job_title' => 'required|string|between:2,100',
+                'category_id' => 'required|integer',
+                // 'username' => 'required|string|between:2,100|alpha_dash|unique:users',
+                'email' => 'required|string|email|max:100|unique:users',
+                'password' => 'required|string|confirmed|min:6',
+            ]);
+            if ($validator->fails()) {
+                return $this->apiResponse(null, $validator->errors()->first(), 400);
+            }
 
-        if ($validator->fails()) {
-            return $this->apiResponse(null, $validator->errors()->first(), 400);
+            $user = User::create(array_merge(
+                $validator->validated(),
+                ['password' => bcrypt($request->password)]
+            ));
+
+            // add points to user who referred this user
+            if ($request->parent_code) {
+                $this->ReferralService->add($user, $request->parent_code, 30, 'Referral');
+            }
+            DB::commit();
+            return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $this->apiResponse(null, $e->getMessage(), 500);
         }
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bcrypt($request->password)]
-        ));
-
-        return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
     }
 
     public function logout()

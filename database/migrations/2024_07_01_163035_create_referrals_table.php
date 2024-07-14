@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('referrals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('refer_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('parent_user')->nullable()->constrained('users')->restrictOnDelete();
+            $table->foreignId('new_user')->constrained('users')->restrictOnDelete();
             $table->decimal('points', 8, 2)->default(0);
-            $table->integer('status')->default(0);
+
+            $table->string('reason')->nullable();
+
             $table->timestamps();
         });
     }

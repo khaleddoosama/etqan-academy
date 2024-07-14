@@ -25,6 +25,11 @@ class UserService
         return User::studentInactive()->get();
     }
 
+    // get user by code
+    public function getUserByCode($code)
+    {
+        return User::where('code', $code)->first();
+    }
 
     // update user
     public function updateUser(array $data, User $user)

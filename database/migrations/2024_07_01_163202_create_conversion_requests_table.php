@@ -13,22 +13,10 @@ return new class extends Migration
     {
         Schema::create('conversion_requests', function (Blueprint $table) {
             $table->id();
-            // full name
-            $table->string('name');
-            // code
-            $table->string('code');
-            // email
-            $table->string('email');
-            // phone
-            $table->string('phone');
-            // whatsapp
-            $table->string('whatsapp');
-            // points
-            $table->decimal('points', 8, 2)->default(0);
-            // phone wallet
-            $table->string('phone_wallet');
-            // password
-            $table->string('password');
+            // user_id
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
+            $table->integer('points');
+            $table->string('wallet_phone');
             // status
             $table->integer('status')->default(0);
             $table->timestamps();

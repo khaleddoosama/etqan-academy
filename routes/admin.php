@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\UserCoursesController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -58,6 +59,14 @@ Route::group(
             Route::resource('courses', CourseController::class)->except(['show'])->missing(function () {
                 return redirect()->route('admin.courses.index');
             });
+
+            // UserCourse Controller
+            Route::controller(UserCoursesController::class)->group(function () {
+                Route::get('/users/{user}/courses', 'index')->name('users.courses.index');
+                Route::post('/users/{user}/courses', 'store')->name('users.courses.store');
+                Route::put('/users/{user}/courses/{course}', 'changeStatus')->name('users.courses.change_status');
+            });
+
 
             Route::controller(SectionController::class)->group(function () {
                 // show section

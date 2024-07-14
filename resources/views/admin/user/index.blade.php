@@ -1,6 +1,6 @@
 @extends('admin.master')
 @section('title')
-   {{ $title }}
+    {{ $title }}
 @endsection
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -31,7 +31,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th>{{ __('attributes.image') }}</th>
-                                            <th>{{ __('attributes.name') }}</th>
+                                            <th>{{ __('attributes.first_name') }}</th>
+                                            <th>{{ __('attributes.last_name') }}</th>
                                             <th>{{ __('attributes.email') }}</th>
                                             <th>{{ __('attributes.phone') }}</th>
                                             <th>{{ __('attributes.status') }}</th>
@@ -45,7 +46,8 @@
                                                 <td>
                                                     <x-custom.profile-picture :user="$user" size="50" />
                                                 </td>
-                                                <td>{{ $user->name }}</td>
+                                                <td>{{ $user->first_name }}</td>
+                                                <td>{{ $user->last_name }}</td>
                                                 <td>{{ $user->email }}</td>
                                                 <td>{{ $user->phone }}</td>
                                                 <td>
@@ -54,6 +56,13 @@
 
 
                                                 <td>
+
+                                                    {{-- @can('user.add_course') --}}
+                                                    <a href="{{ route('admin.users.courses.index', $user) }}" class="btn btn-warning" title="{{ __('buttons.add_course') }}"
+                                                        style="color: white; text-decoration: none;">
+                                                        <i class="fas fa-plus"></i>
+                                                    </a>
+
                                                     {{-- @can('user.edit') --}}
                                                     <x-custom.edit-button route="admin.users.edit" :id="$user->id" />
 
@@ -69,7 +78,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th>{{ __('attributes.image') }}</th>
-                                            <th>{{ __('attributes.name') }}</th>
+                                            <th>{{ __('attributes.first_name') }}</th>
+                                            <th>{{ __('attributes.last_name') }}</th>
                                             <th>{{ __('attributes.email') }}</th>
                                             <th>{{ __('attributes.phone') }}</th>
                                             <th>{{ __('attributes.status') }}</th>

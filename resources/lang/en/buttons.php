@@ -34,8 +34,6 @@
     'create_subcategory' => 'Create Subcategory',
     'edit_subcategory' => 'Edit Subcategory',
     'create_bad_word' => 'Create Bad Word',
-    'create_user' => 'Create User',
-    'edit_user' => 'Edit User',
     'create_post' => 'Create Post',
     'edit_post' => 'Edit Post',
     "show_post" => "Show Post",
@@ -76,4 +74,5 @@
     "get_lecture" => "Get Lecture",
     "duplicate" => "Duplicate",
     "duplicate_lecture" => "Duplicate Lecture",
+    "add_course" => "Add Course",
 );

@@ -95,12 +95,18 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Gallery::class);
     }
 
+    // courses
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'user_courses', 'student_id', 'course_id')->withPivot('id', 'completed', 'rating', 'review', 'progress', 'status', 'created_at');
+    }
+
     /* methods */
     // set Picture Attribute
     public function setPictureAttribute(UploadedFile $picture)
     {
 
-        $folderName = $this->role . '/'. $this->code .'/pictures';
+        $folderName = $this->role . '/' . $this->code . '/pictures';
 
         $this->deleteIfExists($this->picture); // Delete the old image if it exists
         $this->attributes['picture'] = $this->uploadImage($picture, $folderName);

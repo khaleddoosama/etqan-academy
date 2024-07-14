@@ -19,6 +19,7 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
+
     //pending
     public function pending()
     {
@@ -80,9 +81,11 @@ class UserController extends Controller
         $data = $request->validate([
             'status' => 'required',
         ]);
-        
+
         $this->userService->updateUser(['status' => $request->status], $user) ? Toastr::success(__('messages.user_status_updated'), __('status.success')) : '';
 
         return redirect()->back();
     }
+
+
 }

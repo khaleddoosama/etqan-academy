@@ -37,7 +37,9 @@
                                                 <td>{{ $inquiry->email }}</td>
                                                 <td>{{ $inquiry->phone }}</td>
                                                 <td>{!! Str::limit($inquiry->message, 50) !!}
-                                                <td>{{ $inquiry->status }}</td>
+                                                <td>
+                                                    <span class="badge bg-{{ $inquiry->status == 'pending' ? 'warning' : 'success' }}">{{ $inquiry->status }}</span>
+                                                </td>
                                                 <td>
                                                     {{-- @can('inquiry.show') --}}
                                                     <a href="{{ route('admin.inquiries.show', $inquiry) }}"

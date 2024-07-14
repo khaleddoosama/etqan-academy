@@ -74,4 +74,11 @@ return [
     'videos' => 'Videos',
     'lecture' => 'Lecture',
     'lectures' => 'Lectures',
+    'inquiry' => 'Inquiry',
+    'inquiries' => 'Inquiries',
+    'course_title' => 'Course Title',
+    'completed' => 'Completed',
+    'rating' => 'Rating',
+    'review' => 'Review',
+    'progress' => 'Progress',
 ];

@@ -25,6 +25,12 @@ class UserService
         return User::studentInactive()->get();
     }
 
+    // get students
+    public function getStudents()
+    {
+        return User::student()->get();
+    }
+
     // get user by code
     public function getUserByCode($code)
     {
@@ -37,7 +43,4 @@ class UserService
         $user->update($data);
         return $user->wasChanged();
     }
-
-
-
 }

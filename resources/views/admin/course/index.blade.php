@@ -40,12 +40,12 @@
                                                 <td>{{ $course->category->name }}</td>
                                                 <td>
                                                     @foreach ($course->sections as $section)
-                                                        <a href="{{ route('admin.sections.show', $section) }}" title="show {{ $section->title }}">
+                                                        <a href="{{ route('admin.sections.show', $section) }}"
+                                                            title="show {{ $section->title }}">
                                                             {{ $section->title }} <i class="fas fa-eye"></i>
                                                             <span class="sr-only">(current)</span>
                                                             <br>
                                                         </a>
-
                                                     @endforeach
 
                                                 </td>
@@ -54,6 +54,13 @@
                                                     <x-custom.edit-button route="admin.courses.edit"
                                                         id="{{ $course->id }}" />
                                                     {{-- @endcan --}}
+
+                                                    <a href="{{ route('admin.courses.students.index', $course) }}" class="btn btn-warning"
+                                                        title="{{ __('buttons.show_students') }}"
+                                                        style="color: white; text-decoration: none;">
+                                                        <i class="fas fa-users"></i>
+                                                    </a>
+
 
                                                     {{-- @can('course.delete') --}}
                                                     {{-- <x-custom.delete-button route="admin.courses.destroy"

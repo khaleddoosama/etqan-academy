@@ -81,4 +81,6 @@ return [
     'rating' => 'Rating',
     'review' => 'Review',
     'progress' => 'Progress',
+    'student_name' => 'Student Name',
+    'students' => 'Students',
 ];

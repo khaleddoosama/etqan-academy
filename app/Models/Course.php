@@ -64,6 +64,11 @@ class Course extends Model
         })->sum();
     }
 
+    // get students
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'user_courses', 'course_id', 'student_id')->withPivot('status', 'id');
+    }
 
     /* methods */
     // set Image Attribute

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('rating')->default(0);
             $table->string('review')->nullable();
             $table->integer('progress')->default(0);
-            $table->integer('status')->default(0);
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

@@ -84,10 +84,10 @@ class User extends Authenticatable implements JWTSubject
     }
 
     // scope student and pending
-    public function scopeStudentPending($query)
-    {
-        return $query->where('role', 'student')->where('status', 0);
-    }
+    // public function scopeStudentPending($query)
+    // {
+    //     return $query->where('role', 'student')->where('status', 0);
+    // }
 
     // scope student and active
     public function scopeStudentActive($query)

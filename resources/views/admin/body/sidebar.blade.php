@@ -61,7 +61,7 @@
                           </p>
                       </a>
                       <ul class="nav nav-treeview" style=" @if (!(Request::is('*/admin/users') || Request::is('*/admin/users/*'))) display: none @endif">
-                          <li class="nav-item">
+                          {{-- <li class="nav-item">
                               <a href="{{ route('admin.users.pending') }}"
                                   class="nav-link @if (Request::is('*/admin/users/pending') || Request::is('*/admin/users/pending/*')) active @endif">
                                   <i class="far fa-circle nav-icon"></i>
@@ -69,7 +69,7 @@
                                       {{ __('attributes.users_pending') }}
                                   </p>
                               </a>
-                          </li>
+                          </li> --}}
                           <li class="nav-item">
                               <a href="{{ route('admin.users.active') }}"
                                   class="nav-link @if (Request::is('*/admin/users/active') || Request::is('*/admin/users/active/*')) active @endif">

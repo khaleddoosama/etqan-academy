@@ -5,12 +5,21 @@ namespace App\Services;
 
 
 use App\Models\Lecture;
+use App\Models\LectureViews;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 class LectureService
 {
+    protected $userCoursesService;
+
+
+    public function __construct(UserCoursesService $userCoursesService)
+    {
+        $this->userCoursesService = $userCoursesService;
+    }
+
     public function getLecture(string $id)
     {
         return Lecture::findOrFail($id);
@@ -88,5 +97,19 @@ class LectureService
         $newLecture->save();
 
         return [$lecture, $newLecture];
+    }
+
+    // increase views
+    public function increaseViews(Lecture $lecture)
+    {
+        $lectureView = LectureViews::firstOrCreate(
+            ['user_id' => auth()->id(), 'lecture_id' => $lecture->id],
+            ['views' => 0]
+        );
+        $lectureView->increment('views');
+        $count = $lectureView->lecture_views_count;
+        $this->userCoursesService->updateProgress($count, $lecture->course);
+
+        return $lectureView;
     }
 }

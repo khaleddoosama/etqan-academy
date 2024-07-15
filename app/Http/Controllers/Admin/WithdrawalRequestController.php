@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\WithdrawalRequest;
 use App\Services\WithdrawalRequestService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yoeunes\Toastr\Facades\Toastr;
 
 class WithdrawalRequestController extends Controller
@@ -22,13 +23,18 @@ class WithdrawalRequestController extends Controller
     }
 
 
-    public function status(Request $request,WithdrawalRequest $withdrawalRequest)
+    public function status(Request $request, WithdrawalRequest $withdrawalRequest)
     {
-        $this->withdrawalRequestService->changeStatus($request->all(), $withdrawalRequest);
-
-
-
-        return redirect()->back();
+        DB::beginTransaction();
+        try {
+            $this->withdrawalRequestService->changeStatus($request->all(), $withdrawalRequest);
+            DB::commit();
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Toastr::error($e->getMessage());
+            return redirect()->back();
+        }
     }
 
     // show
@@ -56,6 +62,4 @@ class WithdrawalRequestController extends Controller
 
         return $buttons[$status] ?? [];
     }
-
-
 }

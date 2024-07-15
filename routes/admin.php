@@ -40,7 +40,7 @@ Route::group(
 
             // User Controller
             Route::controller(UserController::class)->group(function () {
-                Route::get('/users/pending', 'pending')->name('users.pending');
+                // Route::get('/users/pending', 'pending')->name('users.pending');
                 Route::get('/users/active', 'active')->name('users.active');
                 Route::get('/users/inactive', 'inactive')->name('users.inactive');
 

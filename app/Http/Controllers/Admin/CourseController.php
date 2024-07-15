@@ -11,6 +11,7 @@ use App\Services\CourseService;
 use App\Services\InstructorService;
 use App\Services\ProgramService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\In;
 use Yoeunes\Toastr\Facades\Toastr;
 
@@ -73,11 +74,19 @@ class CourseController extends Controller
 
     public function update(CourseRequest $request, Course $course)
     {
-        $data = $request->validated();
+        DB::beginTransaction();
+        try {
+            $data = $request->validated();
 
-        $this->courseService->updateCourse($course, $data) ? Toastr::success(__('messages.course_updated'), __('status.success')) : '';
+            $this->courseService->updateCourse($course, $data) ? Toastr::success(__('messages.course_updated'), __('status.success')) : '';
 
-        return redirect()->back();
+            DB::commit();
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Toastr::error($e->getMessage());
+            return redirect()->back();
+        }
     }
 
     public function destroy(string $id)

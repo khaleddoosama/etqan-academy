@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Course;
 use App\Models\User;
+use App\Models\UserCourse;
 use Illuminate\Validation\ValidationException;
 
 class UserCoursesService
@@ -47,7 +48,19 @@ class UserCoursesService
     public function changeUserCourseStatus(array $data, User $user, Course $course)
     {
         $course = $user->courses()->where('course_id', $course->id)->first();
-        
+
         return $course->pivot->update(['status' => $data['status']]);
+    }
+
+    // update progress
+    public function updateProgress($count, Course $course)
+    {
+        $total_count = $course->countLectures();
+        $progress = ($count / $total_count) * 100;
+        $userCourse = UserCourse::where('student_id', auth()->user()->id)->where('course_id', $course->id)->first();
+        if ($progress == 100) {
+            $userCourse->update(['completed' => '1']);
+        }
+        return $userCourse->update(['progress' => $progress]);
     }
 }

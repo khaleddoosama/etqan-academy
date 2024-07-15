@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\LectureResource;
 use App\Services\LectureService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class LectureController extends Controller
 {
@@ -20,7 +23,7 @@ class LectureController extends Controller
     public function index($course_slug, $section_slug)
     {
         $lectures = LectureResource::collection($this->lectureService->getLecturesByCourseSlugAndSectionSlug($course_slug, $section_slug));
-        
+
         if ($lectures && count($lectures) > 0) {
             return $this->apiResponse($lectures, 'ok', 200);
         } else {
@@ -30,12 +33,24 @@ class LectureController extends Controller
 
     public function show($course_slug, $section_slug, $lecture_slug)
     {
-        $lecture = $this->lectureService->getSectionByCourseSlugAndSectionSlugAndSlug($course_slug, $section_slug, $lecture_slug);
+        DB::beginTransaction();
+        try {
+            $lecture = $this->lectureService->getSectionByCourseSlugAndSectionSlugAndSlug($course_slug, $section_slug, $lecture_slug);
 
-        if ($lecture) {
-            return $this->apiResponse(new LectureResource($lecture), 'ok', 200);
+            if (Gate::denies('view', $lecture->course)) {
+                return $this->apiResponse(null, 'unauthorized', 401);
+            }
+
+            if ($lecture) {
+                // $this->lectureService->increaseViews($lecture);
+                return $this->apiResponse(new LectureResource($lecture), 'ok', 200);
+            }
+
+            DB::commit();
+            return $this->apiResponse(null, 'lecture not found', 404);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->apiResponse(null, $e->getMessage(), 500);
         }
-
-        return $this->apiResponse(null, 'lecture not found', 404);
     }
 }

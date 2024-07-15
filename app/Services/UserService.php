@@ -8,10 +8,10 @@ use Illuminate\Validation\ValidationException;
 class UserService
 {
     // get pending users
-    public function getPendingUsers()
-    {
-        return User::studentPending()->get();
-    }
+    // public function getPendingUsers()
+    // {
+    //     return User::studentPending()->get();
+    // }
 
     // get active users
     public function getActiveUsers()

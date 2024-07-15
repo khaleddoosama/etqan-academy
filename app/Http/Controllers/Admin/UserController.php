@@ -21,12 +21,12 @@ class UserController extends Controller
     }
 
     //pending
-    public function pending()
-    {
-        $users = $this->userService->getPendingUsers();
-        $title = __('attributes.users_pending');
-        return view('admin.user.index', compact('users', 'title'));
-    }
+    // public function pending()
+    // {
+    //     $users = $this->userService->getPendingUsers();
+    //     $title = __('attributes.users_pending');
+    //     return view('admin.user.index', compact('users', 'title'));
+    // }
 
     //active
     public function active()

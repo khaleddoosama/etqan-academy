@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class Lecture extends Model
 {
@@ -31,10 +32,35 @@ class Lecture extends Model
     }
 
 
+    public function course()
+    {
+        // lecture->section->course
+        return $this->section->course();
+    }
+
+
     // convertedvideo
     public function convertedVideo()
     {
         return $this->hasOne(ConvertedVideo::class, 'lecture_id');
+    }
+
+    // get video
+    public function getConvertedVideosAttribute()
+    {
+        if ($this->convertedVideo) {
+            $qualities = [1080, 720, 480, 360, 240];
+            $i = array_search($this->quality, $qualities); // 360
+            $videos = [];
+
+            // get all videos from quality or less
+            foreach (array_slice($qualities, $i) as $quality) {
+                $videos[] = Storage::url($this->convertedVideo->{"mp4_Format_$quality"});
+                $videos[] = Storage::url($this->convertedVideo->{"webm_Format_$quality"});
+            }
+
+            return $videos;
+        }
     }
 
 

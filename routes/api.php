@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
@@ -33,7 +34,8 @@ Route::group([
 });
 
 // send Inquiry
-Route::post('send-inquiry', [InquiryController::class, 'sendInquiry']);
+Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry']);
+Route::get('/categories', [CategoryController::class, 'index']);
 
 Route::middleware('jwt.verify')->group(function () {
     // show courses

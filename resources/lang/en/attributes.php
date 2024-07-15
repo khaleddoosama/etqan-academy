@@ -83,4 +83,10 @@ return [
     'progress' => 'Progress',
     'student_name' => 'Student Name',
     'students' => 'Students',
+    'withdrawal_requests' => 'Withdrawal Requests',
+    'withdrawal_request' => 'Withdrawal Request',
+    'user_name' => 'User Name',
+    'wallet' => 'Wallet',
+    'wallet_phone' => 'Wallet Phone',
+    'amount' => 'Amount',
 ];

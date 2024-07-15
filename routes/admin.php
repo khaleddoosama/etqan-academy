@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserCoursesController;
+use App\Http\Controllers\Admin\WithdrawalRequestController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -43,6 +44,7 @@ Route::group(
                 Route::get('/users/active', 'active')->name('users.active');
                 Route::get('/users/inactive', 'inactive')->name('users.inactive');
 
+                Route::get('/users/{user}/show', 'show')->name('users.show');
                 Route::get('/users/{user}/edit', 'edit')->name('users.edit');
                 Route::put('/users/{user}', 'update')->name('users.update');
                 Route::put('/users/{user}/status', 'status')->name('users.status');
@@ -88,6 +90,13 @@ Route::group(
                 Route::get('/inquiries', 'index')->name('inquiries.index');
                 Route::get('/inquiries/{id}', 'show')->name('inquiries.show');
                 Route::put('/inquiries/{id}/reply', 'reply')->name('inquiries.reply');
+            });
+
+            // Withdrawal Request Controller
+            Route::controller(WithdrawalRequestController::class)->group(function () {
+                Route::get('/withdrawal-requests', 'index')->name('withdrawal_requests.index');
+                Route::get('/withdrawal-requests/{withdrawalRequest}', 'show')->name('withdrawal_requests.show');
+                Route::put('/withdrawal-requests/{withdrawalRequest}/status', 'status')->name('withdrawal_requests.status');
             });
 
             // Permission controller (resource)

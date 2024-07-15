@@ -19,7 +19,7 @@ class InquiryController extends Controller
 
     public function sendInquiry(InquiryRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
         $inquiry = $this->inquiryService->sendInquiry($data);
 
         if ($inquiry) {

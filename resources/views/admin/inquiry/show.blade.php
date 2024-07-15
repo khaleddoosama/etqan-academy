@@ -24,17 +24,19 @@
                                 <p><strong>{{ __('attributes.message') }}:</strong> {{ $inquiry->message }}</p>
                                 <p><strong>{{ __('attributes.status') }}:</strong> {{ $inquiry->status }}</p>
 
+                                <p><strong>{{ __('attributes.created_at') }}:</strong> {{ $inquiry->created_at }}</p>
+
                                 {{-- @can('inquiry.reply') --}}
-                                    @if ($inquiry->status == 'pending')
-                                        <form action="{{ route('admin.inquiries.reply', $inquiry->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            {{-- button --}}
-                                            <button type="submit" class="btn btn-success" title="{{ __('main.reply') }}">
-                                                <i class="fas fa-reply"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                                @if ($inquiry->status == 'pending')
+                                    <form action="{{ route('admin.inquiries.reply', $inquiry->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        {{-- button --}}
+                                        <button type="submit" class="btn btn-success" title="{{ __('main.reply') }}">
+                                            <i class="fas fa-reply"></i>
+                                        </button>
+                                    </form>
+                                @endif
                                 {{-- @endcan --}}
                             </div>
                             <!-- /.card-body -->

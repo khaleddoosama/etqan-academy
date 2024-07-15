@@ -129,6 +129,17 @@
                   </li>
                   {{-- @endcan --}}
 
+                  {{-- Inquiry --}}
+                  {{-- @can('withdrawal.list') --}}
+                  <li class="nav-item">
+                      <a href="{{ route('admin.withdrawal_requests.index') }}"
+                          class="nav-link @if (Request::is('*/admin/withdrawal-request') || Request::is('*/admin/withdrawal-request/*')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
+                          <span class="title">{{ __('attributes.withdrawal_request') }}</span>
+                      </a>
+                  </li>
+                  {{-- @endcan --}}
+
                   {{-- Permissions --}}
                   {{-- @can('permission.list')
                       <li class="nav-item">

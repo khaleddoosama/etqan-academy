@@ -90,7 +90,7 @@ class Handler extends ExceptionHandler
             // Handle other exceptions
             Toastr::error($exception->getMessage(),  __('status.error'));
         }
-
+        
         return parent::render($request, $exception);
     }
 }

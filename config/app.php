@@ -69,8 +69,8 @@ return [
     | ahead and set this to a sensible default for you out of the box.
     |
     */
-
-    'timezone' => 'UTC',
+    // +03
+    'timezone' => 'Europe/Istanbul',
 
     /*
     |--------------------------------------------------------------------------

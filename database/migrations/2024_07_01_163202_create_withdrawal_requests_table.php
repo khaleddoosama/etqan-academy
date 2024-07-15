@@ -11,14 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('conversion_requests', function (Blueprint $table) {
+        Schema::create('withdrawal_requests', function (Blueprint $table) {
             $table->id();
             // user_id
             $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->integer('points');
             $table->string('wallet_phone');
+
             // status
             $table->integer('status')->default(0);
+
+            $table->string('approved_by')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->string('rejected_by')->nullable();
+            $table->timestamp('rejected_at')->nullable();
+            $table->string('rejected_reason')->nullable();
+
             $table->timestamps();
         });
     }
@@ -28,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conversion_requests');
+        Schema::dropIfExists('withdrawal_requests');
     }
 };

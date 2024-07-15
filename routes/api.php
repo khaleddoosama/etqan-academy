@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\SectionController;
+use App\Http\Controllers\Api\WithdrawalRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,4 +53,7 @@ Route::middleware('jwt.verify')->group(function () {
 
     // show single lecture
     Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);
+
+    // Withdrawal Request
+    Route::post('withdrawal-request', [WithdrawalRequestController::class, 'store']);
 });

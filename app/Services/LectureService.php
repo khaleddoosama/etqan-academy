@@ -80,7 +80,9 @@ class LectureService
             Storage::delete($convertedVideo->webm_Format_720);
             Storage::delete($convertedVideo->webm_Format_1080);
         }
-        Storage::delete($lecture->thumbnail);
+        if ($lecture->thumbnail) {
+            Storage::delete($lecture->thumbnail);
+        }
 
 
         return $lecture->delete();

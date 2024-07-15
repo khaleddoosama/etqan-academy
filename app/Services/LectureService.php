@@ -68,16 +68,18 @@ class LectureService
     {
         $convertedVideo = $lecture->convertedVideo;
 
-        Storage::delete($convertedVideo->mp4_Format_240);
-        Storage::delete($convertedVideo->mp4_Format_360);
-        Storage::delete($convertedVideo->mp4_Format_480);
-        Storage::delete($convertedVideo->mp4_Format_720);
-        Storage::delete($convertedVideo->mp4_Format_1080);
-        Storage::delete($convertedVideo->webm_Format_240);
-        Storage::delete($convertedVideo->webm_Format_360);
-        Storage::delete($convertedVideo->webm_Format_480);
-        Storage::delete($convertedVideo->webm_Format_720);
-        Storage::delete($convertedVideo->webm_Format_1080);
+        if ($convertedVideo) {
+            Storage::delete($convertedVideo->mp4_Format_240);
+            Storage::delete($convertedVideo->mp4_Format_360);
+            Storage::delete($convertedVideo->mp4_Format_480);
+            Storage::delete($convertedVideo->mp4_Format_720);
+            Storage::delete($convertedVideo->mp4_Format_1080);
+            Storage::delete($convertedVideo->webm_Format_240);
+            Storage::delete($convertedVideo->webm_Format_360);
+            Storage::delete($convertedVideo->webm_Format_480);
+            Storage::delete($convertedVideo->webm_Format_720);
+            Storage::delete($convertedVideo->webm_Format_1080);
+        }
         Storage::delete($lecture->thumbnail);
 
 

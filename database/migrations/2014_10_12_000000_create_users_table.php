@@ -36,6 +36,7 @@ return new class extends Migration
             $table->decimal('points', 8, 2)->default(0);
 
             $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('last_login')->nullable();
 
             $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
             $table->integer('status')->default(1)->comment('1: approved, 2: rejected, 3: removed');

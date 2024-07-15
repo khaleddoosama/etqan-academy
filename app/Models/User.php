@@ -14,6 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\UploadedFile;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -56,6 +57,12 @@ class User extends Authenticatable implements JWTSubject
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    // User Active Now
+    public function UserOnline()
+    {
+        return Cache::has('user-is-online' . $this->id);
     }
 
     // scope student

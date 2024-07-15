@@ -6,6 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
+
 
 class JwtMiddleware
 {
@@ -18,6 +21,11 @@ class JwtMiddleware
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
+
+            $expireTime = Carbon::now()->addSeconds(30);
+            Cache::put('user-is-online' . $user->id, true, $expireTime);
+            $user->update(['last_login' => Carbon::now()]);
+
         } catch (\Exception $e) {
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
                 return response()->json(['status' => 'Token is Invalid']);

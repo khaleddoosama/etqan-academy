@@ -25,6 +25,7 @@
                                             <th>{{ __('attributes.wallet_phone') }}</th>
                                             <th>{{ __('attributes.amount') }}</th>
                                             <th>{{ __('attributes.status') }}</th>
+                                            <th>{{ __('attributes.created_at') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </thead>
@@ -39,6 +40,7 @@
                                                     <span class="badge badge-{{ $withdrawl->status_color }}">
                                                         {{ $withdrawl->status_text }}
                                                 </td>
+                                                <td>{{ $withdrawl->created_at }}</td>
                                                 <td>
                                                     {{-- @can('withdrawl.show') --}}
                                                     <a href="{{ route('admin.withdrawal_requests.show', $withdrawl) }}"
@@ -57,6 +59,7 @@
                                             <th>{{ __('attributes.wallet_phone') }}</th>
                                             <th>{{ __('attributes.amount') }}</th>
                                             <th>{{ __('attributes.status') }}</th>
+                                            <th>{{ __('attributes.created_at') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </tfoot>

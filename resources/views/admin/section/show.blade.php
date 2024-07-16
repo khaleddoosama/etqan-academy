@@ -203,7 +203,7 @@
 
 
                                             </div>
-                                            @if ($lecture->processed)
+                                            @if ($lecture->processed == 1)
                                                 <div id="collapse-{{ $loop->iteration }}" class="collapse"
                                                     aria-labelledby="heading-{{ $loop->iteration }}"
                                                     data-parent="#accordion">

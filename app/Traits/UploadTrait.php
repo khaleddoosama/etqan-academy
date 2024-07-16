@@ -5,6 +5,7 @@ namespace App\Traits;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -42,6 +43,7 @@ trait UploadTrait
 
         // $file->storeAs("{$folderName}/", $name_gen, 'public');
         Storage::disk($disk)->put($path, file_get_contents($file));
+        Log::info("File uploaded successfully: {$path}");
         return $path;
     }
 

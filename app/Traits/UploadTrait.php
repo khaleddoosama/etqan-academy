@@ -44,8 +44,9 @@ trait UploadTrait
         // $file->storeAs("{$folderName}/", $name_gen, 'public');
         Storage::disk($disk)->put($path, file_get_contents($file));
         // log absolute path
-        Log::info("File uploaded successfully: {$file->path()}");
-        Log::info("File uploaded successfully: {$file->getRealPath()}");
+        Log::info("File uploaded successfully:" . storage_path("{$folderName}/{$name_gen}"));
+        Log::info("File uploaded successfully:" . storage_path('app/public/' . $this->lecture->video));
+        Log::info("File uploaded successfully: {$path}");
         return $path;
     }
 

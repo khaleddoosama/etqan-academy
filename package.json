@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "heroku-postbuild": "php artisan storage:link"
+        "heroku-postbuild": "npm run build && php artisan storage:link"
 
     },
     "devDependencies": {

@@ -116,72 +116,104 @@ class ConvertVideoForStreaming implements ShouldQueue
      */
     public function handle(): void
     {
-        $ffprobe = FFProbe::create();
-        $videoPath = storage_path('app/public/' . $this->lecture->video);
-        $video1 = $ffprobe->streams($videoPath)->videos()->first();
+        $videoPath = $this->getVideoPath();
+        $video1 = $this->getVideoStream($videoPath);
 
+        list($width, $height) = $this->getVideoDimensions($video1);
+        $durationInSeconds = $this->getVideoDuration();
+        list($hours, $minutes, $seconds) = $this->convertDuration($durationInSeconds);
+
+        $quality = $this->determineQualityAndConvert($width, $height);
+
+        $this->logVideoProcessing();
+        // $this->deleteOldVideo();
+        $this->updateConvertedVideo();
+
+        $this->updateLecture($hours, $minutes, $seconds, $quality);
+    }
+
+    private function getVideoPath(): string
+    {
+        return storage_path('app/public/' . $this->lecture->video);
+    }
+
+    private function getVideoStream(string $videoPath)
+    {
+        $ffprobe = FFProbe::create();
+        return $ffprobe->streams($videoPath)->videos()->first();
+    }
+
+    private function getVideoDimensions($video1): array
+    {
         $width = $video1->get('width');
         $height = $video1->get('height');
+        return [$width, $height];
+    }
 
+    private function getVideoDuration(): int
+    {
         $media = FFMpeg::fromDisk($this->lecture->disk)->open($this->lecture->video);
-        $durationInSeconds = $media->getDurationInSeconds();
+        return $media->getDurationInSeconds();
+    }
+
+    private function convertDuration(int $durationInSeconds): array
+    {
         $hours = floor($durationInSeconds / 3600);
         $minutes = floor(($durationInSeconds / 60) % 60);
         $seconds = floor($durationInSeconds % 60);
+        return [$hours, $minutes, $seconds];
+    }
 
+    private function determineQualityAndConvert(int $width, int $height): int
+    {
         $quality = 0;
-        // if video is landscape
         if ($width > $height) {
-            if ($width >= 1920 && $height >= 1080) {
-                $quality = 1080;
-                $this->convertVideo(0);
-            } elseif ($width >= 1280 && $height >= 720) {
-                $quality = 720;
-                $this->convertVideo(1);
-            } elseif ($width >= 854 && $height >= 480) {
-                $quality = 480;
-                $this->convertVideo(2);
-            } elseif ($width >= 640 && $height >= 360) {
-                $quality = 360;
-                $this->convertVideo(3);
-            } elseif ($width >= 426 && $height >= 240) {
-                $quality = 240;
-                $this->convertVideo(4);
-            }
-        } elseif ($width < $height) { // if video is portrait
+            $quality = $this->convertVideoBasedOnResolution($width, $height, false);
+        } elseif ($width < $height) {
             $this->lecture->update(['longitudinal' => true]);
-            if ($width >= 1080 && $height >= 1920) {
-                $quality = 1080;
-                $this->convertVideo(0);
-            } elseif ($width >= 720 && $height >= 1280) {
-                $quality = 720;
-                $this->convertVideo(1);
-            } elseif ($width >= 480 && $height >= 854) {
-                $quality = 480;
-                $this->convertVideo(2);
-            } elseif ($width >= 360 && $height >= 640) {
-                $quality = 360;
-                $this->convertVideo(3);
-            } elseif ($width >= 240 && $height >= 426) {
-                $quality = 240;
-                $this->convertVideo(4);
+            $quality = $this->convertVideoBasedOnResolution($width, $height, true);
+        }
+        return $quality;
+    }
+
+    private function convertVideoBasedOnResolution(int $width, int $height, bool $isPortrait): int
+    {
+        $resolutions = [
+            ['width' => 1920, 'height' => 1080, 'quality' => 1080],
+            ['width' => 1280, 'height' => 720, 'quality' => 720],
+            ['width' => 854, 'height' => 480, 'quality' => 480],
+            ['width' => 640, 'height' => 360, 'quality' => 360],
+            ['width' => 426, 'height' => 240, 'quality' => 240]
+        ];
+
+        foreach ($resolutions as $index => $resolution) {
+            if ($isPortrait) {
+                if ($width >= $resolution['height'] && $height >= $resolution['width']) {
+                    $this->convertVideo($index);
+                    return $resolution['quality'];
+                }
+            } else {
+                if ($width >= $resolution['width'] && $height >= $resolution['height']) {
+                    $this->convertVideo($index);
+                    return $resolution['quality'];
+                }
             }
         }
+        return 0;
+    }
+
+    private function logVideoProcessing()
+    {
         Log::info('Video processed: ' . $this->lecture->video);
-        // delete old video
+    }
+
+    private function deleteOldVideo()
+    {
         Storage::disk($this->lecture->disk)->delete($this->lecture->video);
+    }
 
-        // $converted_video = new ConvertedVideo();
-
-        // for ($i = 0; $i < count($this->names); $i++) {
-        //     $converted_video->{'mp4_Format_' . $this->videoHeight[$i]} = $this->names[$i][0];
-        //     $converted_video->{'webm_Format_' . $this->videoHeight[$i]} = $this->names[$i][1];
-        // }
-
-        // $converted_video->lecture_id = $this->lecture->id;
-        // $converted_video->save();
-
-        // update or create converted video
+    private function updateConvertedVideo()
+    {
         ConvertedVideo::updateOrCreate(
             ['lecture_id' => $this->lecture->id],
             [
@@ -197,7 +229,10 @@ class ConvertVideoForStreaming implements ShouldQueue
                 'webm_Format_240' => $this->names[4][1],
             ]
         );
+    }
 
+    private function updateLecture(int $hours, int $minutes, int $seconds, int $quality)
+    {
         $this->lecture->update([
             'processed' => true,
             'hours' => $hours,

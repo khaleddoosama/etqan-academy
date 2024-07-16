@@ -34,19 +34,28 @@ trait UploadTrait
     // upload file (pdf)
     public function uploadFile(UploadedFile $file, $folderName, $disk = 'public')
     {
+        try {
+            $name_gen = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
+            $path = "{$folderName}/{$name_gen}";
 
-        $name_gen = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
-        $path = "{$folderName}/{$name_gen}";
-        // $file->move(public_path("{$folderName}/"), $name_gen);
+            Storage::disk($disk)->put($path, file_get_contents($file));
 
-        // $this->ensureDirectoryExists($folderName);
+            $publicPath = public_path("storage/{$folderName}/{$name_gen}");
+            $storagePath = storage_path("app/public/{$folderName}/{$name_gen}");
 
-        // $file->storeAs("{$folderName}/", $name_gen, 'public');
-        $p = Storage::disk($disk)->put($path, file_get_contents($file));
+            if (File::exists($publicPath)) {
+                Log::info("File uploaded successfully public_path1: {$publicPath}");
+            }
+            if (File::exists($storagePath)) {
+                Log::info("File uploaded successfully storage_path: {$storagePath}");
+            }
 
-        Log::info("file uploaded successfully: {$p}");
-
-        return $path;
+            Log::info("File uploaded successfully: {$path}");
+            return $path;
+        } catch (\Exception $e) {
+            Log::error("File upload failed: " . $e->getMessage());
+            return false;
+        }
     }
 
     // delete Image

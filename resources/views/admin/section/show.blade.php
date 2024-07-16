@@ -200,8 +200,11 @@
 
 
                                                 </h5>
-
-
+                                                <video style="height: 240px" controls id="video-{{ $loop->iteration }}">
+                                                    <source id="mp4-source"
+                                                        src="{{ Storage::disk($lecture->disk)->url($lecture->video) }}"
+                                                        type="video/mp4">
+                                                </video>
                                             </div>
                                             @if ($lecture->processed == 1)
                                                 <div id="collapse-{{ $loop->iteration }}" class="collapse"

@@ -127,7 +127,7 @@ class ConvertVideoForStreaming implements ShouldQueue
 
             $video1 = $ffprobe->streams($videoPath)->videos()->first();
 
-            Log::info('Video Path: ' . storage_path(''));
+            Log::info('Video Path: ' . storage_path('')); 
 
             $width = $video1->get('width');
             $height = $video1->get('height');

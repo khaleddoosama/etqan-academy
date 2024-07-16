@@ -44,9 +44,16 @@ trait UploadTrait
         // $file->storeAs("{$folderName}/", $name_gen, 'public');
         Storage::disk($disk)->put($path, file_get_contents($file));
         // log absolute path
-        Log::info("File uploaded successfully:" . public_path("storage/{$folderName}/{$name_gen}"));
-        Log::info("File uploaded successfully:" . public_path("{$folderName}/{$name_gen}"));
-        Log::info("File uploaded successfully:" . storage_path('app/public/' . $this->lecture->video));
+        if (public_path("storage/{$folderName}/{$name_gen}") && File::exists(public_path("storage/{$folderName}/{$name_gen}"))) {
+            Log::info("File uploaded successfully public_path:" . public_path("storage/{$folderName}/{$name_gen}"));
+        }
+        if (storage_path("app/public/{$folderName}/{$name_gen}") && File::exists(storage_path("app/public/{$folderName}/{$name_gen}"))) {
+            Log::info("File uploaded successfully:" . storage_path("app/public/{$folderName}/{$name_gen}"));
+        }
+        if (public_path("{$folderName}/{$name_gen}") && File::exists(public_path("{$folderName}/{$name_gen}"))) {
+            Log::info("File uploaded successfully:" . public_path("{$folderName}/{$name_gen}"));
+        }
+
         Log::info("File uploaded successfully: {$path}");
         return $path;
     }

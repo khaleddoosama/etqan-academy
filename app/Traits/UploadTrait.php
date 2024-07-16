@@ -42,19 +42,10 @@ trait UploadTrait
         // $this->ensureDirectoryExists($folderName);
 
         // $file->storeAs("{$folderName}/", $name_gen, 'public');
-        Storage::disk($disk)->put($path, file_get_contents($file));
-        // log absolute path
-        if (public_path("storage/{$folderName}/{$name_gen}") && File::exists(public_path("storage/{$folderName}/{$name_gen}"))) {
-            Log::info("File uploaded successfully public_path1:" . public_path("storage/{$folderName}/{$name_gen}"));
-        }
-        if (storage_path("app/public/{$folderName}/{$name_gen}") && File::exists(storage_path("app/public/{$folderName}/{$name_gen}"))) {
-            Log::info("File uploaded successfully storage_path:" . storage_path("app/public/{$folderName}/{$name_gen}"));
-        }
-        if (public_path("{$folderName}/{$name_gen}") && File::exists(public_path("{$folderName}/{$name_gen}"))) {
-            Log::info("File uploaded successfully public_path2:" . public_path("{$folderName}/{$name_gen}"));
-        }
+        $p = Storage::disk($disk)->put($path, file_get_contents($file));
 
-        Log::info("File uploaded successfully: {$path}");
+        Log::info("file uploaded successfully: {$p}");
+
         return $path;
     }
 

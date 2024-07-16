@@ -122,7 +122,25 @@ class ConvertVideoForStreaming implements ShouldQueue
 
             $videoPath = storage_path('app/public/' . $this->lecture->video);
 
+            if (!file_exists($videoPath)) {
+                Log::error('File does not exist: ' . $videoPath);
+                return;
+            }
+
+            // Log file permissions
+            $filePerms = substr(sprintf('%o', fileperms($videoPath)), -4);
+            Log::info('File permissions: ' . $filePerms);
+
+            // Log absolute video path
+            Log::info('Video absolute path: ' . $videoPath);
+
+            // Ensure the path is properly encoded
+            $videoPath = escapeshellarg($videoPath);
+
             $video1 = $ffprobe->streams($videoPath)->videos()->first();
+            if (!$video1) {
+                throw new \Exception('FFProbe could not probe the video.');
+            }
 
             Log::info('Video Path: ' . storage_path(''));
 

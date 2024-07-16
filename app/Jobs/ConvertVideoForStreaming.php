@@ -208,7 +208,7 @@ class ConvertVideoForStreaming implements ShouldQueue
                 'quality' => $quality
             ]);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error('error: ' . $e->getMessage());
             $this->lecture->update(['processed' => -1]);
         }
     }

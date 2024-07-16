@@ -121,17 +121,6 @@ class ConvertVideoForStreaming implements ShouldQueue
             Log::info('Processing video: ' . $this->lecture->video);
 
             $videoPath = storage_path('app/public/' . $this->lecture->video);
-            // $directoryPath = dirname($videoPath);
-
-            // Check if directory exists, if not create it
-            // if (!file_exists($directoryPath)) {
-            //     Log::info('Creating directory: ' . $directoryPath);
-            //     mkdir($directoryPath, 0777, true);
-            // }
-
-            // Log the directory contents and permissions
-            // Log::info('Directory contents: ' . implode(', ', scandir(dirname($videoPath))));
-            // Log::info('File permissions: ' . substr(sprintf('%o', fileperms($videoPath)), -4));
 
             $video1 = $ffprobe->streams($videoPath)->videos()->first();
 
@@ -224,7 +213,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             ]);
         } catch (\Exception $e) {
             Log::error('error: ' . $e->getMessage());
-            Log::error('path: ' . $videoPath);
+            Log::error('Exception Trace: ' . $e->getTraceAsString());
             Log::error('getline: ' . $e->getLine());
             $this->lecture->update(['processed' => -1]);
         }

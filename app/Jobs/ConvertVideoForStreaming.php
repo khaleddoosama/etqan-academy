@@ -116,95 +116,101 @@ class ConvertVideoForStreaming implements ShouldQueue
      */
     public function handle(): void
     {
-        $ffprobe = FFProbe::create();
-        $videoPath = storage_path('app/public/' . $this->lecture->video);
-        $video1 = $ffprobe->streams($videoPath)->videos()->first();
+        try {
+            $ffprobe = FFProbe::create();
+            Log::info('Processing video: ' . $this->lecture->video);
+            $videoPath = storage_path('app/public/' . $this->lecture->video);
+            $video1 = $ffprobe->streams($videoPath)->videos()->first();
 
-        $width = $video1->get('width');
-        $height = $video1->get('height');
+            $width = $video1->get('width');
+            $height = $video1->get('height');
 
-        $media = FFMpeg::fromDisk($this->lecture->disk)->open($this->lecture->video);
-        $durationInSeconds = $media->getDurationInSeconds();
-        $hours = floor($durationInSeconds / 3600);
-        $minutes = floor(($durationInSeconds / 60) % 60);
-        $seconds = floor($durationInSeconds % 60);
+            $media = FFMpeg::fromDisk($this->lecture->disk)->open($this->lecture->video);
+            $durationInSeconds = $media->getDurationInSeconds();
+            $hours = floor($durationInSeconds / 3600);
+            $minutes = floor(($durationInSeconds / 60) % 60);
+            $seconds = floor($durationInSeconds % 60);
 
-        $quality = 0;
-        // if video is landscape
-        if ($width > $height) {
-            if ($width >= 1920 && $height >= 1080) {
-                $quality = 1080;
-                $this->convertVideo(0);
-            } elseif ($width >= 1280 && $height >= 720) {
-                $quality = 720;
-                $this->convertVideo(1);
-            } elseif ($width >= 854 && $height >= 480) {
-                $quality = 480;
-                $this->convertVideo(2);
-            } elseif ($width >= 640 && $height >= 360) {
-                $quality = 360;
-                $this->convertVideo(3);
-            } elseif ($width >= 426 && $height >= 240) {
-                $quality = 240;
-                $this->convertVideo(4);
+            $quality = 0;
+            // if video is landscape
+            if ($width > $height) {
+                if ($width >= 1920 && $height >= 1080) {
+                    $quality = 1080;
+                    $this->convertVideo(0);
+                } elseif ($width >= 1280 && $height >= 720) {
+                    $quality = 720;
+                    $this->convertVideo(1);
+                } elseif ($width >= 854 && $height >= 480) {
+                    $quality = 480;
+                    $this->convertVideo(2);
+                } elseif ($width >= 640 && $height >= 360) {
+                    $quality = 360;
+                    $this->convertVideo(3);
+                } elseif ($width >= 426 && $height >= 240) {
+                    $quality = 240;
+                    $this->convertVideo(4);
+                }
+            } elseif ($width < $height) { // if video is portrait
+                $this->lecture->update(['longitudinal' => true]);
+                if ($width >= 1080 && $height >= 1920) {
+                    $quality = 1080;
+                    $this->convertVideo(0);
+                } elseif ($width >= 720 && $height >= 1280) {
+                    $quality = 720;
+                    $this->convertVideo(1);
+                } elseif ($width >= 480 && $height >= 854) {
+                    $quality = 480;
+                    $this->convertVideo(2);
+                } elseif ($width >= 360 && $height >= 640) {
+                    $quality = 360;
+                    $this->convertVideo(3);
+                } elseif ($width >= 240 && $height >= 426) {
+                    $quality = 240;
+                    $this->convertVideo(4);
+                }
             }
-        } elseif ($width < $height) { // if video is portrait
-            $this->lecture->update(['longitudinal' => true]);
-            if ($width >= 1080 && $height >= 1920) {
-                $quality = 1080;
-                $this->convertVideo(0);
-            } elseif ($width >= 720 && $height >= 1280) {
-                $quality = 720;
-                $this->convertVideo(1);
-            } elseif ($width >= 480 && $height >= 854) {
-                $quality = 480;
-                $this->convertVideo(2);
-            } elseif ($width >= 360 && $height >= 640) {
-                $quality = 360;
-                $this->convertVideo(3);
-            } elseif ($width >= 240 && $height >= 426) {
-                $quality = 240;
-                $this->convertVideo(4);
-            }
+            Log::info('Video processed: ' . $this->lecture->video);
+            // delete old video
+            Storage::disk($this->lecture->disk)->delete($this->lecture->video);
+
+            // $converted_video = new ConvertedVideo();
+
+            // for ($i = 0; $i < count($this->names); $i++) {
+            //     $converted_video->{'mp4_Format_' . $this->videoHeight[$i]} = $this->names[$i][0];
+            //     $converted_video->{'webm_Format_' . $this->videoHeight[$i]} = $this->names[$i][1];
+            // }
+
+            // $converted_video->lecture_id = $this->lecture->id;
+            // $converted_video->save();
+
+            // update or create converted video
+            ConvertedVideo::updateOrCreate(
+                ['lecture_id' => $this->lecture->id],
+                [
+                    'mp4_Format_1080' => $this->names[0][0],
+                    'webm_Format_1080' => $this->names[0][1],
+                    'mp4_Format_720' => $this->names[1][0],
+                    'webm_Format_720' => $this->names[1][1],
+                    'mp4_Format_480' => $this->names[2][0],
+                    'webm_Format_480' => $this->names[2][1],
+                    'mp4_Format_360' => $this->names[3][0],
+                    'webm_Format_360' => $this->names[3][1],
+                    'mp4_Format_240' => $this->names[4][0],
+                    'webm_Format_240' => $this->names[4][1],
+                ]
+            );
+
+            $this->lecture->update([
+                'processed' => true,
+                'hours' => $hours,
+                'minutes' => $minutes,
+                'seconds' => $seconds,
+                'quality' => $quality
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            $this->lecture->update(['processed' => -1]);
         }
-
-        // delete old video
-        Storage::disk($this->lecture->disk)->delete($this->lecture->video);
-
-        // $converted_video = new ConvertedVideo();
-
-        // for ($i = 0; $i < count($this->names); $i++) {
-        //     $converted_video->{'mp4_Format_' . $this->videoHeight[$i]} = $this->names[$i][0];
-        //     $converted_video->{'webm_Format_' . $this->videoHeight[$i]} = $this->names[$i][1];
-        // }
-
-        // $converted_video->lecture_id = $this->lecture->id;
-        // $converted_video->save();
-
-        // update or create converted video
-        ConvertedVideo::updateOrCreate(
-            ['lecture_id' => $this->lecture->id],
-            [
-                'mp4_Format_1080' => $this->names[0][0],
-                'webm_Format_1080' => $this->names[0][1],
-                'mp4_Format_720' => $this->names[1][0],
-                'webm_Format_720' => $this->names[1][1],
-                'mp4_Format_480' => $this->names[2][0],
-                'webm_Format_480' => $this->names[2][1],
-                'mp4_Format_360' => $this->names[3][0],
-                'webm_Format_360' => $this->names[3][1],
-                'mp4_Format_240' => $this->names[4][0],
-                'webm_Format_240' => $this->names[4][1],
-            ]
-        );
-
-        $this->lecture->update([
-            'processed' => true,
-            'hours' => $hours,
-            'minutes' => $minutes,
-            'seconds' => $seconds,
-            'quality' => $quality
-        ]);
     }
 
     public function getFileName($fileName, $type, $quality)

@@ -119,6 +119,7 @@ class ConvertVideoForStreaming implements ShouldQueue
         try {
             $ffprobe = FFProbe::create();
             Log::info('Processing video: ' . $this->lecture->video);
+            Log::info('Video Path: ' . storage_path(''));
             $videoPath = storage_path('app/public/' . $this->lecture->video);
             $video1 = $ffprobe->streams($videoPath)->videos()->first();
 
@@ -209,6 +210,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             ]);
         } catch (\Exception $e) {
             Log::error('error: ' . $e->getMessage());
+            Log::error('path: ' . $videoPath);
             $this->lecture->update(['processed' => -1]);
         }
     }

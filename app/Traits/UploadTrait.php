@@ -25,7 +25,12 @@ trait UploadTrait
         // Image::read($picture)->resize($width, $height)->save(public_path("{$path}"));
 
         $image = Image::read($picture)->resize($width, $height);
-        Storage::disk($disk)->put($path, (string) $image->encode());
+        if ($disk == 's3') {
+            Storage::disk($disk)->put($path, (string) $image->encode());
+        } elseif ($disk == 'public') {
+            // in public path
+            $image->save(public_path("uploads/{$path}"));
+        }
 
         return $path;
     }

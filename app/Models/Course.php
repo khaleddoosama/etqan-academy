@@ -98,7 +98,7 @@ class Course extends Model
             10 => 'عشر مستويات',
         ];
 
-        return $levels[$this->number_of_levels] ?? 'غير محدد';
+        return $levels[$this->attributes['number_of_levels']] ?? 'غير محدد';
     }
     /* methods */
     // set Image Attribute

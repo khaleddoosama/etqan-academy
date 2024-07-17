@@ -143,7 +143,14 @@ class ConvertVideoForStreaming implements ShouldQueue
             Log::error("File does not exist: " . $videoPath);
         }
 
-        
+        Log::info("Absolute path: " . realpath($videoPath));
+        if (file_exists(realpath($videoPath))) {
+            Log::error("File exist2: " . $videoPath);
+        } else {
+            Log::info("File does not exists2: " . $videoPath);
+        }
+
+
 
         $video1 = $this->getVideoStream($videoPath);
         Log::info('Video stream: ');
@@ -168,7 +175,9 @@ class ConvertVideoForStreaming implements ShouldQueue
     private function getVideoPath(): string
     {
         // return storage_path('app/public/' . $this->lecture->video);
-        return public_path($this->lecture->video);
+        $path = public_path($this->lecture->video);
+        // enusure there are no //
+        return str_replace('//', '/', $path);
     }
 
     private function getVideoStream(string $videoPath)

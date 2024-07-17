@@ -12,7 +12,7 @@ use Intervention\Image\Laravel\Facades\Image;
 trait UploadTrait
 {
     // upload Image
-    public function uploadImage(UploadedFile $picture, $folderName, $width = 640, $height = 480, $disk = 's3')
+    public function uploadImage(UploadedFile $picture, $folderName, $width = 640, $height = 480, $disk = 'public')
     {
 
         $name_gen = hexdec(uniqid()) . '.' . $picture->getClientOriginalExtension();

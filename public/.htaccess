@@ -31,8 +31,8 @@
     </FilesMatch>
 </IfModule>
 
-<Directory "/app/public">
-    Options +FollowSymLinks
-    AllowOverride All
-    Require all granted
-</Directory>
+# <Directory "/app/public">
+#     Options +FollowSymLinks
+#     AllowOverride All
+#     Require all granted
+# </Directory>

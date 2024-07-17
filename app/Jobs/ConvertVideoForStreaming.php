@@ -136,6 +136,15 @@ class ConvertVideoForStreaming implements ShouldQueue
         Log::info('Processing video: ' . $this->lecture->video);
         $videoPath = $this->getVideoPath();
         Log::info('Video path: ' . $videoPath);
+
+        if (file_exists($videoPath)) {
+            Log::info("File exists: " . $videoPath);
+        } else {
+            Log::error("File does not exist: " . $videoPath);
+        }
+
+        
+
         $video1 = $this->getVideoStream($videoPath);
         Log::info('Video stream: ');
 

@@ -202,7 +202,7 @@
                                                 </h5>
                                                 <video style="height: 240px" controls id="video-{{ $loop->iteration }}">
                                                     <source id="mp4-source"
-                                                        src="{{ Storage::disk($lecture->disk)->url($lecture->video) }}"
+                                                        src="{{ asset($lecture->video) }}"
                                                         type="video/mp4">
                                                 </video>
                                             </div>

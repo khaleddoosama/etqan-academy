@@ -39,6 +39,9 @@ class Lecture extends Model
     }
 
 
+
+
+
     // convertedvideo
     public function convertedVideo()
     {
@@ -99,6 +102,11 @@ class Lecture extends Model
         $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 's3');
     }
 
+    // get thumbnail ur
+    public function getThumbnailUrlAttribute()
+    {
+        return Storage::url($this->thumbnail);
+    }
     // on change section_id
     // public function setSectionIdAttribute($value)
     // {

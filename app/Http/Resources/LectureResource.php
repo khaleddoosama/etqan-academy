@@ -23,7 +23,7 @@ class LectureResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,
-            'image' => $this->thumbnail,
+            'image' => $this->thumbnail_url,
             'hours' => $this->hours,
             'minutes' => $this->minutes,
             'seconds' => $this->seconds,
@@ -38,8 +38,8 @@ class LectureResource extends JsonResource
 
     public static function collection($resource, $withVideo = false)
     {
-        return tap(parent::collection($resource), function ($collection) use ($withVideo) {
-            $collection->collection->each->withVideo = $withVideo;
+        return parent::collection($resource)->each(function ($resource) use ($withVideo) {
+            $resource->withVideo = $withVideo;
         });
     }
 }

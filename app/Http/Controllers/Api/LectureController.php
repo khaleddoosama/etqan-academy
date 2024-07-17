@@ -22,7 +22,7 @@ class LectureController extends Controller
 
     public function index($course_slug, $section_slug)
     {
-        $lectures = LectureResource::collection($this->lectureService->getLecturesByCourseSlugAndSectionSlug($course_slug, $section_slug));
+        $lectures = LectureResource::collection($this->lectureService->getLecturesByCourseSlugAndSectionSlug($course_slug, $section_slug), false);
 
         if ($lectures && count($lectures) > 0) {
             return $this->apiResponse($lectures, 'ok', 200);

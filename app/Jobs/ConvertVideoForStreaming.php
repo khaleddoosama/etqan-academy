@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\ConvertedVideo;
+use Exception;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\FFProbe;
 use FFMpeg\Filters\Video\VideoFilters;
@@ -96,18 +97,34 @@ class ConvertVideoForStreaming implements ShouldQueue
                 $this->getFileName($this->lecture->video, 'mp4', '240p'), $this->getFileName($this->lecture->video, 'webm', '240p'),
             )
         );
+        Log::info('names: ' . json_encode($this->names));
+        // Resolve the real path to avoid issues with the path formatting
+        $videoPath = $this->getVideoPath();
+
 
         for ($this->i = $loopNumber; $this->i < count($this->format); $this->i++) {
             for ($j = 0; $j < count($this->format[$this->i]); $j++) {
-                FFMpeg::fromDisk($this->lecture->disk)
-                    ->open($this->lecture->video)
+                Log::info('Convert: ' . $videoPath);
+                $ffmpeg = FFMpeg::openUrl($videoPath)
                     ->export()
-                    ->toDisk(env('FILESYSTEM_DISK'))
+                    ->toDisk('s3')
                     ->inFormat($this->format[$this->i][$j])
                     ->addFilter(function (VideoFilters $filters) {
                         $filters->resize(new Dimension($this->videoWidth[$this->i], $this->videoHeight[$this->i]));
                     })
                     ->save($this->names[$this->i][$j]);
+                // Log::info('Ffmpeg: ' . $ffmpeg->getFFMpegBinary());
+
+                // $ffmpeg
+                //     ->export()
+                //     ->toDisk(env('FILESYSTEM_DISK'))
+                //     ->inFormat($this->format[$this->i][$j])
+                //     ->addFilter(function (VideoFilters $filters) {
+                //         $filters->resize(new Dimension($this->videoWidth[$this->i], $this->videoHeight[$this->i]));
+                //     })
+                //     ->save($this->names[$this->i][$j]);
+
+                Log::info('Converted: ' . $this->names[$this->i][$j]);
             }
         }
     }
@@ -116,25 +133,33 @@ class ConvertVideoForStreaming implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info('Processing video: ' . $this->lecture->video);
         $videoPath = $this->getVideoPath();
+        Log::info('Video path: ' . $videoPath);
         $video1 = $this->getVideoStream($videoPath);
+        Log::info('Video stream: ');
 
         list($width, $height) = $this->getVideoDimensions($video1);
+        Log::info('Video dimensions: ' . $width . 'x' . $height);
+
         $durationInSeconds = $this->getVideoDuration();
+        Log::info('Video duration: ' . $durationInSeconds . ' seconds');
         list($hours, $minutes, $seconds) = $this->convertDuration($durationInSeconds);
-
+        Log::info('Video duration: ' . $hours . ' hours, ' . $minutes . ' minutes, ' . $seconds . ' seconds');
         $quality = $this->determineQualityAndConvert($width, $height);
-
-        $this->logVideoProcessing();
-        // $this->deleteOldVideo();
+        Log::info('Video quality: ' . $quality);
+        // $this->logVideoProcessing();
+        $this->deleteOldVideo();
         $this->updateConvertedVideo();
-
+        Log::info('Video processed: ' . $this->lecture->video);
         $this->updateLecture($hours, $minutes, $seconds, $quality);
+        Log::info('Lecture updated: ' . $this->lecture->id);
     }
 
     private function getVideoPath(): string
     {
-        return storage_path('app/public/' . $this->lecture->video);
+        // return storage_path('app/public/' . $this->lecture->video);
+        return public_path($this->lecture->video);
     }
 
     private function getVideoStream(string $videoPath)
@@ -152,8 +177,26 @@ class ConvertVideoForStreaming implements ShouldQueue
 
     private function getVideoDuration(): int
     {
-        $media = FFMpeg::fromDisk($this->lecture->disk)->open($this->lecture->video);
-        return $media->getDurationInSeconds();
+        try {
+            $videoPath = $this->getVideoPath();
+
+            // Check if the file exists
+            if (!file_exists($videoPath)) {
+                Log::error("File not found: " . $videoPath);
+                return 0; // Or handle this scenario appropriately
+            }
+
+            // Create an FFProbe instance
+            $ffprobe = FFProbe::create();
+
+            // Retrieve the duration of the video
+            $durationInSeconds = $ffprobe->format($videoPath)->get('duration');
+
+            return (int) $durationInSeconds;
+        } catch (\Exception $e) {
+            Log::error("Error getting video duration: " . $e->getMessage());
+            return 0; // Return 0 or handle the error appropriately
+        }
     }
 
     private function convertDuration(int $durationInSeconds): array
@@ -209,7 +252,8 @@ class ConvertVideoForStreaming implements ShouldQueue
 
     private function deleteOldVideo()
     {
-        Storage::disk($this->lecture->disk)->delete($this->lecture->video);
+        // Storage::disk($this->lecture->disk)->delete($this->lecture->video);
+        unlink($this->getVideoPath());
     }
 
     private function updateConvertedVideo()

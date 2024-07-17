@@ -337,16 +337,17 @@ class ConvertVideoForStreaming implements ShouldQueue
         ConvertedVideo::updateOrCreate(
             ['lecture_id' => $this->lecture->id],
             [
-                'mp4_Format_1080' => $this->names[0][0],
-                'webm_Format_1080' => $this->names[0][1],
-                'mp4_Format_720' => $this->names[1][0],
-                'webm_Format_720' => $this->names[1][1],
-                'mp4_Format_480' => $this->names[2][0],
-                'webm_Format_480' => $this->names[2][1],
-                'mp4_Format_360' => $this->names[3][0],
-                'webm_Format_360' => $this->names[3][1],
-                'mp4_Format_240' => $this->names[4][0],
-                'webm_Format_240' => $this->names[4][1],
+                // remove any // in the name
+                'mp4_Format_1080' => str_replace('//', '/', $this->names[0][0]),
+                'webm_Format_1080' => str_replace('//', '/', $this->names[0][1]),
+                'mp4_Format_720' => str_replace('//', '/', $this->names[1][0]),
+                'webm_Format_720' => str_replace('//', '/', $this->names[1][1]),
+                'mp4_Format_480' => str_replace('//', '/', $this->names[2][0]),
+                'webm_Format_480' => str_replace('//', '/', $this->names[2][1]),
+                'mp4_Format_360' => str_replace('//', '/', $this->names[3][0]),
+                'webm_Format_360' => str_replace('//', '/', $this->names[3][1]),
+                'mp4_Format_240' => str_replace('//', '/', $this->names[4][0]),
+                'webm_Format_240' => str_replace('//', '/', $this->names[4][1]),
             ]
         );
     }

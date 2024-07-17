@@ -200,15 +200,15 @@
 
 
                                                 </h5>
-                                                <video style="height: 240px" controls id="video-{{ $loop->iteration }}">
+                                                {{-- <video style="height: 240px" controls id="video-{{ $loop->iteration }}">
                                                     <source id="mp4-source" src="{{ asset($lecture->video) }}"
                                                         type="video/mp4">
-                                                </video>
+                                                </video> --}}
                                             </div>
                                             @if ($lecture->processed == 1)
                                                 <div id="collapse-{{ $loop->iteration }}" class="collapse"
                                                     aria-labelledby="heading-{{ $loop->iteration }}"
-                                                    data-parent="#accordion">
+                                                    data-parent="#accordion" style="visibility: visible!important">
                                                     <div
                                                         class="card-body d-flex justify-content-between align-items-center">
                                                         {{ $lecture->description }}
@@ -271,7 +271,7 @@
                                             @elseif ($lecture->processed == 0)
                                                 <div id="collapse-{{ $loop->iteration }}" class="collapse"
                                                     aria-labelledby="heading-{{ $loop->iteration }}"
-                                                    data-parent="#accordion">
+                                                    data-parent="#accordion" style="visibility: visible!important">
                                                     <div
                                                         class="card-body d-flex justify-content-between align-items-center">
                                                         {{ __('messages.processing') }}
@@ -280,7 +280,7 @@
                                             @elseif ($lecture->processed == -1)
                                                 <div id="collapse-{{ $loop->iteration }}" class="collapse bg-danger"
                                                     aria-labelledby="heading-{{ $loop->iteration }}"
-                                                    data-parent="#accordion">
+                                                    data-parent="#accordion" style="visibility: visible!important">
                                                     <div
                                                         class="card-body d-flex justify-content-between align-items-center text-white">
                                                         {{ __('messages.failed') }}

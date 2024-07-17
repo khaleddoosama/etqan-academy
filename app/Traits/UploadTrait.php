@@ -16,7 +16,7 @@ trait UploadTrait
     {
 
         $name_gen = hexdec(uniqid()) . '.' . $picture->getClientOriginalExtension();
-        $path = "{$folderName}/{$name_gen}";
+        $path = "uploads/{$folderName}/{$name_gen}";
 
         // Ensure the directory exists or create it
         $this->ensureDirectoryExists($folderName);
@@ -29,7 +29,7 @@ trait UploadTrait
             Storage::disk($disk)->put($path, (string) $image->encode());
         } elseif ($disk == 'public') {
             // in public path
-            $image->save(public_path("uploads/{$path}"));
+            $image->save(public_path("{$path}"));
         }
 
         //reomve // from $path

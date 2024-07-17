@@ -201,8 +201,7 @@
 
                                                 </h5>
                                                 <video style="height: 240px" controls id="video-{{ $loop->iteration }}">
-                                                    <source id="mp4-source"
-                                                        src="{{ asset($lecture->video) }}"
+                                                    <source id="mp4-source" src="{{ asset($lecture->video) }}"
                                                         type="video/mp4">
                                                 </video>
                                             </div>
@@ -269,13 +268,22 @@
                                                         @endif
                                                     </div>
                                                 </div>
-                                            @else
+                                            @elseif ($lecture->processed == 0)
                                                 <div id="collapse-{{ $loop->iteration }}" class="collapse"
                                                     aria-labelledby="heading-{{ $loop->iteration }}"
                                                     data-parent="#accordion">
                                                     <div
                                                         class="card-body d-flex justify-content-between align-items-center">
                                                         {{ __('messages.processing') }}
+                                                    </div>
+                                                </div>
+                                            @elseif ($lecture->processed == -1)
+                                                <div id="collapse-{{ $loop->iteration }}" class="collapse bg-danger"
+                                                    aria-labelledby="heading-{{ $loop->iteration }}"
+                                                    data-parent="#accordion">
+                                                    <div
+                                                        class="card-body d-flex justify-content-between align-items-center text-white">
+                                                        {{ __('messages.failed') }}
                                                     </div>
                                                 </div>
                                             @endif

@@ -323,7 +323,13 @@ class ConvertVideoForStreaming implements ShouldQueue
     private function deleteOldVideo()
     {
         // Storage::disk($this->lecture->disk)->delete($this->lecture->video);
-        unlink($this->getVideoPath());
+        // unlink($this->getVideoPath());
+        if (file_exists($this->getVideoPath())) {
+            unlink($this->getVideoPath());
+        }
+        if (Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
+            Storage::disk($this->lecture->disk)->delete($this->lecture->video);
+        }
     }
 
     private function updateConvertedVideo()

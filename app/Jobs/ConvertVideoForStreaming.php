@@ -169,6 +169,14 @@ class ConvertVideoForStreaming implements ShouldQueue
             Log::error("File does not exists4: " . $videoPath_without_app_public);
         }
 
+        $videoPath_without_public = $this->lecture->video;
+        Log::info("Without app and public: " . $videoPath_without_public);
+        if (file_exists($videoPath_without_public)) {
+            Log::info("File exists5: " . $videoPath_without_public);
+        } else {
+            Log::error("File does not exists5: " . $videoPath_without_public);
+        }
+
         $video1 = $this->getVideoStream($videoPath);
         Log::info('Video stream: ');
 

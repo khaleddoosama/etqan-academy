@@ -19,17 +19,3 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
-
-<IfModule mod_headers.c>
-    <FilesMatch "\.(html|htm|js|css)$">
-        Header set Cache-Control "max-age=2592000"
-    </FilesMatch>
-</IfModule>
-
-<Directory "/app/public">
-    Options +FollowSymLinks
-    AllowOverride All
-    Require all granted
-</Directory>
-
-

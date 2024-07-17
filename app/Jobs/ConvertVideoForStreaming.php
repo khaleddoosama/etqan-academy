@@ -17,6 +17,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use Illuminate\Support\Facades\Http;
 
 class ConvertVideoForStreaming implements ShouldQueue
 {
@@ -182,7 +183,14 @@ class ConvertVideoForStreaming implements ShouldQueue
         if (file_exists($videoPath_with_asset)) {
             Log::info("File exists6: " . $videoPath_with_asset);
         } else {
-            Log::error("File does not exists6: " . $videoPath_without_public);
+            Log::error("File does not exists6: " . $videoPath_with_asset);
+        }
+
+        $this->downloadVideoLocally($videoPath_with_asset);
+        if (Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
+            Log::info("File exists7: " . $this->getVideoPath());
+        } else {
+            Log::error("File does not exists7: " . $this->getVideoPath());
         }
 
         $video1 = $this->getVideoStream($videoPath_with_asset);
@@ -211,6 +219,15 @@ class ConvertVideoForStreaming implements ShouldQueue
         $path = public_path($this->lecture->video);
         // enusure there are no //
         return str_replace('//', '/', $path);
+    }
+
+    private function downloadVideoLocally($url)
+    {
+        // Download the video file from the URL
+        $response = Http::get($url);
+
+        // Save the file to the local path
+        Storage::disk($this->lecture->disk)->put($this->lecture->video, $response->body());
     }
 
     private function getVideoStream(string $videoPath)

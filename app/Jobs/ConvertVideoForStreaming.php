@@ -144,14 +144,16 @@ class ConvertVideoForStreaming implements ShouldQueue
         }
 
         $videoPath_real = realpath($videoPath);
-        Log::info("Absolute path: " . realpath($videoPath_real));
-        if (file_exists(realpath($videoPath_real))) {
+        Log::info("Absolute path: " . $videoPath_real);
+        if (file_exists($videoPath_real)) {
             Log::info("File exist2: " . $videoPath_real);
         } else {
             Log::error("File does not exists2: " . $videoPath_real);
         }
 
-        $videoPath_without_app = str_replace('app/', '', $videoPath_real);
+
+
+        $videoPath_without_app = str_replace('app/', '', $videoPath);
         Log::info("Without app: " . $videoPath_without_app);
         if (file_exists($videoPath_without_app)) {
             Log::info("File exists3: " . $videoPath_without_app);
@@ -159,7 +161,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             Log::error("File does not exists3: " . $videoPath_without_app);
         }
 
-        $videoPath_without_app_public = str_replace('app/public/', '', $videoPath_without_app);
+        $videoPath_without_app_public = str_replace('app/public/', '', $videoPath);
         Log::info("Without app and public: " . $videoPath_without_app_public);
         if (file_exists($videoPath_without_app_public)) {
             Log::info("File exists4: " . $videoPath_without_app_public);

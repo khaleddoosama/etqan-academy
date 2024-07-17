@@ -188,12 +188,15 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         $this->downloadVideoLocally($videoPath_with_asset);
         if (Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
-            Log::info("File exists7: " . $this->getVideoPath());
+            Log::info("File exists7: " . Storage::disk($this->lecture->disk)->path($this->lecture->video));
         } else {
-            Log::error("File does not exists7: " . $this->getVideoPath());
+            Log::error("File does not exists7: " . Storage::disk($this->lecture->disk)->path($this->lecture->video));
         }
+        $p = Storage::disk($this->lecture->disk)->path($this->lecture->video);
+        Log::info('Video path: ' . $p);
 
-        $video1 = $this->getVideoStream($videoPath_with_asset);
+
+        $video1 = $this->getVideoStream($p);
         Log::info('Video stream: ');
 
         list($width, $height) = $this->getVideoDimensions($video1);

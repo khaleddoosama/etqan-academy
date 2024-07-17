@@ -145,9 +145,9 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         Log::info("Absolute path: " . realpath($videoPath));
         if (file_exists(realpath($videoPath))) {
-            Log::error("File exist2: " . $videoPath);
+            Log::info("File exist2: " . $videoPath);
         } else {
-            Log::info("File does not exists2: " . $videoPath);
+            Log::error("File does not exists2: " . $videoPath);
         }
 
 

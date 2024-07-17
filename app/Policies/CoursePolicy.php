@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Course;
 use App\Models\User;
+use App\Models\UserCourse;
 use Illuminate\Auth\Access\Response;
 
 class CoursePolicy
@@ -22,7 +23,8 @@ class CoursePolicy
     public function view(User $user, Course $course): bool
     {
         // التحقق من أن المستخدم مسجل في الدورة
-        return $user->courses()->where('course_id', $course->id)->exists();
+        // return $user->courses()->where('course_id', $course->id)->where('status', 1)->exists();
+        return UserCourse::where('student_id', $user->id)->where('course_id', $course->id)->where('status', 1)->exists();
     }
 
     /**

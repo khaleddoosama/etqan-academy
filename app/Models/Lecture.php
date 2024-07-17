@@ -70,7 +70,7 @@ class Lecture extends Model
     public function setVideoAttribute(UploadedFile $video)
     {
         // to lower case $this->section->course->title
-        $folderName = str_replace(' ', '-', strtolower($this->section->course->title)) . '/' . str_replace(' ', '-', strtolower($this->section->title)) . '/' . str_replace(' ', '-', strtolower($this->title)) . '/videos';
+        $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($this->slug)) . '/videos';
 
         $this->deleteIfExists($this->video); // Delete the old video if it exists
 
@@ -94,7 +94,7 @@ class Lecture extends Model
     public function setThumbnailAttribute(UploadedFile $thumbnail)
     {
         // to lower case $this->section->course->title
-        $folderName = str_replace(' ', '-', strtolower($this->section->course->title)) . '/' . str_replace(' ', '-', strtolower($this->section->title)) . '/' . str_replace(' ', '-', strtolower($this->title)) . '/thumbnails';
+        $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($this->slug)) . '/thumbnails';
         $this->deleteIfExists($this->thumbnail);
         $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 's3');
     }

@@ -19,7 +19,7 @@ trait UploadTrait
         $path = "{$folderName}/{$name_gen}";
 
         // Ensure the directory exists or create it
-        // $this->ensureDirectoryExists($folderName);
+        $this->ensureDirectoryExists($folderName);
 
         // Image::make($picture)->resize($width, $height)->save(public_path("{$path}"));
         // Image::read($picture)->resize($width, $height)->save(public_path("{$path}"));
@@ -106,10 +106,10 @@ trait UploadTrait
     }
 
     // Ensure the directory exists or create it
-    // public function ensureDirectoryExists($folderName)
-    // {
-    //     if (!is_dir(public_path("uploads/{$folderName}/"))) {
-    //         mkdir(public_path("uploads/{$folderName}/"), 0755, true);
-    //     }
-    // }
+    public function ensureDirectoryExists($folderName)
+    {
+        if (!is_dir(public_path("uploads/{$folderName}/"))) {
+            mkdir(public_path("uploads/{$folderName}/"), 0755, true);
+        }
+    }
 }

@@ -32,6 +32,8 @@ trait UploadTrait
             $image->save(public_path("uploads/{$path}"));
         }
 
+        //reomve // from $path
+        $path = str_replace('//', '/', $path);
         return $path;
     }
 

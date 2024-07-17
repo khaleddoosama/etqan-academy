@@ -43,19 +43,12 @@ trait UploadTrait
             $name_gen = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
             $path = "{$folderName}/{$name_gen}";
 
-            Storage::disk($disk)->put($path, file_get_contents($file));
+            // if ($disk == 's3') {
+                Storage::disk($disk)->put($path, file_get_contents($file));
+            // } elseif ($disk == 'public') {
+            //     $file->move(public_path("uploads/{$folderName}/"), $name_gen);
+            // }
 
-            $publicPath = public_path("storage/{$folderName}/{$name_gen}");
-            $storagePath = storage_path("app/public/{$folderName}/{$name_gen}");
-
-            if (File::exists($publicPath)) {
-                Log::info("File uploaded successfully public_path1: {$publicPath}");
-            }
-            if (File::exists($storagePath)) {
-                Log::info("File uploaded successfully storage_path: {$storagePath}");
-            }
-
-            Log::info("File uploaded successfully: {$path}");
             return $path;
         } catch (\Exception $e) {
             Log::error("File upload failed: " . $e->getMessage());
@@ -68,6 +61,10 @@ trait UploadTrait
     {
         if ($path && File::exists(public_path($path))) {
             File::delete(public_path($path));
+        }
+
+        if ($path && File::exists(public_path('uploads/' . $path))) {
+            File::delete(public_path('uploads/' . $path));
         }
 
         if ($path && Storage::disk('public')->exists($path)) {

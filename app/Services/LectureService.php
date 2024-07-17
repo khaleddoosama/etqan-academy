@@ -51,6 +51,7 @@ class LectureService
 
     public function createLecture(array $data): Lecture
     {
+        // $data['disk'] = 's3';
         $lecture = Lecture::create($data); // Create the lecture without the 'lectures' data
 
         return $lecture;
@@ -82,6 +83,10 @@ class LectureService
         }
         if ($lecture->thumbnail) {
             Storage::delete($lecture->thumbnail);
+        }
+
+        if ($lecture->video) {
+            Storage::disk($lecture->disk)->delete($lecture->video);
         }
 
 

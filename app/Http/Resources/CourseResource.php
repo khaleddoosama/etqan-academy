@@ -18,7 +18,7 @@ class CourseResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,
-            // 'image' => $this->thumbnail,
+            'image' => $this->thumbnail,
             'category' => $this->category->name,
             'price' => $this->price,
             'num_of_levels' => $this->number_of_levels,
@@ -26,6 +26,8 @@ class CourseResource extends JsonResource
             'sections' => SectionResource::collection($this->sections),
             'lessons' => $this->countLectures(),
             'total_duration' => $this->totalDuration(),
+            'students_count' => $this->students_count,
+            'instructor' => $this->instructor ? new InstructorResource($this->instructor) : null
         ];
     }
 }

@@ -47,6 +47,12 @@ class Course extends Model
         return Program::whereIn('id', $programIds)->get();
     }
 
+    // instructor
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
+    }
+
     // count number of lectures in course
     public function countLectures()
     {
@@ -70,6 +76,30 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'user_courses', 'course_id', 'student_id')->withPivot('status', 'id');
     }
 
+    // get students count
+    public function studentsCount()
+    {
+        return $this->students()->count();
+    }
+
+    // get number_of_levels attribute
+    public function getNumberOfLevelsAttribute()
+    {
+        $levels = [
+            1 => 'مستوي واحد',
+            2 => 'مستويين',
+            3 => 'ثلاث مستويات',
+            4 => 'اربع مستويات',
+            5 => 'خمس مستويات',
+            6 => 'ست مستويات',
+            7 => 'سبع مستويات',
+            8 => 'ثمان مستويات',
+            9 => 'تسع مستويات',
+            10 => 'عشر مستويات',
+        ];
+
+        return $levels[$this->number_of_levels] ?? 'غير محدد';
+    }
     /* methods */
     // set Image Attribute
     public function setThumbnailAttribute(UploadedFile $thumbnail)

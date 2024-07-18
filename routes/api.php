@@ -38,10 +38,10 @@ Route::group([
 // send Inquiry
 Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry']);
 Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/courses', [CourseController::class, 'index']);
 
 Route::middleware('jwt.verify')->group(function () {
     // show courses
-    Route::get('/courses', [CourseController::class, 'index']);
 
     // show single course
     Route::get('/course/{course_slug}', [CourseController::class, 'show']);

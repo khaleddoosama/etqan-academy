@@ -31,6 +31,8 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
     Route::put('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::put('/change-password', [AuthController::class, 'changePassword']);
+    Route::post('/update-picture', [AuthController::class, 'updatePicture']);
 });
 
 // send Inquiry

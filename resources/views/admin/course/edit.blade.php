@@ -30,7 +30,7 @@
 
                                 <div class="card-body row">
                                     <div class="col-md-12">
-                                        <img src="@if ($course->thumbnail) {{ asset($course->thumbnail) }} @else # @endif"
+                                        <img src="@if ($course->thumbnail) {{ $course->thumbnail_url }} @else # @endif"
                                             alt=""
                                             class="img-thumbnail @if ($course->thumbnail) {{ asset($course->thumbnail) }} @else d-none @endif"
                                             id="course-thumbnail" style="max-height: 70vh">

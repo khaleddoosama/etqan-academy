@@ -7,6 +7,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class Course extends Model
 {
@@ -83,7 +84,7 @@ class Course extends Model
     }
 
     // get number_of_levels attribute
-    public function getNumberOfLevelsAttribute()
+    public function getNumberOfLevelsTextAttribute()
     {
         $levels = [
             1 => 'مستوي واحد',
@@ -101,11 +102,20 @@ class Course extends Model
         return $levels[$this->attributes['number_of_levels']] ?? 'غير محدد';
     }
     /* methods */
+    // get thumbnail url
+    public function getThumbnailUrlAttribute()
+    {
+        if ($this->thumbnail) {
+            return Storage::url($this->thumbnail);
+        }
+        return null;
+    }
+
     // set Image Attribute
     public function setThumbnailAttribute(UploadedFile $thumbnail)
     {
-        $folderName = 'courses/' . str_replace(' ', '-', strtolower($this->title)) . '/thumbnails';
+        $folderName = str_replace(' ', '-', strtolower($this->slug)) . '/thumbnails';
         $this->deleteIfExists($this->thumbnail); // Delete the old thumbnail if it exists
-        $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480);
+        $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 's3');
     }
 }

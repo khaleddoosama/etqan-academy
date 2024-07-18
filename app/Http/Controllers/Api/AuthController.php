@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ChangePasswordRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -101,14 +102,23 @@ class AuthController extends Controller
         try {
             $user = auth('api')->user();
 
-            $attributes = Validator::make($request->all(), [
-                'name' => 'required|string|between:2,100',
-                // "username" => "required|string|alpha_dash|between:2,100|unique:users,username,{$user->id}",
-                "email" => "required|string|email|max:100|unique:users,email,{$user->id}",
-                'password' => 'sometimes|required|string|confirmed|min:6',
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|string|between:2,100',
+                'last_name' => 'required|string|between:2,100',
+                'email' => "required|string|email|max:100|unique:users,email,{$user->id}",
+                'age' => 'required|integer',
+                'gender' => 'required|string|between:2,100',
+                'job_title' => 'required|string|between:2,100',
+                'category_id' => 'required|integer',
+                'phone' => 'sometimes|string|max:100',
+                'country' => 'sometimes|string|max:100',
             ]);
 
-            $user->update($attributes->validated());
+            if ($validator->fails()) {
+                return $this->apiResponse(null, $validator->errors()->first(), 400);
+            }
+
+            $user->update($validator->validated());
 
             return $this->apiResponse(new UserResource($user), 'Profile updated successfully', 200);
         } catch (QueryException $e) {
@@ -133,9 +143,34 @@ class AuthController extends Controller
         $data = [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'expires_in' => auth('api')->factory()->getTTL() * 60 ,
             'user' => new UserResource(auth('api')->user())
         ];
         return $this->apiResponse($data, 'ok', 200);
+    }
+
+    // change password
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $data = $request->validated();
+        $user = Auth::user();
+
+        $user->update(['password' => bcrypt($data['password'])]);
+
+
+        return $this->apiResponse(new UserResource($user), 'Password changed successfully', 200);
+    }
+
+    // update picture profile
+    public function updatePicture(Request $request)
+    {
+        $user = Auth::user();
+        $data = $request->validate([
+            'picture' => 'required|image',
+        ]);
+
+        $user->update(['picture' => $request->picture]);
+
+        return $this->apiResponse(new UserResource($user), 'Profile picture updated successfully', 200);
     }
 }

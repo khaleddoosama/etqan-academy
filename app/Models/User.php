@@ -15,6 +15,7 @@ use Illuminate\Http\UploadedFile;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -126,15 +127,25 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Referral::class, 'parent_user', 'id');
     }
 
+    // get picture attribute
+    public function getPictureUrlAttribute()
+    {
+        if ($this->picture) {
+            return Storage::url($this->picture);
+        } else {
+            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
+        }
+    }
+
     /* methods */
     // set Picture Attribute
     public function setPictureAttribute(UploadedFile $picture)
     {
 
-        $folderName = $this->role . '/' . $this->code . '/pictures';
+        $folderName = 'users/' . $this->role . '/' . $this->code . '/pictures';
 
         $this->deleteIfExists($this->picture); // Delete the old image if it exists
-        $this->attributes['picture'] = $this->uploadImage($picture, $folderName);
+        $this->attributes['picture'] = $this->uploadImage($picture, $folderName, 640, 480, 's3');
     }
 
     protected static function boot()

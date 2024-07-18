@@ -21,7 +21,7 @@ class CourseResource extends JsonResource
             'image' => $this->thumbnail,
             'category' => $this->category->name,
             'price' => $this->price,
-            'num_of_levels' => $this->number_of_levels,
+            'num_of_levels' => $this->number_of_levels_text,
             'programs' => $this->programs ? ProgramResource::collection($this->programs()) : [],
             'sections' => SectionResource::collection($this->sections),
             'lessons' => $this->countLectures(),

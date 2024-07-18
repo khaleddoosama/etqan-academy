@@ -38,22 +38,22 @@ Route::group([
 // send Inquiry
 Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry']);
 Route::get('/categories', [CategoryController::class, 'index']);
+
+// show courses
 Route::get('/courses', [CourseController::class, 'index']);
 
+// show single course
+Route::get('/course/{course_slug}', [CourseController::class, 'show']);
+// show sections
+Route::get('/course/{course_slug}/sections', [SectionController::class, 'index']);
+
+// show single section
+Route::get('course/{course_slug}/section/{section_slug}', [SectionController::class, 'show']);
+
+// show lectures
+Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index']);
+
 Route::middleware('jwt.verify')->group(function () {
-    // show courses
-
-    // show single course
-    Route::get('/course/{course_slug}', [CourseController::class, 'show']);
-
-    // show sections
-    Route::get('/course/{course_slug}/sections', [SectionController::class, 'index']);
-
-    // show single section
-    Route::get('course/{course_slug}/section/{section_slug}', [SectionController::class, 'show']);
-
-    // show lectures
-    Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index']);
 
     // show single lecture
     Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);

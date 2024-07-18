@@ -33,7 +33,7 @@ class LectureController extends Controller
 
     public function show($course_slug, $section_slug, $lecture_slug)
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
         try {
             $lecture = $this->lectureService->getSectionByCourseSlugAndSectionSlugAndSlug($course_slug, $section_slug, $lecture_slug);
 
@@ -46,10 +46,10 @@ class LectureController extends Controller
                 return $this->apiResponse(new LectureResource($lecture), 'ok', 200);
             }
 
-            DB::commit();
+            // DB::commit();
             return $this->apiResponse(null, 'lecture not found', 404);
         } catch (\Exception $e) {
-            DB::rollBack();
+            // DB::rollBack();
             return $this->apiResponse(null, $e->getMessage(), 500);
         }
     }

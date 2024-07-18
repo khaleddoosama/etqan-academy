@@ -26,7 +26,7 @@ class CourseResource extends JsonResource
             'sections' => SectionResource::collection($this->sections),
             'lessons' => $this->countLectures(),
             'total_duration' => $this->totalDuration(),
-            'students_count' => $this->students_count,
+            'students_count' => $this->studentsCount(),
             'instructor' => $this->instructor ? new InstructorResource($this->instructor) : null
         ];
     }

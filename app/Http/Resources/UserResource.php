@@ -25,7 +25,7 @@ class UserResource extends JsonResource
             'points' => $this->points,
             'country' => $this->country,
             'image' => $this->image,
-            'courses_count' => $this->courses_count,
+            'courses_count' => $this->coursesCount(),
             'status' => $this->status,
         ];
     }

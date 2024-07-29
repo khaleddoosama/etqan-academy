@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class Lecture extends Model
@@ -70,10 +71,10 @@ class Lecture extends Model
 
     /* methods */
     // set video Attribute
-    public function setVideoAttribute(UploadedFile $video)
+    public function setVideoAttribute($path)
     {
         // to lower case $this->section->course->title
-        $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($this->slug)) . '/videos';
+        // $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($this->slug)) . '/videos';
 
         $this->deleteIfExists($this->video); // Delete the old video if it exists
 
@@ -89,7 +90,8 @@ class Lecture extends Model
         $this->deleteIfExists($this->convertedVideo?->webm_Format_720); // Delete the old video if it
         $this->deleteIfExists($this->convertedVideo?->webm_Format_1080); // Delete the old video if it
 
-        $this->attributes['video'] = $this->uploadFile($video, $folderName);
+        // $this->attributes['video'] = $this->uploadFile($video, $folderName);
+        $this->attributes['video'] = $path;
     }
 
 

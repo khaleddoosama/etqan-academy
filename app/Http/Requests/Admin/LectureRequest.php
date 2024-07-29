@@ -21,6 +21,7 @@ class LectureRequest extends FormRequest
     {
         $lecture = $this->lecture; // This assumes you're passing the lecture ID in the request somehow.
 
+        Log::info($this->lecture);
         $rules = [
             //unique for title and section
             'title' => [
@@ -42,7 +43,7 @@ class LectureRequest extends FormRequest
         if ($this->isMethod('put')) {
             $rules['video'] = 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime,video/3gpp,video/x-msvideo,video/x-flv,video/x-ms-wmv';
         } else {
-            $rules['video'] = 'required|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime,video/3gpp,video/x-msvideo,video/x-flv,video/x-ms-wmv';
+            $rules['video'] = 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime,video/3gpp,video/x-msvideo,video/x-flv,video/x-ms-wmv';
         }
 
         return $rules;

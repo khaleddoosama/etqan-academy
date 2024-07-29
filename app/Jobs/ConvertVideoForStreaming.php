@@ -100,7 +100,7 @@ class ConvertVideoForStreaming implements ShouldQueue
         );
         Log::info('names: ' . json_encode($this->names));
         // Resolve the real path to avoid issues with the path formatting
-        $videoPath = Storage::disk($this->lecture->disk)->path($this->lecture->video);
+        $videoPath = $this->getVideoPath();
 
 
         for ($this->i = $loopNumber; $this->i < count($this->format); $this->i++) {
@@ -138,71 +138,23 @@ class ConvertVideoForStreaming implements ShouldQueue
         $videoPath = $this->getVideoPath();
         Log::info('Video path: ' . $videoPath);
 
-        if (file_exists($videoPath)) {
-            Log::info("File exists: " . $videoPath);
-        } else {
-            Log::error("File does not exist: " . $videoPath);
-        }
-
-        $videoPath_real = realpath($videoPath);
-        Log::info("Absolute path: " . $videoPath_real);
-        if (file_exists($videoPath_real)) {
-            Log::info("File exist2: " . $videoPath_real);
-        } else {
-            Log::error("File does not exists2: " . $videoPath_real);
-        }
-
-
-
-        $videoPath_without_app = str_replace('app/', '', $videoPath);
-        Log::info("Without app: " . $videoPath_without_app);
-        if (file_exists($videoPath_without_app)) {
-            Log::info("File exists3: " . $videoPath_without_app);
-        } else {
-            Log::error("File does not exists3: " . $videoPath_without_app);
-        }
-
-        $videoPath_without_app_public = str_replace('app/public/', '', $videoPath);
-        Log::info("Without app and public: " . $videoPath_without_app_public);
-        if (file_exists($videoPath_without_app_public)) {
-            Log::info("File exists4: " . $videoPath_without_app_public);
-        } else {
-            Log::error("File does not exists4: " . $videoPath_without_app_public);
-        }
-
-        $videoPath_without_public = $this->lecture->video;
-        Log::info("Without public: " . $videoPath_without_public);
-        if (file_exists($videoPath_without_public)) {
-            Log::info("File exists5: " . $videoPath_without_public);
-        } else {
-            Log::error("File does not exists5: " . $videoPath_without_public);
-        }
-
-        $videoPath_with_asset = asset($this->lecture->video);
-        Log::info("Without asset: " . $videoPath_with_asset);
-        if (file_exists($videoPath_with_asset)) {
-            Log::info("File exists6: " . $videoPath_with_asset);
-        } else {
-            Log::error("File does not exists6: " . $videoPath_with_asset);
-        }
-
-        $this->downloadVideoLocally($videoPath_with_asset);
+        $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
         if (Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
             Log::info("File exists7: " . Storage::disk($this->lecture->disk)->path($this->lecture->video));
         } else {
             Log::error("File does not exists7: " . Storage::disk($this->lecture->disk)->path($this->lecture->video));
         }
-        $p = Storage::disk($this->lecture->disk)->path($this->lecture->video);
-        Log::info('Video path: ' . $p);
+
+        Log::info('Video path: ' . $videoPath);
 
 
-        $video1 = $this->getVideoStream($p);
+        $video1 = $this->getVideoStream($videoPath);
         Log::info('Video stream: ');
 
         list($width, $height) = $this->getVideoDimensions($video1);
         Log::info('Video dimensions: ' . $width . 'x' . $height);
 
-        $durationInSeconds = $this->getVideoDuration($p);
+        $durationInSeconds = $this->getVideoDuration($videoPath);
         Log::info('Video duration: ' . $durationInSeconds . ' seconds');
         list($hours, $minutes, $seconds) = $this->convertDuration($durationInSeconds);
         Log::info('Video duration: ' . $hours . ' hours, ' . $minutes . ' minutes, ' . $seconds . ' seconds');
@@ -219,7 +171,7 @@ class ConvertVideoForStreaming implements ShouldQueue
     private function getVideoPath(): string
     {
         // return storage_path('app/public/' . $this->lecture->video);
-        $path = public_path($this->lecture->video);
+        $path = Storage::disk('public')->path($this->lecture->video);
         // enusure there are no //
         return str_replace('//', '/', $path);
     }
@@ -230,7 +182,7 @@ class ConvertVideoForStreaming implements ShouldQueue
         $response = Http::get($url);
 
         // Save the file to the local path
-        Storage::disk($this->lecture->disk)->put($this->lecture->video, $response->body());
+        Storage::disk('public')->put($this->lecture->video, $response->body());
     }
 
     private function getVideoStream(string $videoPath)
@@ -315,10 +267,6 @@ class ConvertVideoForStreaming implements ShouldQueue
         return 0;
     }
 
-    private function logVideoProcessing()
-    {
-        Log::info('Video processed: ' . $this->lecture->video);
-    }
 
     private function deleteOldVideo()
     {

@@ -83,6 +83,7 @@ Route::group(
             });
             Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
             Route::post('/lectures/update-order', [LectureController::class, 'updateOrder'])->name('lectures.updateOrder');
+            Route::post('/upload-video', [LectureController::class, 'generatePresignedUrl']);
 
 
             // Inquiry Controller
@@ -97,7 +98,7 @@ Route::group(
                 Route::get('/withdrawal-requests', 'index')->name('withdrawal_requests.index');
                 Route::get('/withdrawal-requests/{withdrawalRequest}', 'show')->name('withdrawal_requests.show');
                 Route::put('/withdrawal-requests/{withdrawalRequest}/status', 'status')->name('withdrawal_requests.status');
-            }); 
+            });
 
             // Permission controller (resource)
             // Route::resource('permission', RolePermissionController::class)->except(['show']);

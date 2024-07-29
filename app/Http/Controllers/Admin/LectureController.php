@@ -2,23 +2,28 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Api\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LectureRequest;
 use App\Jobs\ConvertVideoForStreaming;
 use App\Models\Lecture;
+use App\Services\AwsS3Service;
 use App\Services\LectureService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yoeunes\Toastr\Facades\Toastr;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class LectureController extends Controller
 {
-
+    use ApiResponseTrait;
     protected $lectureService;
-    public function __construct(LectureService $lectureService)
+    protected $awsS3Service;
+    public function __construct(LectureService $lectureService, AwsS3Service $awsS3Service)
     {
         $this->lectureService = $lectureService;
+        $this->awsS3Service = $awsS3Service;
     }
 
     public function index()
@@ -32,12 +37,30 @@ class LectureController extends Controller
         //
     }
 
+    //generatePresignedUrl
+    public function generatePresignedUrl(LectureRequest $request)
+    {
+        try {
+            $data = $request->validated();
+
+            $fileName = $data['video']->getClientOriginalName();
+
+            $url = $this->awsS3Service->getPreSignedUrl($fileName, $data['video']->getClientMimeType());
+
+            return $this->apiResponse($url, __('messages.presigned_url_generated'), 200);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->apiResponse(null, $e->getMessage(), 500);
+        }
+    }
+
 
     public function store(LectureRequest $request)
     {
         $data = $request->validated();
         $lecture = $this->lectureService->createLecture($data);
-
+        $lecture->video = $request['video_path'];
+        $lecture->save();
 
         ConvertVideoForStreaming::dispatch($lecture);
 

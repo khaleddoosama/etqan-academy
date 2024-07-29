@@ -51,7 +51,7 @@ class LectureService
 
     public function createLecture(array $data): Lecture
     {
-        // $data['disk'] = 's3';
+        $data['disk'] = 's3';
         $lecture = Lecture::create($data); // Create the lecture without the 'lectures' data
 
         return $lecture;

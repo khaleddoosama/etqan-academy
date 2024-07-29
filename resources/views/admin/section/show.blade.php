@@ -104,8 +104,24 @@
                                                                     <div class="modal-body">
 
 
-                                                                        <x-custom.form-group type="text" name="title"
-                                                                            value="{{ $lecture->title }}" />
+                                                                        {{-- <x-custom.form-group type="text" name="title"
+                                                                            value="{{ $lecture->title }}" /> --}}
+
+                                                                        <div class='form-group row'>
+                                                                            <x-input-label for="input-title-{{ $loop->iteration }}"
+                                                                                class="col-sm-12 col-form-label">{{ __('main.title') }}</x-input-label>
+
+                                                                            <div class="col-sm-12">
+                                                                                <x.text-input type="text"
+                                                                                    name="title"
+                                                                                    id="input-title-{{ $loop->iteration }}"
+                                                                                    value="{{ old('title') ?? ($lecture->title ?? '') }}"
+                                                                                    class="form-control" />
+                                                                            </div>
+
+                                                                            <x-input-error :messages="$errors->get('title')"
+                                                                                style="padding: 0 7.5px;margin: 0;" />
+                                                                        </div>
 
                                                                         <div class='form-group row'>
                                                                             <x-input-label
@@ -337,7 +353,8 @@
                                             </div>
                                             <div class="modal-body">
 
-                                                <input type="hidden" name="section_id" value="{{ $section->id }}">
+                                                <input type="hidden" name="section_id" value="{{ $section->id }}"
+                                                    id="input-section_id">
 
                                                 <x-custom.form-group type="text" name="title" />
 
@@ -465,121 +482,7 @@
     {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/min/dropzone.min.css" rel="stylesheet"> --}}
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/min/dropzone.min.js"></script> --}}
 
-    <!-- Page specific script -->
-    <script>
-        $(function() {
-            // store lecture
-            $("#effect").hide();
-            var activeUploadRequest = null; // This will hold the current upload request
-
-            $('#form1').validate({
-                rules: {
-                    title: {
-                        required: true,
-                    },
-                    video: {
-                        required: true,
-                        accept: "video/*"
-                    }
-                },
-                messages: {
-                    title: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.title')]) }}"
-                    },
-                    video: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.video')]) }}",
-                        accept: "{{ __('validation.accept', ['attribute' => __('attributes.video')]) }}"
-                    }
-                },
-                errorElement: 'span',
-                errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    error.css('padding', '0 7.5px');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                }, // when everything is ok, send ajax request
-                submitHandler: function(form) {
-                    console.log(11);
-                    var formData = new FormData(form);
-                    var startTime = Date.now(); // Capture the start time of the upload
-
-                    activeUploadRequest = $.ajax({
-                        url: '{{ route('admin.lectures.store') }}',
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        xhr: function() {
-                            var xhr = new window.XMLHttpRequest();
-                            $('#effect').show('blind');
-
-                            xhr.upload.addEventListener("progress", function(evt) {
-                                if (evt.lengthComputable) {
-                                    var percentComplete = evt.loaded / evt.total;
-                                    percentComplete = parseInt(percentComplete *
-                                        100);
-                                    var uploadedMB = (evt.loaded / 1024 / 1024)
-                                        .toFixed(2); // Convert bytes to MB
-                                    var totalMB = (evt.total / 1024 / 1024).toFixed(
-                                        2); // Convert bytes to MB
-                                    var elapsedTime = (Date.now() - startTime) /
-                                        1000; // Calculate elapsed time in seconds
-                                    var speedMbps = ((evt.loaded / elapsedTime) /
-                                        1024 / 1024 * 8).toFixed(
-                                        2); // Speed in Mbps
-                                    $('#progressBar').width(percentComplete + '%');
-                                    $('#progressText').html(
-                                        percentComplete + '%'
-                                    )
-                                    $('#status p').html(
-                                        `(${uploadedMB}MB of ${totalMB}MB)`
-                                    );
-
-                                }
-                            }, false);
-                            return xhr;
-                        },
-                        success: function(response) {
-                            // Handle success
-                            console.log('Success:', response);
-                            $('#status p').html(response.message);
-                            // reload page
-                            location.reload();
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle error
-                            console.log('Error:', error);
-                            $('#status p').html("Error uploading file.");
-                        }
-                    });
-
-                }
-
-            });
-
-            // cancel upload
-            $('#cancelUpload').click(function() {
-                if (activeUploadRequest) {
-                    activeUploadRequest.abort(); // Abort the active request
-                    activeUploadRequest = null; // Reset the variable
-                }
-                $("#effect").hide('blind');
-                $('#progressBar').width('0%');
-                $('#progressText').html('0%');
-                $('#status p').html('');
-
-
-                $('#form1').trigger("reset");
-                $('#form1').validate().resetForm();
-            });
-        });
-    </script>
-
+    <script src="{{ asset('asset/admin/dist/js/uploadvideo.js') }}" defer></script>
     <script>
         $(function() {
             // edit lecture

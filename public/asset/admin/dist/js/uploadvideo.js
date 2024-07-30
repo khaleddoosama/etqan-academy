@@ -6,134 +6,98 @@ $(function () {
         const file = fileInput.files[0];
 
         console.log('Starting upload process...');
+        $('#effect').show('blind');
+        const formData = createFormData(file);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        formData.append('_token', csrfToken);
 
-        // Generate pre-signed URL
+        try {
+            console.log('Requesting pre-signed URL...');
+            const preSignedUrlResponse = await postFormData('/admin/upload-video', formData);
+            console.log('Pre-signed URL:', preSignedUrlResponse);
+            await uploadFileToS3(preSignedUrlResponse.data.url, file);
+            console.log('File uploaded successfully.');
+            await storeLecture(formData, preSignedUrlResponse.data.filename);
+            console.log('Lecture stored successfully.');
+        } catch (error) {
+            console.error('Error:', error);
+            document.querySelector('#status p').innerText = error.message;
+        }
+    }
+
+    function createFormData(file) {
         const formData = new FormData();
-        // formData.append('video', file);
-        formData.append('title', $('#input-title').val());
-        formData.append('section_id', $('#input-section_id').val());
-        if ($('#input-thumbnail').prop('files').length !== 0) {
-            formData.append('thumbnail', $('#input-thumbnail').prop('files')[0]);
+        formData.append('title', document.getElementById('input-title').value);
+        formData.append('section_id', document.getElementById('input-section_id').value);
+
+        const thumbnailInput = document.getElementById('input-thumbnail');
+        if (thumbnailInput.files.length !== 0) {
+            formData.append('thumbnail', thumbnailInput.files[0]);
         }
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        // csrf
-        formData.append('_token', csrfToken);
-        // activeUploadRequest = $.ajax({
-        //     url: '/admin/upload-video',
-        //     type: 'POST',
-        //     data: formData,
-        //     contentType: false,
-        //     processData: false,
-        //     success: function (response) {
-        //         const uploadUrl = response.data.url;
-        //         const filepath = response.data.filename;
-        //         console.log('response:', response);
-                // Upload video to S3 using the pre-signed URL
-                activeUploadRequest = $.ajax({
-                    url: "https://etqan-bucket.s3.eu-north-1.amazonaws.com/uploads/tkn-mal/s1-khtm/videos/1806029637787209.mp4?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA47CR26RHQCY3RN4G%2F20240730%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Date=20240730T182800Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1200&X-Amz-Signature=e78f952834ab5e479210aea7f78b5c3274e06f659c2ec7ad073b68411c071d55",
-                    type: 'PUT',
-                    data: file,
-                    processData: false,
-                    contentType: file.type,
-                    xhr: function () {
-                        const xhr = $.ajaxSettings.xhr();
-                        $('#effect').show('blind');
-                        var startTime = Date.now();
-                        if (xhr.upload) {
-                            xhr.upload.addEventListener("progress", function (
-                                evt) {
-                                // console.log(evt);
-                                if (evt.lengthComputable) {
-                                    var percentComplete = evt.loaded /
-                                        evt.total;
-                                    percentComplete = parseInt(
-                                        percentComplete *
-                                        100);
-                                    var uploadedMB = (evt.loaded /
-                                        1024 / 1024)
-                                        .toFixed(
-                                            2); // Convert bytes to MB
-                                    var totalMB = (evt.total / 1024 /
-                                        1024).toFixed(
-                                            2); // Convert bytes to MB
-                                    var elapsedTime = (Date.now() -
-                                        startTime) /
-                                        1000; // Calculate elapsed time in seconds
-                                    var speedMbps = ((evt.loaded /
-                                        elapsedTime) /
-                                        1024 / 1024 * 8).toFixed(
-                                            2); // Speed in Mbps
-                                    $('#progressBar').width(
-                                        percentComplete + '%');
-                                    $('#progressText').html(
-                                        percentComplete + '%'
-                                    )
-                                    $('#status p').html(
-                                        `(${uploadedMB}MB of ${totalMB}MB)`
-                                    );
-
-                                }
-                            }, false);
-                            return xhr;
-                        }
-
-
-                    },
-                    success: function (response) {
-                        // Handle success
-                        console.log('Success:', response);
-                        $('#status p').html("Video uploaded successfully.");
-                        // store lecture
-                        // form data without video
-                        formData.delete('video');
-                        // put video name
-                        formData.append('video_path', "asd.mp4");
-
-                        $.ajax({
-                            url: "/admin/lectures",
-                            type: 'POST',
-                            data: formData,
-                            processData: false, // Prevent jQuery from automatically transforming the data into a query string
-                            contentType: false, // Tell jQuery not to set any content type header
-                            success: function (response) {
-                                console.log('Lecture stored:', response);
-                                $('#status p').html("Lecture stored successfully.");
-                                // reload page
-                                // wait 1 second
-                                setTimeout(function () {
-                                    location.reload();
-                                }, 1000);
-                            },
-                            error: function (xhr, status, error) {
-                                console.log('Upload error:', error);
-                                console.log('XHR:', xhr);
-                                console.log('Status:', status);
-                                console.error('Failed to store lecture.');
-                                $('#status p').html("Error storing lecture.");
-                            }
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        console.log('Upload error:', error);
-                        console.log('XHR:', xhr);
-                        console.log('Status:', status);
-                        console.error('Failed to upload video.');
-                        $('#status p').html("Error uploading video.");
-                    }
-                });
-            // },
-            // error: function (xhr, status, error) {
-            //     console.log(error);
-            //     console.log(xhr);
-            //     console.log(status);
-            //     console.error('Failed to generate pre-signed URL.');
-            //     $('#status p').html("Error generating pre-signed URL.");
-            // }
-        // });
-
+        return formData;
     }
+
+    async function postFormData(url, formData) {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData,
+        });
+        if (!response.ok) throw new Error('Failed to generate pre-signed URL.');
+        return response.json();
+    }
+
+    async function uploadFileToS3(uploadUrl, file) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', uploadUrl, true);
+        xhr.setRequestHeader('Content-Type', file.type);
+
+        return new Promise((resolve, reject) => {
+            xhr.upload.addEventListener('progress', updateProgress);
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    console.log('File uploaded successfully.');
+                    document.querySelector('#status p').innerText = 'Video uploaded successfully.';
+                    resolve();
+                } else {
+                    reject(new Error('Failed to upload video.'));
+                }
+            };
+            xhr.onerror = () => reject(new Error('Network error during file upload.'));
+            xhr.send(file);
+        });
+    }
+
+    function updateProgress(event) {
+        const startTime = Date.now();
+        if (event.lengthComputable) {
+            const percentComplete = Math.round((event.loaded / event.total) * 100);
+            const uploadedMB = (event.loaded / 1024 / 1024).toFixed(2);
+            const totalMB = (event.total / 1024 / 1024).toFixed(2);
+            const speedMbps = ((event.loaded / ((Date.now() - startTime) / 1000)) / 1024 / 1024 * 8).toFixed(2);
+
+            document.querySelector('#progressBar').style.width = `${percentComplete}%`;
+            document.querySelector('#progressText').innerText = `${percentComplete}%`;
+            document.querySelector('#status p').innerText = `(${uploadedMB}MB of ${totalMB}MB)`;
+        }
+    }
+
+    async function storeLecture(formData, filepath) {
+        formData.delete('video');
+        formData.append('video_path', filepath);
+
+        const response = await fetch('/admin/lectures', {
+            method: 'POST',
+            body: formData,
+        });
+        if (!response.ok) throw new Error('Failed to store lecture.');
+
+        const result = await response.json();
+        console.log('Lecture stored:', result);
+        document.querySelector('#status p').innerText = 'Lecture stored successfully.';
+        setTimeout(() => location.reload(), 1000);
+    }
+
     // store lecture
     $("#effect").hide();
 

@@ -329,6 +329,7 @@
                                                         </div>
                                                         <p id="progressText" class="position-absolute"
                                                             style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                            0%
                                                         </p>
                                                     </div>
                                                     <div id="status"

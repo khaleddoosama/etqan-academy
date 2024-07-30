@@ -112,7 +112,7 @@
                                                                                 class="col-sm-12 col-form-label">{{ __('main.title') }}</x-input-label>
 
                                                                             <div class="col-sm-12">
-                                                                                <x.text-input type="text"
+                                                                                <x-text-input type="text"
                                                                                     name="title"
                                                                                     id="input-title-{{ $loop->iteration }}"
                                                                                     value="{{ old('title') ?? ($lecture->title ?? '') }}"

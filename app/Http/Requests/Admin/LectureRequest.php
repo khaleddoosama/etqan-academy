@@ -40,11 +40,11 @@ class LectureRequest extends FormRequest
         ];
 
         // Check if video is being updated
-        if ($this->isMethod('put')) {
-            $rules['video'] = 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime,video/3gpp,video/x-msvideo,video/x-flv,video/x-ms-wmv';
-        } else {
-            $rules['video'] = 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime,video/3gpp,video/x-msvideo,video/x-flv,video/x-ms-wmv';
-        }
+        // if ($this->isMethod('put')) {
+        //     $rules['video'] = 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime,video/3gpp,video/x-msvideo,video/x-flv,video/x-ms-wmv';
+        // } else {
+        //     $rules['video'] = 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime,video/3gpp,video/x-msvideo,video/x-flv,video/x-ms-wmv';
+        // }
 
         return $rules;
     }

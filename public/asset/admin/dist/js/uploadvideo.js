@@ -8,7 +8,7 @@ $(function () {
         console.log(122);
         // Generate pre-signed URL
         const formData = new FormData();
-        formData.append('video', file);
+        // formData.append('video', file);
         formData.append('title', $('#input-title').val());
         formData.append('section_id', $('#input-section_id').val());
         if ($('#input-thumbnail').prop('files').length !== 0) {
@@ -26,8 +26,9 @@ $(function () {
             contentType: false,
             processData: false,
             success: function (response) {
-                const uploadUrl = response.data;
-                console.log('Upload URL:', uploadUrl);
+                const uploadUrl = response.data.url;
+                const filepath = response.data.filename;
+                console.log('response:', response);
                 // Upload video to S3 using the pre-signed URL
                 activeUploadRequest = $.ajax({
                     url: uploadUrl,
@@ -87,7 +88,7 @@ $(function () {
                         // form data without video
                         formData.delete('video');
                         // put video name
-                        formData.append('video_path', file.name);
+                        formData.append('video_path', filepath);
 
                         $.ajax({
                             url: "/admin/lectures",

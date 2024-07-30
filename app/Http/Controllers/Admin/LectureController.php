@@ -43,11 +43,15 @@ class LectureController extends Controller
         try {
             $data = $request->validated();
 
-            $fileName = $data['video']->getClientOriginalName();
+            $section = $this->lectureService->getSection($data['section_id']);
 
-            $url = $this->awsS3Service->getPreSignedUrl($fileName, $data['video']->getClientMimeType());
+            $fileName = 'uploads/' . str_replace(' ', '-', strtolower($section->course->slug)) . '/' . str_replace(' ', '-', strtolower($section->slug)) . '/videos' . '/' . hexdec(uniqid()) . '.mp4';
 
-            return $this->apiResponse($url, __('messages.presigned_url_generated'), 200);
+            // $fileName = $data['video']->getClientOriginalName();
+
+            $url = $this->awsS3Service->getPreSignedUrl($fileName, 'video/mp4');
+
+            return $this->apiResponse(['url' => $url, 'filename' => $fileName], __('messages.presigned_url_generated'), 200);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return $this->apiResponse(null, $e->getMessage(), 500);

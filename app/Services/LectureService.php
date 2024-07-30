@@ -13,11 +13,12 @@ use Illuminate\Support\Facades\Storage;
 class LectureService
 {
     protected $userCoursesService;
+    protected $sectionService;
 
-
-    public function __construct(UserCoursesService $userCoursesService)
+    public function __construct(UserCoursesService $userCoursesService, SectionService $sectionService)
     {
         $this->userCoursesService = $userCoursesService;
+        $this->sectionService = $sectionService;
     }
 
     public function getLecture(string $id)
@@ -121,4 +122,11 @@ class LectureService
 
         return $lectureView;
     }
+
+    // get section by id
+    public function getSection(int $id)
+    {
+        return $this->sectionService->getSection($id);
+    }
+
 }

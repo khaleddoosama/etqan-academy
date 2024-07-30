@@ -302,10 +302,8 @@
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script> --}}
 
     <!-- ==================== Script ====================== -->
-    <script src="{{ asset('asset/admin/js/main.js') }}"></script>
     <!----------------- Charts JS ------------------->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="{{ asset('asset/admin/js/chartsJS.js') }}"></script>
 
 
     <!---  ============= ionicons ============== --->

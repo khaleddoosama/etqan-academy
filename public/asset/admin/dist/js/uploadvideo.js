@@ -5,7 +5,8 @@ $(function () {
         const fileInput = document.getElementById('input-video');
         const file = fileInput.files[0];
 
-        console.log(122);
+        console.log('Starting upload process...');
+
         // Generate pre-signed URL
         const formData = new FormData();
         // formData.append('video', file);
@@ -19,19 +20,19 @@ $(function () {
 
         // csrf
         formData.append('_token', csrfToken);
-        activeUploadRequest = $.ajax({
-            url: '/admin/upload-video',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                const uploadUrl = response.data.url;
-                const filepath = response.data.filename;
-                console.log('response:', response);
+        // activeUploadRequest = $.ajax({
+        //     url: '/admin/upload-video',
+        //     type: 'POST',
+        //     data: formData,
+        //     contentType: false,
+        //     processData: false,
+        //     success: function (response) {
+        //         const uploadUrl = response.data.url;
+        //         const filepath = response.data.filename;
+        //         console.log('response:', response);
                 // Upload video to S3 using the pre-signed URL
                 activeUploadRequest = $.ajax({
-                    url: uploadUrl,
+                    url: "https://etqan-bucket.s3.eu-north-1.amazonaws.com/uploads/tkn-mal/s1-khtm/videos/1806029637787209.mp4?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA47CR26RHQCY3RN4G%2F20240730%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Date=20240730T182800Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1200&X-Amz-Signature=e78f952834ab5e479210aea7f78b5c3274e06f659c2ec7ad073b68411c071d55",
                     type: 'PUT',
                     data: file,
                     processData: false,
@@ -88,7 +89,7 @@ $(function () {
                         // form data without video
                         formData.delete('video');
                         // put video name
-                        formData.append('video_path', filepath);
+                        formData.append('video_path', "asd.mp4");
 
                         $.ajax({
                             url: "/admin/lectures",
@@ -122,15 +123,15 @@ $(function () {
                         $('#status p').html("Error uploading video.");
                     }
                 });
-            },
-            error: function (xhr, status, error) {
-                console.log(error);
-                console.log(xhr);
-                console.log(status);
-                console.error('Failed to generate pre-signed URL.');
-                $('#status p').html("Error generating pre-signed URL.");
-            }
-        });
+            // },
+            // error: function (xhr, status, error) {
+            //     console.log(error);
+            //     console.log(xhr);
+            //     console.log(status);
+            //     console.error('Failed to generate pre-signed URL.');
+            //     $('#status p').html("Error generating pre-signed URL.");
+            // }
+        // });
 
     }
     // store lecture

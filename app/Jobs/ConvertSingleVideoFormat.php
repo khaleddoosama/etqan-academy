@@ -39,6 +39,10 @@ class ConvertSingleVideoFormat implements ShouldQueue
 
 
         Log::info('Convert: ' . $this->videoPath);
+        // check if video exits
+        if (!Storage::disk('public')->exists($this->videoPath)) {
+            Log::error('Video not found: ' . $this->videoPath);
+        }
         FFMpeg::openUrl($this->videoPath)
             ->export()
             ->toDisk('s3')
@@ -48,5 +52,14 @@ class ConvertSingleVideoFormat implements ShouldQueue
             })
             ->save($this->name);
         Log::info('Converted: ' . $this->name);
+    }
+
+    // faild
+    public function failed($exception)
+    {
+        Log::error('error from ConvertSingleVideoFormat: ' . $exception->getMessage());
+        Log::error('Exception Trace: ' . $exception->getTraceAsString());
+        Log::error('getline: ' . $exception->getLine());
+        $this->lecture->update(['processed' => -1]);
     }
 }

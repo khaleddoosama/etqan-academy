@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LectureRequest;
 use App\Jobs\ConvertVideoForStreaming;
+use App\Jobs\ProcessVideo;
 use App\Models\Lecture;
 use App\Services\AwsS3Service;
 use App\Services\LectureService;
@@ -66,7 +67,8 @@ class LectureController extends Controller
         $lecture->video = $request['video_path'];
         $lecture->save();
 
-        ConvertVideoForStreaming::dispatch($lecture);
+        // ConvertVideoForStreaming::dispatch($lecture);
+        ProcessVideo::dispatch($lecture);
 
         Toastr::success(__('messages.lecture_created'), __('status.success'));
         return response()->json(['message' => __('messages.lecture_created')]);

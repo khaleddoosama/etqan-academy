@@ -44,6 +44,13 @@ class ProcessVideo implements ShouldQueue
     private function downloadVideoLocally($url): ?string
     {
         $path = Storage::disk('public')->path($this->lecture->video);
+
+        // Ensure the directory exists
+        $directory = dirname($path);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
         $file = fopen($path, 'w');
         $response = Http::withOptions(['sink' => $file])->get($url);
 

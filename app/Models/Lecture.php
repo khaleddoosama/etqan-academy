@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\UploadTrait;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -99,7 +100,11 @@ class Lecture extends Model
     public function setThumbnailAttribute(UploadedFile $thumbnail)
     {
         // to lower case $this->section->course->title
-        $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($this->slug)) . '/thumbnails';
+        $slug = SlugService::createSlug(Lecture::class, 'slug', $this->title);
+
+        $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($slug)) . '/thumbnails';
+
+
         $this->deleteIfExists($this->thumbnail);
         $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 's3');
     }

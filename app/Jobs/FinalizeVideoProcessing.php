@@ -86,4 +86,13 @@ class FinalizeVideoProcessing implements ShouldQueue
     {
         return preg_replace('/\\.[^.\\s]{3,4}$/', '', $fileName) . '-' . $quality . '.' . $type;
     }
+
+    // faild
+    public function failed($exception)
+    {
+        Log::error('error: ' . $exception->getMessage());
+        Log::error('Exception Trace: ' . $exception->getTraceAsString());
+        Log::error('getline: ' . $exception->getLine());
+        $this->lecture->update(['processed' => -1]);
+    }
 }

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Yoeunes\Toastr\Facades\Toastr;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
+use \Cviebrock\EloquentSluggable\Services\SlugService;
 
 class LectureController extends Controller
 {
@@ -45,8 +46,9 @@ class LectureController extends Controller
             $data = $request->validated();
 
             $section = $this->lectureService->getSection($data['section_id']);
+            $slug = SlugService::createSlug(Lecture::class, 'slug', $data['title']);
 
-            $fileName = 'uploads/' . str_replace(' ', '-', strtolower($section->course->slug)) . '/' . str_replace(' ', '-', strtolower($section->slug)) . '/videos' . '/' . hexdec(uniqid()) . '.mp4';
+            $fileName = 'uploads/' . str_replace(' ', '-', strtolower($section->course->slug)) . '/' . str_replace(' ', '-', strtolower($section->slug)) . '/' . str_replace(' ', '-', strtolower($slug)) . '/videos' . '/' . hexdec(uniqid()) . '.mp4';
 
             // $fileName = $data['video']->getClientOriginalName();
 

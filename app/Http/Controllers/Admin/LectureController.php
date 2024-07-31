@@ -66,7 +66,7 @@ class LectureController extends Controller
         $lecture->video = $request['video_path'];
         $lecture->save();
 
-        ConvertVideoForStreaming::dispatchSync($lecture);
+        ConvertVideoForStreaming::dispatch($lecture);
 
         Toastr::success(__('messages.lecture_created'), __('status.success'));
         return response()->json(['message' => __('messages.lecture_created')]);

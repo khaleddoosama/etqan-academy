@@ -52,9 +52,11 @@ class ProcessVideo implements ShouldQueue
         }
 
         $file = fopen($path, 'w');
+        Log::info('Downloading video from URL: ' . $url);
         $response = Http::withOptions(['sink' => $file])->get($url);
-
+        Log::info('Video downloaded to: ' . $path);
         if ($response->successful()) {
+            Log::info('Video downloaded successfully');
             fclose($file);
             return str_replace('//', '/', $path);
         }

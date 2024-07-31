@@ -26,6 +26,10 @@ class Lecture extends Model
         ];
     }
 
+    // cast
+    protected $casts = [
+        'attachments' => 'array'
+    ];
 
 
     public function section()

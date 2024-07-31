@@ -32,6 +32,9 @@ return new class extends Migration
             $table->boolean('processed')->default(false);
             $table->boolean('longitudinal')->default(false);
 
+            // attachments
+            $table->json('attachments')->nullable();
+
             $table->integer('status')->default(0);
 
             //unique for title and section

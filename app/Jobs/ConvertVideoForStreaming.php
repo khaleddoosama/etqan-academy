@@ -100,7 +100,7 @@ class ConvertVideoForStreaming implements ShouldQueue
         );
         Log::info('names: ' . json_encode($this->names));
         // Resolve the real path to avoid issues with the path formatting
-        $videoPath = Storage::disk($this->lecture->disk)->url($this->lecture->video);
+        $videoPath = $this->getVideoPath();
 
 
         for ($this->i = $loopNumber; $this->i < count($this->format); $this->i++) {
@@ -134,17 +134,27 @@ class ConvertVideoForStreaming implements ShouldQueue
      */
     public function handle(): void
     {
-        $videoUrl = Storage::disk($this->lecture->disk)->url($this->lecture->video);
+        Log::info('Processing video: ' . $this->lecture->video);
+        $videoPath = $this->getVideoPath();
+        Log::info('Video path: ' . $videoPath);
+
+        $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
+        if (Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
+            Log::info("File exists7: " . Storage::disk($this->lecture->disk)->path($this->lecture->video));
+        } else {
+            Log::error("File does not exists7: " . Storage::disk($this->lecture->disk)->path($this->lecture->video));
+        }
+
+        Log::info('Video path: ' . $videoPath);
 
 
-
-        $video1 = $this->getVideoStream($videoUrl);
+        $video1 = $this->getVideoStream($videoPath);
         Log::info('Video stream: ');
 
         list($width, $height) = $this->getVideoDimensions($video1);
         Log::info('Video dimensions: ' . $width . 'x' . $height);
 
-        $durationInSeconds = $this->getVideoDuration($videoUrl);
+        $durationInSeconds = $this->getVideoDuration($videoPath);
         Log::info('Video duration: ' . $durationInSeconds . ' seconds');
         list($hours, $minutes, $seconds) = $this->convertDuration($durationInSeconds);
         Log::info('Video duration: ' . $hours . ' hours, ' . $minutes . ' minutes, ' . $seconds . ' seconds');

@@ -107,7 +107,11 @@ class Lecture extends Model
     // get thumbnail ur
     public function getThumbnailUrlAttribute()
     {
-        return Storage::url($this->thumbnail);
+        if ($this->thumbnail != null) {
+            return Storage::url($this->thumbnail);
+        } else {
+            return null;
+        }
     }
     // on change section_id
     // public function setSectionIdAttribute($value)

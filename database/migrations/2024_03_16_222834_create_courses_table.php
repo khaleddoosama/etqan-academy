@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('description')->nullable();
+            $table->LONGTEXT('description')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('instructor_id')->nullable();
             $table->integer('number_of_levels')->default(1);

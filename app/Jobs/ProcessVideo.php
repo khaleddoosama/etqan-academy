@@ -42,7 +42,7 @@ class ProcessVideo implements ShouldQueue
 
 
         // نفذ FinalizeVideoProcessing بعد انتهاء جميع وظائف التحويل
-        $conversionJobs = $this->collectConversionJobs();
+        $conversionJobs = $this->collectConversionJobs($durationInSeconds);
         if (!empty($conversionJobs)) {
             $finalizeJob = new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath);
             $conversionJobs[] = $finalizeJob->delay(now()->addSeconds(20));
@@ -133,7 +133,7 @@ class ProcessVideo implements ShouldQueue
         ];
 
         foreach ($resolutions as $index => $resolution) {
-            Log::info("index: " . $index . ' ' . $width . ' ' . $height . ' ' . $resolution['width'] . ' ' . $resolution['height']);
+            // Log::info("index: " . $index . ' ' . $width . ' ' . $height . ' ' . $resolution['width'] . ' ' . $resolution['height']);
             if ($isPortrait) {
                 if ($width >= $resolution['height'] && $height >= $resolution['width']) {
                     // $this->dispatchConversionJobs($index);
@@ -151,7 +151,7 @@ class ProcessVideo implements ShouldQueue
         return 0;
     }
 
-    private function collectConversionJobs()
+    private function collectConversionJobs($durationInSeconds)
     {
         $formats = [
             [(new X264('aac', 'libx264'))->setKiloBitrate(4096), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(4096)],
@@ -174,15 +174,16 @@ class ProcessVideo implements ShouldQueue
         $conversionJobs = [];
 
         for ($this->i = $this->index; $this->i < count($formats); $this->i++) {
-            Log::info("this->i: " . $this->i);
+            // Log::info("this->i: " . $this->i);
             for ($j = 0; $j < count($formats[$this->i]); $j++) {
-                Log::info("j: " . $j);
+                // Log::info("j: " . $j);
                 $job = new ConvertSingleVideoFormat(
                     $this->lecture,
                     $formats[$this->i][$j],
                     $videoWidths[$this->i],
                     $videoHeights[$this->i],
                     $names[$this->i][$j],
+                    $durationInSeconds,
                     $this->videoPath
                 );
 

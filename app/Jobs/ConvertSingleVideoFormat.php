@@ -40,7 +40,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
 
         Log::info('Convert: ' . $this->videoPath);
         // check if video exits
-        if (!Storage::disk('public')->exists($this->videoPath)) {
+        if ($this->videoPath) {
             Log::error('Video not found: ' . $this->videoPath);
         }
         FFMpeg::openUrl($this->videoPath)

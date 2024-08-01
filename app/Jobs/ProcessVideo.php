@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use FFMpeg\Format\Video\X264;
 use FFMpeg\Format\Video\WebM;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Bus;
 
 class ProcessVideo implements ShouldQueue
 {
@@ -21,6 +22,7 @@ class ProcessVideo implements ShouldQueue
     public $lecture;
     public $videoPath;
     public $i;
+    public $index;
 
     public function __construct($lecture)
     {
@@ -38,8 +40,17 @@ class ProcessVideo implements ShouldQueue
         [$hours, $minutes, $seconds] = $this->convertDuration($durationInSeconds);
         $quality = $this->determineQualityAndConvert($width, $height);
 
-        dispatch(new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath))
-            ->delay(now()->addSeconds(10));
+
+        // نفذ FinalizeVideoProcessing بعد انتهاء جميع وظائف التحويل
+        $conversionJobs = $this->collectConversionJobs();
+        if (!empty($conversionJobs)) {
+            $finalizeJob = new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath);
+            $conversionJobs[] = $finalizeJob->delay(now()->addSeconds(20));
+            Bus::chain($conversionJobs)->dispatch();
+        }
+
+        // dispatch(new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath))
+        //     ->delay(now()->addSeconds(10));
     }
     private function downloadVideoLocally($url): ?string
     {
@@ -125,12 +136,14 @@ class ProcessVideo implements ShouldQueue
             Log::info("index: " . $index . ' ' . $width . ' ' . $height . ' ' . $resolution['width'] . ' ' . $resolution['height']);
             if ($isPortrait) {
                 if ($width >= $resolution['height'] && $height >= $resolution['width']) {
-                    $this->dispatchConversionJobs($index);
+                    // $this->dispatchConversionJobs($index);
+                    $this->index = $index;
                     return $resolution['quality'];
                 }
             } else {
                 if ($width >= $resolution['width'] && $height >= $resolution['height']) {
-                    $this->dispatchConversionJobs($index);
+                    // $this->dispatchConversionJobs($index);
+                    $this->index = $index;
                     return $resolution['quality'];
                 }
             }
@@ -138,7 +151,7 @@ class ProcessVideo implements ShouldQueue
         return 0;
     }
 
-    private function dispatchConversionJobs(int $index)
+    private function collectConversionJobs()
     {
         $formats = [
             [(new X264('aac', 'libx264'))->setKiloBitrate(4096), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(4096)],
@@ -158,25 +171,38 @@ class ProcessVideo implements ShouldQueue
             [$this->getFileName($this->lecture->video, 'mp4', '240p'), $this->getFileName($this->lecture->video, 'webm', '240p')]
         ];
 
+        $conversionJobs = [];
 
-        for ($this->i = $index; $this->i < count($formats); $this->i++) {
+        for ($this->i = $this->index; $this->i < count($formats); $this->i++) {
             Log::info("this->i: " . $this->i);
             for ($j = 0; $j < count($formats[$this->i]); $j++) {
                 Log::info("j: " . $j);
-                dispatch(new ConvertSingleVideoFormat(
+                $job = new ConvertSingleVideoFormat(
                     $this->lecture,
                     $formats[$this->i][$j],
                     $videoWidths[$this->i],
                     $videoHeights[$this->i],
                     $names[$this->i][$j],
                     $this->videoPath
-                ))->delay(now()->addSeconds(5));
+                );
+
+                $conversionJobs[] = $job->delay(now()->addSeconds(10));
             }
         }
+        return $conversionJobs;
     }
 
     private function getFileName($fileName, $type, $quality)
     {
         return preg_replace('/\\.[^.\\s]{3,4}$/', '', $fileName) . '-' . $quality . '.' . $type;
+    }
+
+    // faild
+    public function failed($exception)
+    {
+        Log::error('error from processVideo: ' . $exception->getMessage());
+        Log::error('Exception Trace: ' . $exception->getTraceAsString());
+        Log::error('getline: ' . $exception->getLine());
+        $this->lecture->update(['processed' => -1]);
     }
 }

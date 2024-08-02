@@ -94,7 +94,7 @@
 
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="editVideoModalLabel">
-                                                                            {{ __('buttons.add_video') }}
+                                                                            {{ __('buttons.edit_video') }}
                                                                         </h5>
                                                                         <button type="button" class="close"
                                                                             data-dismiss="modal" aria-label="Close">
@@ -108,12 +108,12 @@
                                                                             value="{{ $lecture->title }}" /> --}}
 
                                                                         <div class='form-group row'>
-                                                                            <x-input-label for="input-title-{{ $loop->iteration }}"
-                                                                                class="col-sm-12 col-form-label">{{ __('main.title') }}</x-input-label>
+                                                                            <x-input-label
+                                                                                for="input-title-{{ $loop->iteration }}"
+                                                                                class="col-sm-12 col-form-label">{{ __('attributes.title') }}</x-input-label>
 
                                                                             <div class="col-sm-12">
-                                                                                <x-text-input type="text"
-                                                                                    name="title"
+                                                                                <x-text-input type="text" name="title"
                                                                                     id="input-title-{{ $loop->iteration }}"
                                                                                     value="{{ old('title') ?? ($lecture->title ?? '') }}"
                                                                                     class="form-control" />
@@ -225,10 +225,13 @@
                                                 <div id="collapse-{{ $loop->iteration }}" class="collapse"
                                                     aria-labelledby="heading-{{ $loop->iteration }}"
                                                     data-parent="#accordion" style="visibility: visible!important">
+
+                                                    <div class="mx-3 my-3 callout callout-info row">
+                                                        <h5>{{ __('attributes.description') }}:</h5>
+                                                        <p>{!! $lecture->description !!}</p>
+                                                    </div>
                                                     <div
                                                         class="card-body d-flex justify-content-between align-items-center">
-                                                        {{ $lecture->description }}
-
                                                         {{-- show video --}}
                                                         <div class="mx-3 my-3 callout callout-info">
                                                             <h5>{{ __('attributes.video') }}:</h5>
@@ -282,7 +285,43 @@
                                                                     style="height: 240px">
                                                             </div>
                                                         @endif
+
                                                     </div>
+                                                    {{-- show attachments --}}
+                                                    @if ($lecture->attachments)
+                                                        <div class="mx-3 my-3 callout callout-info">
+                                                            <h5>{{ __('attributes.attachments') }}:</h5>
+                                                            <div class="row">
+                                                                @foreach ($lecture->attachments as $attachment)
+                                                                    <div class="col-md">
+                                                                        <h6>{{ $attachment['originalName'] }}:</h6>
+                                                                        @if (Str::contains($attachment['type'], 'image'))
+                                                                            <img src="{{ Storage::url($attachment['path']) }}"
+                                                                                alt="{{ $attachment['originalName'] }}"
+                                                                                class="img-thumbnail"
+                                                                                style="height: 100px">
+                                                                        @elseif (Str::contains($attachment['type'], 'video'))
+                                                                            <video style="height: 100px" controls>
+                                                                                <source
+                                                                                    src="{{ Storage::url($attachment['path']) }}"
+                                                                                    type="video/mp4">
+                                                                            </video>
+                                                                        @elseif (Str::contains($attachment['type'], 'audio'))
+                                                                            <audio style="height: 100px" controls>
+                                                                                <source
+                                                                                    src="{{ Storage::url($attachment['path']) }}"
+                                                                                    type="audio/mp3">
+                                                                            </audio>
+                                                                        @else
+                                                                            <iframe
+                                                                                src="{{ Storage::url($attachment['path']) }}"
+                                                                                style="width: 100%; height: 100px;"></iframe>
+                                                                        @endif
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             @elseif ($lecture->processed == 0)
                                                 <div id="collapse-{{ $loop->iteration }}" class="collapse"
@@ -390,6 +429,22 @@
                                                     <img src="" alt="" id="thumbnail"
                                                         class="img-thumbnail" style="height: 240px">
                                                 </div>
+
+                                                <div class='row form-group col-md-12'>
+                                                    <x-input-label for="summernote"
+                                                        class='col-sm-12 col-form-label'>{{ __('attributes.description') }}</x-input-label>
+
+                                                    <div class='col-sm-12'>
+                                                        <textarea name="description" id="summernote" class="form-control" rows="1">{{ old('description') ?? ($value ?? '') }}</textarea>
+                                                    </div>
+                                                </div>
+
+                                                <x-custom.form-group type="file" name="attachments[]"
+                                                    :multiple="true" />
+
+                                                <div class="form-group row" style="display: none" id="showAttachments">
+
+                                                </div>
                                             </div>
 
                                             <div class="modal-footer">
@@ -435,6 +490,7 @@
                                                                 {{ __('buttons.choose') }}</option>
                                                             @foreach ($lectures as $option)
                                                                 <option value="{{ $option->id }}">
+                                                                    {{ $option->section->course->title }} -
                                                                     {{ $option->section->title }} - {{ $option->title }}
                                                                 </option>
                                                             @endforeach
@@ -633,6 +689,48 @@
             }
             reader.readAsDataURL(this.files[0]);
         });
+
+        // when upload attachments show the attachments preview
+        $('#input-attachments').change(function() {
+            console.log('attachments');
+            $('#showAttachments').show('blind');
+
+            // remove old preview
+            $('#showAttachments').empty();
+
+            // get the files
+            var files = this.files;
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.createElement('div');
+                    preview.classList.add('col-md-6');
+                    preview.classList.add('col-12');
+                    let type = e.target.result.split(':')[1].split('/')[0];
+
+                    if (type == 'image') {
+                        preview.innerHTML = '<img class="img-thumbnail img-fluid" src="' + e.target.result +
+                            '"/>';
+                    } else if (type == 'video') {
+                        preview.innerHTML = '<video style="width: 100%; height: 100%;" controls src="' + e
+                            .target.result + '" >';
+                    } else if (type == 'audio') {
+                        preview.innerHTML =
+                            '<audio style="width: 100%; height: 100%;" controls class="audio"  src="' + e.target
+                            .result + '" >';
+                    } else {
+                        preview.innerHTML = '<iframe style="width: 100%; height: 100%;" src="' + e.target
+                            .result + '" >' + '</iframe>';
+                    }
+                    $('#showAttachments').append(preview);
+                }
+                reader.readAsDataURL(file);
+            }
+
+        });
+
 
         // when upload video show the video preview
         @foreach ($section->lectures as $lecture)

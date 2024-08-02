@@ -86,13 +86,19 @@ trait UploadTrait
         $attachmentData = [];
         foreach ($attachments as $attachment) {
             $name_gen = hexdec(uniqid()) . '.' . $attachment->getClientOriginalExtension();
-            $path = "{$folderName}/{$name_gen}";
-            $attachment->move(public_path("{$folderName}/"), $name_gen);
-            $attachmentData[] = $path;
+            $path = "uploads/{$folderName}/{$name_gen}";
+            // $attachment->move(public_path("{$folderName}/"), $name_gen);
+            Storage::put($path, file_get_contents($attachment));
+
+            $attachmentData[] = [
+                'path' => $path,
+                'originalName' => $attachment->getClientOriginalName(),
+                'type' => $attachment->getMimeType()
+            ];
         }
         // Encode the attachment data as JSON
 
-        // dd($attachmentData);
+        Log::info('attachments data: '. json_encode($attachmentData));
         return $attachmentData;
     }
 

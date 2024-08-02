@@ -89,4 +89,6 @@ return [
     'wallet' => 'Wallet',
     'wallet_phone' => 'Wallet Phone',
     'amount' => 'Amount',
+    'attachments' => 'Attachments',
+    'attachment' => 'Attachment',
 ];

@@ -65,6 +65,7 @@ class LectureController extends Controller
     public function store(LectureRequest $request)
     {
         $data = $request->validated();
+        Log::info('data: ' . json_encode($data));
         $lecture = $this->lectureService->createLecture($data);
         $lecture->video = $request['video_path'];
         $lecture->save();

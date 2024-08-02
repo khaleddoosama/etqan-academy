@@ -75,4 +75,6 @@
     "duplicate" => "Duplicate",
     "duplicate_lecture" => "Duplicate Lecture",
     "add_course" => "Add Course",
+    "edit_video" => "Edit Video",
+    
 );

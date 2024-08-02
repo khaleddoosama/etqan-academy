@@ -18,6 +18,8 @@
     }
 
     $inputId = 'input-' . $name;
+    // remove [] from id
+    $inputId = str_replace('[]', '', $inputId);
 
     //example sections[0][title] must be transformed to sections.0.title
     $error = str_replace(['[', ']'], '.', $name);
@@ -42,7 +44,7 @@
         <div class="input-group {{ $COLINPUT ?? 'col-sm-12' }}">
             <div class="custom-file">
                 <input type="{{ $type }}" name="{{ $name }}" id="{{ $inputId }}"
-                    class="custom-file-input" accept="image/*">
+                    class="custom-file-input" {{ $multiple ? 'multiple' : '' }}>
                 <x-input-label for="{{ $inputId }}" class="custom-file-label col-form-label"
                     data-browse="{{ __('buttons.browse') }}">{{ __('buttons.choose') }}</x-input-label>
             </div>

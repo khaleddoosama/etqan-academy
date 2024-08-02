@@ -408,7 +408,7 @@
                     ['insert', ['link', 'picture', 'video']],
                     ['view', ['fullscreen', 'codeview', 'help']]
                 ],
-                placeholder: 'أدخل وصف الدورة هنا...',
+                placeholder: 'أدخل وصف المحتوى هنا...',
                 direction: 'rtl' // تعيين اتجاه النص إلى اليمين إلى اليسار
             });
         });

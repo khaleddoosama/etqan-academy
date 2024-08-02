@@ -8,6 +8,7 @@ use App\Models\Lecture;
 use App\Models\LectureViews;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class LectureService
@@ -88,6 +89,12 @@ class LectureService
 
         if ($lecture->video) {
             Storage::disk($lecture->disk)->delete($lecture->video);
+        }
+
+        if ($lecture->attachments) {
+            foreach ($lecture->attachments as $attachment) {
+                Storage::disk($lecture->disk)->delete($attachment['path']);
+            }
         }
 
 

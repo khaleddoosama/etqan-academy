@@ -122,6 +122,18 @@ class Lecture extends Model
             return null;
         }
     }
+
+    // set attachments Attribute
+    public function setAttachmentsAttribute($attachments)
+    {
+        if (is_array($attachments)) {
+            // to lower case $this->section->course->title
+            $slug = SlugService::createSlug(Lecture::class, 'slug', $this->title);
+            $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($slug)) . '/attachments';
+            $this->attributes['attachments'] = json_encode($this->uploadAttachments($attachments, $folderName));
+        }
+    }
+
     // on change section_id
     // public function setSectionIdAttribute($value)
     // {

@@ -7,12 +7,14 @@ $(function () {
 
         console.log('Starting upload process...');
         $('#effect').show('blind');
+        // scroll to the top of the page to show the progress bar
+        window.scrollTo(0, 0);
         const formData = createFormData(file);
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         formData.append('_token', csrfToken);
 
         try {
-            console.log('Requesting pre-signed URL...');
+            // console.log('Requesting pre-signed URL...');
             const preSignedUrlResponse = await postFormData('/admin/upload-video', formData);
             console.log('Pre-signed URL:', preSignedUrlResponse);
             await uploadFileToS3(preSignedUrlResponse.data.url, file);
@@ -29,11 +31,18 @@ $(function () {
         const formData = new FormData();
         formData.append('title', document.getElementById('input-title').value);
         formData.append('section_id', document.getElementById('input-section_id').value);
+        // formData.append('description', document.getElementById('summernote').value);
 
         const thumbnailInput = document.getElementById('input-thumbnail');
         if (thumbnailInput.files.length !== 0) {
             formData.append('thumbnail', thumbnailInput.files[0]);
         }
+        // const attachmentsInput = document.getElementById('input-attachments');
+        // if (attachmentsInput.files.length !== 0) {
+        //     for (let i = 0; i < attachmentsInput.files.length; i++) {
+        //         formData.append('attachments[]', attachmentsInput.files[i]);
+        //     }
+        // }
 
         return formData;
     }
@@ -83,8 +92,15 @@ $(function () {
     }
 
     async function storeLecture(formData, filepath) {
-        formData.delete('video');
         formData.append('video_path', filepath);
+        formData.append('description', document.getElementById('summernote').value);
+        const attachmentsInput = document.getElementById('input-attachments');
+        if (attachmentsInput.files.length !== 0) {
+            for (let i = 0; i < attachmentsInput.files.length; i++) {
+                formData.append('attachments[]', attachmentsInput.files[i]);
+            }
+        }
+
 
         const response = await fetch('/admin/lectures', {
             method: 'POST',

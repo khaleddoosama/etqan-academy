@@ -312,10 +312,13 @@
                                                                                     src="{{ Storage::url($attachment['path']) }}"
                                                                                     type="audio/mp3">
                                                                             </audio>
-                                                                        @else
+                                                                        @elseif (Str::contains($attachment['type'], 'application'))
                                                                             <iframe
                                                                                 src="{{ Storage::url($attachment['path']) }}"
                                                                                 style="width: 100%; height: 100px;"></iframe>
+                                                                        @else
+                                                                            <a href="{{ Storage::url($attachment['path']) }}"
+                                                                                target="_blank">{{ $attachment['originalName'] }}</a>
                                                                         @endif
                                                                     </div>
                                                                 @endforeach
@@ -708,6 +711,7 @@
                     var preview = document.createElement('div');
                     preview.classList.add('col-md-6');
                     preview.classList.add('col-12');
+                    preview.classList.add('my-3');
                     let type = e.target.result.split(':')[1].split('/')[0];
 
                     if (type == 'image') {
@@ -720,9 +724,13 @@
                         preview.innerHTML =
                             '<audio style="width: 100%; height: 100%;" controls class="audio"  src="' + e.target
                             .result + '" >';
-                    } else {
+                    } else if (type == 'application') {
                         preview.innerHTML = '<iframe style="width: 100%; height: 100%;" src="' + e.target
                             .result + '" >' + '</iframe>';
+                    } else {
+                        console.log(e.target);
+                        preview.innerHTML = '<a class="text-primary" href="' + e.target.result +
+                            '" target="_blank">View attachment</a>';
                     }
                     $('#showAttachments').append(preview);
                 }

@@ -48,7 +48,7 @@ trait UploadTrait
             // if ($disk == 's3') {
             //     Storage::disk($disk)->put($path, file_get_contents($file));
             // } elseif ($disk == 'public') {
-                $file->move(public_path("uploads/{$folderName}/"), $name_gen);
+            $file->move(public_path("uploads/{$folderName}/"), $name_gen);
             // }
 
             return $path;
@@ -61,24 +61,31 @@ trait UploadTrait
     // delete Image
     public function deleteIfExists($path)
     {
-        if ($path && File::exists(public_path($path))) {
-            File::delete(public_path($path));
+        if (!$path) {
+            return false;
         }
 
-        if ($path && File::exists(public_path('uploads/' . $path))) {
-            File::delete(public_path('uploads/' . $path));
+        $paths = [
+            public_path($path),
+            public_path('uploads/' . $path),
+        ];
+
+        foreach ($paths as $filePath) {
+            if (File::exists($filePath)) {
+                File::delete($filePath);
+            }
         }
 
-        if ($path && Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-        }
-
-        if ($path && Storage::disk('s3')->exists($path)) {
-            Storage::disk('s3')->delete($path);
+        $disks = ['public', 's3'];
+        foreach ($disks as $disk) {
+            if (Storage::disk($disk)->exists($path)) {
+                Storage::disk($disk)->delete($path);
+            }
         }
 
         return true;
     }
+
 
     // upload attachments (audios, videos) must return json
     public function uploadAttachments(array $attachments, $folderName): array
@@ -98,7 +105,7 @@ trait UploadTrait
         }
         // Encode the attachment data as JSON
 
-        Log::info('attachments data: '. json_encode($attachmentData));
+        Log::info('attachments data: ' . json_encode($attachmentData));
         return $attachmentData;
     }
 

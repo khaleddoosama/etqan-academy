@@ -7,8 +7,9 @@ $(function () {
 
         console.log('Starting upload process...');
         $('#effect').show('blind');
-        // scroll to the top of the page to show the progress bar
-        window.scrollTo(0, 0);
+        // scroll to the top of the modal to show the progress bar
+        $('.modal.fade.show').animate({ scrollTop: 0 }, 'slow');
+
         const formData = createFormData(file);
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         formData.append('_token', csrfToken);

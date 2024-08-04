@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class LectureService
 {
@@ -54,6 +55,7 @@ class LectureService
     public function createLecture(array $data): Lecture
     {
         $data['disk'] = 's3';
+        $data['position'] = Lecture::where('section_id', $data['section_id'])->max('position') + 1;
         $lecture = Lecture::create($data); // Create the lecture without the 'lectures' data
 
         return $lecture;
@@ -70,18 +72,18 @@ class LectureService
     public function deleteLecture(Lecture $lecture): bool
     {
         $convertedVideo = $lecture->convertedVideo;
-
+        Log::info('convertedVideo: ' . json_encode($convertedVideo));
         if ($convertedVideo) {
-            Storage::delete($convertedVideo->mp4_Format_240);
-            Storage::delete($convertedVideo->mp4_Format_360);
-            Storage::delete($convertedVideo->mp4_Format_480);
-            Storage::delete($convertedVideo->mp4_Format_720);
-            Storage::delete($convertedVideo->mp4_Format_1080);
-            Storage::delete($convertedVideo->webm_Format_240);
-            Storage::delete($convertedVideo->webm_Format_360);
-            Storage::delete($convertedVideo->webm_Format_480);
-            Storage::delete($convertedVideo->webm_Format_720);
-            Storage::delete($convertedVideo->webm_Format_1080);
+            $convertedVideo->mp4_Format_240 !== null ? Storage::delete($convertedVideo->mp4_Format_240) : null;
+            $convertedVideo->mp4_Format_360 !== null ? Storage::delete($convertedVideo->mp4_Format_360) : null;
+            $convertedVideo->mp4_Format_480 !== null ? Storage::delete($convertedVideo->mp4_Format_480) : null;
+            $convertedVideo->mp4_Format_720 !== null ? Storage::delete($convertedVideo->mp4_Format_720) : null;
+            $convertedVideo->mp4_Format_1080 !== null ? Storage::delete($convertedVideo->mp4_Format_1080) : null;
+            $convertedVideo->webm_Format_240 !== null ? Storage::delete($convertedVideo->webm_Format_240) : null;
+            $convertedVideo->webm_Format_360 !== null ? Storage::delete($convertedVideo->webm_Format_360) : null;
+            $convertedVideo->webm_Format_480 !== null ? Storage::delete($convertedVideo->webm_Format_480) : null;
+            $convertedVideo->webm_Format_720 !== null ? Storage::delete($convertedVideo->webm_Format_720) : null;
+            $convertedVideo->webm_Format_1080 !== null ? Storage::delete($convertedVideo->webm_Format_1080) : null;
         }
         if ($lecture->thumbnail) {
             Storage::delete($lecture->thumbnail);
@@ -108,7 +110,7 @@ class LectureService
         // Create a new lecture instance and copy the properties from the original lecture
         $newLecture = $lecture->replicate();
         $newLecture->section_id = $sectionId;
-        $newLecture->slug = $newLecture->slug . '-' . $newLecture->id;
+        $newLecture->slug = SlugService::createSlug(Lecture::class, 'slug', $lecture->title);
         $newLecture->processed = 0;
         // Save the new lecture
         $newLecture->save();
@@ -135,5 +137,4 @@ class LectureService
     {
         return $this->sectionService->getSection($id);
     }
-
 }

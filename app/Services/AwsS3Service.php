@@ -44,4 +44,17 @@ class AwsS3Service
             throw $e;
         }
     }
+
+    public function duplicateObject($sourcePath, $destinationPath)
+    {
+        try {
+            $this->s3Client->copyObject([
+                'Bucket'     => $this->bucket,
+                'CopySource' => "{$this->bucket}/{$sourcePath}",
+                'Key'        => $destinationPath,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error duplicating object on S3: ' . $e->getMessage());
+        }
+    }
 }

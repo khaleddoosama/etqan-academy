@@ -47,14 +47,17 @@ class LectureController extends Controller
             $data = $request->validated();
 
             $section = $this->lectureService->getSection($data['section_id']);
-            $slug = SlugService::createSlug(Lecture::class, 'slug', $data['title']);
+            if (!array_key_exists('id', $data)) {
+                $slug = SlugService::createSlug(Lecture::class, 'slug', $data['title']);
+            } else {
+                $lecture = $this->lectureService->getLecture($data['id']);
+                $slug = $lecture->slug;
+            }
 
             $fileName = 'uploads/' . str_replace(' ', '-', strtolower($section->course->slug)) . '/' . str_replace(' ', '-', strtolower($section->slug)) . '/' . str_replace(' ', '-', strtolower($slug)) . '/videos' . '/' . hexdec(uniqid()) . '.mp4';
 
             // $fileName = $data['video']->getClientOriginalName();
-
             $url = $this->awsS3Service->getPreSignedUrl($fileName, 'video/mp4');
-
             return $this->apiResponse(['url' => $url, 'filename' => $fileName], __('messages.presigned_url_generated'), 200);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -75,37 +78,40 @@ class LectureController extends Controller
         ProcessVideo::dispatch($lecture);
 
         Toastr::success(__('messages.lecture_created'), __('status.success'));
-        return response()->json(['message' => __('messages.lecture_created')]);
+        // return response()->json(['message' => __('messages.lecture_created')]);
+        return $this->apiResponse($lecture, __('messages.lecture_created'), 201);
     }
 
-
-    public function show(string $id)
+    //edit
+    public function edit(Lecture $lecture)
     {
-        //
+        $sections = $this->lectureService->getSections($lecture->section->course->slug);
+        return view('admin.lecture.edit', compact('lecture', 'sections'));
     }
-
-
-    public function edit(string $id)
-    {
-        //
-    }
-
 
     public function update(LectureRequest $request, Lecture $lecture)
     {
-        $data = $request->validated();
 
-        // $this->lectureService->updateLecture($lecture, $data) ? Toastr::success(__('messages.lecture_updated'), __('status.success')) : '';
-        $lecture = $this->lectureService->updateLecture($lecture, $data);
+        try {
+            $data = $request->validated();
 
-        // check if data has video or thumbnail
-        if ($request->hasFile('video')) {
-            ProcessVideo::dispatch($lecture);
+            $lecture = $this->lectureService->updateLecture($lecture, $data);
+
+            // check if data has video or thumbnail
+            if ($request->has('video_path')) {
+                $lecture->video = $request['video_path'];
+                $lecture->save();
+                ProcessVideo::dispatch($lecture);
+            }
+
+            Toastr::success(__('messages.lecture_updated'), __('status.success'));
+
+            // return response()->json(['message' => __('messages.lecture_updated')]);
+            return $this->apiResponse($lecture, __('messages.lecture_updated'), 200);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->apiResponse(null, $e->getMessage(), 500);
         }
-
-        Toastr::success(__('messages.lecture_updated'), __('status.success'));
-
-        return response()->json(['message' => __('messages.lecture_updated')]);
     }
     public function destroy(string $id)
     {
@@ -120,7 +126,7 @@ class LectureController extends Controller
         [$lecture, $newLecture] = $this->lectureService->duplicateLecture($request->lecture_id, $request->section_id);
 
 
-        DuplicateLecture::dispatch($lecture,$newLecture);
+        DuplicateLecture::dispatch($lecture, $newLecture);
 
         // convert video
         // ConvertVideoForStreaming::dispatch($lectures[1]);
@@ -144,5 +150,23 @@ class LectureController extends Controller
             'message' => __('messages.lectures_order_updated'),
             'status' => 200
         ]);
+    }
+
+
+    public function updateAttachment(Request $request, Lecture $lecture)
+    {
+        $lecture = $this->lectureService->updateAttachment($lecture, $request->attachment_path, $request->attachment_name);
+
+        return $this->apiResponse($lecture, __('messages.attachment_updated'), 200);
+    }
+
+    public function deleteAttachment(Request $request, Lecture $lecture)
+    {
+
+        $this->lectureService->deleteAttachment($lecture, $request->attachment_path);
+
+        Toastr::success(__('messages.attachment_deleted'), __('status.success'));
+
+        return redirect()->back();
     }
 }

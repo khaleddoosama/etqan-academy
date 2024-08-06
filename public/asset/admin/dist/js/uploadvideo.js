@@ -1,49 +1,68 @@
 $(function () {
     var activeUploadRequest = null; // This will hold the current upload request
+    // check if there in page input have id = input-id if it exist then make var isupdate = true else make it false
+    var isUpdate = document.getElementById('input-id') ? true : false;
 
     async function uploadVideo() {
         const fileInput = document.getElementById('input-video');
         const file = fileInput.files[0];
 
         console.log('Starting upload process...');
-        $('#effect').show('blind');
-        // scroll to the top of the modal to show the progress bar
-        $('.modal.fade.show').animate({ scrollTop: 0 }, 'slow');
 
-        const formData = createFormData(file);
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        formData.append('_token', csrfToken);
+
+        const formData = createFormData();
+
 
         try {
-            // console.log('Requesting pre-signed URL...');
-            const preSignedUrlResponse = await postFormData('/admin/upload-video', formData);
-            console.log('Pre-signed URL:', preSignedUrlResponse);
-            await uploadFileToS3(preSignedUrlResponse.data.url, file);
-            console.log('File uploaded successfully.');
-            await storeLecture(formData, preSignedUrlResponse.data.filename);
-            console.log('Lecture stored successfully.');
+            if (file) {
+                $('#effect').show('blind');
+                // scroll to the top of the modal to show the progress bar
+                $('.modal.fade.show').animate({ scrollTop: 0 }, 'slow');
+
+                window.scrollTo(
+                    {
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+
+
+                console.log('Uploading file...');
+                const preSignedUrlResponse = await postFormData('/admin/upload-video', formData);
+                console.log('Pre-signed URL:', preSignedUrlResponse);
+                await uploadFileToS3(preSignedUrlResponse.data.url, file);
+                console.log('File uploaded successfully.');
+                if (isUpdate) {
+                    await updateLecture(formData, preSignedUrlResponse.data.filename);
+                    console.log('Lecture updated successfully.');
+                } else {
+                    await storeLecture(formData, preSignedUrlResponse.data.filename);
+                    console.log('Lecture stored successfully.');
+                }
+            } else {
+                console.log('No file selected.');
+                await updateLecture(formData);
+                console.log('Lecture updated successfully.');
+            }
         } catch (error) {
             console.error('Error:', error);
             document.querySelector('#status p').innerText = error.message;
+        } finally {
+            activeUploadRequest = null; // Reset after the upload process completes
         }
     }
 
-    function createFormData(file) {
+    function createFormData() {
         const formData = new FormData();
         formData.append('title', document.getElementById('input-title').value);
         formData.append('section_id', document.getElementById('input-section_id').value);
-        // formData.append('description', document.getElementById('summernote').value);
 
-        const thumbnailInput = document.getElementById('input-thumbnail');
-        if (thumbnailInput.files.length !== 0) {
-            formData.append('thumbnail', thumbnailInput.files[0]);
+        if (document.getElementById('input-id')) {
+            console.log('found');
+            formData.append('id', document.getElementById('input-id').value);
         }
-        // const attachmentsInput = document.getElementById('input-attachments');
-        // if (attachmentsInput.files.length !== 0) {
-        //     for (let i = 0; i < attachmentsInput.files.length; i++) {
-        //         formData.append('attachments[]', attachmentsInput.files[i]);
-        //     }
-        // }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        formData.append('_token', csrfToken);
 
         return formData;
     }
@@ -53,14 +72,21 @@ $(function () {
             method: 'POST',
             body: formData,
         });
-        if (!response.ok) throw new Error('Failed to generate pre-signed URL.');
-        return response.json();
+        const result = await response.json();
+        if (!response.ok) {
+            toastr.error(result.message);
+            throw new Error('Failed to generate pre-signed URL.');
+        }
+
+        return result;
     }
 
     async function uploadFileToS3(uploadUrl, file) {
         const xhr = new XMLHttpRequest();
         xhr.open('PUT', uploadUrl, true);
         xhr.setRequestHeader('Content-Type', file.type);
+
+        activeUploadRequest = xhr; // Assign the active upload request
 
         return new Promise((resolve, reject) => {
             xhr.upload.addEventListener('progress', updateProgress);
@@ -95,6 +121,12 @@ $(function () {
     async function storeLecture(formData, filepath) {
         formData.append('video_path', filepath);
         formData.append('description', document.getElementById('summernote').value);
+
+        const thumbnailInput = document.getElementById('input-thumbnail');
+        if (thumbnailInput.files.length !== 0) {
+            formData.append('thumbnail', thumbnailInput.files[0]);
+        }
+
         const attachmentsInput = document.getElementById('input-attachments');
         if (attachmentsInput.files.length !== 0) {
             for (let i = 0; i < attachmentsInput.files.length; i++) {
@@ -110,11 +142,46 @@ $(function () {
         if (!response.ok) throw new Error('Failed to store lecture.');
 
         const result = await response.json();
-        console.log('Lecture stored:', result);
+        // console.log('Lecture stored:', result);
         document.querySelector('#status p').innerText = 'Lecture stored successfully.';
         setTimeout(() => location.reload(), 1000);
     }
 
+    async function updateLecture(formData, filepath = null) {
+        if (filepath) {
+            formData.append('video_path', filepath);
+        }
+        formData.append('description', document.getElementById('summernote').value);
+
+        const thumbnailInput = document.getElementById('input-thumbnail');
+        if (thumbnailInput.files.length !== 0) {
+            formData.append('thumbnail', thumbnailInput.files[0]);
+        }
+
+        const attachmentsInput = document.getElementById('input-attachments');
+        if (attachmentsInput.files.length !== 0) {
+            for (let i = 0; i < attachmentsInput.files.length; i++) {
+                formData.append('attachments[]', attachmentsInput.files[i]);
+            }
+        }
+
+        // for (const pair of formData.entries()) {
+        //     console.log(pair[0] + ', ' + pair[1]);
+        // }
+        formData.append('_method', 'PUT');
+        const response = await fetch('/admin/lectures/' + document.getElementById('input-id').value, {
+            method: 'POST',
+            body: formData,
+        });
+        const result = await response.json();
+        if (!response.ok) {
+            toastr.error(result.message);
+            throw new Error('Failed to update lecture.');
+        }
+
+        document.querySelector('#status p').innerText = 'Lecture updated successfully.';
+        setTimeout(() => location.reload(), 1000);
+    }
     // store lecture
     $("#effect").hide();
 
@@ -124,7 +191,7 @@ $(function () {
                 required: true,
             },
             video: {
-                required: true,
+                required: isUpdate ? false : true,
                 accept: "video/*"
             }
         },
@@ -160,7 +227,6 @@ $(function () {
     // cancel upload
     $('#cancelUpload').click(function () {
         if (activeUploadRequest) {
-            console.log(activeUploadRequest);
             activeUploadRequest.abort(); // Abort the active request
             activeUploadRequest = null; // Reset the variable
             console.log('Upload canceled');
@@ -171,8 +237,7 @@ $(function () {
         $('#status p').html('');
 
 
-        $('#form1').trigger("reset");
-        $('#form1').validate().resetForm();
+        // $('#form1').trigger("reset");
+        // $('#form1').validate().resetForm();
     });
 });
-

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Controllers\Api\ApiResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\AttributesTrait;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,7 @@ use Illuminate\Validation\Rule;
 class LectureRequest extends FormRequest
 {
     use AttributesTrait;
+    use ApiResponseTrait;
 
     public function authorize(): bool
     {
@@ -21,8 +23,10 @@ class LectureRequest extends FormRequest
     {
         $lecture = $this->lecture; // This assumes you're passing the lecture ID in the request somehow.
 
-        Log::info($this->lecture);
+        Log::info($lecture);
+        Log::info($this);
         $rules = [
+            'id' => 'nullable|exists:lectures,id',
             //unique for title and section
             'title' => [
                 'required',
@@ -30,6 +34,7 @@ class LectureRequest extends FormRequest
                 Rule::unique('lectures')->where(function ($query) {
                     $query->where('section_id', $this->section_id);
                     if ($this->lecture) {
+                        Log::info('found');
                         $query->where('id', '!=', $this->lecture->id);
                     }
                 }),
@@ -49,5 +54,14 @@ class LectureRequest extends FormRequest
         // }
 
         return $rules;
+    }
+
+    // handle validation errors
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        Log::info('failed validation');
+        $errors = $validator->errors();
+        Log::info($errors);
+        return $this->apiResponse(null, $errors, 422);
     }
 }

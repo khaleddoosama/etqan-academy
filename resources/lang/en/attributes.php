@@ -91,4 +91,6 @@ return [
     'amount' => 'Amount',
     'attachments' => 'Attachments',
     'attachment' => 'Attachment',
+    'add_attachments' => 'Add Attachments',
+    'action' => 'Action',
 ];

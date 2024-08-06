@@ -105,7 +105,6 @@ trait UploadTrait
         }
         // Encode the attachment data as JSON
 
-        Log::info('attachments data: ' . json_encode($attachmentData));
         return $attachmentData;
     }
 

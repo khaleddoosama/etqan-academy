@@ -84,7 +84,8 @@ Route::group(
             Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
             Route::post('/lectures/update-order', [LectureController::class, 'updateOrder'])->name('lectures.updateOrder');
             Route::post('/upload-video', [LectureController::class, 'generatePresignedUrl']);
-
+            Route::put('/update-attachment/{lecture}', [LectureController::class, 'updateAttachment'])->name('lectures.updateAttachment');
+            Route::put('/delete-attachment/{lecture}', [LectureController::class, 'deleteAttachment'])->name('lectures.deleteAttachment');
 
             // Inquiry Controller
             Route::controller(InquiryController::class)->group(function () {

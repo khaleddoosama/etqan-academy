@@ -393,24 +393,27 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#summernote').summernote({
-                lang: 'ar-AR', // تعيين اللغة العربية
-                height: 200, // تعيين ارتفاع المحرر
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['fontname', ['fontname']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ],
-                placeholder: 'أدخل وصف المحتوى هنا...',
-                direction: 'rtl' // تعيين اتجاه النص إلى اليمين إلى اليسار
+            $('.summernote').each(function() {
+                $(this).summernote({
+                    lang: 'ar-AR', // تعيين اللغة العربية
+                    height: 200, // تعيين ارتفاع المحرر
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['fontname', ['fontname']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['view', ['fullscreen', 'codeview', 'help']]
+                    ],
+                    placeholder: 'أدخل وصف المحتوى هنا...',
+                    direction: 'rtl' // تعيين اتجاه النص إلى اليمين إلى اليسار
+                });
             });
+
         });
     </script>
 

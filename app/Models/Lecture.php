@@ -72,7 +72,31 @@ class Lecture extends Model
         }
     }
 
+    // get best quality video
+    public function getBestQualityVideoAttribute()
+    {
+        if ($this->convertedVideo) {
+            $qualities = [1080, 720, 480, 360, 240];
+            $i = array_search($this->quality, $qualities); // 360
 
+            // get all videos from quality or less
+            foreach (array_slice($qualities, $i) as $quality) {
+                if ($this->convertedVideo->{"mp4_Format_$quality"} != null) {
+                    return Storage::url($this->convertedVideo->{"mp4_Format_$quality"});
+                }
+            }
+        }
+    }
+
+    // get thumbnail ur
+    public function getThumbnailUrlAttribute()
+    {
+        if ($this->thumbnail != null) {
+            return Storage::url($this->thumbnail);
+        } else {
+            return null;
+        }
+    }
 
     /* methods */
     // set video Attribute
@@ -103,35 +127,43 @@ class Lecture extends Model
     // set thumbnail Attribute
     public function setThumbnailAttribute(UploadedFile $thumbnail)
     {
-        // to lower case $this->section->course->title
-        $slug = SlugService::createSlug(Lecture::class, 'slug', $this->title);
-
-        $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($slug)) . '/thumbnails';
+        $folderName = $this->getFolderName('thumbnails');
 
 
         $this->deleteIfExists($this->thumbnail);
         $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 's3');
     }
 
-    // get thumbnail ur
-    public function getThumbnailUrlAttribute()
-    {
-        if ($this->thumbnail != null) {
-            return Storage::url($this->thumbnail);
-        } else {
-            return null;
-        }
-    }
+
 
     // set attachments Attribute
     public function setAttachmentsAttribute($attachments)
     {
         if (is_array($attachments)) {
-            // to lower case $this->section->course->title
-            $slug = SlugService::createSlug(Lecture::class, 'slug', $this->title);
-            $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($slug)) . '/attachments';
-            $this->attributes['attachments'] = json_encode($this->uploadAttachments($attachments, $folderName));
+
+            $folderName = $this->getFolderName('attachments');
+
+            $newAttachments = $this->uploadAttachments($attachments, $folderName);
+            $oldAttachments = $this->attributes['attachments'] ?? [];
+
+            // Ensure oldAttachments is an array
+            if (!is_array($oldAttachments)) {
+                $oldAttachments = json_decode($oldAttachments, true);
+            }
+
+            $combined = array_merge($newAttachments, $oldAttachments);
+        $this->attributes['attachments'] = json_encode($combined);  // Encode as JSON before saving
         }
+    }
+
+    private function getFolderName($type)
+    {
+        $slug = $this->slug;
+        if ($this->slug == null) {
+            $slug = SlugService::createSlug(Lecture::class, 'slug', $this->title);
+        }
+
+        return str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($slug)) . '/' . $type;
     }
 
     // on change section_id

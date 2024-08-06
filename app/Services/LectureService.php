@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Support\Facades\DB;
 
 class LectureService
 {
@@ -136,5 +137,49 @@ class LectureService
     public function getSection(int $id)
     {
         return $this->sectionService->getSection($id);
+    }
+
+    // get section by id
+    public function getSections($course_slug = '')
+    {
+        return $this->sectionService->getSectionsByCourseSlug($course_slug); // Get all sections for all courses
+    }
+
+    // Update an attachment
+    public function updateAttachment(Lecture $lecture, $attachment_path, $attachment_name)
+    {
+        $attachments = $this->getUpdatedAttachments($lecture, $attachment_path, function (&$attachment) use ($attachment_name) {
+            $attachment['originalName'] = $attachment_name;
+        });
+
+        DB::table('lectures')->where('id', $lecture->id)->update(['attachments' => $attachments]);
+        return $lecture;
+    }
+
+    // Delete an attachment
+    public function deleteAttachment(Lecture $lecture, $attachment_path)
+    {
+        $attachments = $this->getUpdatedAttachments($lecture, $attachment_path, function (&$attachment) {
+            Storage::delete($attachment['path']);
+        }, true);
+
+        DB::table('lectures')->where('id', $lecture->id)->update(['attachments' => $attachments]);
+    }
+
+    // Helper method to update attachments
+    private function getUpdatedAttachments(Lecture $lecture, $attachment_path, $callback, $remove = false)
+    {
+        $attachments = $lecture->attachments;
+        foreach ($attachments as $key => $value) {
+            if ($value['path'] === $attachment_path) {
+                $callback($attachments[$key]);
+                if ($remove) {
+                    unset($attachments[$key]);
+                }
+                break;
+            }
+        }
+
+        return array_values($attachments);
     }
 }

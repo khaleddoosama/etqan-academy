@@ -43,7 +43,7 @@
                                             class='col-sm-12 col-form-label'>{{ __('attributes.description') }}</x-input-label>
 
                                         <div class='col-sm-12'>
-                                            <textarea name="description" id="summernote" class="form-control" rows="1">{{ old('description') ?? ($value ?? '') }}</textarea>
+                                            <textarea name="description" id="summernote" class="form-control summernote" rows="1">{{ old('description') ?? ($value ?? '') }}</textarea>
                                         </div>
                                     </div>
 

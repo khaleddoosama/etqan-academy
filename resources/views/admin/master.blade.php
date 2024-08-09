@@ -160,6 +160,23 @@
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('asset/admin/dist/js/demo.js') }}"></script>
     <!-- Page specific script -->
+
+    {{-- pusher --}}
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+
+      // Enable pusher logging - don't include this in production
+      Pusher.logToConsole = true;
+
+      var pusher = new Pusher('76ac8bd1b72f06108985', {
+        cluster: 'mt1'
+      });
+
+    //   var channel = pusher.subscribe('my-channel');
+    //   channel.bind('my-event', function(data) {
+    //     alert(JSON.stringify(data));
+    //   });
+    </script>
     <script>
         $(function() {
             $("#example1").DataTable({

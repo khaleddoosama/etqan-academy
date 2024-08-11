@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\SectionController;
+use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\WithdrawalRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,11 +54,22 @@ Route::get('course/{course_slug}/section/{section_slug}', [SectionController::cl
 // show lectures
 Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index']);
 
-Route::middleware('jwt.verify')->group(function () {
-
+Route::middleware(['jwt.auth', 'verified'])->group(function () {
     // show single lecture
     Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);
 
     // Withdrawal Request
     Route::post('withdrawal-request', [WithdrawalRequestController::class, 'store']);
 });
+
+
+Route::middleware(['jwt.auth'])->group(function () {
+    // Send the email verification link
+    Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
+        ->name('verification.send');
+
+});
+
+// Handle email verification
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyEmail'])
+    ->name('jwt.verification.verify')->middleware(['signed', 'throttle:6,1']);

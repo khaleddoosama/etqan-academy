@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\CustomVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Traits\UploadTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -17,7 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, UploadTrait, Sluggable;
 
@@ -52,6 +53,11 @@ class User extends Authenticatable implements JWTSubject
                 'source' => ['first_name', 'last_name']
             ]
         ];
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new CustomVerifyEmail);
     }
 
     // get name

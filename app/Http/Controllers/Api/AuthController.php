@@ -23,7 +23,7 @@ class AuthController extends Controller
     protected $ReferralService;
     public function __construct(ReferralService $ReferralService)
     {
-        $this->middleware('jwt.verify', ['except' => ['login', 'register']]);
+        $this->middleware('jwt.auth', ['except' => ['login', 'register']]);
         $this->ReferralService = $ReferralService;
     }
 
@@ -72,6 +72,9 @@ class AuthController extends Controller
                 $this->ReferralService->add($user, $request->parent_code, 30);
             }
             DB::commit();
+
+            $user->sendEmailVerificationNotification();
+
             return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
         } catch (Exception $e) {
             DB::rollBack();

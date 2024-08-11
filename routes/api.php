@@ -54,7 +54,8 @@ Route::get('course/{course_slug}/section/{section_slug}', [SectionController::cl
 // show lectures
 Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index']);
 
-Route::middleware(['jwt.auth', 'verified'])->group(function () {
+// verified
+Route::middleware(['jwt.auth', 'jwt.verified'])->group(function () {
     // show single lecture
     Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);
 
@@ -62,7 +63,7 @@ Route::middleware(['jwt.auth', 'verified'])->group(function () {
     Route::post('withdrawal-request', [WithdrawalRequestController::class, 'store']);
 });
 
-
+//
 Route::middleware(['jwt.auth'])->group(function () {
     // Send the email verification link
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])

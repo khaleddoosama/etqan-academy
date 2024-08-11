@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\SectionController;
+use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\WithdrawalRequestController;
 use Illuminate\Http\Request;
@@ -61,6 +62,11 @@ Route::middleware(['jwt.auth', 'jwt.verified'])->group(function () {
 
     // Withdrawal Request
     Route::post('withdrawal-request', [WithdrawalRequestController::class, 'store']);
+
+    // search students
+    Route::get('/students/search', [StudentController::class, 'search']);
+    Route::get('/students/{slug}', [StudentController::class, 'showProfile']);
+    
 });
 
 //
@@ -68,7 +74,6 @@ Route::middleware(['jwt.auth'])->group(function () {
     // Send the email verification link
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
         ->name('verification.send');
-
 });
 
 // Handle email verification

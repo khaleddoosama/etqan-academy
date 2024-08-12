@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
+use App\Http\Controllers\Api\RequestCourseController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\VerificationController;
@@ -66,7 +67,10 @@ Route::middleware(['jwt.auth', 'jwt.verified'])->group(function () {
     // search students
     Route::get('/students/search', [StudentController::class, 'search']);
     Route::get('/students/{slug}', [StudentController::class, 'showProfile']);
-    
+
+    // send Request Course
+    Route::post('/request-course', [RequestCourseController::class, 'store']);
+
 });
 
 //

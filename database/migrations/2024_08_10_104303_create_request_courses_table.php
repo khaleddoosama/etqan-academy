@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('request_courses', function (Blueprint $table) {
             $table->id();
-            
+            $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->string('phone')->nullable();
+            $table->string('message')->nullable();
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

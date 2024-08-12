@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\LectureController;
+use App\Http\Controllers\Admin\RequestCourseController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SectionController;
@@ -99,6 +100,13 @@ Route::group(
                 Route::get('/withdrawal-requests', 'index')->name('withdrawal_requests.index');
                 Route::get('/withdrawal-requests/{withdrawalRequest}', 'show')->name('withdrawal_requests.show');
                 Route::put('/withdrawal-requests/{withdrawalRequest}/status', 'status')->name('withdrawal_requests.status');
+            });
+
+            // Inquiry Controller
+            Route::controller(RequestCourseController::class)->group(function () {
+                Route::get('/request-courses', 'index')->name('request_courses.index');
+                Route::get('/request-courses/{id}', 'show')->name('request_courses.show');
+                Route::put('/request-courses/{id}/reply', 'reply')->name('request_courses.reply');
             });
 
             // Permission controller (resource)

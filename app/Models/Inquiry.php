@@ -16,6 +16,6 @@ class Inquiry extends Model
     // Apply a global scope to order by status desc.
     public function newQuery()
     {
-        return parent::newQuery()->orderBy('status', 'desc');
+        return parent::newQuery()->orderBy('status', 'desc')->orderBy('created_at', 'desc');
     }
 }

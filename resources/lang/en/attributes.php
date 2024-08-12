@@ -93,4 +93,8 @@ return [
     'attachment' => 'Attachment',
     'add_attachments' => 'Add Attachments',
     'action' => 'Action',
+    'student_email' => 'Student Email',
+    'student_phone' => 'Student Phone',
+    'request_course' => 'Request Course',
+    'request_courses' => 'Request Courses',
 ];

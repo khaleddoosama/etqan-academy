@@ -140,6 +140,18 @@
                   </li>
                   {{-- @endcan --}}
 
+                  {{-- RequestCourse --}}
+                  {{-- @can('request_course.list') --}}
+                  <li class="nav-item">
+                      <a href="{{ route('admin.request_courses.index') }}"
+                          class="nav-link @if (Request::is('*/admin/request-course') || Request::is('*/admin/request-course/*')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
+                          <span class="title">{{ __('attributes.request_course') }}</span>
+                      </a>
+                  </li>
+                  {{-- @endcan --}}
+
+
                   {{-- Permissions --}}
                   {{-- @can('permission.list')
                       <li class="nav-item">

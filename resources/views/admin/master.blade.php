@@ -183,6 +183,7 @@
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
+                'ordering': false,
                 "buttons": ["copy", "csv", "excel", "print", "colvis"],
                 "language": {
                     "emptyTable": "{{ __('datatable.no_data_available_in_table') }}",

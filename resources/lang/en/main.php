@@ -8,5 +8,5 @@
     "new_password_confirmation" => "New Password Confirmation",
     "transfer_lecture" => "Transfer Lecture",
     "duplicate_lecture" => "Duplicate Lecture",
-
+    "reply" => "Reply",
 );

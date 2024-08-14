@@ -45,11 +45,11 @@ trait UploadTrait
             $name_gen = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
             $path = "uploads/{$folderName}/{$name_gen}";
 
-            // if ($disk == 's3') {
-            //     Storage::disk($disk)->put($path, file_get_contents($file));
-            // } elseif ($disk == 'public') {
-            $file->move(public_path("uploads/{$folderName}/"), $name_gen);
-            // }
+            if ($disk == 's3') {
+                Storage::disk($disk)->put($path, file_get_contents($file));
+            } elseif ($disk == 'public') {
+                $file->move(public_path("uploads/{$folderName}/"), $name_gen);
+            }
 
             return $path;
         } catch (\Exception $e) {

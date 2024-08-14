@@ -26,6 +26,7 @@ class UserResource extends JsonResource
             'country' => $this->country,
             'image' => $this->picture_url,
             'courses_count' => $this->coursesCount(),
+            'gallery' => GalleryResource::collection($this->galleries),
             'status' => $this->status,
         ];
     }

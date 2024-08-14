@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\GalleryRequest;
 use App\Services\GalleryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class GalleryController extends Controller
 {
@@ -17,9 +19,18 @@ class GalleryController extends Controller
         $this->galleryService = $galleryService;
     }
 
-    public function store(Request $request)
+    public function store(GalleryRequest $request)
     {
-        $gallery = $this->galleryService->createGallery($request->all());
+        $data = $request->validated();
+
+        $gallery = $this->galleryService->createGallery($data);
         return $this->apiResponse($gallery, 'Gallery created successfully', 201);
+    }
+
+
+    public function destroy($id)
+    {
+        $gallery = $this->galleryService->deleteGallery($id);
+        return $this->apiResponse($gallery, 'Gallery deleted successfully', 200);
     }
 }

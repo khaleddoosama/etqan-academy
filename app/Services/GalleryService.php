@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Models\Gallery;
 use App\Models\Inquiry;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 
 class GalleryService
 {
@@ -21,7 +22,9 @@ class GalleryService
 
     public function createGallery(array $data)
     {
-        $gallery = auth()->user()->galleries()->create($data);
+        $data['disk'] = 's3';
+        Log::info('from GalleryService data: ' . json_encode($data));
+        $gallery = Gallery::create($data);
         return $gallery;
     }
 

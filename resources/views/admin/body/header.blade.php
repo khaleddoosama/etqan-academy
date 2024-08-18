@@ -81,7 +81,7 @@
                              <i class="mr-2 {{ $notification->data['icon'] }}"></i>
                              {{ $notification->data['title'] }}
                              <span
-                                 class="float-right text-sm text-muted">{{ $notification->created_at->diffForHumans() }}</span>
+                                 class="float-right text-sm text-muted" title="{{ $notification->created_at }}">{{ $notification->created_at->diffForHumans() }}</span>
                              <div class="pl-1 mx-4 dropdown-message">
                                  <p class="text-sm">{{ $notification->data['message'] }}</p>
                              </div>

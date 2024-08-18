@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\WithdrawalRequestRequest;
+use App\Models\User;
+use App\Notifications\WithdrawalRequestNotification;
 use App\Services\WithdrawalRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Notification;
 
 class WithdrawalRequestController extends Controller
 {
@@ -24,6 +27,9 @@ class WithdrawalRequestController extends Controller
         $data = Arr::except($data, ['password']);
 
         $withdrawalRequest = $this->WithdwawalRequestService->store($data);
+
+        $admins = User::admin()->get();
+        Notification::send($admins, new WithdrawalRequestNotification($withdrawalRequest->user->name, $withdrawalRequest->id));
 
         return $this->apiResponse($withdrawalRequest, 'Withdrawal Request sent successfully', 201);
     }

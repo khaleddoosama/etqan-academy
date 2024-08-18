@@ -8,11 +8,13 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Notifications\UserRegisteredNotification;
 use App\Services\ReferralService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 // use Validator;
@@ -74,6 +76,10 @@ class AuthController extends Controller
             DB::commit();
 
             $user->sendEmailVerificationNotification();
+
+            // notify admins
+            $admins = User::admin()->get();
+            Notification::send($admins, new UserRegisteredNotification($user->name));
 
             return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
         } catch (Exception $e) {

@@ -18,7 +18,7 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
-    'frontend_url' => env('FRONTEND_URL', 'https://etqanacademy.tech/'),
+    'frontend_url' => env('FRONTEND_URL', 'https://etqan-flame.vercel.app'),
     /*
     |--------------------------------------------------------------------------
     | Application Environment

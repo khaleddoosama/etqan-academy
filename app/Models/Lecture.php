@@ -166,6 +166,23 @@ class Lecture extends Model
         return str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($slug)) . '/' . $type;
     }
 
+    // get attachments
+    public function getAttachmentsUrlAttribute()
+    {
+        $attachments = json_decode($this->attributes['attachments'], true);
+        $attachments = array_map(function ($attachment) {
+            return [
+                'name' => $attachment['originalName'],
+                'url' => Storage::url($attachment['path']),
+                'type' => $attachment['type'],
+
+            ];
+        }, $attachments);
+
+        return $attachments;
+    }
+
+
     // on change section_id
     // public function setSectionIdAttribute($value)
     // {

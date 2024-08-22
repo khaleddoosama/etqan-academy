@@ -32,6 +32,7 @@ class LectureResource extends JsonResource
 
         if ($this->withVideo) {
             $data['converted_videos'] = $this->converted_videos;
+            $data['attachments'] = $this->attachments_url;
         }
         return $data;
     }

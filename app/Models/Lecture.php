@@ -177,7 +177,7 @@ class Lecture extends Model
                 'type' => $attachment['type'],
 
             ];
-        }, $attachments);
+        }, $attachments ?? []);
 
         return $attachments;
     }

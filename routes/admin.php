@@ -109,6 +109,9 @@ Route::group(
                 Route::put('/request-courses/{id}/reply', 'reply')->name('request_courses.reply');
             });
 
+            //
+            Route::resource('products', ProgramController::class);
+
             // Permission controller (resource)
             // Route::resource('permission', RolePermissionController::class)->except(['show']);
 

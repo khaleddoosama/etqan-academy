@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Http\Requests\AttributesTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryRequest extends FormRequest
+class ProgramRequest extends FormRequest
 {
     use AttributesTrait;
 
@@ -17,7 +17,9 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:categories,name,' . optional($this->category)->id,
+            'name' => 'required|string|unique:programs,name,' . optional($this->program)->id,
+            'description' => 'nullable|string',
+            'icon' => 'nullable|image|max:2048',
         ];
     }
 }

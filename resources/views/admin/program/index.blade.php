@@ -1,12 +1,12 @@
 @extends('admin.master')
 @section('title')
-    {{ __('attributes.categories') }}
+    {{ __('attributes.programs') }}
 @endsection
 @section('content')
     <div class="content-wrapper">
         <!-- Content Wrapper. Contains page content -->
         <!-- Content Header (Page header) -->
-        <x-custom.header-page title="{{ __('attributes.categories') }}" />
+        <x-custom.header-page title="{{ __('attributes.programs') }}" />
 
         <!-- Main content -->
         <section class="content">
@@ -14,9 +14,9 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            {{-- @can('category.create') --}}
-                                <x-custom.create-button route="admin.categories.create"
-                                    title="{{ __('buttons.create_category') }}" />
+                            {{-- @can('program.create') --}}
+                            <x-custom.create-button route="admin.programs.create"
+                                title="{{ __('buttons.create_program') }}" />
                             {{-- @endcan --}}
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -25,23 +25,28 @@
                                         <tr>
                                             <th>#</th>
                                             <th>{{ __('attributes.name') }}</th>
+                                            <th>{{ __('attributes.description') }}</th>
+                                            <th>{{ __('attributes.icon') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($categories as $category)
+                                        @foreach ($programs as $program)
                                             <tr>
-                                                <td>{{ $category->id }}</td>
-                                                <td>{{ $category->name }}</td>
+                                                <td>{{ $program->id }}</td>
+                                                <td>{{ $program->name }}</td>
+                                                <td>{{ $program->description }}</td>
+                                                <td><img src="{{ $program->icon_url }}" alt=""
+                                                        width="50" /></td>
                                                 <td>
-                                                    {{-- @can('category.edit') --}}
-                                                        <x-custom.edit-button route="admin.categories.edit"
-                                                            id="{{ $category->id }}" />
+                                                    {{-- @can('program.edit') --}}
+                                                    <x-custom.edit-button route="admin.programs.edit"
+                                                        id="{{ $program->id }}" />
                                                     {{-- @endcan --}}
 
-                                                    {{-- @can('category.delete') --}}
-                                                    <x-custom.delete-button route="admin.categories.destroy"
-                                                        id="{{ $category->id }}" />
+                                                    {{-- @can('program.delete') --}}
+                                                    <x-custom.delete-button route="admin.programs.destroy"
+                                                        id="{{ $program->id }}" />
 
 
                                                     {{-- @endcan --}}
@@ -54,6 +59,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th>{{ __('attributes.name') }}</th>
+                                            <th>{{ __('attributes.description') }}</th>
+                                            <th>{{ __('attributes.icon') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </tfoot>

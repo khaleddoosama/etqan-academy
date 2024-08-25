@@ -64,7 +64,6 @@ trait UploadTrait
         if (!$path) {
             return false;
         }
-
         $paths = [
             public_path($path),
             public_path('uploads/' . $path),

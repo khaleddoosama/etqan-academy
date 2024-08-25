@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\LectureController;
+use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\RequestCourseController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RolePermissionController;
@@ -56,6 +57,11 @@ Route::group(
             // Category Controller
             Route::resource('categories', CategoryController::class)->except(['show'])->missing(function () {
                 return redirect()->route('admin.categories.index');
+            });
+
+            // Program Controller
+            Route::resource('programs', ProgramController::class)->except(['show'])->missing(function () {
+                return redirect()->route('admin.programs.index');
             });
 
             // Course Controller
@@ -110,7 +116,6 @@ Route::group(
             });
 
             //
-            Route::resource('products', ProgramController::class);
 
             // Permission controller (resource)
             // Route::resource('permission', RolePermissionController::class)->except(['show']);

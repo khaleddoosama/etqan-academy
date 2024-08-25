@@ -105,6 +105,16 @@
                   </li>
                   {{-- @endcan --}}
 
+                  {{-- programs --}}
+                  {{-- @can('program.list') --}}
+                  <li class="nav-item">
+                      <a href="{{ route('admin.programs.index') }}"
+                          class="nav-link @if (Request::is('*/admin/programs') || Request::is('*/admin/programs/*')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="layers-outline"></ion-icon></span>
+                          <span class="title">{{ __('attributes.programs') }}</span>
+                      </a>
+                  </li>
+                  {{-- @endcan --}}
 
                   {{-- Courses --}}
                   {{-- @can('course.list') --}}

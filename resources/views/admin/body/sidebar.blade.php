@@ -176,15 +176,15 @@
                   @endcan --}}
 
                   {{-- Roles --}}
-                  {{-- @can('role.list')
-                      <li class="nav-item">
-                          <a href="{{ route('admin.role.index') }}"
-                              class="nav-link @if (Request::is('*/admin/role') || Request::is('*/admin/role/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="people-outline"></ion-icon></span>
-                              <span class="title">{{ __('attributes.roles') }}</span>
-                          </a>
-                      </li>
-                  @endcan --}}
+                  {{-- @can('role.list') --}}
+                  <li class="nav-item">
+                      <a href="{{ route('admin.role.index') }}"
+                          class="nav-link @if (Request::is('*/admin/role') || Request::is('*/admin/role/*')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="key-outline"></ion-icon></span>
+                          <span class="title">{{ __('attributes.roles') }}</span>
+                      </a>
+                  </li>
+                  {{-- @endcan --}}
 
                   {{-- Roles In Permission --}}
                   {{-- @can('role_permission.list')
@@ -199,13 +199,13 @@
 
                   {{-- Admins --}}
                   {{-- @can('admin.list') --}}
-                      <li class="nav-item">
-                          <a href="{{ route('admin.all_admin.index') }}"
-                              class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="people-outline"></ion-icon></span>
-                              <span class="title">{{ __('attributes.admin_manage') }}</span>
-                          </a>
-                      </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.all_admin.index') }}"
+                          class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="people-outline"></ion-icon></span>
+                          <span class="title">{{ __('attributes.admin_manage') }}</span>
+                      </a>
+                  </li>
                   {{-- @endcan --}}
               </ul>
           </nav>

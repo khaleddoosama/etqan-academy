@@ -15,14 +15,14 @@
                     <div class="col-12">
 
                         <div class="card">
-                            @can('role.create')
+                            {{-- @can('role.create') --}}
                                 <div class="card-header" style="display: flex;justify-content: end">
                                     <a href="{{ route('admin.role.create') }}" class="btn btn-primary"
                                         style="color: white; text-decoration: none;">
                                         {{ __('main.create_role') }}
                                     </a>
                                 </div>
-                            @endcan
+                            {{-- @endcan --}}
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -39,14 +39,14 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $role->name }}</td>
                                                 <td>
-                                                    @can('role.edit')
+                                                    {{-- @can('role.edit') --}}
                                                         <a href="{{ route('admin.role.edit', $role->id) }}"
                                                             class="btn btn-primary"
                                                             style="color: white; text-decoration: none;">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                    @endcan
-                                                    @can('role.delete')
+                                                    {{-- @endcan --}}
+                                                    {{-- @can('role.delete') --}}
                                                         <form action="{{ route('admin.role.destroy', $role->id) }}"
                                                             method="POST" style="display: inline-block" id="delete-form">
                                                             @csrf
@@ -56,7 +56,7 @@
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
-                                                    @endcan
+                                                    {{-- @endcan --}}
                                                 </td>
                                             </tr>
                                         @endforeach

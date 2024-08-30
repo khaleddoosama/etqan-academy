@@ -83,7 +83,7 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('asset/admin/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
+            <img class="animation__shake" src="{{ asset('asset/logo.png') }}" alt="EtqanLogo"
                 height="60" width="60">
         </div>
 

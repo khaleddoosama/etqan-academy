@@ -30,4 +30,10 @@ class PermissionService
     {
         return $permission->delete();
     }
+
+    public function getPermissionModules(): Collection
+    {
+        // dd(Permission::get()->groupBy('module'));
+        return Permission::get()->groupBy('module');
+    }
 }

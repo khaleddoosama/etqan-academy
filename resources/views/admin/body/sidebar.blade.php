@@ -2,7 +2,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="{{ route('admin.home') }}" class="brand-link">
-          <img src="{{ asset('asset/admin/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
+          <img src="{{ asset('asset/logo.png') }}" alt="Etqan Logo"
               class="brand-image img-circle elevation-3" style="opacity: .8">
           <span class="brand-text font-weight-light">{{ __('main.dashboard') }}</span>
       </a>
@@ -12,8 +12,7 @@
           <!-- Sidebar user panel (optional) -->
           <div class="pb-3 mt-3 mb-3 user-panel d-flex">
               <div class="image">
-                  <img src="{{ asset('asset/admin/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
-                      alt="User Image">
+                    <x-custom.profile-picture :user="auth()->user()" size="30" id="userPicture" />
               </div>
               <div class="info">
                   <a href="#" class="d-block">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</a>
@@ -110,7 +109,7 @@
                   <li class="nav-item">
                       <a href="{{ route('admin.programs.index') }}"
                           class="nav-link @if (Request::is('*/admin/programs') || Request::is('*/admin/programs/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="layers-outline"></ion-icon></span>
+                          <span class="icon nav-icon"><ion-icon name="code-slash-outline"></ion-icon></span>
                           <span class="title">{{ __('attributes.programs') }}</span>
                       </a>
                   </li>
@@ -162,17 +161,29 @@
                   {{-- @endcan --}}
 
 
+
+                  {{-- Admins --}}
+                  {{-- @can('admin.list') --}}
+                  <li class="nav-item">
+                      <a href="{{ route('admin.all_admin.index') }}"
+                          class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="person-circle-outline"></ion-icon></span>
+                          <span class="title">{{ __('attributes.admin_manage') }}</span>
+                      </a>
+                  </li>
+                  {{-- @endcan --}}
+
                   {{-- Permissions --}}
                   {{-- @can('permission.list') --}}
-                      <li class="nav-item">
-                          <a href="{{ route('admin.permission.index') }}"
-                              class="nav-link @if (Request::is('*/admin/permission') || Request::is('*/admin/permission/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
-                              <p>
-                                  {{ __('attributes.permissions') }}
-                              </p>
-                          </a>
-                      </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.permission.index') }}"
+                          class="nav-link @if (Request::is('*/admin/permission') || Request::is('*/admin/permission/*')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                          <p>
+                              {{ __('attributes.permissions') }}
+                          </p>
+                      </a>
+                  </li>
                   {{-- @endcan --}}
 
                   {{-- Roles --}}
@@ -187,26 +198,17 @@
                   {{-- @endcan --}}
 
                   {{-- Roles In Permission --}}
-                  {{-- @can('role_permission.list')
-                      <li class="nav-item">
-                          <a href="{{ route('admin.role_permission.index') }}"
-                              class="nav-link @if (Request::is('*/admin/role_permission') || Request::is('*/admin/role_permission/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="people-outline"></ion-icon></span>
-                              <span class="title">{{ __('attributes.roles_in_permission') }}</span>
-                          </a>
-                      </li>
-                  @endcan --}}
-
-                  {{-- Admins --}}
-                  {{-- @can('admin.list') --}}
+                  {{-- @can('role_permission.list') --}}
                   <li class="nav-item">
-                      <a href="{{ route('admin.all_admin.index') }}"
-                          class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="people-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.admin_manage') }}</span>
+                      <a href="{{ route('admin.role_permissions.index') }}"
+                          class="nav-link @if (Request::is('*/admin/role_permissions') || Request::is('*/admin/role_permissions/*')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="lock-open-outline"></ion-icon></span>
+                          <span class="title">{{ __('attributes.role_in_permissions') }}</span>
                       </a>
                   </li>
                   {{-- @endcan --}}
+
+
               </ul>
           </nav>
           <!-- /.sidebar-menu -->

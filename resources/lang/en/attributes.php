@@ -99,4 +99,7 @@ return [
     'request_courses' => 'Request Courses',
     'first_name' => 'First Name',
     'last_name' => 'Last Name',
+    'role_in_permissions' => 'Role in Permissions',
+    'program' => 'Program',
+    'programs' => 'Programs',
 ];

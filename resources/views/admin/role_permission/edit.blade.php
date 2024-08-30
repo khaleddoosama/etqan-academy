@@ -21,7 +21,7 @@
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form id="quickForm" action="{{ route('admin.role_permission.update', $role->id) }}"
+                            <form id="quickForm" action="{{ route('admin.role_permissions.update', $role->id) }}"
                                 method="POST" enctype="multipart/form-data">
                                 @method('PUT')
                                 @csrf
@@ -47,19 +47,19 @@
                                     </div>
                                     <hr class="col-md-12">
                                     {{-- check boxex --}}
-                                    @foreach ($permission_modules as $perm_mod)
+                                    @foreach ($permission_modules as $module => $permissions)
                                         <div class="col-md-12">
-                                            <h4>{{ $perm_mod->module }}</h4>
+                                            <h4>{{ $module }}</h4>
                                         </div>
-                                        @foreach ($perm_mod->permissions as $permission)
+                                        @foreach ($permissions as $permission)
                                             <div class="col-md-3 form-group">
                                                 <div class="custom-control custom-checkbox">
                                                     {{-- check if role has permission or not --}}
 
                                                     <input class="custom-control-input" type="checkbox"
                                                         @if ($role->haspermissionTo($permission->name)) checked @endif
-                                                        id="permission{{ $permission->id }}" name="permission_id[]"
-                                                        value="{{ $permission->id }}">
+                                                        id="permission{{ $permission->id }}" name="permissions[]"
+                                                        value="{{ $permission->name }}">
                                                     <label for="permission{{ $permission->id }}"
                                                         class="custom-control-label">
                                                         {{ $permission->name }}

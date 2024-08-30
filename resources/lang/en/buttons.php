@@ -59,6 +59,9 @@
     'create_lecture' => 'Create Lecture',
     'edit_lecture' => 'Edit Lecture',
 
+    'create_role_permission' => 'Add Permissions to Role',
+
+
     //auth views
     'confirm' => 'Confirm',
     "email_password_reset_link" => "Email Password Reset Link",
@@ -76,5 +79,5 @@
     "duplicate_lecture" => "Duplicate Lecture",
     "add_course" => "Add Course",
     "edit_video" => "Edit Video",
-    
+
 );

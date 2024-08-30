@@ -9,8 +9,8 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\RequestCourseController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SectionController;
-use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserCoursesController;
 use App\Http\Controllers\Admin\WithdrawalRequestController;
@@ -125,10 +125,7 @@ Route::group(
             Route::resource('role', RoleController::class)->except(['show']);
 
             // role permission controller (resource) with prefix role-permission and as role_permission.
-            // Route::resource('role_permission', RolePermissionController::class)->except(['show', 'destroy']);
-
-            // support
-            Route::get('/support', [SupportController::class, 'index'])->name('support.index');
+            Route::resource('role_permissions', RolePermissionController::class)->only(['index', 'edit', 'update']);
         });
     }
 );

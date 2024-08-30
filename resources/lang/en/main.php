@@ -9,4 +9,5 @@
     "transfer_lecture" => "Transfer Lecture",
     "duplicate_lecture" => "Duplicate Lecture",
     "reply" => "Reply",
+    "all_permissions" => "All Permissions",
 );

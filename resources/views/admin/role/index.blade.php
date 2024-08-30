@@ -16,12 +16,12 @@
 
                         <div class="card">
                             {{-- @can('role.create') --}}
-                                <div class="card-header" style="display: flex;justify-content: end">
-                                    <a href="{{ route('admin.role.create') }}" class="btn btn-primary"
-                                        style="color: white; text-decoration: none;">
-                                        {{ __('main.create_role') }}
-                                    </a>
-                                </div>
+                            <div class="card-header" style="display: flex;justify-content: end">
+                                <a href="{{ route('admin.role.create') }}" class="btn btn-primary"
+                                    style="color: white; text-decoration: none;">
+                                    {{ __('main.create_role') }}
+                                </a>
+                            </div>
                             {{-- @endcan --}}
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -40,22 +40,14 @@
                                                 <td>{{ $role->name }}</td>
                                                 <td>
                                                     {{-- @can('role.edit') --}}
-                                                        <a href="{{ route('admin.role.edit', $role->id) }}"
-                                                            class="btn btn-primary"
-                                                            style="color: white; text-decoration: none;">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
+
+                                                    <x-custom.edit-button route="admin.role.edit"
+                                                        id="{{ $role->id }}" />
                                                     {{-- @endcan --}}
                                                     {{-- @can('role.delete') --}}
-                                                        <form action="{{ route('admin.role.destroy', $role->id) }}"
-                                                            method="POST" style="display: inline-block" id="delete-form">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger delete-button"
-                                                                style="color: white; text-decoration: none;">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
+
+                                                    <x-custom.delete-button route="admin.role.destroy"
+                                                        id="{{ $role->id }}" />
                                                     {{-- @endcan --}}
                                                 </td>
                                             </tr>

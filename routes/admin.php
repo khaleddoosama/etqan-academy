@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\LectureController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\RequestCourseController;
 use App\Http\Controllers\Admin\RoleController;
@@ -118,7 +119,7 @@ Route::group(
             //
 
             // Permission controller (resource)
-            // Route::resource('permission', RolePermissionController::class)->except(['show']);
+            Route::resource('permission', PermissionController::class)->except(['show']);
 
             // Role controller (resource)
             Route::resource('role', RoleController::class)->except(['show']);

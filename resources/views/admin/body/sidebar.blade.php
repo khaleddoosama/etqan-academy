@@ -163,17 +163,17 @@
 
 
                   {{-- Permissions --}}
-                  {{-- @can('permission.list')
+                  {{-- @can('permission.list') --}}
                       <li class="nav-item">
                           <a href="{{ route('admin.permission.index') }}"
                               class="nav-link @if (Request::is('*/admin/permission') || Request::is('*/admin/permission/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="key-outline"></ion-icon></span>
+                              <span class="icon nav-icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
                               <p>
                                   {{ __('attributes.permissions') }}
                               </p>
                           </a>
                       </li>
-                  @endcan --}}
+                  {{-- @endcan --}}
 
                   {{-- Roles --}}
                   {{-- @can('role.list') --}}

@@ -35,7 +35,7 @@
                                             <tr>
                                                 <td>{{ $inquiry->id }}</td>
                                                 <td>{{ $inquiry->name }}</td>
-                                                <td>{{ $inquiry->email }}</td>
+                                                <td><a href="mailto:{{ $inquiry->email }}">{{ $inquiry->email }}</a></td>
                                                 <td>
                                                     <a href="https://wa.me/{{$inquiry->phone}}" target="_blank">
                                                         {{$inquiry->phone}}

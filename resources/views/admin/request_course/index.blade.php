@@ -36,10 +36,12 @@
                                             <tr>
                                                 <td>{{ $request_course->id }}</td>
                                                 <td>{{ $request_course->student->name }}</td>
-                                                <td>{{ $request_course->student->email }}</td>
-                                                <a href="https://wa.me/{{$request_course->phone}}" target="_blank">
-                                                    {{$request_course->phone}}
-                                                </a>
+                                                <td>
+                                                    <a href="mailto:{{ $request_course->student->email }}">{{ $request_course->student->email }}</a>
+                                                </td>
+                                                <td><a href="https://wa.me/{{ $request_course->phone }}" target="_blank">
+                                                        {{ $request_course->phone }}
+                                                    </a></td>
                                                 <td>{{ $request_course->course->title }}</td>
                                                 <td>{!! Str::limit($request_course->message, 50) !!}
                                                 <td>

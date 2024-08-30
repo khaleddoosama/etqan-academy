@@ -19,6 +19,11 @@ class AdminService
         return User::admin()->get();
     }
 
+    public function getAdmin($id)
+    {
+        return User::admin()->find($id);
+    }
+
     public function createAdmin(array $data)
     {
         $role = $this->roleService->getRole($data['role']);

@@ -53,9 +53,11 @@ class UserController extends Controller
     }
 
     //update
-    public function update(UserRequest $request, User $user)
+    public function update(UserRequest $request,$id)
     {
         $data = $request->validated();
+
+        $user = $this->userService->getUser($id);
 
         // $user->update($data);
         $this->userService->updateUser($data, $user) ?
@@ -65,10 +67,11 @@ class UserController extends Controller
     }
 
     //change password
-    public function updatePassword(PasswordRequest $request, User $user)
+    public function updatePassword(PasswordRequest $request, $id)
     {
         $data = $request->validated();
 
+        $user = $this->userService->getUser($id);
 
         $this->userService->updateUser($data, $user) ? Toastr::success(__('messages.user_password_updated'), __('status.success')) : '';
 
@@ -76,12 +79,14 @@ class UserController extends Controller
     }
 
     //status
-    public function status(Request $request, User $user)
+    public function status(Request $request, $id)
     {
         $data = $request->validate([
             'status' => 'required',
         ]);
 
+        $user = $this->userService->getUser($id);
+        
         $this->userService->updateUser(['status' => $request->status], $user) ? Toastr::success(__('messages.user_status_updated'), __('status.success')) : '';
 
         return redirect()->back();

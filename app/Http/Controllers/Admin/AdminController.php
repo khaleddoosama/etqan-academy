@@ -93,17 +93,21 @@ class AdminController extends Controller
     }
 
     // edit admin
-    public function edit(User $all_admin)
+    public function edit($id)
     {
         $roles = Role::get();
 
-        return view('admin.admin.edit', ['admin' => $all_admin, 'roles' => $roles]);
+        $admin = $this->adminService->getAdmin($id);
+
+        return view('admin.admin.edit', compact('admin', 'roles'));
     }
 
     // update admin
-    public function update(AdminRequest $request, User $all_admin)
+    public function update(AdminRequest $request, $id)
     {
         $data = $request->validated();
+
+        $all_admin = $this->adminService->getAdmin($id);
 
         $this->adminService->updateUser($data, $all_admin);
         Toastr::success(__('messages.admin_updated'), __('status.success'));
@@ -112,8 +116,9 @@ class AdminController extends Controller
     }
 
     // delete admin
-    public function destroy(User $all_admin)
+    public function destroy($id)
     {
+        $all_admin = $this->adminService->getAdmin($id);
         $this->adminService->deleteUser($all_admin) ? Toastr::success(__('messages.admin_deleted'), __('status.success')) : '';
 
         return redirect()->route('admin.all_admin.index');

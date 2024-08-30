@@ -19,7 +19,9 @@
                             <div class="card-body">
 
                                 <p><strong>{{ __('attributes.name') }}:</strong> {{ $requestCourse->student->name }}</p>
-                                <p><strong>{{ __('attributes.email') }}:</strong> {{ $requestCourse->student->email }}</p>
+                                <p><strong>{{ __('attributes.email') }}:</strong> <a
+                                        href="mailto:{{ $requestCourse->student->email }}">{{ $requestCourse->student->email }}</a>
+                                </p>
                                 <p><strong>{{ __('attributes.phone') }}:</strong> <a
                                         href="https://wa.me/{{ $requestCourse->phone }}" target="_blank">
                                         {{ $requestCourse->phone }}

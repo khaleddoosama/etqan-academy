@@ -19,10 +19,12 @@
                             <div class="card-body">
 
                                 <p><strong>{{ __('attributes.name') }}:</strong> {{ $inquiry->name }}</p>
-                                <p><strong>{{ __('attributes.email') }}:</strong> {{ $inquiry->email }}</p>
-                                <p><strong>{{ __('attributes.phone') }}:</strong> <a href="https://wa.me/{{$inquiry->phone}}" target="_blank">
-                                    {{$inquiry->phone}}
-                                </a></p>
+                                <p><strong>{{ __('attributes.email') }}:</strong><a
+                                        href="mailto:{{ $inquiry->email }}">{{ $inquiry->email }}</a></p>
+                                <p><strong>{{ __('attributes.phone') }}:</strong> <a
+                                        href="https://wa.me/{{ $inquiry->phone }}" target="_blank">
+                                        {{ $inquiry->phone }}
+                                    </a></p>
                                 <p><strong>{{ __('attributes.message') }}:</strong> {{ $inquiry->message }}</p>
                                 <p><strong>{{ __('attributes.status') }}:</strong> {{ $inquiry->status }}</p>
 

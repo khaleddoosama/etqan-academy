@@ -42,9 +42,11 @@
 
                                                     <div class="form-group">
                                                         <label for="student_id">{{ __('attributes.student_title') }}</label>
-                                                        <select name="user_id" id="user_id" class="form-control">
+                                                        <select name="user_id" id="user_id" class="form-control select2">
+                                                            <option value="">{{ __('buttons.select') }} {{ __('attributes.student') }}</option>
                                                             @foreach ($students as $student)
-                                                                <option value="{{ $student->id }}">{{ $student->name }}
+                                                                <option value="{{ $student->id }}">{{ $student->name }} -
+                                                                    {{ $student->email }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -155,4 +157,20 @@
         <!-- /.content -->
 
     </div>
+@endsection
+@section('script')
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#addStudentModal').on('shown.bs.modal', function() {
+                $('#user_id').select2({
+                    dropdownParent: $('#addStudentModal')
+                });
+            });
+
+        });
+    </script>
+@endsection
+
 @endsection

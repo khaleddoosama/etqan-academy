@@ -58,7 +58,10 @@
                                             @method('PUT')
                                             @csrf
 
-                                            <x-custom.form-group type="text" name="name" value="{{ $user->name }}"
+                                            <x-custom.form-group type="text" name="first_name" value="{{ $user->first_name }}"
+                                                COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            <x-custom.form-group type="text" name="last_name" value="{{ $user->last_name }}"
                                                 COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
 
                                             <x-custom.form-group type="text" name="email" value="{{ $user->email }}"

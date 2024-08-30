@@ -37,7 +37,9 @@
                                                 <td>{{ $request_course->id }}</td>
                                                 <td>{{ $request_course->student->name }}</td>
                                                 <td>{{ $request_course->student->email }}</td>
-                                                <td>{{ $request_course->phone }}</td>
+                                                <a href="https://wa.me/{{$request_course->phone}}" target="_blank">
+                                                    {{$request_course->phone}}
+                                                </a>
                                                 <td>{{ $request_course->course->title }}</td>
                                                 <td>{!! Str::limit($request_course->message, 50) !!}
                                                 <td>

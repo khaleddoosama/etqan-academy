@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
 use App\Http\Requests\PasswordRequest;
-use App\Http\Requests\ProfileRequest;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -47,13 +46,14 @@ class UserController extends Controller
     }
 
     //edit
-    public function edit(User $user)
+    public function edit($id)
     {
+        $user = $this->userService->getUser($id);
         return view('admin.user.edit', compact('user'));
     }
 
     //update
-    public function update(ProfileRequest $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
         $data = $request->validated();
 

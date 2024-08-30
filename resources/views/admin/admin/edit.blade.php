@@ -1,93 +1,115 @@
 @extends('admin.master')
 @section('title')
-    {{ __('main.edit_admin') }}
+    {{ __('buttons.edit_user') }}
 @endsection
 @section('content')
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <x-custom.header-page title="{{ __('main.edit_admin') }}" />
+        <x-custom.header-page title="{{ __('buttons.edit_user') }}" />
 
         <!-- Main content -->
-        <section class=" content">
+        <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <!-- left column -->
-                    <div class="col-md-12">
-                        <!-- jquery validation -->
-                        <div class="card card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">{{ __('main.Edit') }} <small>{{ __('main.Admin') }}</small></h3>
+                    <div class="col-md-3">
+
+                        <!-- Profile Image -->
+                        <div class="card card-primary card-outline">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    <x-custom.profile-picture :user="$admin" size="100" id="profilePicture" />
+                                </div>
+
+                                <h3 class="text-center profile-username">{{ $admin->name }}</h3>
+
+                                <p class="text-center text-muted">{{ $admin->role }}</p>
+
+                                <form action="{{ route('admin.users.update.password', $admin->id) }}" method="POST"
+                                    id="form2">
+                                    @method('PUT')
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $admin->id }}">
+
+                                    <x-custom.form-group name="new_password" type="password" />
+
+                                    <x-custom.form-group name="new_password_confirmation" type="password" />
+
+                                    <x-custom.form-submit text="{{ __('buttons.change_password') }}"
+                                        class="btn-primary btn-block" />
+
+                                </form>
+
                             </div>
-                            <!-- /.card-header -->
-                            <!-- form start -->
-                            <form id="quickForm" action="{{ route('admin.all_admin.update', $admin->id) }}" method="POST"
-                                enctype="multipart/form-data">
-                                @method('PUT')
-                                @csrf
-                                <div class="card-body row">
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
 
 
-                                    <div class="form-group col-md-6">
-                                        <label for="exampleInputname1">{{ __('attributes.name') }}:</label>
-                                        <input type="text" name="name" class="form-control" id="exampleInputname1"
-                                            placeholder="{{ __('main.Enter name') }}" required autofocus autocomplete="name"
-                                            :value="old('name')" value="{{ $admin->name }}">
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-9">
+                        <div class="card">
+
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="settings">
+                                        <form action="{{ route('admin.all_admin.update', $admin) }}" class="form-horizontal"
+                                            id="form1" method="POST" enctype="multipart/form-data">
+                                            @method('PUT')
+                                            @csrf
+
+                                            <x-custom.form-group type="text" name="first_name"
+                                                value="{{ $admin->first_name }}" COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            <x-custom.form-group type="text" name="last_name"
+                                                value="{{ $admin->last_name }}" COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            <x-custom.form-group type="text" name="email" value="{{ $admin->email }}"
+                                                COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            <x-custom.form-group type="text" name="phone" value="{{ $admin->phone }}"
+                                                COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            <div class ='form-group row'>
+                                                <x-input-label for="input-role"
+                                                    class="col-sm-2 col-form-label">{{ __('attributes.role') }}</x-input-label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control select2" style="width: 100%;"
+                                                        name="role">
+                                                        <option selected disabled>
+                                                            {{ __('buttons.choose') }}</option>
+                                                        @foreach ($roles as $role)
+                                                            <option value="{{ $role->id }}"
+                                                                {{ $admin->hasRole($role->name) ? 'selected' : '' }}>
+
+
+                                                                {{ $role->name }}</option>
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                                <x-input-error :messages="$errors->get('role')" style="padding: 0 7.5px;margin: 0;" />
+                                            </div>
+
+                                            <x-custom.form-group type="file" name="picture"
+                                                value="{{ $admin->picture }}" COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            <x-custom.form-submit text="{{ __('buttons.edit') }}" COLOFFSET="offset-sm-2"
+                                                class="btn-primary" />
+                                        </form>
                                     </div>
-
-
-                                    <div class="form-group col-md-6">
-                                        <label for="exampleInputemail1">{{ __('attributes.email') }}:</label>
-                                        <input type="text" name="email" class="form-control" id="exampleInputemail1"
-                                            placeholder="{{ __('main.Enter Email') }}" required autofocus
-                                            autocomplete="email" :value="old('email')" value="{{ $admin->email }}">
-                                    </div>
-
-
-                                    <div class="form-group col-md-6">
-                                        <label for="exampleInputphone1">{{ __('attributes.phone') }}:</label>
-                                        <input type="text" name="phone" class="form-control" id="exampleInputphone1"
-                                            placeholder="{{ __('main.Enter Phone') }}" required autofocus
-                                            autocomplete="phone" :value="old('phone')" value="{{ $admin->phone }}">
-                                    </div>
-
-
-
-                                    <div class="form-group col-md-6">
-                                        <label>{{ __('attributes.role') }}:</label>
-                                        <select class="form-control select2" style="width: 100%;" name="role">
-                                            <option selected="selected" disabled>{{ __('main.select_role') }}</option>
-                                            @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}"
-                                                    {{ $admin->hasRole($role->name) ? 'selected' : '' }}>
-                                                    {{ $role->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                        <label>{{ __('attributes.category') }}:</label>
-                                        <select class="form-control select2" style="width: 100%;" name="category_id">
-                                            <option selected="selected" disabled>{{ __('main.choose') }}</option>
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}"
-                                                    {{ $admin->category_id == $category->id ? 'selected' : '' }}>
-                                                    {{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    <!-- /.tab-pane -->
                                 </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">{{ __('main.submit') }}</button>
-                                </div>
-                            </form>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
                         </div>
                         <!-- /.card -->
                     </div>
-
+                    <!-- /.col -->
                 </div>
+
                 <!-- /.row -->
+
             </div><!-- /.container-fluid -->
         </section>
         <!-- /.content -->
@@ -98,12 +120,7 @@
     <!-- Page specific script -->
     <script>
         $(function() {
-            // $.validator.setDefaults({
-            //     submitHandler: function() {
-            //         alert("Form successful submitted!");
-            //     }
-            // });
-            $('#quickForm').validate({
+            $('#form1').validate({
                 rules: {
                     name: {
                         required: true,
@@ -115,32 +132,29 @@
                     phone: {
                         required: true,
                     },
-                    role: {
-                        required: true,
+                    picture: {
+                        accept: "image/*"
                     },
-
                 },
                 messages: {
+
                     name: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.name')]) }}",
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.name')]) }}"
                     },
                     email: {
-                        required: "{{ __('validation.required', ['attribute' => __('main.Email')]) }}",
-                        email: "{{ __('validation.email', ['attribute' => __('main.Email')]) }}",
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.email')]) }}",
+                        email: "{{ __('validation.email', ['attribute' => __('attributes.email')]) }}"
                     },
                     phone: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.phone')]) }}",
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.phone')]) }}"
                     },
-                    role: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.role')]) }}",
+                    picture: {
+                        accept: "{{ __('validation.image', ['attribute' => __('attributes.picture')]) }}"
                     },
-
-
                 },
                 errorElement: 'span',
                 errorPlacement: function(error, element) {
                     error.addClass('invalid-feedback');
-                    error.css('padding', '0 7.5px');
                     element.closest('.form-group').append(error);
                 },
                 highlight: function(element, errorClass, validClass) {
@@ -148,6 +162,66 @@
                 },
                 unhighlight: function(element, errorClass, validClass) {
                     $(element).removeClass('is-invalid');
+                }
+            });
+            $('#form2').validate({
+                rules: {
+
+                    new_password: {
+                        required: true,
+                        minlength: 8
+                    },
+                    new_password_confirmation: {
+                        required: true,
+                        minlength: 8,
+                        equalTo: "#input-new_password"
+                    },
+
+
+                },
+                messages: {
+                    password: {
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.new_password')]) }}",
+                        minlength: "{{ __('validation.min.string', ['attribute' => __('attributes.new_password'), 'min' => 8]) }}",
+                    },
+                    password_confirmation: {
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.new_password_confirmation')]) }}",
+                        minlength: "{{ __('validation.min.string', ['attribute' => __('attributes.new_password_confirmation'), 'min' => 8]) }}",
+                        equalTo: "{{ __('validation.same', ['attribute' => __('attributes.new_password_confirmation'), 'other' => __('attributes.new_password')]) }}"
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+
+        });
+    </script>
+
+
+    <script>
+        // when user selects a file #exampleInputFile must be show in img with id = #profilePicture
+        $(document).ready(function() {
+            $('#input-picture').on('change', function(event) {
+                const input = event.target;
+                const img = $('#profilePicture');
+
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        img.attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
                 }
             });
         });

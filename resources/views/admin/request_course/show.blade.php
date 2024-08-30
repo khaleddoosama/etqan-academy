@@ -20,16 +20,21 @@
 
                                 <p><strong>{{ __('attributes.name') }}:</strong> {{ $requestCourse->student->name }}</p>
                                 <p><strong>{{ __('attributes.email') }}:</strong> {{ $requestCourse->student->email }}</p>
-                                <p><strong>{{ __('attributes.phone') }}:</strong> {{ $requestCourse->phone }}</p>
+                                <p><strong>{{ __('attributes.phone') }}:</strong> <a
+                                        href="https://wa.me/{{ $requestCourse->phone }}" target="_blank">
+                                        {{ $requestCourse->phone }}
+                                    </a></p>
                                 <p><strong>{{ __('attributes.course') }}:</strong> {{ $requestCourse->course->title }}</p>
                                 <p><strong>{{ __('attributes.message') }}:</strong> {{ $requestCourse->message }}</p>
                                 <p><strong>{{ __('attributes.status') }}:</strong> {{ $requestCourse->status_text }}</p>
 
-                                <p><strong>{{ __('attributes.created_at') }}:</strong> {{ $requestCourse->created_at }}</p>
+                                <p><strong>{{ __('attributes.created_at') }}:</strong> {{ $requestCourse->created_at }}
+                                </p>
 
                                 {{-- @can('request_course.reply') --}}
                                 @if ($requestCourse->status == 0)
-                                    <form action="{{ route('admin.request_courses.reply', $requestCourse->id) }}" method="POST">
+                                    <form action="{{ route('admin.request_courses.reply', $requestCourse->id) }}"
+                                        method="POST">
                                         @csrf
                                         @method('PUT')
                                         {{-- button --}}

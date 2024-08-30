@@ -24,6 +24,7 @@
                                     style="color: white; text-decoration: none;">
                                     {{ __('buttons.add_course') }}
                                 </button>
+
                                 {{-- start modal --}}
                                 <div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog"
                                     aria-labelledby="addCourseModalLabel" aria-hidden="true">
@@ -44,12 +45,16 @@
 
                                                     <div class="form-group">
                                                         <label for="course_id">{{ __('attributes.course_title') }}</label>
-                                                        <select name="course_id" id="course_id" class="form-control">
+                                                        <select name="course_id" id="course_id"
+                                                            class="form-control select2">
+                                                            <option value="">{{ __('buttons.select') }} {{ __('attributes.course') }}</option>
+
                                                             @foreach ($courses as $course)
                                                                 <option value="{{ $course->id }}">{{ $course->title }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
+
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -63,6 +68,7 @@
                                     </div>
                                 </div>
                                 {{-- end button modal --}}
+
 
                             </div>
                             {{-- @endcan --}}
@@ -156,4 +162,16 @@
         </section>
         <!-- /.content -->
     </div>
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#addCourseModal').on('shown.bs.modal', function() {
+                $('#course_id').select2({
+                    dropdownParent: $('#addCourseModal')
+                });
+            });
+
+        });
+    </script>
 @endsection

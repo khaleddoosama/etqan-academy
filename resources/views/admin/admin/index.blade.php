@@ -16,14 +16,14 @@
                     <div class="col-12">
 
                         <div class="card">
-                            @can('admin.create')
+                            {{-- @can('admin.create') --}}
                                 <div class="card-header" style="display: flex;justify-content: end">
                                     <a href="{{ route('admin.all_admin.create') }}" class="btn btn-primary"
                                         style="color: white; text-decoration: none;">
                                         {{ __('main.create_admin') }}
                                     </a>
                                 </div>
-                            @endcan
+                            {{-- @endcan --}}
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -51,15 +51,15 @@
                                                 </td>
 
                                                 <td>
-                                                    @can('admin.edit')
-                                                        <a href="{{ route('admin.all_admin.edit', $admin->id) }}"
+                                                    {{-- @can('admin.edit') --}}
+                                                        <a href="{{ route('admin.all_admin.edit', $admin) }}"
                                                             class="btn btn-primary"
                                                             style="color: white; text-decoration: none;">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                    @endcan
-                                                    @can('admin.delete')
-                                                        <form action="{{ route('admin.all_admin.destroy', $admin->id) }}"
+                                                    {{-- @endcan --}}
+                                                    {{-- @can('admin.delete') --}}
+                                                        <form action="{{ route('admin.all_admin.destroy', $admin) }}"
                                                             method="POST" style="display: inline-block" id="delete-form">
                                                             @csrf
                                                             @method('DELETE')
@@ -68,7 +68,7 @@
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
-                                                    @endcan
+                                                    {{-- @endcan --}}
                                                 </td>
                                             </tr>
                                         @endforeach

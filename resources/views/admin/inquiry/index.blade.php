@@ -36,7 +36,11 @@
                                                 <td>{{ $inquiry->id }}</td>
                                                 <td>{{ $inquiry->name }}</td>
                                                 <td>{{ $inquiry->email }}</td>
-                                                <td>{{ $inquiry->phone }}</td>
+                                                <td>
+                                                    <a href="https://wa.me/{{$inquiry->phone}}" target="_blank">
+                                                        {{$inquiry->phone}}
+                                                    </a>
+                                                </td>
                                                 <td>{!! Str::limit($inquiry->message, 50) !!}
                                                 <td>
                                                     <span class="badge bg-{{ $inquiry->status == 'pending' ? 'warning' : 'success' }}">{{ $inquiry->status }}</span>

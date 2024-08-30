@@ -37,6 +37,12 @@ class UserService
         return User::where('code', $code)->first();
     }
 
+    // get user by id
+    public function getUser($id)
+    {
+        return User::where('id', $id)->where('role', 'student')->first();
+    }
+
     // update user
     public function updateUser(array $data, User $user)
     {

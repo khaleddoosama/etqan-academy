@@ -97,4 +97,6 @@ return [
     'student_phone' => 'Student Phone',
     'request_course' => 'Request Course',
     'request_courses' => 'Request Courses',
+    'first_name' => 'First Name',
+    'last_name' => 'Last Name',
 ];

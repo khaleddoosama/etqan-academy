@@ -30,4 +30,9 @@ class RoleService
     {
         return $role->delete();
     }
+
+    public function getRole(int $id): Role
+    {
+        return Role::findOrFail($id);
+    }
 }

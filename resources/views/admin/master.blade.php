@@ -162,7 +162,7 @@
     <!-- Page specific script -->
 
     {{-- pusher --}}
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    {{-- <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
 
       // Enable pusher logging - don't include this in production
@@ -176,7 +176,7 @@
     //   channel.bind('my-event', function(data) {
     //     alert(JSON.stringify(data));
     //   });
-    </script>
+    </script> --}}
     <script>
         $(function() {
             $("#example1").DataTable({
@@ -216,7 +216,7 @@
         });
     </script>
     <script>
-        $(function() {
+        $(document).ready(function() {
             //Initialize Select2 Elements
             $('.select2').select2()
 

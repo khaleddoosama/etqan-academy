@@ -37,6 +37,7 @@ Route::group(
                 Route::get('/', 'home')->name('home');
                 Route::get('/profile', 'profile')->name('profile');
                 Route::put('/profile', 'updateProfile')->name('profile.update');
+
                 Route::put('/change-password', 'changePassword')->name('change.password');
             });
 

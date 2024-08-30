@@ -198,7 +198,7 @@
                   @endcan --}}
 
                   {{-- Admins --}}
-                  {{-- @can('admin.list')
+                  {{-- @can('admin.list') --}}
                       <li class="nav-item">
                           <a href="{{ route('admin.all_admin.index') }}"
                               class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
@@ -206,7 +206,7 @@
                               <span class="title">{{ __('attributes.admin_manage') }}</span>
                           </a>
                       </li>
-                  @endcan --}}
+                  {{-- @endcan --}}
               </ul>
           </nav>
           <!-- /.sidebar-menu -->

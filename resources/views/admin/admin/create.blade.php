@@ -27,68 +27,31 @@
                                 <div class="card-body row">
 
 
-                                    <div class="form-group col-md-6">
+                                    {{-- <div class="form-group col-md-6">
                                         <label for="exampleInputname1">{{ __('attributes.name') }}:</label>
                                         <input type="text" name="name" class="form-control" id="exampleInputname1"
                                             required autofocus autocomplete="name" :value="old('name')">
-                                    </div>
-
-
-                                    <div class="form-group col-md-6">
-                                        <label for="exampleInputemail1">{{ __('attributes.email') }}:</label>
-                                        <input type="text" name="email" class="form-control" id="exampleInputemail1"
-                                            required autofocus autocomplete="email" :value="old('email')">
-                                    </div>
-
-
-                                    <div class="form-group col-md-6">
-                                        <label for="exampleInputphone1">{{ __('attributes.phone') }}:</label>
-                                        <input type="text" name="phone" class="form-control" id="exampleInputphone1"
-                                            required autofocus autocomplete="phone" :value="old('phone')">
-                                    </div>
-
-                                    {{-- <div class="form-group col-md-6">
-                                        <label for="exampleInputaddress1">{{ __('buttons.address') }}:</label>
-                                        <textarea name="address" class="form-control" id="exampleInputaddress1" placeholder="Enter address" required autofocus
-                                            autocomplete="address" :value="old('address')"></textarea>
                                     </div> --}}
+                                    <x-custom.form-group class="col-md-6" type="text" name="first_name" />
+                                    <x-custom.form-group class="col-md-6" type="text" name="last_name" />
 
-                                    <div class="form-group col-md-6">
-                                        <label for="exampleInputpassword1">{{ __('attributes.password') }}</label>
-                                        <input type="password" name="password" class="form-control"
-                                            id="exampleInputpassword1" placeholder="{{ __('attributes.password') }}">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label
-                                            for="exampleInputpassword2">{{ __('attributes.password_confirmation') }}</label>
-                                        <input type="password" name="password_confirmation" class="form-control"
-                                            id="exampleInputpassword2"
-                                            placeholder="{{ __('attributes.password_confirmation') }}">
-                                    </div>
+                                    <x-custom.form-group class="col-md-6" type="text" name="email" />
 
-                                    <div class="form-group col-md-6">
-                                        <label>{{ __('attributes.role') }}:</label>
-                                        <select class="form-control select2" style="width: 100%;" name="role">
-                                            <option selected="selected" disabled>{{ __('main.select_role') }}</option>
-                                            @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    <x-custom.form-group class="col-md-6" type="text" name="phone" />
 
-                                    <div class="form-group col-md-6">
-                                        <label>{{ __('attributes.category') }}:</label>
-                                        <select class="form-control select2" style="width: 100%;" name="category_id">
-                                            <option selected="selected" disabled>{{ __('main.choose') }}</option>
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+
+                                    <x-custom.form-group class="col-md-6" type="password" name="password" />
+
+                                    <x-custom.form-group class="col-md-6" type="password" name="password_confirmation" />
+
+
+                                    <x-custom.form-group class="col-md-6" type="select" name="role" :options="$roles" />
+
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">{{ __('main.submit') }}</button>
+                                    <x-primary-button
+                                        class="btn btn-primary"><b>{{ __('buttons.submit') }}</b></x-primary-button>
                                 </div>
                             </form>
                         </div>
@@ -114,7 +77,10 @@
             // });
             $('#quickForm').validate({
                 rules: {
-                    name: {
+                    first_name: {
+                        required: true,
+                    },
+                    last_name: {
                         required: true,
                     },
                     email: {
@@ -129,24 +95,24 @@
                     // },
                     password: {
                         required: true,
-                        minlength: 6
+                        minlength: 8
                     },
                     password_confirmation: {
                         required: true,
-                        minlength: 6,
-                        equalTo: "#exampleInputpassword1"
+                        minlength: 8,
+                        equalTo: "#input-password"
                     },
                     role: {
                         required: true,
                     },
-                    category_id: {
-                        required: true,
-                    }
 
                 },
                 messages: {
-                    name: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.name')]) }}",
+                    first_name: {
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.first_name')]) }}",
+                    },
+                    last_name: {
+                        required: "{{ __('validation.required', ['attribute' => __('attributes.last_name')]) }}",
                     },
                     email: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.email')]) }}",
@@ -155,9 +121,7 @@
                     phone: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.phone')]) }}",
                     },
-                    // address: {
-                    //     required: "{{ __('validation.required', ['attribute' => __('attributes.address')]) }}",
-                    // },
+
                     password: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.password')]) }}",
                         minlength: "{{ __('validation.min.string', ['attribute' => __('attributes.password'), 'min' => 6]) }}",
@@ -170,9 +134,6 @@
                     role: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.role')]) }}",
                     },
-                    category_id: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.category')]) }}",
-                    }
 
                 },
                 errorElement: 'span',

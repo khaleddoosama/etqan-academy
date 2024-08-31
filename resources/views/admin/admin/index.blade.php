@@ -16,14 +16,14 @@
                     <div class="col-12">
 
                         <div class="card">
-                            {{-- @can('admin.create') --}}
+                            @can('admin.create')
                             <div class="card-header" style="display: flex;justify-content: end">
                                 <a href="{{ route('admin.all_admin.create') }}" class="btn btn-primary"
                                     style="color: white; text-decoration: none;">
-                                    {{ __('main.create_admin') }}
+                                    {{ __('buttons.create_admin') }}
                                 </a>
                             </div>
-                            {{-- @endcan --}}
+                            @endcan
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -51,16 +51,16 @@
                                                 </td>
 
                                                 <td>
-                                                    {{-- @can('admin.edit') --}}
+                                                    @can('admin.edit')
 
                                                     </a><x-custom.edit-button route="admin.all_admin.edit"
                                                         id="{{ $admin->id }}" />
-                                                    {{-- @endcan --}}
-                                                    {{-- @can('admin.delete') --}}
+                                                    @endcan
+                                                    @can('admin.delete')
 
                                                     <x-custom.delete-button route="admin.all_admin.destroy"
                                                         id="{{ $admin->id }}" />
-                                                    {{-- @endcan --}}
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

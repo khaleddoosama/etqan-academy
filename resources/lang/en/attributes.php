@@ -102,4 +102,6 @@ return [
     'role_in_permissions' => 'Role in Permissions',
     'program' => 'Program',
     'programs' => 'Programs',
+    'student' => 'Student',
+    'student_title' => 'Student Title',
 ];

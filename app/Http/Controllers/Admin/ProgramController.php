@@ -21,10 +21,10 @@ class ProgramController extends Controller
         $this->programService = $programService;
 
         // program.list program.create program.edit program.delete
-        // $this->middleware('permission:program.list')->only('index');
-        // $this->middleware('permission:program.create')->only('create', 'store');
-        // $this->middleware('permission:program.edit')->only('edit', 'update');
-        // $this->middleware('permission:program.delete')->only('destroy');
+        $this->middleware('permission:program.list')->only('index');
+        $this->middleware('permission:program.create')->only('create', 'store');
+        $this->middleware('permission:program.edit')->only('edit', 'update');
+        $this->middleware('permission:program.delete')->only('destroy');
     }
 
     public function index(): View

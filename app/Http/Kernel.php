@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
 class Kernel extends HttpKernel
 {
@@ -74,7 +75,7 @@ class Kernel extends HttpKernel
         'localeViewPath'          => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
 
         // roles and permissions spatie
-        // 'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'permission' => PermissionMiddleware::class,
 
         'jwt.auth' => \App\Http\Middleware\JwtMiddleware::class,
         'jwt.verified' => \App\Http\Middleware\EnsureEmailVerified::class,

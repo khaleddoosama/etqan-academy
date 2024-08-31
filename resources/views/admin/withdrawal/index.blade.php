@@ -30,24 +30,24 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($withdrawalRequests as $withdrawl)
+                                        @foreach ($withdrawalRequests as $withdrawal)
                                             <tr>
-                                                <td>{{ $withdrawl->id }}</td>
-                                                <td><a href="{{ route('admin.users.show', $withdrawl->user) }}">{{ $withdrawl->user->name }}</a></td>
-                                                <td>{{ $withdrawl->wallet_phone }}</td>
-                                                <td>{{ $withdrawl->points }}</td>
+                                                <td>{{ $withdrawal->id }}</td>
+                                                <td><a href="{{ route('admin.users.show', $withdrawal->user) }}">{{ $withdrawal->user->name }}</a></td>
+                                                <td>{{ $withdrawal->wallet_phone }}</td>
+                                                <td>{{ $withdrawal->points }}</td>
                                                 <td>
-                                                    <span class="badge badge-{{ $withdrawl->status_color }}">
-                                                        {{ $withdrawl->status_text }}
+                                                    <span class="badge badge-{{ $withdrawal->status_color }}">
+                                                        {{ $withdrawal->status_text }}
                                                 </td>
-                                                <td>{{ $withdrawl->created_at }}</td>
+                                                <td>{{ $withdrawal->created_at }}</td>
                                                 <td>
-                                                    {{-- @can('withdrawl.show') --}}
-                                                    <a href="{{ route('admin.withdrawal_requests.show', $withdrawl) }}"
+                                                    @can('withdrawal.show')
+                                                    <a href="{{ route('admin.withdrawal_requests.show', $withdrawal) }}"
                                                         class="btn btn-success btn-sm" title="{{ __('main.show') }}">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    {{-- @endcan --}}
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

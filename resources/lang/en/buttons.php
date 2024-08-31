@@ -60,6 +60,9 @@
     'edit_lecture' => 'Edit Lecture',
 
     'create_role_permission' => 'Add Permissions to Role',
+    'edit_role_permission' => 'Edit Permissions for Role',
+    'add_student' => 'Add Student',
+    'edit_student' => 'Edit Student',
 
 
     //auth views

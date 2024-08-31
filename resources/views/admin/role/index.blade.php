@@ -15,14 +15,14 @@
                     <div class="col-12">
 
                         <div class="card">
-                            {{-- @can('role.create') --}}
+                            @can('role.create')
                             <div class="card-header" style="display: flex;justify-content: end">
                                 <a href="{{ route('admin.role.create') }}" class="btn btn-primary"
                                     style="color: white; text-decoration: none;">
-                                    {{ __('main.create_role') }}
+                                    {{ __('buttons.create_role') }}
                                 </a>
                             </div>
-                            {{-- @endcan --}}
+                            @endcan
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -39,16 +39,16 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $role->name }}</td>
                                                 <td>
-                                                    {{-- @can('role.edit') --}}
+                                                    @can('role.edit')
 
                                                     <x-custom.edit-button route="admin.role.edit"
                                                         id="{{ $role->id }}" />
-                                                    {{-- @endcan --}}
-                                                    {{-- @can('role.delete') --}}
+                                                    @endcan
+                                                    @can('role.delete')
 
                                                     <x-custom.delete-button route="admin.role.destroy"
                                                         id="{{ $role->id }}" />
-                                                    {{-- @endcan --}}
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

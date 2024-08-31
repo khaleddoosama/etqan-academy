@@ -13,6 +13,11 @@ class InquiryController extends Controller
     public function __construct(InquiryService $inquiryService)
     {
         $this->inquiryService = $inquiryService;
+
+        $this->middleware('permission:inquiry.list')->only('index');
+        $this->middleware('permission:inquiry.show')->only('show');
+        $this->middleware('permission:inquiry.reply')->only('reply');
+
     }
     public function index()
     {

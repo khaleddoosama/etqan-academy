@@ -26,7 +26,7 @@ class AdminRequest extends FormRequest
         $rules = [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->all_admin->id . ',id'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->all_admin?->id . ',id'],
             'phone' => ['required', 'string', 'max:255'],
             'role' => ['required', Rule::in(Role::pluck('id')->toArray())],
         ];

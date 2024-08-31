@@ -37,22 +37,23 @@
                                                 <td>{{ $inquiry->name }}</td>
                                                 <td><a href="mailto:{{ $inquiry->email }}">{{ $inquiry->email }}</a></td>
                                                 <td>
-                                                    <a href="https://wa.me/{{$inquiry->phone}}" target="_blank">
-                                                        {{$inquiry->phone}}
+                                                    <a href="https://wa.me/{{ $inquiry->phone }}" target="_blank">
+                                                        {{ $inquiry->phone }}
                                                     </a>
                                                 </td>
                                                 <td>{!! Str::limit($inquiry->message, 50) !!}
                                                 <td>
-                                                    <span class="badge bg-{{ $inquiry->status == 'pending' ? 'warning' : 'success' }}">{{ $inquiry->status }}</span>
+                                                    <span
+                                                        class="badge bg-{{ $inquiry->status == 'pending' ? 'warning' : 'success' }}">{{ $inquiry->status }}</span>
                                                 </td>
                                                 <td>{{ $inquiry->created_at }}</td>
                                                 <td>
-                                                    {{-- @can('inquiry.show') --}}
-                                                    <a href="{{ route('admin.inquiries.show', $inquiry) }}"
-                                                        class="btn btn-success btn-sm" title="{{ __('main.show') }}">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    {{-- @endcan --}}
+                                                    @can('inquiry.show')
+                                                        <a href="{{ route('admin.inquiries.show', $inquiry) }}"
+                                                            class="btn btn-success btn-sm" title="{{ __('main.show') }}">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

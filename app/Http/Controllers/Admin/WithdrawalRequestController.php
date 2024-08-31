@@ -15,6 +15,10 @@ class WithdrawalRequestController extends Controller
     public function __construct(WithdrawalRequestService $withdrawalRequestService)
     {
         $this->withdrawalRequestService = $withdrawalRequestService;
+
+        $this->middleware('permission:withdrawal.list')->only('index');
+        $this->middleware('permission:withdrawal.show')->only('show');
+        $this->middleware('permission:withdrawal.status')->only('status');
     }
     public function index()
     {

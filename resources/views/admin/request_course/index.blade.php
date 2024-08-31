@@ -51,12 +51,12 @@
                                                 <td title="{{ $request_course->created_at }}">
                                                     {{ $request_course->created_at->diffForHumans() }}</td>
                                                 <td>
-                                                    {{-- @can('request_course.show') --}}
+                                                    @can('request_course.show')
                                                     <a href="{{ route('admin.request_courses.show', $request_course) }}"
                                                         class="btn btn-success btn-sm" title="{{ __('main.show') }}">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    {{-- @endcan --}}
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

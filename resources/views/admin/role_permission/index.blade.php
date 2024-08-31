@@ -15,7 +15,7 @@
                     <div class="col-12">
 
                         <div class="card">
-                            
+
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -38,11 +38,10 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    {{-- @can('role_permission.edit') --}}
-
+                                                    @can('role_permission.edit')
                                                         <x-custom.edit-button route="admin.role_permissions.edit"
-                                                        id="{{ $role->id }}" />
-                                                    {{-- @endcan --}}
+                                                            id="{{ $role->id }}" />
+                                                    @endcan
 
                                                 </td>
                                             </tr>

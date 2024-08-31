@@ -14,14 +14,15 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            {{-- @can('course.create') --}}
                             <div class="card-header" style="display: flex;justify-content: end;align-items: center">
                                 <h3 class="card-title">Course: {{ $course->title }}</h3>
                                 {{-- button modal --}}
-                                <button class="btn btn-primary ml-auto" data-toggle="modal" data-target="#addStudentModal"
-                                    style="color: white; text-decoration: none;">
-                                    {{ __('buttons.add_student') }}
-                                </button>
+                                @can('user_course.create')
+                                    <button class="btn btn-primary ml-auto" data-toggle="modal" data-target="#addStudentModal"
+                                        style="color: white; text-decoration: none;">
+                                        {{ __('buttons.add_student') }}
+                                    </button>
+                                @endcan
                                 {{-- start modal --}}
                                 <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog"
                                     aria-labelledby="addStudentModalLabel" aria-hidden="true">
@@ -43,7 +44,8 @@
                                                     <div class="form-group">
                                                         <label for="student_id">{{ __('attributes.student_title') }}</label>
                                                         <select name="user_id" id="user_id" class="form-control select2">
-                                                            <option value="">{{ __('buttons.select') }} {{ __('attributes.student') }}</option>
+                                                            <option value="">{{ __('buttons.select') }}
+                                                                {{ __('attributes.student') }}</option>
                                                             @foreach ($students as $student)
                                                                 <option value="{{ $student->id }}">{{ $student->name }} -
                                                                     {{ $student->email }}
@@ -101,30 +103,31 @@
                                                 <td>{{ $SC->created_at }}</td>
 
                                                 <td>
-                                                    {{-- @can('user.edit') --}}
-                                                    {{-- @endcan --}}
-                                                    <form
-                                                        action="{{ route('admin.users.courses.change_status', [$SC->student, $course]) }}"
-                                                        method="POST" style="display: inline-block;">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        @if ($SC->status == 0)
-                                                            <input type="hidden" name="status" value="1">
-                                                            <button type="submit" class="btn btn-success"
-                                                                title="{{ __('buttons.activate') }}"
-                                                                style="color: white; text-decoration: none;">
-                                                                <i class="fas fa-toggle-on"></i>
-                                                            </button>
-                                                        @else
-                                                            <input type="hidden" name="status" value="0">
-                                                            <button type="submit" class="btn btn-danger"
-                                                                title="{{ __('buttons.deactivate') }}"
-                                                                style="color: white; text-decoration: none;">
-                                                                <i class="fas fa-toggle-off"></i>
-                                                            </button>
-                                                        @endif
+                                                    @can('user_course.status')
+                                                        <form
+                                                            action="{{ route('admin.users.courses.change_status', [$SC->student, $course]) }}"
+                                                            method="POST" style="display: inline-block;">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            @if ($SC->status == 0)
+                                                                <input type="hidden" name="status" value="1">
+                                                                <button type="submit" class="btn btn-success"
+                                                                    title="{{ __('buttons.activate') }}"
+                                                                    style="color: white; text-decoration: none;">
+                                                                    <i class="fas fa-toggle-on"></i>
+                                                                </button>
+                                                            @else
+                                                                <input type="hidden" name="status" value="0">
+                                                                <button type="submit" class="btn btn-danger"
+                                                                    title="{{ __('buttons.deactivate') }}"
+                                                                    style="color: white; text-decoration: none;">
+                                                                    <i class="fas fa-toggle-off"></i>
+                                                                </button>
+                                                            @endif
 
-                                                    </form>
+                                                        </form>
+                                                    @endcan
+
                                                 </td>
                                             </tr>
                                         @endforeach

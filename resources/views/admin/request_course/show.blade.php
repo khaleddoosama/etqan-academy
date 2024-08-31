@@ -33,7 +33,7 @@
                                 <p><strong>{{ __('attributes.created_at') }}:</strong> {{ $requestCourse->created_at }}
                                 </p>
 
-                                {{-- @can('request_course.reply') --}}
+                                @can('request_course.reply')
                                 @if ($requestCourse->status == 0)
                                     <form action="{{ route('admin.request_courses.reply', $requestCourse->id) }}"
                                         method="POST">
@@ -45,7 +45,7 @@
                                         </button>
                                     </form>
                                 @endif
-                                {{-- @endcan --}}
+                                @endcan
                             </div>
                             <!-- /.card-body -->
                         </div>

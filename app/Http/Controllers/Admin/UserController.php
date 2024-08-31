@@ -17,15 +17,11 @@ class UserController extends Controller
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
+        $this->middleware('permission:user.list')->only('active', 'inactive');
+        $this->middleware('permission:user.show')->only('show');
+        $this->middleware('permission:user.edit')->only('edit', 'update', 'updatePassword');
+        $this->middleware('permission:user.status')->only('status');
     }
-
-    //pending
-    // public function pending()
-    // {
-    //     $users = $this->userService->getPendingUsers();
-    //     $title = __('attributes.users_pending');
-    //     return view('admin.user.index', compact('users', 'title'));
-    // }
 
     //active
     public function active()
@@ -53,7 +49,7 @@ class UserController extends Controller
     }
 
     //update
-    public function update(UserRequest $request,$id)
+    public function update(UserRequest $request, $id)
     {
         $data = $request->validated();
 
@@ -86,11 +82,9 @@ class UserController extends Controller
         ]);
 
         $user = $this->userService->getUser($id);
-        
+
         $this->userService->updateUser(['status' => $request->status], $user) ? Toastr::success(__('messages.user_status_updated'), __('status.success')) : '';
 
         return redirect()->back();
     }
-
-
 }

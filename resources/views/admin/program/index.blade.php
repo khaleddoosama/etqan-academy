@@ -14,10 +14,10 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            {{-- @can('program.create') --}}
+                            @can('program.create')
                             <x-custom.create-button route="admin.programs.create"
                                 title="{{ __('buttons.create_program') }}" />
-                            {{-- @endcan --}}
+                            @endcan
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -39,17 +39,17 @@
                                                 <td><img src="{{ $program->icon_url }}" alt=""
                                                         width="50" /></td>
                                                 <td>
-                                                    {{-- @can('program.edit') --}}
+                                                    @can('program.edit')
                                                     <x-custom.edit-button route="admin.programs.edit"
                                                         id="{{ $program->id }}" />
-                                                    {{-- @endcan --}}
+                                                    @endcan
 
-                                                    {{-- @can('program.delete') --}}
+                                                    @can('program.delete')
                                                     <x-custom.delete-button route="admin.programs.destroy"
                                                         id="{{ $program->id }}" />
 
 
-                                                    {{-- @endcan --}}
+                                                    @endcan
 
                                                 </td>
                                             </tr>

@@ -19,6 +19,9 @@ class UserCoursesController extends Controller
     public function __construct(UserCoursesService $userCoursesService)
     {
         $this->userCoursesService = $userCoursesService;
+        $this->middleware('permission:user_course.list')->only('index', 'showStudents');
+        $this->middleware('permission:user_course.create')->only('store', 'store2');
+        $this->middleware('permission:user_course.status')->only('changeStatus');
     }
 
     // get user courses

@@ -16,10 +16,8 @@ class RolePermissionController extends Controller
     {
         $this->RolePermissionService = $RolePermissionService;
 
-        // $this->middleware('permission:role_permission.list')->only('index');
-        // $this->middleware('permission:role_permission.create')->only('create', 'store');
-        // $this->middleware('permission:role_permission.edit')->only('edit', 'update');
-        // $this->middleware('permission:role_permission.delete')->only('destroy');
+        $this->middleware('permission:role_permission.list')->only('index');
+        $this->middleware('permission:role_permission.edit')->only('edit', 'update');
     }
 
     public function index()

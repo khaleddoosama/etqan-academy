@@ -23,10 +23,10 @@ class AdminController extends Controller
     public function __construct(AdminService $adminService)
     {
         //     //admin.list admin.create admin.edit admin.delete
-        //     $this->middleware('permission:admin.list')->only('index');
-        //     $this->middleware('permission:admin.create')->only('create', 'store');
-        //     $this->middleware('permission:admin.edit')->only('edit', 'update');
-        //     $this->middleware('permission:admin.delete')->only('destroy');
+            $this->middleware('permission:admin.list')->only('index');
+            $this->middleware('permission:admin.create')->only('create', 'store');
+            $this->middleware('permission:admin.edit')->only('edit', 'update');
+            $this->middleware('permission:admin.delete')->only('destroy');
 
         $this->adminService = $adminService;
     }

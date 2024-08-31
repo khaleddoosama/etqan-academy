@@ -2,8 +2,8 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="{{ route('admin.home') }}" class="brand-link">
-          <img src="{{ asset('asset/logo.png') }}" alt="Etqan Logo"
-              class="brand-image img-circle elevation-3" style="opacity: .8">
+          <img src="{{ asset('asset/logo.png') }}" alt="Etqan Logo" class="brand-image img-circle elevation-3"
+              style="opacity: .8">
           <span class="brand-text font-weight-light">{{ __('main.dashboard') }}</span>
       </a>
 
@@ -12,7 +12,7 @@
           <!-- Sidebar user panel (optional) -->
           <div class="pb-3 mt-3 mb-3 user-panel d-flex">
               <div class="image">
-                    <x-custom.profile-picture :user="auth()->user()" size="30" id="userPicture" />
+                  <x-custom.profile-picture :user="auth()->user()" size="30" id="userPicture" />
               </div>
               <div class="info">
                   <a href="#" class="d-block">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</a>
@@ -51,7 +51,7 @@
                   @endcan
 
                   {{--  users  --}}
-                  {{-- @can('user.list') --}}
+                  @can('user.list')
                   <li class="nav-item @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) menu-open @endif">
                       <a href="#" class="nav-link  @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) active @endif">
                           <i class="nav-icon fas fa-users"></i>
@@ -60,16 +60,6 @@
                           </p>
                       </a>
                       <ul class="nav nav-treeview" style=" @if (!(Request::is('*/admin/users') || Request::is('*/admin/users/*'))) display: none @endif">
-                          {{-- <li class="nav-item">
-                              <a href="{{ route('admin.users.pending') }}"
-                                  class="nav-link @if (Request::is('*/admin/users/pending') || Request::is('*/admin/users/pending/*')) active @endif">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>
-                                      {{ __('attributes.users_pending') }}
-                                  </p>
-                              </a>
-                          </li> --}}
-                          <li class="nav-item">
                               <a href="{{ route('admin.users.active') }}"
                                   class="nav-link @if (Request::is('*/admin/users/active') || Request::is('*/admin/users/active/*')) active @endif">
                                   <i class="far fa-circle nav-icon"></i>
@@ -89,10 +79,10 @@
                           </li>
                       </ul>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
                   {{--  categories  --}}
-                  {{-- @can('category.list') --}}
+                  @can('category.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.categories.index') }}"
                           class="nav-link @if (Request::is('*/admin/categories') || Request::is('*/admin/categories/*')) active @endif">
@@ -102,10 +92,10 @@
                           </p>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
                   {{-- programs --}}
-                  {{-- @can('program.list') --}}
+                  @can('program.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.programs.index') }}"
                           class="nav-link @if (Request::is('*/admin/programs') || Request::is('*/admin/programs/*')) active @endif">
@@ -113,10 +103,10 @@
                           <span class="title">{{ __('attributes.programs') }}</span>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
                   {{-- Courses --}}
-                  {{-- @can('course.list') --}}
+                  @can('course.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.courses.index') }}"
                           class="nav-link @if (Request::is('*/admin/courses') || Request::is('*/admin/courses/*')) active @endif">
@@ -124,11 +114,11 @@
                           <span class="title">{{ __('attributes.courses') }}</span>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
 
                   {{-- Inquiry --}}
-                  {{-- @can('inquiry.list') --}}
+                  @can('inquiry.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.inquiries.index') }}"
                           class="nav-link @if (Request::is('*/admin/inquiry') || Request::is('*/admin/inquiry/*')) active @endif">
@@ -136,10 +126,10 @@
                           <span class="title">{{ __('attributes.inquiry') }}</span>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
                   {{-- Inquiry --}}
-                  {{-- @can('withdrawal.list') --}}
+                  @can('withdrawal.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.withdrawal_requests.index') }}"
                           class="nav-link @if (Request::is('*/admin/withdrawal-request') || Request::is('*/admin/withdrawal-request/*')) active @endif">
@@ -147,10 +137,10 @@
                           <span class="title">{{ __('attributes.withdrawal_request') }}</span>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
                   {{-- RequestCourse --}}
-                  {{-- @can('request_course.list') --}}
+                  @can('request_course.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.request_courses.index') }}"
                           class="nav-link @if (Request::is('*/admin/request-course') || Request::is('*/admin/request-course/*')) active @endif">
@@ -158,12 +148,12 @@
                           <span class="title">{{ __('attributes.request_course') }}</span>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
 
 
                   {{-- Admins --}}
-                  {{-- @can('admin.list') --}}
+                  @can('admin.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.all_admin.index') }}"
                           class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
@@ -171,10 +161,10 @@
                           <span class="title">{{ __('attributes.admin_manage') }}</span>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
                   {{-- Permissions --}}
-                  {{-- @can('permission.list') --}}
+                  @can('permission.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.permission.index') }}"
                           class="nav-link @if (Request::is('*/admin/permission') || Request::is('*/admin/permission/*')) active @endif">
@@ -184,10 +174,10 @@
                           </p>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
                   {{-- Roles --}}
-                  {{-- @can('role.list') --}}
+                  @can('role.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.role.index') }}"
                           class="nav-link @if (Request::is('*/admin/role') || Request::is('*/admin/role/*')) active @endif">
@@ -195,10 +185,10 @@
                           <span class="title">{{ __('attributes.roles') }}</span>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
                   {{-- Roles In Permission --}}
-                  {{-- @can('role_permission.list') --}}
+                  @can('role_permission.list')
                   <li class="nav-item">
                       <a href="{{ route('admin.role_permissions.index') }}"
                           class="nav-link @if (Request::is('*/admin/role_permissions') || Request::is('*/admin/role_permissions/*')) active @endif">
@@ -206,7 +196,7 @@
                           <span class="title">{{ __('attributes.role_in_permissions') }}</span>
                       </a>
                   </li>
-                  {{-- @endcan --}}
+                  @endcan
 
 
               </ul>

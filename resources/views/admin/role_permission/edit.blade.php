@@ -1,11 +1,11 @@
 @extends('admin.master')
 @section('title')
-    {{ __('main.edit_role_permissions') }}
+    {{ __('buttons.edit_role_permissions') }}
 @endsection
 @section('content')
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <x-custom.header-page title="{{ __('main.edit_role_permissions') }}" />
+        <x-custom.header-page title="{{ __('buttons.edit_role_permissions') }}" />
 
         <!-- Main content -->
         <section class=" content">
@@ -16,7 +16,7 @@
                         <!-- jquery validation -->
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">{{ __('main.edit') }} <small>{{ __('main.role_permissions') }}</small>
+                                <h3 class="card-title">{{ __('buttons.edit') }} <small>{{ __('main.role_permissions') }}</small>
                                 </h3>
                             </div>
                             <!-- /.card-header -->
@@ -72,7 +72,7 @@
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">{{ __('main.submit') }}</button>
+                                    <button type="submit" class="btn btn-primary">{{ __('buttons.submit') }}</button>
                                 </div>
                             </form>
                         </div>

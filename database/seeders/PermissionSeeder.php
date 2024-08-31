@@ -21,6 +21,7 @@ class PermissionSeeder extends Seeder
             'user' => [
                 'user.list',
                 'user.create',
+                'user.show',
                 'user.edit',
                 'user.status',
             ],
@@ -46,7 +47,12 @@ class PermissionSeeder extends Seeder
                 'course.list',
                 'course.create',
                 'course.edit',
-                'course.delete',
+                'course.status',
+            ],
+            'user_course' => [
+                'user_course.list',
+                'user_course.create',
+                'user_course.status',
             ],
             'permission' => [
                 'permission.list',
@@ -60,6 +66,10 @@ class PermissionSeeder extends Seeder
                 'role.edit',
                 'role.delete',
             ],
+            'role_permission' => [
+                'role_permission.list',
+                'role_permission.edit',
+            ],
             'admin' => [
                 'admin.list',
                 'admin.create',
@@ -68,14 +78,17 @@ class PermissionSeeder extends Seeder
             ],
             'inquiry' => [
                 'inquiry.list',
+                'inquiry.show',
                 'inquiry.reply',
             ],
-            'Withdrawal' => [
-                'Withdrawal.list',
-                'Withdrawal.reply',
+            'withdrawal' => [
+                'withdrawal.list',
+                'withdrawal.show',
+                'withdrawal.reply',
             ],
             'request_course' => [
                 'request_course.list',
+                'request_course.show',
                 'request_course.reply',
             ],
         ];

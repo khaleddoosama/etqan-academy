@@ -14,9 +14,9 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            {{-- @can('course.create') --}}
-                            <x-custom.create-button route="admin.courses.create" title="{{ __('buttons.create_course') }}" />
-                            {{-- @endcan --}}
+                            @can('course.create')
+                                <x-custom.create-button route="admin.courses.create" title="{{ __('buttons.create_course') }}" />
+                            @endcan
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -50,16 +50,18 @@
 
                                                 </td>
                                                 <td>
-                                                    {{-- @can('course.edit') --}}
-                                                    <x-custom.edit-button route="admin.courses.edit"
-                                                        id="{{ $course->id }}" />
-                                                    {{-- @endcan --}}
+                                                    @can('course.edit')
+                                                        <x-custom.edit-button route="admin.courses.edit"
+                                                            id="{{ $course->id }}" />
+                                                    @endcan
 
-                                                    <a href="{{ route('admin.courses.students.index', $course) }}" class="btn btn-warning"
-                                                        title="{{ __('buttons.show_students') }}"
-                                                        style="color: white; text-decoration: none;">
-                                                        <i class="fas fa-users"></i>
-                                                    </a>
+                                                    @can('user_course.list')
+                                                        <a href="{{ route('admin.courses.students.index', $course) }}"
+                                                            class="btn btn-warning" title="{{ __('buttons.show_students') }}"
+                                                            style="color: white; text-decoration: none;">
+                                                            <i class="fas fa-users"></i>
+                                                        </a>
+                                                    @endcan
 
 
                                                     {{-- @can('course.delete') --}}

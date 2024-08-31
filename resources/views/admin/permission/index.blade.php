@@ -16,14 +16,14 @@
                     <div class="col-12">
 
                         <div class="card">
-                            {{-- @can('permission.create') --}}
+                            @can('permission.create')
                             <div class="card-header" style="display: flex;justify-content: end">
                                 <a href="{{ route('admin.permission.create') }}" class="btn btn-primary"
                                     style="color: white; text-decoration: none;">
-                                    {{ __('main.create_permission') }}
+                                    {{ __('buttons.create_permission') }}
                                 </a>
                             </div>
-                            {{-- @endcan --}}
+                            @endcan
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -42,15 +42,15 @@
                                                 <td>{{ $permission->name }}</td>
                                                 <td>{{ $permission->module }}</td>
                                                 <td>
-                                                    {{-- @can('permission.edit') --}}
+                                                    @can('permission.edit')
                                                     <x-custom.edit-button route="admin.permission.edit"
                                                         id="{{ $permission->id }}" />
-                                                    {{-- @endcan --}}
-                                                    {{-- @can('permission.delete') --}}
+                                                    @endcan
+                                                    @can('permission.delete')
 
                                                     <x-custom.delete-button route="admin.permission.destroy"
                                                         id="{{ $permission->id }}" />
-                                                    {{-- @endcan --}}
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

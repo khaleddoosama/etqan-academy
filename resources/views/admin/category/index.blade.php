@@ -14,10 +14,10 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            {{-- @can('category.create') --}}
+                            @can('category.create')
                                 <x-custom.create-button route="admin.categories.create"
                                     title="{{ __('buttons.create_category') }}" />
-                            {{-- @endcan --}}
+                            @endcan
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -34,17 +34,15 @@
                                                 <td>{{ $category->id }}</td>
                                                 <td>{{ $category->name }}</td>
                                                 <td>
-                                                    {{-- @can('category.edit') --}}
+                                                    @can('category.edit')
                                                         <x-custom.edit-button route="admin.categories.edit"
                                                             id="{{ $category->id }}" />
-                                                    {{-- @endcan --}}
+                                                    @endcan
 
-                                                    {{-- @can('category.delete') --}}
+                                                    @can('category.delete')
                                                     <x-custom.delete-button route="admin.categories.destroy"
                                                         id="{{ $category->id }}" />
-
-
-                                                    {{-- @endcan --}}
+                                                    @endcan
 
                                                 </td>
                                             </tr>

@@ -14,6 +14,10 @@ class RequestCourseController extends Controller
     public function __construct(RequestCourseService $requestCourseService)
     {
         $this->requestCourseService = $requestCourseService;
+
+        $this->middleware('permission:request_course.list')->only('index');
+        $this->middleware('permission:request_course.show')->only('show');
+        $this->middleware('permission:request_course.reply')->only('reply');
     }
 
     // index

@@ -16,62 +16,63 @@
                     <div class="col-12">
 
                         <div class="card">
-                            {{-- @can('user.create') --}}
                             <div class="card-header" style="display: flex;justify-content: end;align-items: center">
                                 <h3 class="card-title">Student: {{ $user->first_name }} {{ $user->last_name }}</h3>
                                 {{-- button modal --}}
-                                <button class="btn btn-primary ml-auto" data-toggle="modal" data-target="#addCourseModal"
-                                    style="color: white; text-decoration: none;">
-                                    {{ __('buttons.add_course') }}
-                                </button>
+                                @can('user_course.create')
+                                    <button class="btn btn-primary ml-auto" data-toggle="modal" data-target="#addCourseModal"
+                                        style="color: white; text-decoration: none;">
+                                        {{ __('buttons.add_course') }}
+                                    </button>
 
-                                {{-- start modal --}}
-                                <div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog"
-                                    aria-labelledby="addCourseModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <form action="{{ route('admin.users.courses.store', $user) }}" method="POST">
-                                                @csrf
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="addCourseModalLabel">
-                                                        {{ __('buttons.add_course') }}
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <div class="form-group">
-                                                        <label for="course_id">{{ __('attributes.course_title') }}</label>
-                                                        <select name="course_id" id="course_id"
-                                                            class="form-control select2">
-                                                            <option value="">{{ __('buttons.select') }} {{ __('attributes.course') }}</option>
-
-                                                            @foreach ($courses as $course)
-                                                                <option value="{{ $course->id }}">{{ $course->title }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-
+                                    {{-- start modal --}}
+                                    <div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog"
+                                        aria-labelledby="addCourseModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <form action="{{ route('admin.users.courses.store', $user) }}" method="POST">
+                                                    @csrf
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="addCourseModalLabel">
+                                                            {{ __('buttons.add_course') }}
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">{{ __('buttons.close') }}</button>
-                                                    <button type="submit"
-                                                        class="btn btn-primary">{{ __('buttons.add') }}</button>
-                                                </div>
-                                            </form>
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group">
+                                                            <label for="course_id">{{ __('attributes.course_title') }}</label>
+                                                            <select name="course_id" id="course_id"
+                                                                class="form-control select2">
+                                                                <option value="">{{ __('buttons.select') }}
+                                                                    {{ __('attributes.course') }}</option>
+
+                                                                @foreach ($courses as $course)
+                                                                    <option value="{{ $course->id }}">{{ $course->title }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">{{ __('buttons.close') }}</button>
+                                                        <button type="submit"
+                                                            class="btn btn-primary">{{ __('buttons.add') }}</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {{-- end button modal --}}
+                                    {{-- end button modal --}}
+                                @endcan
 
 
                             </div>
-                            {{-- @endcan --}}
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -107,8 +108,7 @@
                                                 <td>{{ $user_course->created_at }}</td>
 
                                                 <td>
-                                                    {{-- @can('user.edit') --}}
-                                                    {{-- @endcan --}}
+                                                    @can('user_course.edit')
                                                     <form
                                                         action="{{ route('admin.users.courses.change_status', [$user, $user_course->course]) }}"
                                                         method="POST" style="display: inline-block;">
@@ -131,6 +131,7 @@
                                                         @endif
 
                                                     </form>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

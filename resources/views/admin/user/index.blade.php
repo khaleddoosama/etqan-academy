@@ -20,7 +20,7 @@
                                 <div class="card-header" style="display: flex;justify-content: end">
                                     <a href="{{ route('user.all_user.create') }}" class="btn btn-primary"
                                         style="color: white; text-decoration: none;">
-                                        {{ __('main.create_user') }}
+                                        {{ __('buttons.create_user') }}
                                     </a>
                                 </div>
                             @endcan --}}
@@ -57,19 +57,20 @@
 
                                                 <td>
 
-                                                    {{-- @can('user.add_course') --}}
-                                                    <a href="{{ route('admin.users.courses.index', $user) }}" class="btn btn-warning" title="{{ __('buttons.add_course') }}"
-                                                        style="color: white; text-decoration: none;">
-                                                        <i class="fas fa-plus"></i>
-                                                    </a>
-
-                                                    {{-- @can('user.edit') --}}
-                                                    <x-custom.edit-button route="admin.users.edit" :id="$user->id" />
-
-                                                    {{-- @endcan --}}
-
-                                                    <x-custom.change-status-button :status="$user->status"
-                                                        route="admin.users.status" :id="$user->id" />
+                                                    @can('user_course.list')
+                                                        <a href="{{ route('admin.users.courses.index', $user) }}"
+                                                            class="btn btn-warning" title="{{ __('buttons.add_course') }}"
+                                                            style="color: white; text-decoration: none;">
+                                                            <i class="fas fa-plus"></i>
+                                                        </a>
+                                                    @endcan
+                                                    @can('user.edit')
+                                                        <x-custom.edit-button route="admin.users.edit" :id="$user->id" />
+                                                    @endcan
+                                                    @can('user.status')
+                                                        <x-custom.change-status-button :status="$user->status"
+                                                            route="admin.users.status" :id="$user->id" />
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

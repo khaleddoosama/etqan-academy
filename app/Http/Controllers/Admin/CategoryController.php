@@ -21,10 +21,10 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
 
         // category.list category.create category.edit category.delete
-        // $this->middleware('permission:category.list')->only('index');
-        // $this->middleware('permission:category.create')->only('create', 'store');
-        // $this->middleware('permission:category.edit')->only('edit', 'update');
-        // $this->middleware('permission:category.delete')->only('destroy');
+        $this->middleware('permission:category.list')->only('index');
+        $this->middleware('permission:category.create')->only('create', 'store');
+        $this->middleware('permission:category.edit')->only('edit', 'update');
+        $this->middleware('permission:category.delete')->only('destroy');
     }
 
     public function index(): View

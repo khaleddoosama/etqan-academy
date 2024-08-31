@@ -1,11 +1,11 @@
 @extends('admin.master')
 @section('title')
-    {{ __('main.create_role') }}
+    {{ __('buttons.create_role') }}
 @endsection
 @section('content')
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <x-custom.header-page title="{{ __('main.create_role') }}" />
+        <x-custom.header-page title="{{ __('buttons.create_role') }}" />
 
         <!-- Main content -->
         <section class=" content">
@@ -16,7 +16,7 @@
                         <!-- jquery validation -->
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">{{ __('main.create') }} <small>{{ __('main.role') }}</small></h3>
+                                <h3 class="card-title">{{ __('buttons.create') }} <small>{{ __('main.role') }}</small></h3>
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
@@ -32,7 +32,7 @@
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">{{ __('main.submit') }}</button>
+                                    <button type="submit" class="btn btn-primary">{{ __('buttons.submit') }}</button>
                                 </div>
                             </form>
                         </div>

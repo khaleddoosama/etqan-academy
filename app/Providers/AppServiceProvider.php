@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\AdminNotificationService;
+use App\Services\AdminService;
 use App\Services\AwsS3Service;
 use App\Services\CategoryService;
 use App\Services\CommentService;
@@ -14,8 +15,11 @@ use App\Services\LectureService;
 use App\Services\PermissionService;
 use App\Services\ProgramService;
 use App\Services\ReferralService;
+use App\Services\RequestCourseService;
+use App\Services\RolePermissionService;
 use App\Services\RoleService;
 use App\Services\SectionService;
+use App\Services\StudentService;
 use App\Services\UserCoursesService;
 use App\Services\UserService;
 use App\Services\WithdrawalRequestService;
@@ -40,6 +44,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(AdminNotificationService::class, function ($app) {
             return new AdminNotificationService();
+        });
+
+        $this->app->singleton(AdminService::class, function ($app) {
+            return new AdminService($app->make(RoleService::class));
         });
 
         $this->app->singleton(AwsS3Service::class, function ($app) {
@@ -91,12 +99,24 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
+        $this->app->singleton(RequestCourseService::class, function ($app) {
+            return new RequestCourseService();
+        });
+
+        $this->app->singleton(RolePermissionService::class, function ($app) {
+            return new RolePermissionService();
+        });
+
         $this->app->singleton(RoleService::class, function ($app) {
             return new RoleService();
         });
 
         $this->app->singleton(SectionService::class, function ($app) {
             return new SectionService();
+        });
+
+        $this->app->singleton(StudentService::class, function ($app) {
+            return new StudentService();
         });
 
         $this->app->singleton(UserCoursesService::class, function ($app) {

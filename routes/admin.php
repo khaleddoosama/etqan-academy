@@ -30,7 +30,7 @@ Route::group(
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
     ],
     function () {
-        Route::prefix('admin')->middleware(['auth', 'role:admin', 'web'])->as('admin.')->group(function () {
+        Route::prefix('admin')->middleware(['auth', 'role:admin', 'web', 'throttle:60,1'])->as('admin.')->group(function () {
             // admin controller (resource)
             Route::resource('all_admin', AdminController::class)->except(['show']);
             // Admin Controller
@@ -122,7 +122,7 @@ Route::group(
                 Route::put('/request-courses/{id}/reply', 'reply')->name('request_courses.reply');
             });
 
-            //
+
 
             // Permission controller (resource)
             Route::resource('permission', PermissionController::class)->except(['show']);

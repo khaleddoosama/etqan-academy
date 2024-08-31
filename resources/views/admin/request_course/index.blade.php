@@ -37,12 +37,16 @@
                                                 <td>{{ $request_course->id }}</td>
                                                 <td>{{ $request_course->student->name }}</td>
                                                 <td>
-                                                    <a href="mailto:{{ $request_course->student->email }}">{{ $request_course->student->email }}</a>
+                                                    <a
+                                                        href="mailto:{{ $request_course->student->email }}">{{ $request_course->student->email }}</a>
                                                 </td>
                                                 <td><a href="https://wa.me/{{ $request_course->phone }}" target="_blank">
                                                         {{ $request_course->phone }}
                                                     </a></td>
-                                                <td>{{ $request_course->course->title }}</td>
+                                                <td>
+                                                    <a
+                                                        href="{{ route('admin.courses.students.index', $request_course->course) }}">{{ $request_course->course->title }}</a>
+                                                </td>
                                                 <td>{!! Str::limit($request_course->message, 50) !!}
                                                 <td>
                                                     <span
@@ -52,10 +56,10 @@
                                                     {{ $request_course->created_at->diffForHumans() }}</td>
                                                 <td>
                                                     @can('request_course.show')
-                                                    <a href="{{ route('admin.request_courses.show', $request_course) }}"
-                                                        class="btn btn-success btn-sm" title="{{ __('main.show') }}">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
+                                                        <a href="{{ route('admin.request_courses.show', $request_course) }}"
+                                                            class="btn btn-success btn-sm" title="{{ __('main.show') }}">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
                                                     @endcan
                                                 </td>
                                             </tr>

@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\ConvertedVideo;
+use App\Notifications\LectureStatusNotification;
+use App\Services\AdminNotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -38,6 +40,9 @@ class FinalizeVideoProcessing implements ShouldQueue
         $this->updateConvertedVideo();
         $this->updateLecture($this->hours, $this->minutes, $this->seconds, $this->quality);
         Log::info('Lecture updated: ' . $this->lecture->id);
+
+        $notification = new LectureStatusNotification($this->lecture->id, 1);
+        AdminNotificationService::notifyAdmins($notification);
     }
 
     private function deleteOldVideo()
@@ -94,5 +99,8 @@ class FinalizeVideoProcessing implements ShouldQueue
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
         $this->lecture->update(['processed' => -1]);
+
+        $notification = new LectureStatusNotification($this->lecture->id, 0, $exception->getMessage());
+        AdminNotificationService::notifyAdmins($notification);
     }
 }

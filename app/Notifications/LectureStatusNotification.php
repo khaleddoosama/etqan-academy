@@ -2,21 +2,27 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationToArray;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class LectureStatusNotification extends Notification
+class LectureStatusNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, NotificationToArray;
 
+    private $lecture_id;
+    private $status;
+    private $error_message;
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($lecture_id, $status, $error_message = null)
     {
-        //
+        $this->lecture_id = $lecture_id;
+        $this->status = $status;
+        $this->error_message = $error_message;
     }
 
     /**
@@ -26,7 +32,7 @@ class LectureStatusNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -35,20 +41,35 @@ class LectureStatusNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    // get title
+    protected function getTitle()
     {
-        return [
-            //
-        ];
+        return 'Video Status';
+    }
+
+    protected function getMessage()
+    {
+        $message = $this->status == 1 ? 'Video Published Successfully' : 'Video Failed to Publish' . ' : ' . $this->error_message;
+        return $message;
+    }
+
+    protected function getType()
+    {
+        return 'lecture';
+    }
+
+    protected function getUrl()
+    {
+        return route('admin.lectures.edit', $this->lecture_id);
+    }
+
+    protected function getIcon()
+    {
+        return 'fa fa-video';
     }
 }

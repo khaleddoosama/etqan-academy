@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\WithdrawalRequestRequest;
 use App\Models\User;
 use App\Notifications\WithdrawalRequestNotification;
+use App\Services\AdminNotificationService;
 use App\Services\WithdrawalRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -15,10 +16,12 @@ class WithdrawalRequestController extends Controller
 {
     use ApiResponseTrait;
     protected WithdrawalRequestService $WithdwawalRequestService;
+    private AdminNotificationService $adminNotificationService;
 
-    public function __construct(WithdrawalRequestService $withdrawalRequestService)
+    public function __construct(WithdrawalRequestService $withdrawalRequestService, AdminNotificationService $adminNotificationService)
     {
         $this->WithdwawalRequestService = $withdrawalRequestService;
+        $this->adminNotificationService = $adminNotificationService;
     }
 
     public function store(WithdrawalRequestRequest $request)
@@ -28,8 +31,8 @@ class WithdrawalRequestController extends Controller
 
         $withdrawalRequest = $this->WithdwawalRequestService->store($data);
 
-        $admins = User::admin()->get();
-        Notification::send($admins, new WithdrawalRequestNotification($withdrawalRequest->user->name, $withdrawalRequest->id));
+        $notification = new WithdrawalRequestNotification($withdrawalRequest->user->name, $withdrawalRequest->id);
+        $this->adminNotificationService->notifyAdmins($notification);
 
         return $this->apiResponse($withdrawalRequest, 'Withdrawal Request sent successfully', 201);
     }

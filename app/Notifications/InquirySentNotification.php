@@ -2,21 +2,23 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationToArray;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InquirySentNotification extends Notification
+class InquirySentNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, NotificationToArray;
 
+    public $inquiry_id;
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($inquiry_id)
     {
-        //
+        $this->inquiry_id = $inquiry_id;
     }
 
     /**
@@ -26,7 +28,7 @@ class InquirySentNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -35,20 +37,34 @@ class InquirySentNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    // get title
+    protected function getTitle()
     {
-        return [
-            //
-        ];
+        return 'New Inquiry';
+    }
+
+    protected function getMessage()
+    {
+        return 'New inquiry received';
+    }
+
+    protected function getType()
+    {
+        return 'inquiry';
+    }
+
+    protected function getUrl()
+    {
+        return route('admin.inquiries.show', $this->inquiry_id);
+    }
+
+    protected function getIcon()
+    {
+        return 'fas fa-question-circle';
     }
 }

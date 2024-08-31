@@ -7,7 +7,30 @@
 
         <!-- Content Wrapper. Contains page content -->
         <!-- Content Header (Page header) -->
-        <x-custom.header-page title="{{ __('buttons.edit_lecture') }}" />
+        {{-- <x-custom.header-page title="{{ __('buttons.edit_lecture') }}" /> --}}
+
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="px-4 mb-3 row">
+                    <div class="w-50">
+                        <h1> {{ __('buttons.edit_lecture') }} </h1>
+                    </div>
+                    <div class="w-50">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">{{ __('main.dashboard') }}</a>
+                            </li>
+                            <li class="breadcrumb-item"><a
+                                    href="{{ route('admin.courses.index') }}">{{ $lecture->course->title }}</a></li>
+                            <li class="breadcrumb-item"><a
+                                    href="{{ route('admin.sections.show', $lecture->section->id) }}">{{ $lecture->section->title }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ __('buttons.edit_lecture') }}</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
 
         <!-- Main content -->
         <section class="content">

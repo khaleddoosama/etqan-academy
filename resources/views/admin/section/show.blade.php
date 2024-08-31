@@ -7,7 +7,25 @@
 
         <!-- Content Wrapper. Contains page content -->
         <!-- Content Header (Page header) -->
-        <x-custom.header-page title="{{ __('buttons.show_section') }}" />
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="px-4 mb-3 row">
+                    <div class="w-50">
+                        <h1> {{ __('buttons.show_section') }} </h1>
+                    </div>
+                    <div class="w-50">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">{{ __('main.dashboard') }}</a>
+                            </li>
+                            <li class="breadcrumb-item"><a
+                                    href="{{ route('admin.courses.index') }}">{{ $section->course->title }}</a></li>
+
+                            <li class="breadcrumb-item active">{{ __('buttons.show_section') }}</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
 
         <!-- Main content -->
         <section class=" content">
@@ -39,7 +57,7 @@
                                                         {{-- data-toggle="collapse" --}}
                                                         href="{{ route('admin.lectures.edit', $lecture->id) }}"
                                                         {{-- data-target="#collapse-{{ $loop->iteration }}" --}} {{-- aria-expanded="false" --}} {{-- aria-controls="collapse-{{ $loop->iteration }}" --}}
-                                                        @if ($lecture->processed == 0) style="color: orange"
+                                                        @if ($lecture->processed == 0) style="color: orange !important"
                                                         @elseif ($lecture->processed == -1)
                                                         style="color: red; text-decoration: line-through" @endif>
                                                         {{ __('attributes.video') }} #{{ $loop->iteration }}:

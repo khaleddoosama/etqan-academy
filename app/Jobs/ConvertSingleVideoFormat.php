@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Notifications\LectureStatusNotification;
+use App\Services\AdminNotificationService;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Filters\Video\VideoFilters;
 use Illuminate\Bus\Queueable;
@@ -141,5 +143,8 @@ class ConvertSingleVideoFormat implements ShouldQueue
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
         $this->lecture->update(['processed' => -1]);
+
+        $notification = new LectureStatusNotification($this->lecture->id, 0, $exception->getMessage());
+        AdminNotificationService::notifyAdmins($notification);
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\ConvertedVideo;
+use App\Notifications\LectureStatusNotification;
+use App\Services\AdminNotificationService;
 use App\Services\AwsS3Service;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -115,6 +117,9 @@ class DuplicateLecture implements ShouldQueue
             }
             DB::table('lectures')->where('id', $this->new_lecture->id)->update(['attachments' => json_encode($attachments)]);
         }
+
+        $notification = new LectureStatusNotification($this->new_lecture->id, 1);
+        AdminNotificationService::notifyAdmins($notification);
     }
     private function getSanitizedPath(): string
     {
@@ -150,5 +155,8 @@ class DuplicateLecture implements ShouldQueue
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
         $this->new_lecture->update(['processed' => -1]);
+
+        $notification = new LectureStatusNotification($this->new_lecture->id, 0, $exception->getMessage());
+        AdminNotificationService::notifyAdmins($notification);
     }
 }

@@ -30,7 +30,7 @@
                                 <p><strong>{{ __('attributes.created_at') }}:</strong>
                                     {{ $withdrawalRequest->created_at }}</p>
 
-                                @can('withdrawal.reply')
+                                @can('withdrawal.status')
                                     <div class="btn-group">
                                         @php
                                             $buttons = [

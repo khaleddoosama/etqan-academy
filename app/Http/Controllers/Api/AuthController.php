@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Notifications\UserRegisteredNotification;
+use App\Services\AdminNotificationService;
 use App\Services\ReferralService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -23,10 +24,13 @@ class AuthController extends Controller
 {
     use ApiResponseTrait;
     protected $ReferralService;
-    public function __construct(ReferralService $ReferralService)
+    private AdminNotificationService $adminNotificationService;
+
+    public function __construct(ReferralService $ReferralService, AdminNotificationService $adminNotificationService)
     {
         $this->middleware('jwt.auth', ['except' => ['login', 'register']]);
         $this->ReferralService = $ReferralService;
+        $this->adminNotificationService = $adminNotificationService;
     }
 
     public function login(Request $request)
@@ -78,8 +82,9 @@ class AuthController extends Controller
             $user->sendEmailVerificationNotification();
 
             // notify admins
-            $admins = User::admin()->get();
-            Notification::send($admins, new UserRegisteredNotification($user->name));
+            $notification = new UserRegisteredNotification($user->name);
+            $this->adminNotificationService->notifyAdmins($notification);
+
 
             return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
         } catch (Exception $e) {
@@ -152,7 +157,7 @@ class AuthController extends Controller
         $data = [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60 ,
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
             'user' => new UserResource(auth('api')->user())
         ];
         return $this->apiResponse($data, 'ok', 200);

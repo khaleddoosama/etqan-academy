@@ -65,4 +65,9 @@ class WithdrawalRequestNotification extends Notification implements ShouldQueue
     {
         return route('admin.withdrawal_requests.show', $this->withdrawalRequest_id);
     }
+
+    protected function getIcon()
+    {
+        return 'fas fa-hand-holding-usd';
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Notifications\LectureStatusNotification;
+use App\Services\AdminNotificationService;
 use FFMpeg\FFProbe;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -205,5 +207,8 @@ class ProcessVideo implements ShouldQueue
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
         $this->lecture->update(['processed' => -1]);
+
+        $notification = new LectureStatusNotification($this->lecture->id, 0, $exception->getMessage());
+        AdminNotificationService::notifyAdmins($notification);
     }
 }

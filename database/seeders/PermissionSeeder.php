@@ -84,7 +84,7 @@ class PermissionSeeder extends Seeder
             'withdrawal' => [
                 'withdrawal.list',
                 'withdrawal.show',
-                'withdrawal.reply',
+                'withdrawal.status',
             ],
             'request_course' => [
                 'request_course.list',

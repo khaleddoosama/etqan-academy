@@ -41,4 +41,10 @@ class WithdrawalRequest extends Model
     {
         return self::$statusColors[$this->status];
     }
+
+    // Apply a global scope to order by status desc.
+    public function newQuery()
+    {
+        return parent::newQuery()->orderBy('status', 'asc')->orderBy('created_at', 'desc');
+    }
 }

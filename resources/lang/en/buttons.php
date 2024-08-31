@@ -63,7 +63,11 @@
     'edit_role_permission' => 'Edit Permissions for Role',
     'add_student' => 'Add Student',
     'edit_student' => 'Edit Student',
-
+    'create_student' => 'Create Student',
+    'create_instructor' => 'Create Instructor',
+    'edit_instructor' => 'Edit Instructor',
+    'create_program' => 'Create Program',
+    'edit_program' => 'Edit Program',
 
     //auth views
     'confirm' => 'Confirm',

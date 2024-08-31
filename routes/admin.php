@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\InquiryController;
+use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\LectureController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
@@ -53,6 +54,11 @@ Route::group(
                 Route::put('/users/{user}/status', 'status')->name('users.status');
 
                 Route::put('/{user}/password', 'updatePassword')->name('users.update.password');
+            });
+
+            // Instructor Controller
+            Route::resource('instructors', InstructorController::class)->except(['show'])->missing(function () {
+                return redirect()->route('admin.instructors.index');
             });
 
             // Category Controller

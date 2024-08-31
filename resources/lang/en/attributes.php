@@ -104,4 +104,6 @@ return [
     'programs' => 'Programs',
     'student' => 'Student',
     'student_title' => 'Student Title',
+    'instructors' => 'Instructors',
+    'instructor' => 'Instructor',
 ];

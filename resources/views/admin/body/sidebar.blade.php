@@ -52,150 +52,163 @@
 
                   {{--  users  --}}
                   @can('user.list')
-                  <li class="nav-item @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) menu-open @endif">
-                      <a href="#" class="nav-link  @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) active @endif">
-                          <i class="nav-icon fas fa-users"></i>
-                          <p>
-                              {{ __('attributes.users') }}
-                          </p>
-                      </a>
-                      <ul class="nav nav-treeview" style=" @if (!(Request::is('*/admin/users') || Request::is('*/admin/users/*'))) display: none @endif">
-                              <a href="{{ route('admin.users.active') }}"
-                                  class="nav-link @if (Request::is('*/admin/users/active') || Request::is('*/admin/users/active/*')) active @endif">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>
-                                      {{ __('attributes.users_active') }}
-                                  </p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a href="{{ route('admin.users.inactive') }}"
-                                  class="nav-link @if (Request::is('*/admin/users/inactive') || Request::is('*/admin/users/inactive/*')) active @endif">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>
-                                      {{ __('attributes.users_inactive') }}
-                                  </p>
-                              </a>
-                          </li>
-                      </ul>
-                  </li>
+                      <li class="nav-item @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) menu-open @endif">
+                          <a href="#" class="nav-link  @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) active @endif">
+                              <i class="nav-icon fas fa-users"></i>
+                              <p>
+                                  {{ __('attributes.users') }}
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview" style=" @if (!(Request::is('*/admin/users') || Request::is('*/admin/users/*'))) display: none @endif">
+
+                              <li class="nav-item">
+                                  <a href="{{ route('admin.users.active') }}"
+                                      class="nav-link @if (Request::is('*/admin/users/active') || Request::is('*/admin/users/active/*')) active @endif">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>
+                                          {{ __('attributes.users_active') }}
+                                      </p>
+                                  </a>
+                              </li>
+                              <li class="nav-item">
+                                  <a href="{{ route('admin.users.inactive') }}"
+                                      class="nav-link @if (Request::is('*/admin/users/inactive') || Request::is('*/admin/users/inactive/*')) active @endif">
+                                      <i class="far fa-circle nav-icon"></i>
+                                      <p>
+                                          {{ __('attributes.users_inactive') }}
+                                      </p>
+                                  </a>
+                              </li>
+                          </ul>
+                      </li>
                   @endcan
 
                   {{--  categories  --}}
                   @can('category.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.categories.index') }}"
-                          class="nav-link @if (Request::is('*/admin/categories') || Request::is('*/admin/categories/*')) active @endif">
-                          <i class="nav-icon fas fa-th"></i>
-                          <p>
-                              {{ __('attributes.categories') }}
-                          </p>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.categories.index') }}"
+                              class="nav-link @if (Request::is('*/admin/categories') || Request::is('*/admin/categories/*')) active @endif">
+                              <i class="nav-icon fas fa-th"></i>
+                              <p>
+                                  {{ __('attributes.categories') }}
+                              </p>
+                          </a>
+                      </li>
+                  @endcan
+
+                  {{-- instructors --}}
+                  @can('instructor.list')
+                      <li class="nav-item">
+                          <a href="{{ route('admin.instructors.index') }}"
+                              class="nav-link @if (Request::is('*/admin/instructors') || Request::is('*/admin/instructors/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="school-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.instructors') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
                   {{-- programs --}}
                   @can('program.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.programs.index') }}"
-                          class="nav-link @if (Request::is('*/admin/programs') || Request::is('*/admin/programs/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="code-slash-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.programs') }}</span>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.programs.index') }}"
+                              class="nav-link @if (Request::is('*/admin/programs') || Request::is('*/admin/programs/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="code-slash-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.programs') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
                   {{-- Courses --}}
                   @can('course.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.courses.index') }}"
-                          class="nav-link @if (Request::is('*/admin/courses') || Request::is('*/admin/courses/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="school-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.courses') }}</span>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.courses.index') }}"
+                              class="nav-link @if (Request::is('*/admin/courses') || Request::is('*/admin/courses/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="book-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.courses') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
 
                   {{-- Inquiry --}}
                   @can('inquiry.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.inquiries.index') }}"
-                          class="nav-link @if (Request::is('*/admin/inquiry') || Request::is('*/admin/inquiry/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.inquiry') }}</span>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.inquiries.index') }}"
+                              class="nav-link @if (Request::is('*/admin/inquiries') || Request::is('*/admin/inquiries/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.inquiry') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
                   {{-- Inquiry --}}
                   @can('withdrawal.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.withdrawal_requests.index') }}"
-                          class="nav-link @if (Request::is('*/admin/withdrawal-request') || Request::is('*/admin/withdrawal-request/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.withdrawal_request') }}</span>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.withdrawal_requests.index') }}"
+                              class="nav-link @if (Request::is('*/admin/withdrawal-requests') || Request::is('*/admin/withdrawal-requests/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.withdrawal_request') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
                   {{-- RequestCourse --}}
                   @can('request_course.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.request_courses.index') }}"
-                          class="nav-link @if (Request::is('*/admin/request-course') || Request::is('*/admin/request-course/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.request_course') }}</span>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.request_courses.index') }}"
+                              class="nav-link @if (Request::is('*/admin/request-courses') || Request::is('*/admin/request-courses/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.request_course') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
 
 
                   {{-- Admins --}}
                   @can('admin.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.all_admin.index') }}"
-                          class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="person-circle-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.admin_manage') }}</span>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.all_admin.index') }}"
+                              class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="person-circle-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.admin_manage') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
                   {{-- Permissions --}}
                   @can('permission.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.permission.index') }}"
-                          class="nav-link @if (Request::is('*/admin/permission') || Request::is('*/admin/permission/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
-                          <p>
-                              {{ __('attributes.permissions') }}
-                          </p>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.permission.index') }}"
+                              class="nav-link @if (Request::is('*/admin/permission') || Request::is('*/admin/permission/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                              <p>
+                                  {{ __('attributes.permissions') }}
+                              </p>
+                          </a>
+                      </li>
                   @endcan
 
                   {{-- Roles --}}
                   @can('role.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.role.index') }}"
-                          class="nav-link @if (Request::is('*/admin/role') || Request::is('*/admin/role/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="key-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.roles') }}</span>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.role.index') }}"
+                              class="nav-link @if (Request::is('*/admin/role') || Request::is('*/admin/role/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="key-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.roles') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
                   {{-- Roles In Permission --}}
                   @can('role_permission.list')
-                  <li class="nav-item">
-                      <a href="{{ route('admin.role_permissions.index') }}"
-                          class="nav-link @if (Request::is('*/admin/role_permissions') || Request::is('*/admin/role_permissions/*')) active @endif">
-                          <span class="icon nav-icon"><ion-icon name="lock-open-outline"></ion-icon></span>
-                          <span class="title">{{ __('attributes.role_in_permissions') }}</span>
-                      </a>
-                  </li>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.role_permissions.index') }}"
+                              class="nav-link @if (Request::is('*/admin/role_permissions') || Request::is('*/admin/role_permissions/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="lock-open-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.role_in_permissions') }}</span>
+                          </a>
+                      </li>
                   @endcan
 
 

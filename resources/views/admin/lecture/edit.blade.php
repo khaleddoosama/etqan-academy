@@ -39,7 +39,8 @@
                     <!-- left column -->
                     <div class="col-md-12">
                         <!-- jquery validation -->
-                        <div class="card card-primary">
+                        <div
+                            class="card {{ $lecture->processed == 0 ? 'card-warning' : ($lecture->processed == -1 ? 'card-danger' : 'card-primary') }}">
                             <div class="toggler">
                                 <div id="effect" class="text-center ui-widget-content ui-corner-all bg-primary">
                                     <p>

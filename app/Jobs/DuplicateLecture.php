@@ -156,7 +156,7 @@ class DuplicateLecture implements ShouldQueue
         Log::error('getline: ' . $exception->getLine());
         $this->new_lecture->update(['processed' => -1]);
 
-        $notification = new LectureStatusNotification($this->new_lecture->id, 0, $exception->getMessage());
+        $notification = new LectureStatusNotification($this->new_lecture->id, 0);
         AdminNotificationService::notifyAdmins($notification);
     }
 }

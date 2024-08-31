@@ -59,7 +59,7 @@
                                                         {{-- data-target="#collapse-{{ $loop->iteration }}" --}} {{-- aria-expanded="false" --}} {{-- aria-controls="collapse-{{ $loop->iteration }}" --}}
                                                         @if ($lecture->processed == 0) style="color: orange !important"
                                                         @elseif ($lecture->processed == -1)
-                                                        style="color: red; text-decoration: line-through" @endif>
+                                                        style="color: red !important; text-decoration: line-through !important" @endif>
                                                         {{ __('attributes.video') }} #{{ $loop->iteration }}:
                                                         {{ $lecture->title }} @if ($lecture->processed == 0)
                                                             <i class="fas fa-spinner fa-spin"></i>

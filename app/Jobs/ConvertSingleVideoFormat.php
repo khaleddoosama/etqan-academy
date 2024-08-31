@@ -14,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use ProtoneMedia\LaravelFFMpeg\Filters\WatermarkFactory;
 
 class ConvertSingleVideoFormat implements ShouldQueue
 {
@@ -49,18 +50,28 @@ class ConvertSingleVideoFormat implements ShouldQueue
         }
 
         $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 10);
+        $watermarkPath = asset('asset/logo-100.png');
+        Log::info('watermark: ' . $watermarkPath);
 
         foreach ($chunks as $index => $chunk) {
             $chunkName = $this->name . '_part' . $index . '.' . pathinfo($chunk, PATHINFO_EXTENSION);
             FFMpeg::openUrl($chunk)
+                ->addFilter(function (VideoFilters $filters) {
+                    $filters->resize(new Dimension($this->videoWidth, $this->videoHeight));
+                })
+                ->addWatermark(function (WatermarkFactory $watermark) use ($watermarkPath) {
+                    $watermark->openUrl($watermarkPath)
+                        ->horizontalAlignment(WatermarkFactory::RIGHT, 25)
+                        ->verticalAlignment(WatermarkFactory::BOTTOM, 25);
+                })
                 ->export()
                 ->toDisk('public')
                 ->inFormat($this->format)
-                ->addFilter(function (VideoFilters $filters) {
-                    $filters->resize(new Dimension($this->videoWidth, $this->videoHeight));
-                })->save($chunkName, [
-                    '-threads', '1', // Reduce the number of threads used by FFMpeg
-                    '-bufsize', '64k', // Reduce buffer size
+                ->save($chunkName, [
+                    '-threads',
+                    '1', // Reduce the number of threads used by FFMpeg
+                    '-bufsize',
+                    '64k', // Reduce buffer size
                 ]);
 
 
@@ -144,7 +155,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
         Log::error('getline: ' . $exception->getLine());
         $this->lecture->update(['processed' => -1]);
 
-        $notification = new LectureStatusNotification($this->lecture->id, 0, $exception->getMessage());
+        $notification = new LectureStatusNotification($this->lecture->id, 0);
         AdminNotificationService::notifyAdmins($notification);
     }
 }

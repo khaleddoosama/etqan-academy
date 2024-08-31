@@ -14,15 +14,13 @@ class LectureStatusNotification extends Notification implements ShouldQueue
 
     private $lecture_id;
     private $status;
-    private $error_message;
     /**
      * Create a new notification instance.
      */
-    public function __construct($lecture_id, $status, $error_message = null)
+    public function __construct($lecture_id, $status)
     {
         $this->lecture_id = $lecture_id;
         $this->status = $status;
-        $this->error_message = $error_message;
     }
 
     /**
@@ -54,7 +52,7 @@ class LectureStatusNotification extends Notification implements ShouldQueue
 
     protected function getMessage()
     {
-        $message = $this->status == 1 ? 'Video Published Successfully' : 'Video Failed to Publish' . ' : ' . $this->error_message;
+        $message = $this->status == 1 ? 'Video Published Successfully' : 'Video Failed to Publish';
         return $message;
     }
 

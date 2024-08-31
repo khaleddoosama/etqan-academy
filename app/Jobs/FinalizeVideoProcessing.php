@@ -100,7 +100,7 @@ class FinalizeVideoProcessing implements ShouldQueue
         Log::error('getline: ' . $exception->getLine());
         $this->lecture->update(['processed' => -1]);
 
-        $notification = new LectureStatusNotification($this->lecture->id, 0, $exception->getMessage());
+        $notification = new LectureStatusNotification($this->lecture->id, 0);
         AdminNotificationService::notifyAdmins($notification);
     }
 }

@@ -39,15 +39,16 @@
 
                                                 <td>{{ $course->category->name }}</td>
                                                 <td>
-                                                    @foreach ($course->sections as $section)
-                                                        <a href="{{ route('admin.sections.show', $section) }}"
-                                                            title="show {{ $section->title }}">
-                                                            {{ $section->title }} <i class="fas fa-eye"></i>
-                                                            <span class="sr-only">(current)</span>
-                                                            <br>
-                                                        </a>
-                                                    @endforeach
-
+                                                    @can('course.show')
+                                                        @foreach ($course->sections as $section)
+                                                            <a href="{{ route('admin.sections.show', $section) }}"
+                                                                title="show {{ $section->title }}">
+                                                                {{ $section->title }} <i class="fas fa-eye"></i>
+                                                                <span class="sr-only">(current)</span>
+                                                                <br>
+                                                            </a>
+                                                        @endforeach
+                                                    @endcan
                                                 </td>
                                                 <td>
                                                     @can('course.edit')

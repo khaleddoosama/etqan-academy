@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:course.show')->only('show');
+    }
+
 
     public function show(Section $section)
     {

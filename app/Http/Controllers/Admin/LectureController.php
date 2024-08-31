@@ -27,17 +27,12 @@ class LectureController extends Controller
     {
         $this->lectureService = $lectureService;
         $this->awsS3Service = $awsS3Service;
-    }
 
-    public function index()
-    {
-        //
-    }
+        // $this->middleware('permission:course.create')->only('');
+        // if have permission course.create or course.edit then allow all methods else only index
+        $this->middleware('permission:course.create|course.edit', ['except' => ['index']]);
 
 
-    public function create()
-    {
-        //
     }
 
     //generatePresignedUrl

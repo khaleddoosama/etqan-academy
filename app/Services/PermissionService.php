@@ -34,6 +34,6 @@ class PermissionService
     public function getPermissionModules(): Collection
     {
         // dd(Permission::get()->groupBy('module'));
-        return Permission::get()->groupBy('module');
+        return Permission::orderBy('module')->get()->groupBy('module');
     }
 }

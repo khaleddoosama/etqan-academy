@@ -92,7 +92,7 @@ Route::group(
             });
 
             // Lecture Controller
-            Route::resource('lectures', LectureController::class)->except(['show'])->missing(function () {
+            Route::resource('lectures', LectureController::class)->except(['show', 'create', 'index'])->missing(function () {
                 return redirect()->route('admin.courses.index');
             });
             Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');

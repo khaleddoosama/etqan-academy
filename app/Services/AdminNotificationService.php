@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 
 class AdminNotificationService
@@ -15,7 +16,9 @@ class AdminNotificationService
         //     }
         // });
 
-        $admins = User::admin()->get();
+       $admins = Cache::remember('admins', 60, function () {
+            return User::admin()->get();
+        });
         Notification::send($admins, $notification);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 
 class AdminService
@@ -16,12 +17,15 @@ class AdminService
 
     public function getAdmins()
     {
-        return User::admin()->get();
+        // Adding cache for retrieving admins
+        return Cache::remember('admins', 60, function () {
+            return User::admin()->get();
+        });
     }
 
     public function getAdmin($id)
     {
-        return User::admin()->find($id);
+        return User::admin()->findOrFail($id);
     }
 
     public function createAdmin(array $data)
@@ -39,7 +43,7 @@ class AdminService
 
 
     // update user
-    public function updateUser(array $data, User $admin)
+    public function updateAdmin(array $data, User $admin)
     {
         $role = $this->roleService->getRole($data['role']);
         unset($data['role']);
@@ -52,8 +56,13 @@ class AdminService
     }
 
     // delete user
-    public function deleteUser(User $admin)
+    public function deleteAdmin(User $admin)
     {
-        return $admin->delete();
+        $result = $admin->delete();
+
+        // Clear cache after deleting an admin
+        Cache::forget('admins');
+
+        return $result;
     }
 }

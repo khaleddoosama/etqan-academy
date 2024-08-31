@@ -6,12 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminRequest;
 use App\Http\Requests\PasswordRequest;
 use App\Http\Requests\ProfileRequest;
-use App\Models\Category;
-use App\Models\Post;
-use App\Models\Rate;
-use App\Models\User;
 use App\Services\AdminService;
-use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Yoeunes\Toastr\Facades\Toastr;
 
@@ -109,7 +104,7 @@ class AdminController extends Controller
 
         $all_admin = $this->adminService->getAdmin($id);
 
-        $this->adminService->updateUser($data, $all_admin);
+        $this->adminService->updateAdmin($data, $all_admin);
         Toastr::success(__('messages.admin_updated'), __('status.success'));
 
         return redirect()->route('admin.all_admin.index');
@@ -119,7 +114,7 @@ class AdminController extends Controller
     public function destroy($id)
     {
         $all_admin = $this->adminService->getAdmin($id);
-        $this->adminService->deleteUser($all_admin) ? Toastr::success(__('messages.admin_deleted'), __('status.success')) : '';
+        $this->adminService->deleteAdmin($all_admin) ? Toastr::success(__('messages.admin_deleted'), __('status.success')) : '';
 
         return redirect()->route('admin.all_admin.index');
     }

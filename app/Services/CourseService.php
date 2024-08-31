@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Course;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 
 class CourseService
 {
@@ -21,7 +22,9 @@ class CourseService
 
     public function getCourses(): Collection
     {
-        return Course::all();
+        return Cache::remember('courses', 60, function () {
+            return Course::all();
+        });
     }
 
     public function createCourse(array $data): Course
@@ -34,9 +37,12 @@ class CourseService
                 $course->sections()->create($section);
             }
         }
+
+        // Clear cache after creating a new course
+        Cache::forget('courses');
+
         return $course;
 
-        // return Course::create($data);
     }
 
 
@@ -75,11 +81,20 @@ class CourseService
                 $sectionToRemove->delete();
             }
         }
+
+        // Clear cache after updating a course
+        Cache::forget('courses');
+
         return $course->wasChanged();
     }
 
     public function deleteCourse(Course $course): bool
     {
-        return $course->delete();
+        $result = $course->delete();
+
+        // Clear cache after deleting a course
+        Cache::forget('courses');
+
+        return $result;
     }
 }

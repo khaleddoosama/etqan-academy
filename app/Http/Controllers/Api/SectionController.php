@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SectionResource;
 use App\Services\SectionService;
-use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {

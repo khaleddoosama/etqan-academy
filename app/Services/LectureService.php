@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class LectureService
@@ -26,7 +27,9 @@ class LectureService
 
     public function getLecture(string $id)
     {
-        return Lecture::findOrFail($id);
+        return Cache::remember("lecture_{$id}", 60, function () use ($id) {
+            return Lecture::findOrFail($id);
+        });
     }
     public function getSectionByCourseSlugAndSectionSlugAndSlug(string $courseSlug, string $sectionSlug, string $slug)
     {
@@ -41,16 +44,21 @@ class LectureService
 
     public function getLectures(): Collection
     {
-        return Lecture::all();
+        return Cache::remember('lectures', 60, function () {
+            return Lecture::all();
+        });
     }
 
     public function getLecturesByCourseSlugAndSectionSlug(string $courseSlug, string $sectionSlug): Collection
     {
-        return Lecture::whereHas('section', function ($query) use ($courseSlug, $sectionSlug) {
-            $query->whereHas('course', function ($query) use ($courseSlug) {
-                $query->where('slug', $courseSlug);
-            })->where('slug', $sectionSlug);
-        })->get();
+        $cacheKey = "lectures_{$courseSlug}_{$sectionSlug}";
+        return Cache::remember($cacheKey, 60, function () use ($courseSlug, $sectionSlug) {
+            return Lecture::whereHas('section', function ($query) use ($courseSlug, $sectionSlug) {
+                $query->whereHas('course', function ($query) use ($courseSlug) {
+                    $query->where('slug', $courseSlug);
+                })->where('slug', $sectionSlug);
+            })->get();
+        });
     }
 
     public function createLecture(array $data): Lecture
@@ -59,6 +67,9 @@ class LectureService
         $data['position'] = Lecture::where('section_id', $data['section_id'])->max('position') + 1;
         $lecture = Lecture::create($data); // Create the lecture without the 'lectures' data
 
+        // Clear cache after creating a new lecture
+        Cache::forget('lectures');
+
         return $lecture;
     }
 
@@ -66,6 +77,9 @@ class LectureService
     {
         $lecture->update($data);
 
+        // Clear cache after updating a lecture
+        Cache::forget("lecture_{$lecture->id}");
+        Cache::forget('lectures');
 
         return $lecture;
     }
@@ -73,7 +87,6 @@ class LectureService
     public function deleteLecture(Lecture $lecture): bool
     {
         $convertedVideo = $lecture->convertedVideo;
-        Log::info('convertedVideo: ' . json_encode($convertedVideo));
         if ($convertedVideo) {
             $convertedVideo->mp4_Format_240 !== null ? Storage::delete($convertedVideo->mp4_Format_240) : null;
             $convertedVideo->mp4_Format_360 !== null ? Storage::delete($convertedVideo->mp4_Format_360) : null;
@@ -100,6 +113,9 @@ class LectureService
             }
         }
 
+        // Clear cache after deleting a lecture
+        Cache::forget("lecture_{$lecture->id}");
+        Cache::forget('lectures');
 
         return $lecture->delete();
     }

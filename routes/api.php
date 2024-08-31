@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\GalleryController;
+use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\RequestCourseController;
@@ -42,6 +43,9 @@ Route::group([
 // send Inquiry
 Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry']);
 Route::get('/categories', [CategoryController::class, 'index']);
+
+Route::get('/home', [HomeController::class, 'home']);
+
 
 // show courses
 Route::get('/courses', [CourseController::class, 'index']);

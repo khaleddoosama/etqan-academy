@@ -12,15 +12,18 @@ class RequestCourse extends Model
     protected $guarded = [];
 
     const STATUS_PENDING = 0;
-    const STATUS_REPLIED = 1;
+    const STATUS_APPROVED = 1;
+    const STATUS_REJECTED = 2;
     // قائمة بالحالات المسموح بها
     public static $statusTexts = [
         self::STATUS_PENDING => 'Pending',
-        self::STATUS_REPLIED => 'Replied',
+        self::STATUS_APPROVED => 'Approved',
+        self::STATUS_REJECTED => 'Rejected',
     ];
     public static $statusColors = [
         self::STATUS_PENDING => 'warning',
-        self::STATUS_REPLIED => 'success',
+        self::STATUS_APPROVED => 'success',
+        self::STATUS_REJECTED => 'danger',
     ];
 
     public function getStatusTextAttribute()

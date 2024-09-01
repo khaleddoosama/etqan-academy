@@ -115,11 +115,11 @@ Route::group(
                 Route::put('/withdrawal-requests/{withdrawalRequest}/status', 'status')->name('withdrawal_requests.status');
             });
 
-            // Inquiry Controller
+            // Request Course Controller
             Route::controller(RequestCourseController::class)->group(function () {
                 Route::get('/request-courses', 'index')->name('request_courses.index');
                 Route::get('/request-courses/{id}', 'show')->name('request_courses.show');
-                Route::put('/request-courses/{id}/reply', 'reply')->name('request_courses.reply');
+                Route::put('/request-courses/{id}/status', 'status')->name('request_courses.status');
             });
 
 

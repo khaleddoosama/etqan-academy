@@ -44,8 +44,7 @@
                                                         {{ $request_course->phone }}
                                                     </a></td>
                                                 <td>
-                                                    <a
-                                                        href="{{ route('admin.courses.students.index', $request_course->course) }}">{{ $request_course->course->title }}</a>
+                                                    {{ $request_course->course->title }}
                                                 </td>
                                                 <td>{!! Str::limit($request_course->message, 50) !!}
                                                 <td>

@@ -90,7 +90,7 @@ class PermissionSeeder extends Seeder
             'request_course' => [
                 'request_course.list',
                 'request_course.show',
-                'request_course.reply',
+                'request_course.status',
             ],
         ];
 

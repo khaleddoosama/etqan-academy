@@ -100,7 +100,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(RequestCourseService::class, function ($app) {
-            return new RequestCourseService();
+            return new RequestCourseService(
+                $app->make(UserCoursesService::class)
+            );
         });
 
         $this->app->singleton(RolePermissionService::class, function ($app) {

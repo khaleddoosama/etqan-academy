@@ -17,7 +17,7 @@ class RequestCourseController extends Controller
 
         $this->middleware('permission:request_course.list')->only('index');
         $this->middleware('permission:request_course.show')->only('show');
-        $this->middleware('permission:request_course.reply')->only('reply');
+        $this->middleware('permission:request_course.status')->only('reply');
     }
 
     // index
@@ -33,11 +33,11 @@ class RequestCourseController extends Controller
         return view('admin.request_course.show', compact('requestCourse'));
     }
 
-    public function reply($id)
+    public function status(Request $request, $id)
     {
-        $this->requestCourseService->reply($id);
+        $this->requestCourseService->changeStatus($request->status, $id);
 
-        Toastr::success(__('messages.requestCourse_replied'), __('status.success'));
+        Toastr::success(__('messages.requestCourse_changed'), __('status.success'));
 
         return redirect()->route('admin.request_courses.index');
     }

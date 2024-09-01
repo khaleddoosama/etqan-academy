@@ -108,7 +108,7 @@
                                                 <td>{{ $user_course->created_at }}</td>
 
                                                 <td>
-                                                    @can('user_course.edit')
+                                                    @can('user_course.status')
                                                     <form
                                                         action="{{ route('admin.users.courses.change_status', [$user, $user_course->course]) }}"
                                                         method="POST" style="display: inline-block;">

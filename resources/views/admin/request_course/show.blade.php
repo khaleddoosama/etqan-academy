@@ -28,23 +28,62 @@
                                     </a></p>
                                 <p><strong>{{ __('attributes.course') }}:</strong> {{ $requestCourse->course->title }}</p>
                                 <p><strong>{{ __('attributes.message') }}:</strong> {{ $requestCourse->message }}</p>
-                                <p><strong>{{ __('attributes.status') }}:</strong> {{ $requestCourse->status_text }}</p>
+                                <p><strong>{{ __('attributes.status') }}:</strong> <span
+                                        class="badge badge-{{ $requestCourse->status_color }}">{{ $requestCourse->status_text }}</span>
+                                </p>
 
                                 <p><strong>{{ __('attributes.created_at') }}:</strong> {{ $requestCourse->created_at }}
                                 </p>
 
-                                @can('request_course.reply')
-                                @if ($requestCourse->status == 0)
-                                    <form action="{{ route('admin.request_courses.reply', $requestCourse->id) }}"
-                                        method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        {{-- button --}}
-                                        <button type="submit" class="btn btn-success" title="{{ __('main.reply') }}">
-                                            <i class="fas fa-reply"></i>
-                                        </button>
-                                    </form>
-                                @endif
+                                @can('request_course.status')
+                                    @if ($requestCourse->status == 0)
+                                        <div class="row">
+                                            <form action="{{ route('admin.request_courses.status', $requestCourse->id) }}"
+                                                method="POST" class="mx-2">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="status" value="1">
+                                                {{-- button --}}
+                                                <button type="submit" class="btn btn-success"
+                                                    title="{{ __('buttons.approve') }}">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.request_courses.status', $requestCourse->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="status" value="2">
+                                                {{-- button --}}
+                                                <button type="submit" class="btn btn-danger"
+                                                    title="{{ __('buttons.reject') }}">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @elseif ($requestCourse->status == 1)
+                                        <form action="{{ route('admin.request_courses.status', $requestCourse->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="2">
+                                            {{-- button --}}
+                                            <button type="submit" class="btn btn-danger" title="{{ __('buttons.reject') }}">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
+                                    @elseif ($requestCourse->status == 2)
+                                        <form action="{{ route('admin.request_courses.status', $requestCourse->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="1">
+                                            {{-- button --}}
+                                            <button type="submit" class="btn btn-success" title="{{ __('buttons.approve') }}">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 @endcan
                             </div>
                             <!-- /.card-body -->

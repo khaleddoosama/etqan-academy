@@ -3,7 +3,7 @@
       <!-- Brand Logo -->
       <a href="{{ route('admin.home') }}" class="brand-link">
           <img src="{{ asset('asset/logo.jpg') }}" alt="Etqan Logo" class="brand-image img-circle elevation-3"
-              style="opacity: .8">
+              style="opacity: .8" >
           <span class="brand-text font-weight-light">{{ __('main.dashboard') }}</span>
       </a>
 

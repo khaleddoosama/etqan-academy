@@ -84,7 +84,7 @@
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="{{ asset('asset/logo.jpg') }}" alt="EtqanLogo"
-                height="60" width="60">
+                height="60" width="60" style="border-radius: 50%">
         </div>
 
 

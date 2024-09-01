@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
 use App\Http\Requests\PasswordRequest;
-use App\Models\User;
+use App\Services\CategoryService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Yoeunes\Toastr\Facades\Toastr;
@@ -13,10 +13,12 @@ use Yoeunes\Toastr\Facades\Toastr;
 class UserController extends Controller
 {
     private $userService;
+    private $categoryService;
     // constructor for UserService
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, CategoryService $categoryService)
     {
         $this->userService = $userService;
+        $this->categoryService = $categoryService;
         $this->middleware('permission:user.list')->only('active', 'inactive');
         $this->middleware('permission:user.show')->only('show');
         $this->middleware('permission:user.edit')->only('edit', 'update', 'updatePassword');
@@ -41,11 +43,31 @@ class UserController extends Controller
         return view('admin.user.index', compact('users', 'title'));
     }
 
+    // create
+    public function create()
+    {
+        $categories = $this->categoryService->getCategories();
+        return view('admin.user.create', compact('categories'));
+    }
+
+    //store
+    public function store(UserRequest $request)
+    {
+        $data = $request->validated();
+        $this->userService->createUser($data);
+
+        Toastr::success(__('messages.user_created'), __('status.success'));
+        return redirect()->route('admin.users.active');
+    }
+
+
     //edit
     public function edit($id)
     {
         $user = $this->userService->getUser($id);
-        return view('admin.user.edit', compact('user'));
+        $categories = $this->categoryService->getCategories();
+
+        return view('admin.user.edit', compact('user', 'categories'));
     }
 
     //update

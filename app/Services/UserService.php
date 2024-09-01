@@ -43,6 +43,12 @@ class UserService
         return User::where('id', $id)->where('role', 'student')->first();
     }
 
+    // create user
+    public function createUser(array $data)
+    {
+        return User::create($data);
+    }
+
     // update user
     public function updateUser(array $data, User $user)
     {

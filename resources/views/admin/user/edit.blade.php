@@ -58,17 +58,21 @@
                                             @method('PUT')
                                             @csrf
 
-                                            <x-custom.form-group type="text" name="first_name" value="{{ $user->first_name }}"
-                                                COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+                                            <x-custom.form-group type="text" name="first_name"
+                                                value="{{ $user->first_name }}" COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
 
-                                            <x-custom.form-group type="text" name="last_name" value="{{ $user->last_name }}"
-                                                COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+                                            <x-custom.form-group type="text" name="last_name"
+                                                value="{{ $user->last_name }}" COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
 
                                             <x-custom.form-group type="text" name="email" value="{{ $user->email }}"
                                                 COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
 
                                             <x-custom.form-group type="text" name="phone" value="{{ $user->phone }}"
                                                 COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            <x-custom.form-group type="select" name="category_id"
+                                                :options="$categories" selected="{{ $user->category_id }}" COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
 
                                             <x-custom.form-group type="file" name="picture" value="{{ $user->picture }}"
                                                 COLINPUT="col-sm-10" COLLABEL="col-sm-2" />

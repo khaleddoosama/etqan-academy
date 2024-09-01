@@ -16,14 +16,14 @@
                     <div class="col-12">
 
                         <div class="card">
-                            {{-- @can('user.create')
+                            @can('user.create')
                                 <div class="card-header" style="display: flex;justify-content: end">
-                                    <a href="{{ route('user.all_user.create') }}" class="btn btn-primary"
+                                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary"
                                         style="color: white; text-decoration: none;">
                                         {{ __('buttons.create_user') }}
                                     </a>
                                 </div>
-                            @endcan --}}
+                            @endcan
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">

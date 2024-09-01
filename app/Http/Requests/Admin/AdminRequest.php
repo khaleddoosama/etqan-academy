@@ -23,12 +23,14 @@ class AdminRequest extends FormRequest
      */
     public function rules(): array
     {
+
         $rules = [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->all_admin?->id . ',id'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->all_admin . ',id'],
             'phone' => ['required', 'string', 'max:255'],
             'role' => ['required', Rule::in(Role::pluck('id')->toArray())],
+            'picture' => ['nullable', 'image', 'mimes:jpg,jpeg,png'],
         ];
 
         if ($this->method() == 'PUT') {

@@ -75,6 +75,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>{{ __('attributes.student_name') }}</th>
+                                            <th>{{ __('attributes.student_email') }}</th>
                                             <th>{{ __('attributes.completed') }}</th>
                                             <th>{{ __('attributes.rating') }}</th>
                                             <th>{{ __('attributes.review') }}</th>
@@ -89,6 +90,7 @@
                                             <tr>
                                                 <td>{{ $SC->id }}</td>
                                                 <td>{{ $SC->student->first_name }} {{ $SC->student->last_name }}</td>
+                                                <td>{{ $SC->student->email }}</td>
                                                 <td>{{ $SC->completed }}</td>
                                                 <td>{{ $SC->rating }}</td>
                                                 <td>{{ $SC->review }}</td>

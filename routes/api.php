@@ -12,7 +12,6 @@ use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\WithdrawalRequestController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*

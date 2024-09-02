@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['api', 'throttle:60,1'],
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);
@@ -61,7 +61,7 @@ Route::get('course/{course_slug}/section/{section_slug}', [SectionController::cl
 Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index']);
 
 // verified
-Route::middleware(['jwt.auth', 'jwt.verified'])->group(function () {
+Route::middleware(['jwt.auth', 'jwt.verified', 'throttle:60,1'])->group(function () {
     // show single lecture
     Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);
 
@@ -82,7 +82,7 @@ Route::middleware(['jwt.auth', 'jwt.verified'])->group(function () {
 });
 
 //
-Route::middleware(['jwt.auth'])->group(function () {
+Route::middleware(['jwt.auth', 'throttle:6,1'])->group(function () {
     // Send the email verification link
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
         ->name('verification.send');

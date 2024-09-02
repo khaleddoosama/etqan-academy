@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\GalleryController;
-use App\Http\Controllers\api\HomeController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\RequestCourseController;

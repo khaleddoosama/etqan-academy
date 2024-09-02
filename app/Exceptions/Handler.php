@@ -109,7 +109,7 @@ class Handler extends ExceptionHandler
             // Additional Symfony HTTP exceptions
             LockedHttpException::class => 423,
             PreconditionFailedHttpException::class => 412,
-            
+
             // General PHP Exceptions
             \LogicException::class => 500,
             \DomainException::class => 500,
@@ -128,7 +128,7 @@ class Handler extends ExceptionHandler
                 return $this->apiResponse(null, $exception->getMessage(), $status);
             }
         }
-
+        Log::error('Unknown exception: ' . $exception->getMessage());
         // Default response for other types of exceptions
         return $this->apiResponse(null, $exception->getMessage(), 499);
     }

@@ -57,11 +57,12 @@ class AuthController extends Controller
                 'first_name' => 'required|string|between:2,100',
                 'last_name' => 'required|string|between:2,100',
                 'age' => 'required|integer',
-                'gender' => 'required|string|between:2,100',
-                'job_title' => 'required|string|between:2,100',
+                'gender' => 'required|string|between:2,10',
+                'job_title' => 'required|string|between:2,50',
                 'category_id' => 'required|integer',
-                // 'username' => 'required|string|between:2,100|alpha_dash|unique:users',
-                'email' => 'required|string|email|max:100|unique:users',
+                'phone' => 'required|string|max:20',
+                // 'username' => 'required|string|between:2,50|alpha_dash|unique:users',
+                'email' => 'required|string|email|max:50|unique:users',
                 'password' => 'required|string|confirmed|min:6',
             ]);
             if ($validator->fails()) {

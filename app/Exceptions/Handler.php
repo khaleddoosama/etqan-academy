@@ -68,7 +68,9 @@ class Handler extends ExceptionHandler
         }
 
         // Default response for other types of exceptions
-        return $this->apiResponse(null, $exception->getMessage(), $exception->getCode() ?? 500);
+        // return $this->apiResponse(null, $exception->getMessage(), 500);
+
+        return parent::render($request, $exception);
     }
 
     protected function handleWebException($request, Throwable $exception)

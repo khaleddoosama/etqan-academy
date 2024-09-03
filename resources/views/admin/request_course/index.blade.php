@@ -33,7 +33,12 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($requestCourses as $request_course)
-                                            <tr>
+                                            @php
+                                                // check if created_at is today
+                                                $isToday =
+                                                    date('Y-m-d', strtotime($inquiry->created_at)) == date('Y-m-d');
+                                            @endphp
+                                            <tr class="{{ $isToday ? 'bg-dark' : '' }}">
                                                 <td>{{ $request_course->id }}</td>
                                                 <td>{{ $request_course->student->name }}</td>
                                                 <td>

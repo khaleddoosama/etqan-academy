@@ -33,13 +33,37 @@
 
                                     <x-custom.form-group class="col-md-6" type="text" name="phone" />
 
+                                    {{-- gender --}}
+                                    <div class='form-group row col-md-6'>
+                                        <x-input-label for="input-gender"
+                                            class="col-sm-12 col-form-label">{{ __('attributes.gender') }}</x-input-label>
+                                        <div class="col-sm-12">
+                                            <select class="form-control select2" style="width: 100%;" name="gender">
+                                                <option disabled>
+                                                    {{ __('buttons.choose') }}</option>
+                                                @foreach ($genders as $option)
+                                                    <option value="{{ $option }}">
+                                                        {{ $option }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
+                                        <x-input-error :messages="$errors->get('gender')" style="padding: 0 7.5px;margin: 0;" />
+                                    </div>
+
+
+                                    <x-custom.form-group class="col-md-6" type="number" name="age" />
+
+                                    <x-custom.form-group class="col-md-6" type="text" name="job_title" />
 
                                     <x-custom.form-group class="col-md-6" type="password" name="password" />
 
                                     <x-custom.form-group class="col-md-6" type="password" name="password_confirmation" />
 
 
-                                    <x-custom.form-group class="col-md-6" type="select" name="category_id" :options="$categories" />
+                                    <x-custom.form-group class="col-md-6" type="select" name="category_id"
+                                        :options="$categories" />
 
 
 

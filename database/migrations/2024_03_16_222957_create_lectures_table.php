@@ -32,6 +32,8 @@ return new class extends Migration
             $table->boolean('processed')->default(false);
             $table->boolean('longitudinal')->default(false);
 
+            $table->boolean('is_free')->default(false);
+
             // attachments
             $table->json('attachments')->nullable();
 

@@ -70,8 +70,34 @@
                                             <x-custom.form-group type="text" name="phone" value="{{ $user->phone }}"
                                                 COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
 
-                                            <x-custom.form-group type="select" name="category_id"
-                                                :options="$categories" selected="{{ $user->category_id }}" COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+                                            <x-custom.form-group type="number" name="age" value="{{ $user->age }}"
+                                                COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            {{-- gender --}}
+                                            <div class='form-group row'>
+                                                <x-input-label for="input-gender"
+                                                    class="col-sm-2 col-form-label">{{ __('attributes.gender') }}</x-input-label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control select2" style="width: 100%;" name="gender">
+                                                        <option disabled>
+                                                            {{ __('buttons.choose') }}</option>
+                                                        @foreach ($genders as $option)
+                                                            <option value="{{ $option }}" @if ($user->gender == $option) selected @endif>
+                                                                {{ $option }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                                <x-input-error :messages="$errors->get('gender')" style="padding: 0 7.5px;margin: 0;" />
+                                            </div>
+
+                                            <x-custom.form-group type="text" name="job_title"
+                                                value="{{ $user->job_title }}" COLINPUT="col-sm-10" COLLABEL="col-sm-2" />
+
+                                            <x-custom.form-group type="select" name="category_id" :options="$categories"
+                                                selected="{{ $user->category_id }}" COLINPUT="col-sm-10"
+                                                COLLABEL="col-sm-2" />
 
 
                                             <x-custom.form-group type="file" name="picture" value="{{ $user->picture }}"

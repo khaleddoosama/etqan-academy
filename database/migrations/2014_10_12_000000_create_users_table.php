@@ -45,6 +45,8 @@ return new class extends Migration
             $table->timestamp('removed_at')->nullable();
             $table->text('rejection_reason')->nullable();
 
+            $table->boolean('is_notify')->default(true);
+
             $table->text('notes')->nullable();
 
             $table->timestamps();

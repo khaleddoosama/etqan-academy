@@ -14,9 +14,12 @@ class UserController extends Controller
 {
     private $userService;
     private $categoryService;
+    private $genders;
     // constructor for UserService
     public function __construct(UserService $userService, CategoryService $categoryService)
     {
+        $this->genders = ['Male', 'Female'];
+
         $this->userService = $userService;
         $this->categoryService = $categoryService;
         $this->middleware('permission:user.list')->only('active', 'inactive');
@@ -47,7 +50,8 @@ class UserController extends Controller
     public function create()
     {
         $categories = $this->categoryService->getCategories();
-        return view('admin.user.create', compact('categories'));
+        $genders = $this->genders;
+        return view('admin.user.create', compact('categories', 'genders'));
     }
 
     //store
@@ -67,7 +71,9 @@ class UserController extends Controller
         $user = $this->userService->getUser($id);
         $categories = $this->categoryService->getCategories();
 
-        return view('admin.user.edit', compact('user', 'categories'));
+        $genders = $this->genders;
+
+        return view('admin.user.edit', compact('user', 'categories', 'genders'));
     }
 
     //update

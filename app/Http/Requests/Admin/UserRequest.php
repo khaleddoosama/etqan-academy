@@ -20,10 +20,13 @@ class UserRequest extends FormRequest
         $rules = [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'age' => ['required', 'numeric', 'max:255'],
+            'gender' => ['required', 'string', 'max:255'],
+            'job_title' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $this->user . ',id'],
             'phone' => ['required', 'string', 'max:255'],
-            'picture' => ['nullable', 'image', 'mimes:jpg,jpeg,png'],
             'category_id' => ['required', 'exists:categories,id'],
+            'picture' => ['nullable', 'image', 'mimes:jpg,jpeg,png'],
         ];
 
         if ($this->method() == 'PUT') {

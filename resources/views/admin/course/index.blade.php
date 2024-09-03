@@ -65,11 +65,10 @@
                                                     @endcan
 
 
-                                                    {{-- @can('course.delete') --}}
-                                                    {{-- <x-custom.delete-button route="admin.courses.destroy"
-                                                        id="{{ $course->id }}" /> --}}
-
-                                                    {{-- @endcan --}}
+                                                    @can('course.delete')
+                                                        <x-custom.delete-button route="admin.courses.destroy"
+                                                            id="{{ $course->id }}" />
+                                                    @endcan
 
                                                 </td>
                                             </tr>

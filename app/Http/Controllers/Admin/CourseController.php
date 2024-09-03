@@ -34,7 +34,7 @@ class CourseController extends Controller
         $this->middleware('permission:course.list')->only('index');
         $this->middleware('permission:course.create')->only('create', 'store');
         $this->middleware('permission:course.edit')->only('edit', 'update');
-        $this->middleware('permission:course.status')->only('status');
+        $this->middleware('permission:course.delete')->only('destroy');
     }
 
     public function index()
@@ -90,8 +90,9 @@ class CourseController extends Controller
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(Course $course)
     {
-        //
+        $this->courseService->deleteCourse($course) ? Toastr::success(__('messages.course_deleted'), __('status.success')) : '';
+        return redirect()->back();
     }
 }

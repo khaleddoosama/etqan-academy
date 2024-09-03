@@ -48,7 +48,7 @@ class PermissionSeeder extends Seeder
                 'course.create',
                 'course.edit',
                 'course.show',
-                'course.status',
+                'course.delete',
             ],
             'user_course' => [
                 'user_course.list',

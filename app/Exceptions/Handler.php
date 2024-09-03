@@ -60,6 +60,15 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+         // log message
+         Log::error($exception->getMessage());
+         // log trace
+         Log::error($exception->getTraceAsString());
+         // log file
+         Log::error($exception->getFile());
+         // log line
+         Log::error($exception->getLine());
+
         if ($request->wantsJson() || $request->is('api/*')) {  // Check if the request is for API
             return $this->handleApiException($request, $exception);
         } else {
@@ -122,15 +131,6 @@ class Handler extends ExceptionHandler
             \UnexpectedValueException::class => 500,
         ];
 
-        // log message
-        Log::error($exception->getMessage());
-        // log trace
-        Log::error($exception->getTraceAsString());
-        // log file
-        Log::error($exception->getFile());
-        // log line
-        Log::error($exception->getLine());
-
         foreach ($exceptionTypeToStatus as $type => $status) {
             if ($exception instanceof $type) {
                 return $this->apiResponse(null, $exception->getMessage(), $status);
@@ -143,15 +143,8 @@ class Handler extends ExceptionHandler
 
     protected function handleWebException($request, Throwable $exception)
     {
-        // log message
-        Log::error($exception->getMessage());
-        // log trace
-        Log::error($exception->getTraceAsString());
-        // log file
-        Log::error($exception->getFile());
-        // log line
-        Log::error($exception->getLine());
-        
+
+
         if ($exception instanceof ValidationException) {
             // Handle validation exceptions
             Toastr::error($exception->getMessage(), __('status.error_in_inputs'));

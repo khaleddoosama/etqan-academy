@@ -31,8 +31,6 @@ class LectureController extends Controller
         // $this->middleware('permission:course.create')->only('');
         // if have permission course.create or course.edit then allow all methods else only index
         $this->middleware('permission:course.create|course.edit', ['except' => ['index']]);
-
-
     }
 
     //generatePresignedUrl
@@ -162,6 +160,15 @@ class LectureController extends Controller
 
         Toastr::success(__('messages.attachment_deleted'), __('status.success'));
 
+        return redirect()->back();
+    }
+
+
+    public function changeIsFree(Lecture $lecture)
+    {
+        $lecture = $this->lectureService->changeIsFree($lecture);
+
+        Toastr::success(__('messages.lecture_updated'), __('status.success'));
         return redirect()->back();
     }
 }

@@ -103,6 +103,7 @@ Route::group(
             Route::post('/upload-video', [LectureController::class, 'generatePresignedUrl']);
             Route::put('/update-attachment/{lecture}', [LectureController::class, 'updateAttachment'])->name('lectures.updateAttachment');
             Route::put('/delete-attachment/{lecture}', [LectureController::class, 'deleteAttachment'])->name('lectures.deleteAttachment');
+            Route::put('lectures/is-free/{lecture}', [LectureController::class, 'changeIsFree'])->name('lectures.changeIsFree');
 
             // Inquiry Controller
             Route::controller(InquiryController::class)->group(function () {

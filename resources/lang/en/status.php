@@ -9,9 +9,10 @@
     'success' => 'Success',
     'warning' => 'Warning',
     'active' => 'Active',
-    'inactive' => 'Inactive',
     'pending' => 'Pending',
     'approved' => 'Approved',
     'rejected' => 'Rejected',
     'removed' => 'Removed',
+    'yes' => 'Yes',
+    'no' => 'No',
 );

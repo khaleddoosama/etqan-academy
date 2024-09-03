@@ -63,9 +63,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(CourseService::class, function ($app) {
-            return new CourseService(
-                $app->make(LectureService::class)
-            );
+            return new CourseService();
         });
 
         $this->app->singleton(GalleryService::class, function ($app) {

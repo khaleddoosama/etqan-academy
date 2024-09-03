@@ -67,12 +67,40 @@
                                 <h3 class="card-title"><small>
                                         {{ __('attributes.lecture') }}: {{ $lecture->title }}</small></h3>
                             </div>
+
+                            {{-- check box --}}
+                            <div class="mx-3 mt-3  callout callout-info d-flex justify-content-between align-items-center">
+                                <h5>{{ __('attributes.is_free') }}:
+                                    {{ $lecture->is_free ? __('status.yes') : __('status.no') }}</h5>
+                                <form action="{{ route('admin.lectures.changeIsFree', $lecture) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="custom-control custom-checkbox">
+                                        @if (!$lecture->is_free)
+                                            <button type="submit" class="btn btn-success"
+                                                title="{{ __('buttons.activate') }}"
+                                                style="color: white; text-decoration: none;">
+                                                <i class="fas fa-toggle-off"></i>
+                                            </button>
+                                        @else
+                                            <button type="submit" class="btn btn-danger"
+                                                title="{{ __('buttons.deactivate') }}"
+                                                style="color: white; text-decoration: none;">
+                                                <i class="fas fa-toggle-on"></i>
+                                            </button>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
+
                             <!-- /.card-header -->
                             <form action="{{ route('admin.lectures.update', $lecture) }}" method="POST" id="form1">
                                 @csrf
                                 @method('PUT')
 
                                 <input type="hidden" name="id" value="{{ $lecture->id }}" id="input-id">
+
+
 
                                 <div class="mx-3 my-3 callout callout-info">
                                     <h5>{{ __('attributes.title') }}:</h5>

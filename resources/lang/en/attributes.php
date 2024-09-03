@@ -106,4 +106,5 @@ return [
     'student_title' => 'Student Title',
     'instructors' => 'Instructors',
     'instructor' => 'Instructor',
+    'is_free' => 'Is Free',
 ];

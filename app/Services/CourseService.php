@@ -7,17 +7,11 @@ namespace App\Services;
 use App\Models\Course;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CourseService
 {
-    protected LectureService $lectureService;
-
-    public function __construct(LectureService $lectureService)
-    {
-        $this->lectureService = $lectureService;
-    }
-
-
     public function getCourse(string $id): Course
     {
         return Course::findOrFail($id);
@@ -29,7 +23,9 @@ class CourseService
 
     public function getCourses(): Collection
     {
-        return Course::all();
+        return Cache::remember('courses', 60, function () {
+            return Course::all();
+        });
     }
 
     public function createCourse(array $data): Course
@@ -42,6 +38,9 @@ class CourseService
                 $course->sections()->create($section);
             }
         }
+
+        // Clear cache after creating a new course
+        Cache::forget('courses');
 
         return $course;
     }
@@ -83,23 +82,42 @@ class CourseService
             }
         }
 
+        // Clear cache after updating a course
+        Cache::forget('courses');
 
         return $course->wasChanged();
     }
-
     public function deleteCourse(Course $course): bool
     {
-        // first delete lectures
-        $lectures = $course->lectures()->get();
-        foreach ($lectures as $lecture) {
-            $this->lectureService->deleteLecture($lecture);
+        DB::beginTransaction();
+        try {
+            // first delete lectures
+            $sections = $course->sections()->with('lectures')->get();
+            $lectures = $sections->pluck('lectures')->flatten();
+
+            foreach ($lectures as $lecture) {
+                $lectureService = app(LectureService::class);
+                $lectureService->deleteLecture($lecture);
+            }
+
+            // second delete sections
+            $course->sections()->delete();
+
+            // Clear cache after deleting a course
+            Cache::forget('courses');
+            Cache::forget('course_' . $course->id);
+            $cacheKey = "sections_course_{$course->slug}";
+            Cache::forget($cacheKey);
+
+            $result = $course->delete();
+
+            DB::commit();
+
+
+            return $result;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return false;
         }
-
-        // second delete sections
-        $course->sections()->delete();
-
-        $result = $course->delete();
-
-        return $result;
     }
 }

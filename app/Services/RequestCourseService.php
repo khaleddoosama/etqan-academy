@@ -42,6 +42,7 @@ class RequestCourseService
             $this->userCoursesService->changeUserCourseStatus(['status' => 0], $request->student, $request->course);
         }
 
-        return $request->update(['status' => $status]);
+        $request->update(['status' => $status]);
+        return $request;
     }
 }

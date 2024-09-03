@@ -30,19 +30,26 @@ class CourseService
 
     public function createCourse(array $data): Course
     {
-        $courseData = Arr::except($data, ['sections']); // Remove 'sections' from the data array
-        $course = Course::create($courseData); // Create the course without the 'sections' data
+        DB::beginTransaction();
+        try {
+            $courseData = Arr::except($data, ['sections']); // Remove 'sections' from the data array
+            $course = Course::create($courseData); // Create the course without the 'sections' data
 
-        if (isset($data['sections'])) {
-            foreach ($data['sections'] as $section) {
-                $course->sections()->create($section);
+            if (isset($data['sections'])) {
+                foreach ($data['sections'] as $section) {
+                    $course->sections()->create($section);
+                }
             }
+
+            // Clear cache after creating a new course
+            Cache::forget('courses');
+
+            DB::commit();
+            return $course;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
-
-        // Clear cache after creating a new course
-        Cache::forget('courses');
-
-        return $course;
     }
 
 

@@ -90,6 +90,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $query->where('role', 'admin');
     }
 
+    // get notified students
+    public static function getNotifiedStudents()
+    {
+        return Cache::remember('students', 60, function () {
+            return self::where('role', 'student')->where('is_notify', 1)->get();
+        });
+    }
+
     // scope student and pending
     // public function scopeStudentPending($query)
     // {

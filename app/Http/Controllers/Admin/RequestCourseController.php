@@ -3,17 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\StudentApprovedNotification;
 use App\Services\RequestCourseService;
+use App\Services\StudentsNotificationService;
 use Illuminate\Http\Request;
 use Yoeunes\Toastr\Facades\Toastr;
 
 class RequestCourseController extends Controller
 {
     private $requestCourseService;
+    private $studentsNotificationService;
 
-    public function __construct(RequestCourseService $requestCourseService)
+
+    public function __construct(RequestCourseService $requestCourseService, StudentsNotificationService $studentsNotificationService)
     {
         $this->requestCourseService = $requestCourseService;
+        $this->studentsNotificationService = $studentsNotificationService;
 
         $this->middleware('permission:request_course.list')->only('index');
         $this->middleware('permission:request_course.show')->only('show');
@@ -35,7 +40,13 @@ class RequestCourseController extends Controller
 
     public function status(Request $request, $id)
     {
-        $this->requestCourseService->changeStatus($request->status, $id);
+        $request_course = $this->requestCourseService->changeStatus($request->status, $id);
+        if ($request_course->status == 1) {
+            // send email
+            $notification = new StudentApprovedNotification($request_course->course->slug, $request_course->course->title);
+            $this->studentsNotificationService->notify($notification);
+        }
+
 
         Toastr::success(__('messages.requestCourse_changed'), __('status.success'));
 

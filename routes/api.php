@@ -72,8 +72,7 @@ Route::middleware(['jwt.auth', 'jwt.verified', 'throttle:60,1'])->group(function
     Route::get('/students/search', [StudentController::class, 'search']);
     Route::get('/students/{slug}', [StudentController::class, 'showProfile']);
 
-    // send Request Course
-    Route::post('/request-course', [RequestCourseController::class, 'store']);
+
 
     // create gallery
     Route::post('/gallery', [GalleryController::class, 'store']);

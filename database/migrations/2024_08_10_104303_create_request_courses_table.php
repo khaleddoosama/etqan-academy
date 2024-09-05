@@ -13,11 +13,20 @@ return new class extends Migration
     {
         Schema::create('request_courses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('student_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->string('phone')->nullable();
             $table->string('message')->nullable();
             $table->boolean('status')->default(0);
+
+             // approved by admin
+             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
+             $table->timestamp('approved_at')->nullable();
+
+             // rejected by admin
+             $table->foreignId('rejected_by')->nullable()->constrained('users')->onDelete('set null');
+             $table->timestamp('rejected_at')->nullable();
+
             $table->timestamps();
         });
     }

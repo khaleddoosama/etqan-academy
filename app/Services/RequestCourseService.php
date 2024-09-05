@@ -38,11 +38,16 @@ class RequestCourseService
         $request = $this->getRequestCourse($id);
         if ($status == 1) {
             $this->userCoursesService->createUserCourse($request->student_id, $request->course_id);
+            $request->approved_by = auth()->user()->id;
+            $request->approved_at = now();
         } elseif ($status == 2) {
             $this->userCoursesService->changeUserCourseStatus(['status' => 0], $request->student, $request->course);
+            $request->rejected_by = auth()->user()->id;
+            $request->rejected_at = now();
         }
 
-        $request->update(['status' => $status]);
+        $request->status = $status;
+        $request->save();
         return $request;
     }
 }

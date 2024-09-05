@@ -41,7 +41,12 @@ Route::group([
 
 // send Inquiry
 Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry']);
+
+// show categories
 Route::get('/categories', [CategoryController::class, 'index']);
+
+// send Request Course
+Route::post('/request-course', [RequestCourseController::class, 'store']);
 
 Route::get('/home', [HomeController::class, 'home']);
 

@@ -40,10 +40,10 @@
                                             @endphp
                                             <tr class="{{ $isToday ? 'bg-dark' : '' }}">
                                                 <td>{{ $request_course->id }}</td>
-                                                <td>{{ $request_course->student->name }}</td>
+                                                <td>{{ $request_course->student->name ?? 'Guest' }}</td>
                                                 <td>
                                                     <a
-                                                        href="mailto:{{ $request_course->student->email }}">{{ $request_course->student->email }}</a>
+                                                        href="mailto:{{ $request_course->student->email ?? '' }}">{{ $request_course->student->email ?? '' }}</a>
                                                 </td>
                                                 <td><a href="https://wa.me/{{ $request_course->phone }}" target="_blank">
                                                         {{ $request_course->phone }}

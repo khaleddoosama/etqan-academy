@@ -32,7 +32,7 @@ class RequestCourseRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $data = parent::validated();
-        $data['student_id'] = auth()->user()->id;
+        $data['student_id'] = auth()->user()->id ?? null;
         return $data;
     }
 

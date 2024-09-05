@@ -28,7 +28,7 @@ class RequestCourseController extends Controller
 
         $requestCourse = $this->requestCourseService->createRequestCourse($data);
 
-        $notification = new CourseRequestNotification($requestCourse->student->name, $requestCourse->id);
+        $notification = new CourseRequestNotification($requestCourse->student->name ?? 'Guest', $requestCourse->id);
         $this->adminNotificationService->notifyAdmins($notification);
 
         return $this->apiResponse($requestCourse, 'Request sent successfully', 201);

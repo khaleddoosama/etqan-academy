@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class CourseResource extends JsonResource
 {
@@ -27,7 +28,10 @@ class CourseResource extends JsonResource
             'lessons' => $this->countLectures(),
             'total_duration' => $this->totalDuration(),
             'students_count' => $this->studentsCount(),
-            'instructor' => $this->instructor ? new InstructorResource($this->instructor) : null
+            'rating' => $this->rating,
+            'instructor' => $this->instructor ? new InstructorResource($this->instructor) : null,
+            // check if the user is enrolled in the course
+            'is_enrolled' => auth('api')->check() && auth('api')->user()->isEnrolledInCourse($this->id),
         ];
     }
 }

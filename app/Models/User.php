@@ -72,6 +72,12 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return Cache::has('user-is-online' . $this->id);
     }
 
+    // isEnrolledInCourse
+    public function isEnrolledInCourse($course_id)
+    {
+        return $this->courses()->where('course_id', $course_id)->exists();
+    }
+
     // scope student
     public function scopeStudent($query)
     {

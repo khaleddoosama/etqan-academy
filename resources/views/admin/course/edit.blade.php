@@ -57,6 +57,10 @@
                                     <x-custom.form-group class="col-md-6" type="number" name="price"
                                         value="{{ $course->price }}" />
 
+
+                                    <x-custom.form-group class="col-md-6" type="number" name="discount_price"
+                                        value="{{ $course->discount_price }}" />
+
                                     <x-custom.form-group class="col-md-6" type="number" name="number_of_levels"
                                         value="{{ $course->number_of_levels }}" />
 

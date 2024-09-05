@@ -126,8 +126,6 @@ Route::group(
                 Route::put('/request-courses/{id}/status', 'status')->name('request_courses.status');
             });
 
-
-
             // Permission controller (resource)
             Route::resource('permission', PermissionController::class)->except(['show']);
 

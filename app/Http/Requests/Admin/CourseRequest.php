@@ -21,6 +21,7 @@ class CourseRequest extends FormRequest
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric',
+            'discount_price' => 'nullable|numeric',
             'number_of_levels' => 'required|integer',
             'instructor_id' => 'nullable|exists:instructors,id',
             'programs[]' => 'nullable|array',

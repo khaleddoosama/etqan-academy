@@ -55,4 +55,18 @@ class UserService
         $user->update($data);
         return $user->wasChanged();
     }
+
+    //getStudentByPhone
+    public function getStudentByPhone($phone)
+    {
+        // إزالة أي مسافات أو شرطات
+        $phone = str_replace([' ', '-'], '', $phone);
+
+        // التأكد من أن الرقم يطابق صيغة بدون رمز الدولة أو مع رمز الدولة
+        return User::where(function ($query) use ($phone) {
+            $query->where('phone', $phone)
+                ->orWhere('phone', '0' . substr($phone, -10))
+                ->orWhere('phone', '+2' . substr($phone, -10));
+        })->where('role', 'student')->first();
+    }
 }

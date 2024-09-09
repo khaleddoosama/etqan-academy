@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\RequestCourse;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Validation\ValidationException;
 
 class RequestCourseService
 {
@@ -36,12 +37,25 @@ class RequestCourseService
     public function changeStatus($status, $id)
     {
         $request = $this->getRequestCourse($id);
+        if (!$request->student) {
+            // search for user with phone
+            $student = $this->userCoursesService->getStudentByPhone($request->phone);
+
+            if (!$student) {
+                // return error
+                throw ValidationException::withMessages(['phone' => 'can not find student with this phone']);
+            }
+
+            $request->student_id = $student->id;
+            $request->save();
+        }
+
         if ($status == 1) {
             $this->userCoursesService->createUserCourse($request->student_id, $request->course_id);
             $request->approved_by = auth()->user()->id;
             $request->approved_at = now();
         } elseif ($status == 2) {
-            $this->userCoursesService->changeUserCourseStatus(['status' => 0], $request->student, $request->course);
+            $this->userCoursesService->changeUserCourseStatus(['status' => 0], $request->student ?? $student, $request->course);
             $request->rejected_by = auth()->user()->id;
             $request->rejected_at = now();
         }

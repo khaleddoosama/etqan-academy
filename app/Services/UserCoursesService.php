@@ -50,9 +50,9 @@ class UserCoursesService
 
 
     // change user course status
-    public function changeUserCourseStatus(array $data, User $user, Course $course)
+    public function changeUserCourseStatus(array $data, User $student, Course $course)
     {
-        $course = $user->courses()->where('course_id', $course->id)->first();
+        $course = $student->courses()->where('course_id', $course->id)->first();
 
         if (!$course) {
             return false;
@@ -71,5 +71,10 @@ class UserCoursesService
             $userCourse->update(['completed' => '1']);
         }
         return $userCourse->update(['progress' => $progress]);
+    }
+
+    public function getStudentByPhone($phone)
+    {
+        return $this->userService->getStudentByPhone($phone);
     }
 }

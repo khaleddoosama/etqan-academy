@@ -45,6 +45,16 @@ class RequestCourse extends Model
         return $this->belongsTo(User::class, 'student_id');
     }
 
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function rejectedBy()
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
+
     // Apply a global scope to order by status desc.
     public function newQuery()
     {

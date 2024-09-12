@@ -35,6 +35,15 @@
                                 <p><strong>{{ __('attributes.created_at') }}:</strong> {{ $requestCourse->created_at }}
                                 </p>
 
+                                <p><strong>{{ __('attributes.approved_at') }}:</strong> {{ $requestCourse->approved_at }}
+                                </p>
+                                <p><strong>{{ __('attributes.approved_by') }}:</strong> {{ $requestCourse->approvedBy?->name }}
+                                </p>
+                                <p><strong>{{ __('attributes.rejected_at') }}:</strong> {{ $requestCourse->rejected_at }}
+                                </p>
+                                <p><strong>{{ __('attributes.rejected_by') }}:</strong> {{ $requestCourse->rejectedBy?->name }}
+                                </p>
+
                                 @can('request_course.status')
                                     @if ($requestCourse->status == 0)
                                         <div class="row">

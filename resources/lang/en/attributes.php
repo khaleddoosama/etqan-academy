@@ -107,4 +107,8 @@ return [
     'instructors' => 'Instructors',
     'instructor' => 'Instructor',
     'is_free' => 'Is Free',
+    "approved_at" => "Approved At",
+    "rejected_at" => "Rejected At",
+    "approved_by" => "Approved By",
+    "rejected_by" => "Rejected By",
 ];

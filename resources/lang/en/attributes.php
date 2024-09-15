@@ -111,4 +111,5 @@ return [
     "rejected_at" => "Rejected At",
     "approved_by" => "Approved By",
     "rejected_by" => "Rejected By",
+    "notifications" => "Notifications",
 ];

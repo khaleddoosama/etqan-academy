@@ -10,4 +10,5 @@
     "duplicate_lecture" => "Duplicate Lecture",
     "reply" => "Reply",
     "all_permissions" => "All Permissions",
+    "see_all_notifications" => "See All Notifications",
 );

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\LectureController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\RequestCourseController;
@@ -31,6 +32,10 @@ Route::group(
     ],
     function () {
         Route::prefix('admin')->middleware(['auth', 'role:admin', 'web', 'throttle:60,1'])->as('admin.')->group(function () {
+
+            Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+            Route::get('/notifications/read', [NotificationController::class, 'read'])->name('notifications.read');
+
             // admin controller (resource)
             Route::resource('all_admin', AdminController::class)->except(['show']);
             // Admin Controller

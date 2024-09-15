@@ -24,7 +24,6 @@ class UserResource extends JsonResource
             'last_login' => $this->last_login,
             'points' => $this->points,
             'country' => $this->country,
-            'image' => $this->picture_url,
             'courses_count' => $this->coursesCount(),
             'gallery' => GalleryResource::collection($this->galleries),
             'status' => $this->status,

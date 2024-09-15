@@ -89,7 +89,7 @@
                      @endforeach
 
                      <div class="dropdown-divider"></div>
-                     <!-- <a href="#" class="dropdown-item dropdown-footer">{{ __('main.See All Notifications') }}</a> -->
+                     <a href="{{ route('admin.notifications.index') }}" class="dropdown-item dropdown-footer">{{ __('main.see_all_notifications') }}</a>
                  </div>
              </li>
 

@@ -3,7 +3,7 @@
       <!-- Brand Logo -->
       <a href="{{ route('admin.home') }}" class="brand-link">
           <img src="{{ asset('asset/logo.jpg') }}" alt="Etqan Logo" class="brand-image img-circle elevation-3"
-              style="opacity: .8" >
+              style="opacity: .8">
           <span class="brand-text font-weight-light">{{ __('main.dashboard') }}</span>
       </a>
 
@@ -55,8 +55,11 @@
                       <li class="nav-item @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) menu-open @endif">
                           <a href="#" class="nav-link  @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) active @endif">
                               <i class="nav-icon fas fa-users"></i>
+
                               <p>
-                                  {{ __('attributes.users') }}
+                                {{ __('attributes.users') }}
+                                <i class="fas fa-angle-left right"></i>
+                                <span class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\UserRegisteredNotification')->count() }}</span>
                               </p>
                           </a>
                           <ul class="nav nav-treeview" style=" @if (!(Request::is('*/admin/users') || Request::is('*/admin/users/*'))) display: none @endif">
@@ -137,6 +140,8 @@
                               class="nav-link @if (Request::is('*/admin/inquiries') || Request::is('*/admin/inquiries/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
                               <span class="title">{{ __('attributes.inquiry') }}</span>
+                              <span class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\InquiryNotification')->count() }}</span>
+
                           </a>
                       </li>
                   @endcan
@@ -148,6 +153,8 @@
                               class="nav-link @if (Request::is('*/admin/withdrawal-requests') || Request::is('*/admin/withdrawal-requests/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
                               <span class="title">{{ __('attributes.withdrawal_request') }}</span>
+                              <span class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\WithdrawalRequestNotification')->count() }}</span>
+
                           </a>
                       </li>
                   @endcan
@@ -159,6 +166,8 @@
                               class="nav-link @if (Request::is('*/admin/request-courses') || Request::is('*/admin/request-courses/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
                               <span class="title">{{ __('attributes.request_course') }}</span>
+                              <span class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\CourseRequestNotification')->count() }}</span>
+
                           </a>
                       </li>
                   @endcan

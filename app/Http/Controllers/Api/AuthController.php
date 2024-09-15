@@ -28,7 +28,7 @@ class AuthController extends Controller
 
     public function __construct(ReferralService $ReferralService, AdminNotificationService $adminNotificationService)
     {
-        $this->middleware('jwt.auth', ['except' => ['login', 'register']]);
+        $this->middleware('jwt.authenticate', ['except' => ['login', 'register']]);
         $this->ReferralService = $ReferralService;
         $this->adminNotificationService = $adminNotificationService;
     }

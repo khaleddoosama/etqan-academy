@@ -77,7 +77,7 @@ class Kernel extends HttpKernel
         // roles and permissions spatie
         'permission' => PermissionMiddleware::class,
 
-        'jwt.auth' => \App\Http\Middleware\JwtMiddleware::class,
+        'jwt.authenticate' => \App\Http\Middleware\JwtMiddleware::class,
         'jwt.verified' => \App\Http\Middleware\EnsureEmailVerified::class,
     ];
 }

@@ -112,4 +112,6 @@ return [
     "approved_by" => "Approved By",
     "rejected_by" => "Rejected By",
     "notifications" => "Notifications",
+    "admins" => "Admins",
+    "admin" => "Admin",
 ];

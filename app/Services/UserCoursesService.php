@@ -77,4 +77,10 @@ class UserCoursesService
     {
         return $this->userService->getStudentByPhone($phone);
     }
+
+    // get course by slug
+    public function getCourseBySlug($slug)
+    {
+        return $this->courseService->getCourseBySlug($slug);
+    }
 }

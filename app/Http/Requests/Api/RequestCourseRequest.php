@@ -22,7 +22,7 @@ class RequestCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'course_id' => 'required|exists:courses,id',
+            'course_slug' => 'required|exists:courses,slug',
             'phone' => 'required|string',
             'message' => 'nullable|string',
 
@@ -32,7 +32,7 @@ class RequestCourseRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $data = parent::validated();
-        $data['student_id'] = auth()->user()->id ?? null;
+        $data['student_id'] = auth('api')->user()->id ?? null;
         return $data;
     }
 

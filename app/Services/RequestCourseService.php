@@ -20,6 +20,9 @@ class RequestCourseService
 
     public function createRequestCourse(array $data): RequestCourse
     {
+        $course = $this->userCoursesService->getCourseBySlug($data['course_slug']);
+        unset($data['course_slug']);
+        $data['course_id'] = $course->id;
         return RequestCourse::create($data);
     }
 

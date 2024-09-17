@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RequestCourseRequest;
+use App\Http\Resources\RequestCourseResource;
 use App\Notifications\CourseRequestNotification;
 use App\Services\AdminNotificationService;
 use App\Services\RequestCourseService;
@@ -26,7 +27,7 @@ class RequestCourseController extends Controller
     {
         $data = $request->validated();
 
-        $requestCourse = $this->requestCourseService->createRequestCourse($data);
+        $requestCourse = new RequestCourseResource($this->requestCourseService->createRequestCourse($data));
 
         $notification = new CourseRequestNotification($requestCourse->student->name ?? 'Guest', $requestCourse->id);
         $this->adminNotificationService->notifyAdmins($notification);

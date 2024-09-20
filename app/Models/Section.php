@@ -36,6 +36,9 @@ class Section extends Model
     // calculate total duration of lectures in section
     public function totalDuration()
     {
-        return $this->lectures->sum('duration');
+        // sum hours and minutes and seconds
+        return $this->lectures->sum(function ($lecture) {
+            return $lecture->duration();
+        });
     }
 }

@@ -44,8 +44,11 @@ class Lecture extends Model
         return $this->section->course();
     }
 
-
-
+    // get duration (sum hours and minutes and seconds)
+    public function duration()
+    {
+        return $this->hours + ($this->minutes / 60) + ($this->seconds / 3600);
+    }
 
 
     // convertedvideo
@@ -152,7 +155,7 @@ class Lecture extends Model
             }
 
             $combined = array_merge($newAttachments, $oldAttachments);
-        $this->attributes['attachments'] = json_encode($combined);  // Encode as JSON before saving
+            $this->attributes['attachments'] = json_encode($combined);  // Encode as JSON before saving
         }
     }
 

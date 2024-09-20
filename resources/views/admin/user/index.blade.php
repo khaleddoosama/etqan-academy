@@ -42,7 +42,7 @@
                                     <tbody>
                                         @foreach ($users as $user)
                                             <tr>
-                                                <td title="{{ $admin->UserOnline() ? 'Online' : Carbon\Carbon::parse($admin->last_login)->diffForHumans() }}">
+                                                <td title="{{ $user->UserOnline() ? 'Online' : Carbon\Carbon::parse($user->last_login)->diffForHumans() }}">
                                                     {!! $user->UserOnline()
                                                         ? "<i class='fas fa-circle text-success'></i>"
                                                         : "<i class='fas fa-circle text-danger'></i>" !!}

@@ -68,7 +68,7 @@ class Course extends Model
     // calculate total duration of lectures in course
     public function totalDuration()
     {
-        return $this->sections->map(function ($section) {
+        return (int) $this->sections->map(function ($section) {
             return $section->totalDuration();
         })->sum();
     }

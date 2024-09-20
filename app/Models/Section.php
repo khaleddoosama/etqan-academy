@@ -37,8 +37,9 @@ class Section extends Model
     public function totalDuration()
     {
         // sum hours and minutes and seconds
-        return $this->lectures->sum(function ($lecture) {
-            return $lecture->duration();
+        return (int) $this->lectures->sum(function ($lecture) {
+            return (int) $lecture->duration();
         });
+
     }
 }

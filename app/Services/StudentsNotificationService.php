@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\Notification;
 
 class StudentsNotificationService
 {
-    public static function notify($notification)
+    public static function notify($notification, $student)
     {
-        // User::admin()->chunk(200, function ($admins) use ($notification) {
-        //     foreach ($admins as $admin) {
-        //         $admin->notify($notification);
-        //     }
-        // });
 
+        Notification::send($student, $notification);
+    }
+
+    public static function notifyAll($notification)
+    {
         $students = User::getNotifiedStudents();
         Notification::send($students, $notification);
     }

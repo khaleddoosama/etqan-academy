@@ -44,7 +44,7 @@ class RequestCourseController extends Controller
         if ($request_course->status == 1) {
             // send email
             $notification = new StudentApprovedNotification($request_course->course->slug, $request_course->course->title);
-            $this->studentsNotificationService->notify($notification);
+            $this->studentsNotificationService->notify($notification, $request_course->student);
         }
 
 

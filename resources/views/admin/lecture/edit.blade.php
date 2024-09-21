@@ -380,6 +380,19 @@
             // when change in input-video show the video preview show-video
             $('#input-video').change(function() {
                 $('#show-video').hide('blind');
+
+                // Get the selected file
+                var file = this.files[0];
+
+                // Check file size (in bytes), for example, limit to 100MB (100 * 1024 * 1024 bytes)
+                var maxSize = 100 * 1024 * 1024; // 100MB
+
+                if (file.size > maxSize) {
+                    // can't preview this file but you can upload it to the server
+                    toastr.warning('File size is too large to preview but you can upload it to the server');
+                    return;
+                }
+
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     $('#show-video').attr('src', e.target

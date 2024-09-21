@@ -78,7 +78,6 @@ class AuthController extends Controller
             if ($request->parent_code) {
                 $this->ReferralService->add($user, $request->parent_code, 30);
             }
-            DB::commit();
 
             $user->sendEmailVerificationNotification();
 
@@ -86,6 +85,7 @@ class AuthController extends Controller
             $notification = new UserRegisteredNotification($user->name);
             $this->adminNotificationService->notifyAdmins($notification);
 
+            DB::commit();
 
             return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
         } catch (Exception $e) {

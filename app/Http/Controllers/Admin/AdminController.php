@@ -80,7 +80,9 @@ class AdminController extends Controller
     {
         $data = $request->validated();
 
-        $this->adminService->createAdmin($data);
+        $admin = $this->adminService->createAdmin($data);
+
+        $admin->sendEmailVerificationNotification();
 
         Toastr::success(__('messages.admin_created'), __('status.success'));
 

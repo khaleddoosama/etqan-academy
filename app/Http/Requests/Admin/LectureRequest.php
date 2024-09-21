@@ -32,12 +32,8 @@ class LectureRequest extends FormRequest
                 'required',
                 // Use Rule::unique() to define a more complex uniqueness rule.
                 Rule::unique('lectures')->where(function ($query) {
-                    $query->where('section_id', $this->section_id);
-                    if ($this->lecture) {
-                        Log::info('found');
-                        $query->where('id', '!=', $this->lecture->id);
-                    }
-                }),
+                    return $query->where('section_id', $this->section_id);
+                })->ignore($this->id),
             ],
             'section_id' => 'required|exists:sections,id',
             'description' => 'nullable|string',

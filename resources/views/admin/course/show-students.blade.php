@@ -138,6 +138,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>{{ __('attributes.student_name') }}</th>
+                                            <th>{{ __('attributes.student_email') }}</th>
                                             <th>{{ __('attributes.completed') }}</th>
                                             <th>{{ __('attributes.rating') }}</th>
                                             <th>{{ __('attributes.review') }}</th>

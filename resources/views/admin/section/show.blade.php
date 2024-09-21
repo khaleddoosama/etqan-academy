@@ -103,8 +103,7 @@
                                                             0%
                                                         </p>
                                                     </div>
-                                                    <div id="status"
-                                                        class="flex items-center justify-between px-3 pt-2">
+                                                    <div id="status" class="flex items-center justify-between px-3 pt-2">
                                                         <p id="statusText"></p>
                                                         <button type="button" id="cancelUpload"
                                                             class="mb-3 btn btn-danger btn-xs">Cancel Upload</button>
@@ -272,7 +271,6 @@
         var operationType = 'store'; // Pass the variable
     </script>
     <script src="{{ asset('asset/admin/dist/js/uploadvideo.js') }}" defer></script>
-    <script></script>
 
     <script>
         // when upload thumbnail show the thumbnail preview
@@ -288,6 +286,19 @@
         // when upload video show the video preview
         $('#input-video').change(function() {
             $('#showVideo').show('blind');
+
+            // Get the selected file
+            var file = this.files[0];
+
+            // Check file size (in bytes), for example, limit to 100MB (100 * 1024 * 1024 bytes)
+            var maxSize = 100 * 1024 * 1024; // 100MB
+
+            if (file.size > maxSize) {
+                // can't preview this file but you can upload it to the server
+                toastr.warning('File size is too large to preview but you can upload it to the server');
+                return;
+            }
+
             var reader = new FileReader();
             reader.onload = function(e) {
                 $('#showVideo video').attr('src', e.target

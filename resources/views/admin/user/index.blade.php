@@ -36,6 +36,7 @@
                                             <th>{{ __('attributes.email') }}</th>
                                             <th>{{ __('attributes.phone') }}</th>
                                             <th>{{ __('attributes.status') }}</th>
+                                            <th>{{ __('attributes.email_verified_at') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </thead>
@@ -58,7 +59,7 @@
                                                 <td>
                                                     <x-custom.status-span :status="$user->status" />
                                                 </td>
-
+                                                <td>{{ $user->email_verified_at ?? 'N/A' }}</td>
 
                                                 <td>
 
@@ -89,6 +90,7 @@
                                             <th>{{ __('attributes.email') }}</th>
                                             <th>{{ __('attributes.phone') }}</th>
                                             <th>{{ __('attributes.status') }}</th>
+                                            <th>{{ __('attributes.email_verified_at') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </tfoot>

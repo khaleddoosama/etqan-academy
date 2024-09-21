@@ -58,7 +58,11 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $data = $request->validated();
-        $this->userService->createUser($data);
+
+        $user = $this->userService->createUser($data);
+
+        $user->sendEmailVerificationNotification();
+
 
         Toastr::success(__('messages.user_created'), __('status.success'));
         return redirect()->route('admin.users.active');

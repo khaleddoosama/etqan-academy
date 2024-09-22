@@ -42,7 +42,7 @@ class FinalizeVideoProcessing implements ShouldQueue
         Log::info('Lecture updated: ' . $this->lecture->id);
 
         $notification = new LectureStatusNotification($this->lecture->id, 1);
-        AdminNotificationService::notifyAdmins($notification);
+        AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 
     private function deleteOldVideo()
@@ -101,6 +101,6 @@ class FinalizeVideoProcessing implements ShouldQueue
         $this->lecture->update(['processed' => -1]);
 
         $notification = new LectureStatusNotification($this->lecture->id, 0);
-        AdminNotificationService::notifyAdmins($notification);
+        AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 }

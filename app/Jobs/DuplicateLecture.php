@@ -112,14 +112,13 @@ class DuplicateLecture implements ShouldQueue
 
                     $awsS3Service->duplicateObject($path, $newFilePath);
                     $attachment['path'] = $newFilePath;
-
                 }
             }
             DB::table('lectures')->where('id', $this->new_lecture->id)->update(['attachments' => json_encode($attachments)]);
         }
 
         $notification = new LectureStatusNotification($this->new_lecture->id, 1);
-        AdminNotificationService::notifyAdmins($notification);
+        AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
     private function getSanitizedPath(): string
     {
@@ -157,6 +156,6 @@ class DuplicateLecture implements ShouldQueue
         $this->new_lecture->update(['processed' => -1]);
 
         $notification = new LectureStatusNotification($this->new_lecture->id, 0);
-        AdminNotificationService::notifyAdmins($notification);
+        AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 }

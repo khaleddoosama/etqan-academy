@@ -4,21 +4,15 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class AdminNotificationService
 {
-    public static function notifyAdmins($notification)
+    public static function notifyAdmins($notification, $permissions = [])
     {
-        // User::admin()->chunk(200, function ($admins) use ($notification) {
-        //     foreach ($admins as $admin) {
-        //         $admin->notify($notification);
-        //     }
-        // });
+        $adminsWithPermissions = User::admin()->permission($permissions)->get();
 
-       $admins = Cache::remember('admins', 60, function () {
-            return User::admin()->get();
-        });
-        Notification::send($admins, $notification);
+        Notification::send($adminsWithPermissions, $notification);
     }
 }

@@ -38,6 +38,9 @@ class AdminService
 
         $admin->assignRole($role);
 
+        // Clear cache after deleting an admin
+        Cache::forget('admins');
+
         return $admin;
     }
 
@@ -51,6 +54,9 @@ class AdminService
         $admin->update($data);
 
         $admin->syncRoles($role);
+
+        // Clear cache after deleting an admin
+        Cache::forget('admins');
 
         return $admin->wasChanged();
     }

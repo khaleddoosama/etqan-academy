@@ -83,7 +83,7 @@ class AuthController extends Controller
 
             // notify admins
             $notification = new UserRegisteredNotification($user->name);
-            $this->adminNotificationService->notifyAdmins($notification);
+            $this->adminNotificationService->notifyAdmins($notification, ['users.list', 'users.show']);
 
             DB::commit();
 

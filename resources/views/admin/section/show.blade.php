@@ -216,7 +216,7 @@
                                                         class="col-sm-12 col-form-label">{{ __('main.duplicate_lecture') }}</x-input-label>
                                                     <div class="col-sm-12" style="font-weight: 200">
                                                         <select class="form-control select2" style="width: 100%;"
-                                                            name="lecture_id">
+                                                            name="lecture_id" id="input-get-lecture">
                                                             <option selected="selected" disabled>
                                                                 {{ __('buttons.choose') }}</option>
                                                             @foreach ($lectures as $option)
@@ -387,6 +387,16 @@
                         }
                     });
                 }
+            });
+
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#getVideoModal').on('shown.bs.modal', function() {
+                $('#input-get-lecture').select2({
+                    dropdownParent: $('#getVideoModal')
+                });
             });
 
         });

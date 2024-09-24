@@ -164,7 +164,6 @@
 
     </div>
 @endsection
-@section('script')
 
 @section('scripts')
     <script>
@@ -177,6 +176,4 @@
 
         });
     </script>
-@endsection
-
 @endsection

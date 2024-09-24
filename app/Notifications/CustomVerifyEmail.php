@@ -28,7 +28,7 @@ class CustomVerifyEmail extends Notification implements ShouldQueue
         $frontendUrl = config('app.frontend_url'); // Make sure to set your frontend URL in config/app.php
         $temporarySignedUrl = URL::temporarySignedRoute(
             'jwt.verification.verify',
-            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60 * 12)),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),

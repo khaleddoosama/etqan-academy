@@ -83,4 +83,15 @@ class UserCoursesService
     {
         return $this->courseService->getCourseBySlug($slug);
     }
+    // get course
+    public function getCourse($id)
+    {
+        return $this->courseService->getCourse($id);
+    }
+
+    // get student
+    public function getStudent($id)
+    {
+        return $this->userService->getUser($id);
+    }
 }

@@ -83,8 +83,8 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('asset/logo.jpg') }}" alt="EtqanLogo"
-                height="60" width="60" style="border-radius: 50%">
+            <img class="animation__shake" src="{{ asset('asset/logo.jpg') }}" alt="EtqanLogo" height="60"
+                width="60" style="border-radius: 50%">
         </div>
 
 
@@ -183,8 +183,8 @@
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
-                'ordering': false,
-                "buttons": ["copy", "csv", "excel", "print", "colvis"],
+                "ordering": true, // Enable ordering
+                "order": [], // No default ordering (columns are unsorted initially)                "buttons": ["copy", "csv", "excel", "print", "colvis"],
                 "language": {
                     "emptyTable": "{{ __('datatable.no_data_available_in_table') }}",
                     "lengthMenu": "{{ __('datatable.show _MENU_ entries') }}",

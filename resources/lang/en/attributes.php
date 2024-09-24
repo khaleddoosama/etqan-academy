@@ -115,4 +115,7 @@ return [
     "admins" => "Admins",
     "admin" => "Admin",
     "email_verified_at" => "Email Verified At",
+    "age" => "Age",
+    "gender" => "Gender",
+    "job_title" => "Job Title",
 ];

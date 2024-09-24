@@ -119,4 +119,12 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
+    // verify
+    public function verify($id)
+    {
+        $user = $this->userService->getUser($id);
+        $user->update(['email_verified_at' => now()]);
+        return redirect()->back();
+    }
 }

@@ -58,6 +58,7 @@ Route::group(
 
                 Route::get('/users/{user}/show', 'show')->name('users.show');
                 Route::get('/users/{user}/edit', 'edit')->name('users.edit');
+                Route::put('/users/{user}/verify', 'verify')->name('users.verify');
                 Route::put('/users/{user}', 'update')->name('users.update');
                 Route::put('/users/{user}/status', 'status')->name('users.status');
 

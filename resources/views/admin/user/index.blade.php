@@ -43,7 +43,8 @@
                                     <tbody>
                                         @foreach ($users as $user)
                                             <tr>
-                                                <td title="{{ $user->UserOnline() ? 'Online' : Carbon\Carbon::parse($user->last_login)->diffForHumans() }}">
+                                                <td
+                                                    title="{{ $user->UserOnline() ? 'Online' : Carbon\Carbon::parse($user->last_login)->diffForHumans() }}">
                                                     {!! $user->UserOnline()
                                                         ? "<i class='fas fa-circle text-success'></i>"
                                                         : "<i class='fas fa-circle text-danger'></i>" !!}
@@ -59,7 +60,27 @@
                                                 <td>
                                                     <x-custom.status-span :status="$user->status" />
                                                 </td>
-                                                <td>{{ $user->email_verified_at ?? 'N/A' }}</td>
+                                                <td>
+                                                    @if ($user->email_verified_at)
+                                                        {{ $user->email_verified_at }}
+                                                    @else
+                                                        N/A
+                                                        @can('user.verify')
+                                                            @if ($user->email_verified_at == null)
+                                                                <form action="{{ route('admin.users.verify', $user->id) }}"
+                                                                    method="POST" style="display: inline-block;" class="mx-3">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <button type="submit" class="btn btn-success"
+                                                                        title="{{ __('buttons.verify_email') }}"
+                                                                        style="color: white; text-decoration: none;">
+                                                                        <i class="fas fa-toggle-on"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                        @endcan
+                                                    @endif
+                                                </td>
 
                                                 <td>
 
@@ -73,6 +94,7 @@
                                                     @can('user.edit')
                                                         <x-custom.edit-button route="admin.users.edit" :id="$user->id" />
                                                     @endcan
+
                                                     @can('user.status')
                                                         <x-custom.change-status-button :status="$user->status"
                                                             route="admin.users.status" :id="$user->id" />

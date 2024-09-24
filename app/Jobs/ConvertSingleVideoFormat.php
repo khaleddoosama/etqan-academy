@@ -37,6 +37,9 @@ class ConvertSingleVideoFormat implements ShouldQueue
         $this->name = $name;
         $this->durationInSeconds = $durationInSeconds;
         $this->videoPath = $videoPath;
+
+        // update lecture status
+        $this->lecture->update(['processed' => 0]);
     }
 
     public function handle()

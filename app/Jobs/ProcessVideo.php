@@ -29,6 +29,8 @@ class ProcessVideo implements ShouldQueue
     public function __construct($lecture)
     {
         $this->lecture = $lecture;
+        // update lecture status
+        $this->lecture->update(['processed' => 0]);
     }
 
     public function handle(): void

@@ -32,6 +32,8 @@ class FinalizeVideoProcessing implements ShouldQueue
         $this->seconds = $seconds;
         $this->quality = $quality;
         $this->videoPath = $videoPath;
+        // update lecture status
+        $this->lecture->update(['processed' => 0]);
     }
 
     public function handle()

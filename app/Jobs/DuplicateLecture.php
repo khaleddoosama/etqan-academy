@@ -27,6 +27,9 @@ class DuplicateLecture implements ShouldQueue
     {
         $this->lecture = $lecture;
         $this->new_lecture = $new_lecture;
+
+        // update lecture status
+        $this->new_lecture->update(['processed' => 0]);
     }
 
 

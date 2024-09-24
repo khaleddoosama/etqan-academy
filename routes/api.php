@@ -95,3 +95,4 @@ Route::middleware(['jwt.authenticate', 'throttle:6,1'])->group(function () {
 // Handle email verification
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyEmail'])
     ->name('jwt.verification.verify')->middleware(['signed', 'throttle:6,1']);
+ 

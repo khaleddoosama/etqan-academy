@@ -20,7 +20,8 @@ class CustomVerifyEmail extends Notification implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->queue = 'high';  // Explicitly assign to the 'high' queue
+
     }
 
     protected function verificationUrl($notifiable)

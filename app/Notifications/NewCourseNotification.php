@@ -22,6 +22,8 @@ class NewCourseNotification extends Notification implements ShouldQueue
     {
         $this->course_slug = $course_slug;
         $this->title = $title;
+        $this->queue = 'high';  // Explicitly assign to the 'high' queue
+
     }
 
     /**

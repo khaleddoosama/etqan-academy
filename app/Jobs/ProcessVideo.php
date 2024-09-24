@@ -49,7 +49,7 @@ class ProcessVideo implements ShouldQueue
         $conversionJobs = $this->collectConversionJobs($durationInSeconds);
         if (!empty($conversionJobs)) {
             $finalizeJob = new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath);
-            $conversionJobs[] = $finalizeJob->delay(now()->addSeconds(20));
+            $conversionJobs[] = $finalizeJob->onQueue('low')->delay(now()->addSeconds(20));
             Bus::chain($conversionJobs)->dispatch();
         }
 
@@ -191,7 +191,7 @@ class ProcessVideo implements ShouldQueue
                     $this->videoPath
                 );
 
-                $conversionJobs[] = $job->delay(now()->addSeconds(10));
+                $conversionJobs[] = $job->onQueue('low')->delay(now()->addSeconds(10));
             }
         }
         return $conversionJobs;

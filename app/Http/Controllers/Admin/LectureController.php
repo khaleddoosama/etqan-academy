@@ -68,7 +68,7 @@ class LectureController extends Controller
         $lecture->save();
 
         // ConvertVideoForStreaming::dispatch($lecture);
-        ProcessVideo::dispatch($lecture);
+        ProcessVideo::dispatch($lecture)->onQueue('low');
 
         Toastr::success(__('messages.lecture_created'), __('status.success'));
         // return response()->json(['message' => __('messages.lecture_created')]);

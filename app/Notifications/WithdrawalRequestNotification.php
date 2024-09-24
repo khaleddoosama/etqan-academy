@@ -22,6 +22,8 @@ class WithdrawalRequestNotification extends Notification implements ShouldQueue
     {
         $this->user_name = $user_name;
         $this->withdrawalRequest_id = $withdrawalRequest_id;
+        $this->queue = 'high';  // Explicitly assign to the 'high' queue
+
     }
 
     /**

@@ -23,6 +23,9 @@ class CourseRequestNotification extends Notification implements ShouldQueue
     {
         $this->student_name = $student_name;
         $this->course_request_id = $course_request_id;
+
+        $this->queue = 'high';  // Explicitly assign to the 'high' queue
+
     }
 
     /**

@@ -19,6 +19,8 @@ class InquirySentNotification extends Notification implements ShouldQueue
     public function __construct($inquiry_id)
     {
         $this->inquiry_id = $inquiry_id;
+        $this->queue = 'high';  // Explicitly assign to the 'high' queue
+
     }
 
     /**

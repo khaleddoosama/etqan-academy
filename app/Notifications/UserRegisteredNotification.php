@@ -20,6 +20,8 @@ class UserRegisteredNotification extends Notification implements ShouldQueue
     public function __construct(string $user_name)
     {
         $this->user_name = $user_name;
+        $this->queue = 'high';  // Explicitly assign to the 'high' queue
+
     }
 
     /**

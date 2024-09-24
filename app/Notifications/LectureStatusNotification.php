@@ -21,6 +21,8 @@ class LectureStatusNotification extends Notification implements ShouldQueue
     {
         $this->lecture_id = $lecture_id;
         $this->status = $status;
+        $this->queue = 'high';  // Explicitly assign to the 'high' queue
+
     }
 
     /**

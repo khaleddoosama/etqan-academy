@@ -54,7 +54,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
 
         $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 10);
         $watermarkPath = asset('asset/logo-100.png');
-        Log::info('watermark: ' . $watermarkPath);
+        // Log::info('watermark: ' . $watermarkPath);
 
         foreach ($chunks as $index => $chunk) {
             $chunkName = $this->name . '_part' . $index . '.' . pathinfo($chunk, PATHINFO_EXTENSION);

@@ -93,8 +93,9 @@ class LectureController extends Controller
             // check if data has video or thumbnail
             if ($request->has('video_path')) {
                 $lecture->video = $request['video_path'];
+                $lecture->processed = 0;
                 $lecture->save();
-                ProcessVideo::dispatch($lecture);
+                ProcessVideo::dispatch($lecture)->onQueue('low');
             }
 
             Toastr::success(__('messages.lecture_updated'), __('status.success'));
@@ -119,7 +120,7 @@ class LectureController extends Controller
         [$lecture, $newLecture] = $this->lectureService->duplicateLecture($request->lecture_id, $request->section_id);
 
 
-        DuplicateLecture::dispatch($lecture, $newLecture);
+        DuplicateLecture::dispatch($lecture, $newLecture)->onQueue('low');;
 
         // convert video
         // ConvertVideoForStreaming::dispatch($lectures[1]);

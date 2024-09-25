@@ -11,7 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Str;
@@ -35,11 +34,7 @@ class DuplicateLecture implements ShouldQueue
      */
     public function handle(): void
     {
-        // update lecture status
-        DB::transaction(function () {
-            // Database operations that must be completed as a single unit
-            $this->lecture->update(['processed' => 0]);
-        });
+
 
         $awsS3Service = app(AwsS3Service::class);
 

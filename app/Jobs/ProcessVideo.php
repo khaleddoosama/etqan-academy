@@ -16,7 +16,6 @@ use FFMpeg\Format\Video\X264;
 use FFMpeg\Format\Video\WebM;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\DB;
 
 class ProcessVideo implements ShouldQueue
 {
@@ -34,11 +33,7 @@ class ProcessVideo implements ShouldQueue
 
     public function handle(): void
     {
-        // update lecture status
-        DB::transaction(function () {
-            // Database operations that must be completed as a single unit
-            $this->lecture->update(['processed' => 0]);
-        });
+
         $this->videoPath = $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
         // $videoPath = $this->getVideoPath();
 

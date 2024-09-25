@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
@@ -37,14 +38,16 @@ class ConvertSingleVideoFormat implements ShouldQueue
         $this->name = $name;
         $this->durationInSeconds = $durationInSeconds;
         $this->videoPath = $videoPath;
-
-        // update lecture status
-        $this->lecture->update(['processed' => 0]);
     }
 
     public function handle()
     {
         Log::info('Convert: ' . $this->videoPath);
+        // update lecture status
+        DB::transaction(function () {
+            // Database operations that must be completed as a single unit
+            $this->lecture->update(['processed' => 0]);
+        });
 
         // Check if video exists
         if (!$this->videoPath) {
@@ -159,6 +162,6 @@ class ConvertSingleVideoFormat implements ShouldQueue
         $this->lecture->update(['processed' => -1]);
 
         $notification = new LectureStatusNotification($this->lecture->id, 0);
-        AdminNotificationService::notifyAdmins($notification,['course.list','course.show']);
+        AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 }

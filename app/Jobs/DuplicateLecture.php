@@ -27,9 +27,6 @@ class DuplicateLecture implements ShouldQueue
     {
         $this->lecture = $lecture;
         $this->new_lecture = $new_lecture;
-
-        // update lecture status
-        $this->new_lecture->update(['processed' => 0]);
     }
 
 
@@ -38,6 +35,12 @@ class DuplicateLecture implements ShouldQueue
      */
     public function handle(): void
     {
+        // update lecture status
+        DB::transaction(function () {
+            // Database operations that must be completed as a single unit
+            $this->lecture->update(['processed' => 0]);
+        });
+
         $awsS3Service = app(AwsS3Service::class);
 
         $formats = [

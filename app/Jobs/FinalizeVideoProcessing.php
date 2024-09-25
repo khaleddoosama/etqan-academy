@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,12 +33,15 @@ class FinalizeVideoProcessing implements ShouldQueue
         $this->seconds = $seconds;
         $this->quality = $quality;
         $this->videoPath = $videoPath;
-        // update lecture status
-        $this->lecture->update(['processed' => 0]);
     }
 
     public function handle()
     {
+        // update lecture status
+        DB::transaction(function () {
+            // Database operations that must be completed as a single unit
+            $this->lecture->update(['processed' => 0]);
+        });
         $this->deleteOldVideo();
         $this->updateConvertedVideo();
         $this->updateLecture($this->hours, $this->minutes, $this->seconds, $this->quality);

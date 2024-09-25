@@ -32,7 +32,7 @@ Route::group(
     ],
     function () {
         Route::prefix('admin')->middleware(['auth', 'role:admin', 'web', 'throttle:60,1'])->as('admin.')->group(function () {
-
+ 
             Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
             Route::get('/notifications/read', [NotificationController::class, 'read'])->name('notifications.read');
 
@@ -52,7 +52,7 @@ Route::group(
                 // Route::get('/users/pending', 'pending')->name('users.pending');
                 Route::get('/users/active', 'active')->name('users.active');
                 Route::get('/users/inactive', 'inactive')->name('users.inactive');
- 
+
                 Route::get('/users/create', 'create')->name('users.create');
                 Route::post('/users', 'store')->name('users.store');
 

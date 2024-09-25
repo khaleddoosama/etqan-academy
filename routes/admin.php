@@ -32,7 +32,7 @@ Route::group(
     ],
     function () {
         Route::prefix('admin')->middleware(['auth', 'role:admin', 'web', 'throttle:60,1'])->as('admin.')->group(function () {
- 
+
             Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
             Route::get('/notifications/read', [NotificationController::class, 'read'])->name('notifications.read');
 
@@ -141,5 +141,5 @@ Route::group(
             // role permission controller (resource) with prefix role-permission and as role_permission.
             Route::resource('role_permissions', RolePermissionController::class)->only(['index', 'edit', 'update']);
         });
-    }
+    } 
 );

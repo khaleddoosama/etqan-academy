@@ -39,11 +39,15 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             Log::error($e->getMessage());
+            Log::error($e->getFile() . ':' . $e->getLine());
         });
     }
 
     public function render($request, Throwable $exception)
     {
+        Log::error($exception->getMessage());
+        Log::error($exception->getFile() . ':' . $exception->getLine());
+
         if ($request->wantsJson() || $request->is('api/*')) {  // Check if the request is for API
             return $this->handleApiException($request, $exception);
         } else {

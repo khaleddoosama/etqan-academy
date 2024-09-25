@@ -79,13 +79,14 @@ class AuthController extends Controller
                 $this->ReferralService->add($user, $request->parent_code, 30);
             }
 
+
+            DB::commit();
+            
             $user->sendEmailVerificationNotification();
 
             // notify admins
             $notification = new UserRegisteredNotification($user->name);
             $this->adminNotificationService->notifyAdmins($notification, ['user.list', 'user.show']);
-
-            DB::commit();
 
             return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
         } catch (Exception $e) {

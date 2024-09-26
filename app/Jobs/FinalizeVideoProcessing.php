@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -36,6 +37,7 @@ class FinalizeVideoProcessing implements ShouldQueue
 
     public function handle()
     {
+        DB::rollBack();
 
         $this->deleteOldVideo();
         $this->updateConvertedVideo();
@@ -70,22 +72,26 @@ class FinalizeVideoProcessing implements ShouldQueue
             'mp4_Format_240' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'mp4', '240p')),
             'webm_Format_240' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'webm', '240p'))
         ];
+        DB::transaction(function () use ($names) {
 
-        ConvertedVideo::updateOrCreate(
-            ['lecture_id' => $this->lecture->id],
-            $names
-        );
+            ConvertedVideo::updateOrCreate(
+                ['lecture_id' => $this->lecture->id],
+                $names
+            );
+        });
     }
 
     private function updateLecture(int $hours, int $minutes, int $seconds, int $quality)
     {
-        $this->lecture->update([
-            'processed' => true,
-            'hours' => $hours,
-            'minutes' => $minutes,
-            'seconds' => $seconds,
-            'quality' => $quality
-        ]);
+        DB::transaction(function () use ($hours, $minutes, $seconds, $quality) {
+            $this->lecture->update([
+                'processed' => true,
+                'hours' => $hours,
+                'minutes' => $minutes,
+                'seconds' => $seconds,
+                'quality' => $quality
+            ]);
+        });
     }
 
     private function getFileName($fileName, $type, $quality)
@@ -99,8 +105,9 @@ class FinalizeVideoProcessing implements ShouldQueue
         Log::error('error: ' . $exception->getMessage());
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
-        $this->lecture->update(['processed' => -1]);
-
+        DB::transaction(function () {
+            $this->lecture->update(['processed' => -1]);
+        });
         $notification = new LectureStatusNotification($this->lecture->id, 0);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }

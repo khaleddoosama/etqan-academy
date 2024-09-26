@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Str;
@@ -54,9 +55,11 @@ class DuplicateLecture implements ShouldQueue
         // Log::info('convertedVideo: ' . $convertedVideo);
         if ($convertedVideo) {
 
-            $this->new_lecture->update([
-                'video' => "{$newPathFolder}/videos/{$newName}.mp4",
-            ]);
+            DB::transaction(function () use ($formats, $newPathFolder, $newName) {
+                $this->new_lecture->update([
+                    'video' => "{$newPathFolder}/videos/{$newName}.mp4",
+                ]);
+            });
 
             $pathes = [];
             foreach ($formats as $format => $resolutions) {
@@ -91,7 +94,12 @@ class DuplicateLecture implements ShouldQueue
                 // Storage::put($newFilePath, Storage::get($path));
                 $awsS3Service->duplicateObject($path, $newFilePath);
 
-                DB::table('lectures')->where('id', $this->new_lecture->id)->update(['thumbnail' => $newFilePath]);
+                // DB::table('lectures')->where('id', $this->new_lecture->id)->update(['thumbnail' => $newFilePath]);
+                DB::transaction(function () use ($newFilePath) {
+                    DB::table('lectures')
+                        ->where('id', $this->new_lecture->id)
+                        ->update(['thumbnail' => $newFilePath]);
+                });
             }
         }
 
@@ -115,7 +123,12 @@ class DuplicateLecture implements ShouldQueue
                     $attachment['path'] = $newFilePath;
                 }
             }
-            DB::table('lectures')->where('id', $this->new_lecture->id)->update(['attachments' => json_encode($attachments)]);
+            // DB::table('lectures')->where('id', $this->new_lecture->id)->update(['attachments' => json_encode($attachments)]);
+            DB::transaction(function () use ($attachments) {
+                DB::table('lectures')
+                    ->where('id', $this->new_lecture->id)
+                    ->update(['attachments' => json_encode($attachments)]);
+            });
         }
 
         $notification = new LectureStatusNotification($this->new_lecture->id, 1);
@@ -137,25 +150,30 @@ class DuplicateLecture implements ShouldQueue
     {
         // Log::info('pathes: ' . json_encode($pathes));
 
-        ConvertedVideo::updateOrCreate(
-            ['lecture_id' => $this->new_lecture->id],
-            $pathes
-        );
+        DB::transaction(function () use ($pathes, $newName) {
+            ConvertedVideo::updateOrCreate(
+                ['lecture_id' => $this->new_lecture->id],
+                $pathes
+            );
 
-        $this->new_lecture->update([
-            'video' => $newName,
-            'processed' => true,
-        ]);
+            $this->new_lecture->update([
+                'video' => $newName,
+                'processed' => true,
+            ]);
+        });
     }
 
     // faild
     public function failed($exception)
     {
+        DB::rollBack();
+
         Log::error('error from DuplicateLecture: ' . $exception->getMessage());
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
-        $this->new_lecture->update(['processed' => -1]);
-
+        DB::transaction(function () {
+            $this->lecture->update(['processed' => -1]);
+        });
         $notification = new LectureStatusNotification($this->new_lecture->id, 0);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }

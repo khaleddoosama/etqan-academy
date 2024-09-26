@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
@@ -151,11 +152,15 @@ class ConvertSingleVideoFormat implements ShouldQueue
 
     public function failed($exception)
     {
+        DB::rollBack();
+
         Log::error('error from ConvertSingleVideoFormat: ' . $exception->getMessage());
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
-        $this->lecture->update(['processed' => -1]);
 
+        DB::transaction(function () {
+            $this->lecture->update(['processed' => -1]);
+        });
         $notification = new LectureStatusNotification($this->lecture->id, 0);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }

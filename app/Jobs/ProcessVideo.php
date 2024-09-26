@@ -16,6 +16,7 @@ use FFMpeg\Format\Video\X264;
 use FFMpeg\Format\Video\WebM;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 
 class ProcessVideo implements ShouldQueue
 {
@@ -119,7 +120,9 @@ class ProcessVideo implements ShouldQueue
         if ($width > $height) {
             $quality = $this->convertVideoBasedOnResolution($width, $height, false);
         } elseif ($width < $height) {
-            $this->lecture->update(['longitudinal' => true]);
+            DB::transaction(function () {
+                $this->lecture->update(['longitudinal' => true]);
+            });
             $quality = $this->convertVideoBasedOnResolution($width, $height, true);
         }
         return $quality;
@@ -204,10 +207,14 @@ class ProcessVideo implements ShouldQueue
     // faild
     public function failed($exception)
     {
+        DB::rollBack();
+
         Log::error('error from processVideo: ' . $exception->getMessage());
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
-        $this->lecture->update(['processed' => -1]);
+        DB::transaction(function () {
+            $this->lecture->update(['processed' => -1]);
+        });
 
         $notification = new LectureStatusNotification($this->lecture->id, 0);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);

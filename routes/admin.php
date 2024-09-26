@@ -141,5 +141,5 @@ Route::group(
             // role permission controller (resource) with prefix role-permission and as role_permission.
             Route::resource('role_permissions', RolePermissionController::class)->only(['index', 'edit', 'update']);
         });
-    } 
+    }  
 );

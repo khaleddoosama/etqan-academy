@@ -13,6 +13,8 @@ class AwsS3Service
 
     public function __construct()
     {
+        Log::info('$this->bucket: ' . $this->bucket);
+
         $this->s3Client = new S3Client([
             'version' => 'latest',
             'region' => env('AWS_DEFAULT_REGION'),
@@ -28,6 +30,8 @@ class AwsS3Service
     public function getPreSignedUrl($file_name, $file_type, $expiry = '+20 minutes')
     {
         try {
+            // logs configuration
+            Log::info('$this->bucket2: ' . $this->bucket);
 
             $cmd = $this->s3Client->getCommand('PutObject', [
                 'Bucket' => $this->bucket,

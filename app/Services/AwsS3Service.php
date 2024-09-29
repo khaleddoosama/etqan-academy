@@ -23,7 +23,7 @@ class AwsS3Service
                 'secret' => config('filesystems.disks.s3.secret'),
             ],
         ]);
-
+ 
         $this->bucket = config('filesystems.disks.s3.bucket');
     }
 

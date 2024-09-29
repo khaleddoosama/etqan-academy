@@ -26,7 +26,7 @@ class AwsS3Service
 
         $this->bucket = config('filesystems.disks.s3.bucket');
     }
-
+ 
     public function getPreSignedUrl($file_name, $file_type, $expiry = '+20 minutes')
     {
         try {

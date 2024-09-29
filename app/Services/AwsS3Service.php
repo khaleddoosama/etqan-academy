@@ -13,26 +13,23 @@ class AwsS3Service
 
     public function __construct()
     {
-        Log::info('$this->bucket: ' . $this->bucket);
+        Log::info('$this->bucket: ' . config('filesystems.disks.s3.bucket'));
 
         $this->s3Client = new S3Client([
             'version' => 'latest',
-            'region' => env('AWS_DEFAULT_REGION'),
+            'region' => config('filesystems.disks.s3.region'),
             'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                'key' => config('filesystems.disks.s3.key'),
+                'secret' => config('filesystems.disks.s3.secret'),
             ],
         ]);
 
-        $this->bucket = env('AWS_BUCKET');
+        $this->bucket = config('filesystems.disks.s3.bucket');
     }
 
     public function getPreSignedUrl($file_name, $file_type, $expiry = '+20 minutes')
     {
         try {
-            // logs configuration
-            Log::info('$this->bucket2: ' . $this->bucket);
-
             $cmd = $this->s3Client->getCommand('PutObject', [
                 'Bucket' => $this->bucket,
                 'Key' => $file_name,

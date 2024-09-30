@@ -13,7 +13,6 @@ class AwsS3Service
 
     public function __construct()
     {
-        Log::info('$this->bucket: ' . config('filesystems.disks.s3.bucket'));
 
         $this->s3Client = new S3Client([
             'version' => 'latest',
@@ -23,7 +22,7 @@ class AwsS3Service
                 'secret' => config('filesystems.disks.s3.secret'),
             ],
         ]);
- 
+
         $this->bucket = config('filesystems.disks.s3.bucket');
     }
 

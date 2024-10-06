@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'action' => 'Action',
     'add_attachments' => 'Add Attachments',
     'admin' => 'Admin',
@@ -31,6 +30,8 @@ return [
     'email' => 'Email',
     'email_verified_at' => 'Email Verified At',
     'features' => 'Features',
+    'file' => 'File',
+    'files' => 'Files',
     'first_name' => 'First Name',
     'gender' => 'Gender',
     'icon' => 'Icon',
@@ -64,6 +65,7 @@ return [
     'phone' => 'Phone',
     'photo' => 'Photo',
     'picture' => 'Picture',
+    'points' => 'Points',
     'post' => 'Post',
     'posts' => 'Posts',
     'price' => 'Price',
@@ -120,8 +122,4 @@ return [
     'withdrawal_request' => 'Withdrawal Request',
     'withdrawal_requests' => 'Withdrawal Requests',
     'word' => 'Word',
-
-    'file' => 'File',
-    'files' => 'Files',
-    'points' => 'Points',
 ];

@@ -34,6 +34,6 @@ class WithdrawalRequestController extends Controller
         $notification = new WithdrawalRequestNotification($withdrawalRequest->user->name, $withdrawalRequest->id);
         $this->adminNotificationService->notifyAdmins($notification,['withdrawal.list', 'withdrawal.show']);
 
-        return $this->apiResponse($withdrawalRequest, 'Withdrawal Request sent successfully', 201);
+        return $this->apiResponse($withdrawalRequest, __('messages.withdrawal_request_sent'), 201);
     }
 }

@@ -24,13 +24,13 @@ class GalleryController extends Controller
         $data = $request->validated();
 
         $gallery = $this->galleryService->createGallery($data);
-        return $this->apiResponse($gallery, 'Gallery created successfully', 201);
+        return $this->apiResponse($gallery, __('messages.gallery_created'), 201);
     }
 
 
     public function destroy($id)
     {
         $gallery = $this->galleryService->deleteGallery($id);
-        return $this->apiResponse($gallery, 'Gallery deleted successfully', 200);
+        return $this->apiResponse($gallery, __('messages.gallery_deleted'), 200);
     }
 }

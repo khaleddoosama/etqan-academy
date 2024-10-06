@@ -24,7 +24,7 @@ class StudentController extends Controller
             'q' => 'required|string|min:2'
         ]);
         $students = $this->studentService->searchStudents($request->query('q', ''));
-        return $this->apiResponse($students, 'students found successfully', 200);
+        return $this->apiResponse($students, __('messages.students_found'), 200);
     }
 
     public function showProfile($slug)
@@ -32,7 +32,7 @@ class StudentController extends Controller
         $student = $this->studentService->getStudentProfile($slug);
 
         if (!$student) {
-            return $this->apiResponse(null, 'student not found', 404);
+            return $this->apiResponse(null, __('messages.student_not_found'), 404);
         } else {
             return $this->apiResponse(new UserResource($student), 'ok', 200);
         }

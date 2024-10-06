@@ -8,7 +8,7 @@
             <div class="container-fluid">
                 <div class="mb-2 row">
                     <div class="col-sm-6">
-                        <h1 class="m-0">الرئيسية</h1>
+                        <h1 class="m-0">{{ __('main.dashboard') }}</h1>
                     </div><!-- /.col -->
 
                 </div><!-- /.row -->
@@ -19,7 +19,7 @@
         <!-- Main content -->
         @can('dashboard.list')
             <!-- Main content -->
-           
+
         @endcan
         <!-- /.content -->
     </div>

@@ -22,7 +22,7 @@ class SectionController extends Controller
         if ($sections && count($sections) > 0) {
             return $this->apiResponse($sections, 'ok', 200);
         } else {
-            return $this->apiResponse(null, 'sections not found', 404);
+            return $this->apiResponse(null, __('messages.sections_not_found'), 404);
         }
     }
 
@@ -34,6 +34,6 @@ class SectionController extends Controller
             return $this->apiResponse(new SectionResource($section), 'ok', 200);
         }
 
-        return $this->apiResponse(null, 'section not found', 404);
+        return $this->apiResponse(null, __('messages.section_not_found'), 404);
     }
 }

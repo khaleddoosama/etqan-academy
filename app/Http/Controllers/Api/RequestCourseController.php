@@ -32,6 +32,6 @@ class RequestCourseController extends Controller
         $notification = new CourseRequestNotification($requestCourse->student->name ?? 'Guest', $requestCourse->id);
         $this->adminNotificationService->notifyAdmins($notification, permissions: ['request_course.list', 'request_course.show']);
 
-        return $this->apiResponse($requestCourse, 'Request sent successfully', 201);
+        return $this->apiResponse($requestCourse, __('messages.requestCourse_sent'), 201);
     }
 }

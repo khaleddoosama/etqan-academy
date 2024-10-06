@@ -31,6 +31,6 @@ class CourseController extends Controller
             return $this->apiResponse(new CourseResource($course), 'ok', 200);
         }
 
-        return $this->apiResponse(null, 'course not found', 404);
+        return $this->apiResponse(null, __('messages.course_not_found'), 404);
     }
 }

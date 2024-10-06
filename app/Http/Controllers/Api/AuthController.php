@@ -45,7 +45,7 @@ class AuthController extends Controller
         }
         if (!$token = auth('api')->attempt($validator->validated())) {
             // return response()->json(['error' => 'Unauthorized'], 401);
-            return $this->apiResponse(null, 'Unauthorized', 401);
+            return $this->apiResponse(null, __('messages.unauthorized'), 401);
         }
         return $this->createNewToken($token);
     }
@@ -81,14 +81,14 @@ class AuthController extends Controller
 
 
             DB::commit();
-            
+
             $user->sendEmailVerificationNotification();
 
             // notify admins
             $notification = new UserRegisteredNotification($user->name);
             $this->adminNotificationService->notifyAdmins($notification, ['user.list', 'user.show']);
 
-            return $this->apiResponse(new UserResource($user), 'User registered successfully', 201);
+            return $this->apiResponse(new UserResource($user), __('messages.registered'), 201);
         } catch (Exception $e) {
             DB::rollBack();
             return $this->apiResponse(null, $e->getMessage(), 500);
@@ -98,7 +98,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth('api')->logout();
-        return $this->apiResponse(null, 'Logged out successfully', 200);
+        return $this->apiResponse(null, __('messages.logged_out'), 200);
     }
 
     public function refresh()
@@ -136,13 +136,13 @@ class AuthController extends Controller
 
             $user->update($validator->validated());
 
-            return $this->apiResponse(new UserResource($user), 'Profile updated successfully', 200);
+            return $this->apiResponse(new UserResource($user), __('messages.profile_updated'), 200);
         } catch (QueryException $e) {
-            return $this->apiResponse(null, 'An error occurred while updating the profile: ' . $e->getMessage(), 500);
+            return $this->apiResponse(null, __('messages.error_occurred:') . $e->getMessage(), 500);
         } catch (ModelNotFoundException $e) {
-            return $this->apiResponse(null, 'User not found', 404);
+            return $this->apiResponse(null, __('messages.user_not_found'), 404);
         } catch (Exception $e) {
-            return $this->apiResponse(null, 'An error occurred while updating the profile: ' . $e->getMessage(), 500);
+            return $this->apiResponse(null, __('messages.error_occurred:') . $e->getMessage(), 500);
         }
     }
 
@@ -174,7 +174,7 @@ class AuthController extends Controller
         $user->update(['password' => bcrypt($data['password'])]);
 
 
-        return $this->apiResponse(new UserResource($user), 'Password changed successfully', 200);
+        return $this->apiResponse(new UserResource($user), __('messages.password_updated'), 200);
     }
 
     // update picture profile
@@ -187,6 +187,6 @@ class AuthController extends Controller
 
         $user->update(['picture' => $request->picture]);
 
-        return $this->apiResponse(new UserResource($user), 'Profile picture updated successfully', 200);
+        return $this->apiResponse(new UserResource($user), __('messages.picture_updated'), 200);
     }
 }

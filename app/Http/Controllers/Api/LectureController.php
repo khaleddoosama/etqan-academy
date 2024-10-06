@@ -27,7 +27,7 @@ class LectureController extends Controller
         if ($lectures && count($lectures) > 0) {
             return $this->apiResponse($lectures, 'ok', 200);
         } else {
-            return $this->apiResponse(null, 'lectures not found', 404);
+            return $this->apiResponse(null, __('messages.lectures_not_found'), 404);
         }
     }
 
@@ -38,7 +38,7 @@ class LectureController extends Controller
             $lecture = $this->lectureService->getLectureByCourseSlugAndSectionSlugAndSlug($course_slug, $section_slug, $lecture_slug);
 
             if (Gate::denies('view', $lecture->course) && $lecture->is_free === 0) {
-                return $this->apiResponse(null, 'unauthorized', 401);
+                return $this->apiResponse(null, __('messages.unauthorized'), 401);
             }
 
             if ($lecture) {
@@ -47,7 +47,7 @@ class LectureController extends Controller
             }
 
             // DB::commit();
-            return $this->apiResponse(null, 'lecture not found', 404);
+            return $this->apiResponse(null, __('messages.lecture_not_found'), 404);
         } catch (\Exception $e) {
             // DB::rollBack();
             return $this->apiResponse(null, $e->getMessage(), 500);

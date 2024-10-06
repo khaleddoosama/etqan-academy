@@ -28,11 +28,11 @@ class InquiryController extends Controller
 
         if ($inquiry) {
             $notification = new InquirySentNotification($inquiry->id);
-            $this->adminNotificationService->notifyAdmins($notification,['inquiry.list', 'inquiry.show']);
+            $this->adminNotificationService->notifyAdmins($notification, ['inquiry.list', 'inquiry.show']);
 
-            return $this->apiResponse($inquiry, 'Inquiry sent successfully', 201);
+            return $this->apiResponse($inquiry, __('messages.inquiry_sent'), 201);
         } else {
-            return $this->apiResponse(null, 'Inquiry not sent', 400);
+            return $this->apiResponse(null, __('messages.inquiry_not_sent'), 400);
         }
     }
 }

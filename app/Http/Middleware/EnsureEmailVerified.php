@@ -20,7 +20,7 @@ class EnsureEmailVerified
     {
         $user = $request->user();
         if ($user && !$user->hasVerifiedEmail()) {
-            return $this->apiResponse(null, 'Your email address is not verified.', 401);
+            return $this->apiResponse(null, __('messages.email_not_verified'), 401);
         }
         return $next($request);
     }

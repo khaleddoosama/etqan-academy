@@ -15,12 +15,12 @@ class VerificationController extends Controller
     public function sendVerificationEmail(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return $this->apiResponse(null, 'Email already verified.', 200);
+            return $this->apiResponse(null, __('messages.email_already_verified'), 200);
         } else {
             $request->user()->sendEmailVerificationNotification();
         }
 
-        return $this->apiResponse(null, 'Verification link sent on your email.', 200);
+        return $this->apiResponse(null, __('messages.verification_email_sent'), 200);
     }
 
     public function verifyEmail(Request $request)
@@ -30,17 +30,17 @@ class VerificationController extends Controller
             $user = User::find($request->route('id'));
 
             if ($user->hasVerifiedEmail()) {
-                return $this->apiResponse(null, 'Email already verified.', 200);
+                return $this->apiResponse(null, __('messages.email_already_verified'), 200);
             }
             if ($user->markEmailAsVerified()) {
                 event(new Verified($user));
             }
 
 
-            return $this->apiResponse(null, 'Email verified successfully.', 200);
+            return $this->apiResponse(null, __('messages.email_verified'), 200);
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return $this->apiResponse(null, 'Something went wrong.', 500);
+            return $this->apiResponse(null, __('messages.something_went_wrong'), 500);
         }
     }
 }

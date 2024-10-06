@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Http\Requests\AttributesTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GalleryRequest extends FormRequest
 {
+    use AttributesTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      */

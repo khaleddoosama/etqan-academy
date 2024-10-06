@@ -13,6 +13,29 @@
          <!-- Right navbar links -->
          <ul class="ml-auto navbar-nav">
              <!-- Navbar Search -->
+             {{-- change lang --}}
+             <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                    <i class="fas fa-globe"></i> {{ LaravelLocalization::getCurrentLocaleName() }}
+                </a>
+                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" rel="alternate" hreflang="ar"
+                        href="{{ LaravelLocalization::getLocalizedURL('ar', null, [], true) }}">
+                        <img src="{{ asset('asset/admin/imgs/flags/EG.png') }}" alt=""
+                            style="width: 20px;height: 20px;">
+                        العربية
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" rel="alternate" hreflang="en"
+                        href="{{ LaravelLocalization::getLocalizedURL('en', null, [], true) }}">
+                        <img src="{{ asset('asset/admin/imgs/flags/US.png') }}" alt=""
+                            style="width: 20px;height: 20px;">
+                        English
+                    </a>
+
+                </div>
+            </li>
              <li class="nav-item">
                  <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                      <i class="fas fa-search"></i>
@@ -36,6 +59,7 @@
              </li>
 
              <!-- Messages Dropdown Menu -->
+             <!--
              <li class="nav-item dropdown">
                  <a class="nav-link" data-toggle="dropdown" href="#">
                      <i class="far fa-comments"></i>
@@ -63,6 +87,7 @@
                      <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
                  </div>
              </li>
+             -->
              <!-- Notifications Dropdown Menu -->
              <li class="nav-item dropdown">
                  <a class="nav-link" data-toggle="dropdown" href="#">

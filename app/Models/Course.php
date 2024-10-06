@@ -68,9 +68,26 @@ class Course extends Model
     // calculate total duration of lectures in course
     public function totalDuration()
     {
-        return (int) ceil($this->sections->map(function ($section) {
-            return $section->totalDuration();
-        })->sum());
+        // check if title == أدوبي اليستريتور
+        if ($this->title == 'أدوبي اليستريتور') {
+            return 22;
+        } elseif ($this->title == 'أدوبي الأنديزاين') {
+            return 8;
+        } elseif ($this->title == 'أدوبي بريمير - قريبًا') {
+            return 25;
+        } elseif ($this->title == 'أدوبي أفترأفكت - قريباً') {
+            return 30;
+        } elseif ($this->title == 'أدوبي فوتوشوب') {
+            return 20;
+        } elseif ($this->title == 'الميني جرافيك') {
+            return 50;
+        } elseif ($this->title == 'السوبر جرافيك') {
+            return 125;
+        } else {
+            return (int) ceil($this->sections->map(function ($section) {
+                return $section->totalDuration();
+            })->sum());
+        }
     }
 
     // get students

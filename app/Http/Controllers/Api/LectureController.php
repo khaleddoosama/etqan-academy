@@ -35,7 +35,7 @@ class LectureController extends Controller
     {
         // DB::beginTransaction();
         try {
-            $lecture = $this->lectureService->getSectionByCourseSlugAndSectionSlugAndSlug($course_slug, $section_slug, $lecture_slug);
+            $lecture = $this->lectureService->getLectureByCourseSlugAndSectionSlugAndSlug($course_slug, $section_slug, $lecture_slug);
 
             if (Gate::denies('view', $lecture->course) && $lecture->is_free === 0) {
                 return $this->apiResponse(null, 'unauthorized', 401);

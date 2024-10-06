@@ -51,7 +51,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
             return;
         }
 
-        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 10);
+        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
         $watermarkPath = asset('asset/logo-100.png');
         // Log::info('watermark: ' . $watermarkPath);
 
@@ -71,7 +71,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
                 ->inFormat($this->format)
                 ->save($chunkName, [
                     '-threads',
-                    '4', // Reduce the number of threads used by FFMpeg
+                    '1', // Reduce the number of threads used by FFMpeg
                     '-bufsize',
                     '64k', // Reduce buffer size
                 ]);

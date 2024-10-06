@@ -69,7 +69,7 @@ class Course extends Model
     public function totalDuration()
     {
         // check if title == أدوبي اليستريتور
-        if ($this->title == 'أدوبي اليستريتور') {
+        if ($this->title == 'أدوبي اليستريتور') {
             return 22;
         } elseif ($this->title == 'أدوبي الأنديزاين') {
             return 8;

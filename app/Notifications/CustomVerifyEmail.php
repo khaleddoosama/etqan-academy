@@ -38,8 +38,8 @@ class CustomVerifyEmail extends Notification
         );
         $signedUrl = str_replace(url('/'), $frontendUrl, $temporarySignedUrl);
         Log::info("signedUrl before: " . $signedUrl);
-        // remove any // to be / from the end of the URL
-        $signedUrl = preg_replace('#(https://[^/]+)//+#', '$1/', $signedUrl);
+        // remove any // to be / from the end of the URL unless in https://
+        $signedUrl = preg_replace('/(http[s]?:\/\/[^\/]+)\/\//', '$1/', $signedUrl);
         Log::info("signedUrl after: " . $signedUrl);
         return $signedUrl; // Directly return the signed URL
     }

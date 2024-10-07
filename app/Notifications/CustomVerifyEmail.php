@@ -36,14 +36,9 @@ class CustomVerifyEmail extends Notification
             ],
 
         );
-        $frontendUrl = rtrim($frontendUrl, '/');
-        Log::info('$frontendUrl: ' . $frontendUrl);
-        $temporarySignedUrl = ltrim($temporarySignedUrl, '/');
-        Log::info('$temporarySignedUrl: ' . $temporarySignedUrl);
-        $signedUrl = $frontendUrl . '/' . $temporarySignedUrl;
-        Log::info('$signedUrl: ' . $signedUrl);
+        $signedUrl = str_replace(url('/'), $frontendUrl, $temporarySignedUrl);
         // remove any // to be / from the end of the URL
-        // $signedUrl = preg_replace('//', 'm/', $signedUrl);
+        $signedUrl = preg_replace('#(https://[^/]+)//+#', '$1/', $signedUrl);
 
         return $signedUrl; // Directly return the signed URL
     }

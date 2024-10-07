@@ -30,7 +30,7 @@ class Section extends Model
 
     public function lectures()
     {
-        return $this->hasMany(Lecture::class)->orderBy('position');
+        return $this->hasMany(Lecture::class)->where('processed', 1)->orderBy('position');
     }
 
     // calculate total duration of lectures in section

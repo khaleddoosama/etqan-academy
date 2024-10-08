@@ -63,7 +63,7 @@ class NewCourseNotification extends Notification implements ShouldQueue
 
     protected function getUrl()
     {
-        return env('FRONTEND_URL') . '/courses/' . $this->course_slug;
+        return env('FRONTEND_URL') . 'courses/' . $this->course_slug;
     }
 
 

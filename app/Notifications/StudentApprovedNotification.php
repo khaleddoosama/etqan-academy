@@ -60,7 +60,7 @@ class StudentApprovedNotification extends Notification
     // get url
     protected function getUrl()
     {
-        return env('FRONTEND_URL') . '/courses/' . $this->course_slug;
+        return env('FRONTEND_URL') . 'courses/' . $this->course_slug;
     }
 
     // get icon

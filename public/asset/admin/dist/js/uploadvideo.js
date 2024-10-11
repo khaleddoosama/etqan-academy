@@ -240,4 +240,10 @@ $(function () {
         // $('#form1').trigger("reset");
         // $('#form1').validate().resetForm();
     });
+
+    window.onbeforeunload = function() {
+        if (activeUploadRequest) {
+            return 'Are you sure you want to leave this page? Your changes will be lost.';
+        }
+    };
 });

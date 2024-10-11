@@ -33,7 +33,7 @@ class LectureService
     }
     public function getLectureByCourseSlugAndSectionSlugAndSlug(string $courseSlug, string $sectionSlug, string $slug)
     {
-        $lecture = Lecture::where('slug', $slug)->where('processed', '1')->first();
+        $lecture = Lecture::where('slug', $slug)->where('processed', '=', 1)->first();
         if ($lecture && $lecture->section->slug === $sectionSlug && $lecture->section->course->slug === $courseSlug) {
             return $lecture;
         } else {
@@ -45,7 +45,7 @@ class LectureService
     {
         $cacheKey = "lectures_{$courseSlug}_{$sectionSlug}";
         return Cache::remember($cacheKey, 60, function () use ($courseSlug, $sectionSlug) {
-            return Lecture::where('processed', '1')->whereHas('section', function ($query) use ($courseSlug, $sectionSlug) {
+            return Lecture::where('processed', '=', 1)->whereHas('section', function ($query) use ($courseSlug, $sectionSlug) {
                 $query->whereHas('course', function ($query) use ($courseSlug) {
                     $query->where('slug', $courseSlug);
                 })->where('slug', $sectionSlug);

@@ -75,7 +75,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     // isEnrolledInCourse
     public function isEnrolledInCourse($course_id)
     {
-        return $this->courses()->where('course_id', $course_id)->exists();
+        return $this->courses()->where('course_id', $course_id)->wherePivot('status', 1)->exists();
     }
 
     // scope student

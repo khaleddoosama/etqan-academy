@@ -61,7 +61,6 @@ class StudentApprovedNotification extends Notification
     // get url
     protected function getUrl()
     {
-        Log::info('Frontend URL: ' . env('FRONTEND_URL'));
         return env('FRONTEND_URL') . 'courses/' . $this->course_slug;
     }
 

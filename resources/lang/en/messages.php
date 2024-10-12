@@ -92,4 +92,5 @@
     'yes_delete_it' => 'Yes, delete it!',
     'you_want_to_delete_it' => 'You want to delete it!',
     'you_wont_be_able_to_revert_this' => 'You won\'t be able to revert this!',
+    'course_access_denied' => 'You are not allowed to access this course.',
 );

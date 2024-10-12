@@ -38,7 +38,7 @@ class LectureController extends Controller
             $lecture = $this->lectureService->getLectureByCourseSlugAndSectionSlugAndSlug($course_slug, $section_slug, $lecture_slug);
 
             if (Gate::denies('view', $lecture->course) && $lecture->is_free === 0) {
-                return $this->apiResponse(null, __('messages.unauthorized'), 401);
+                return $this->apiResponse(null, __('messages.course_access_denied'), 403);
             }
 
             if ($lecture) {

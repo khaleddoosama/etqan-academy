@@ -44,7 +44,7 @@ class NewCourseNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('New Course Available!')
             ->line('A new course has been created: ' . $this->title)
-            ->action('View Course', env('FRONTEND_URL') . '/courses/' . $this->course_slug)
+            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->course_slug)
             ->line('Thank you for using our application!');
     }
 

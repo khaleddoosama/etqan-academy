@@ -41,7 +41,7 @@ class StudentApprovedNotification extends Notification
         return (new MailMessage)
             ->subject('Access Approved: New Course Available!')
             ->line('Congratulations! You have been approved to access the course: ' . $this->title)
-            ->action('View Course', env('FRONTEND_URL') . '/courses/' . $this->course_slug)
+            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->course_slug)
             ->line('We hope you enjoy the learning experience!');
     }
 

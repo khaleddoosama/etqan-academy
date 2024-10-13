@@ -51,7 +51,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
             return;
         }
 
-        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
+        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 1);
         $watermarkPath = asset('asset/logo-100.png');
         // Log::info('watermark: ' . $watermarkPath);
 
@@ -61,19 +61,17 @@ class ConvertSingleVideoFormat implements ShouldQueue
                 ->addFilter(function (VideoFilters $filters) {
                     $filters->resize(new Dimension($this->videoWidth, $this->videoHeight));
                 })
-                ->addWatermark(function (WatermarkFactory $watermark) use ($watermarkPath) {
-                    $watermark->openUrl($watermarkPath)
-                        ->horizontalAlignment(WatermarkFactory::RIGHT, 25)
-                        ->verticalAlignment(WatermarkFactory::BOTTOM, 25);
-                })
+                // ->addWatermark(function (WatermarkFactory $watermark) use ($watermarkPath) {
+                //     $watermark->openUrl($watermarkPath)
+                //         ->horizontalAlignment(WatermarkFactory::RIGHT, 25)
+                //         ->verticalAlignment(WatermarkFactory::BOTTOM, 25);
+                // })
                 ->export()
                 ->toDisk('public')
                 ->inFormat($this->format)
                 ->save($chunkName, [
-                    '-threads',
-                    '1', // Reduce the number of threads used by FFMpeg
                     '-bufsize',
-                    '64k', // Reduce buffer size
+                    '512k', // Reduce buffer size
                 ]);
 
 

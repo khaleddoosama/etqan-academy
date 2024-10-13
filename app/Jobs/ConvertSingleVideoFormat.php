@@ -51,7 +51,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
             return;
         }
 
-        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 1);
+        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 10);
         $watermarkPath = asset('asset/logo-100.png');
         // Log::info('watermark: ' . $watermarkPath);
 
@@ -70,6 +70,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
                 ->toDisk('public')
                 ->inFormat($this->format)
                 ->save($chunkName, [
+                    '-preset', 'ultrafast', // Faster encoding preset
                     '-bufsize',
                     '512k', // Reduce buffer size
                 ]);

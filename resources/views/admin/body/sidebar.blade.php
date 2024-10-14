@@ -57,9 +57,10 @@
                               <i class="nav-icon fas fa-users"></i>
 
                               <p>
-                                {{ __('attributes.users') }}
-                                <i class="fas fa-angle-left right"></i>
-                                <span class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\UserRegisteredNotification')->count() }}</span>
+                                  {{ __('attributes.users') }}
+                                  <i class="fas fa-angle-left right"></i>
+                                  <span
+                                      class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\UserRegisteredNotification')->count() }}</span>
                               </p>
                           </a>
                           <ul class="nav nav-treeview" style=" @if (!(Request::is('*/admin/users') || Request::is('*/admin/users/*'))) display: none @endif">
@@ -140,7 +141,8 @@
                               class="nav-link @if (Request::is('*/admin/inquiries') || Request::is('*/admin/inquiries/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
                               <span class="title">{{ __('attributes.inquiry') }}</span>
-                              <span class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\InquiryNotification')->count() }}</span>
+                              <span
+                                  class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\InquiryNotification')->count() }}</span>
 
                           </a>
                       </li>
@@ -153,7 +155,8 @@
                               class="nav-link @if (Request::is('*/admin/withdrawal-requests') || Request::is('*/admin/withdrawal-requests/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
                               <span class="title">{{ __('attributes.withdrawal_request') }}</span>
-                              <span class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\WithdrawalRequestNotification')->count() }}</span>
+                              <span
+                                  class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\WithdrawalRequestNotification')->count() }}</span>
 
                           </a>
                       </li>
@@ -166,7 +169,8 @@
                               class="nav-link @if (Request::is('*/admin/request-courses') || Request::is('*/admin/request-courses/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="chatbox-ellipses-outline"></ion-icon></span>
                               <span class="title">{{ __('attributes.request_course') }}</span>
-                              <span class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\CourseRequestNotification')->count() }}</span>
+                              <span
+                                  class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\CourseRequestNotification')->count() }}</span>
 
                           </a>
                       </li>
@@ -220,7 +224,19 @@
                       </li>
                   @endcan
 
+                  {{-- Show Logs --}}
+                  {{-- @can('log.list') --}}
+                  @if (auth()->id() == 1)
+                      <li class="nav-item">
+                          <a href="{{ route('admin.logs.index') }}"
+                              class="nav-link @if (Request::is('*/admin/logs') || Request::is('*/admin/logs/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
+                              <span class="title">{{ __('attributes.logs') }}</span>
+                          </a>
+                      </li>
+                  @endif
 
+                  {{-- @endcan --}}
               </ul>
           </nav>
           <!-- /.sidebar-menu -->

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\LectureController;
+use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 
- 
+
 //----------------------------- Admin Routes -----------------------------//
 
 
@@ -140,6 +141,14 @@ Route::group(
 
             // role permission controller (resource) with prefix role-permission and as role_permission.
             Route::resource('role_permissions', RolePermissionController::class)->only(['index', 'edit', 'update']);
+
+            // logs
+            Route::controller(LogController::class)->group(function () {
+                Route::get('/logs', 'index')->name('logs.index');
+                Route::get('/logs/{file}', 'show')->name('logs.show');
+                Route::get('/logs/{file}/download', 'download')->name('logs.download');
+                Route::delete('/logs/{file}', 'delete')->name('logs.delete');
+            });
         });
     }
 );

@@ -37,15 +37,15 @@ class FinalizeVideoProcessing implements ShouldQueue
 
     public function handle()
     {
-        DB::rollBack();
-
         $this->deleteOldVideo();
-        $this->updateConvertedVideo();
+        // $this->updateConvertedVideo();
         $this->updateLecture($this->hours, $this->minutes, $this->seconds, $this->quality);
         Log::info('Lecture updated: ' . $this->lecture->id);
 
         $notification = new LectureStatusNotification($this->lecture->id, 1);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
+        // print time now in log
+        Log::info(message: 'Time after: ' . now());
     }
 
     private function deleteOldVideo()

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ConvertedVideo;
 use App\Notifications\LectureStatusNotification;
 use App\Services\AdminNotificationService;
 use FFMpeg\FFProbe;
@@ -34,6 +35,15 @@ class ProcessVideo implements ShouldQueue
 
     public function handle(): void
     {
+        // print time now in log
+        Log::info('Time before: ' . now());
+
+        DB::transaction(function () {
+            $this->lecture->update(['processed' => 0]);
+        });
+        DB::transaction(function () {
+            ConvertedVideo::where('lecture_id', $this->lecture->id)->delete();
+        });
 
         $this->videoPath = $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
         // $videoPath = $this->getVideoPath();
@@ -45,16 +55,16 @@ class ProcessVideo implements ShouldQueue
         $quality = $this->determineQualityAndConvert($width, $height);
 
 
-        // نفذ FinalizeVideoProcessing بعد انتهاء جميع وظائف التحويل
         $conversionJobs = $this->collectConversionJobs($durationInSeconds);
-        if (!empty($conversionJobs)) {
-            $finalizeJob = new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath);
-            $conversionJobs[] = $finalizeJob->onQueue('low')->delay(now()->addSeconds(20));
-            Bus::chain($conversionJobs)->dispatch();
+        // تشغيل التحويلات بشكل منفصل
+        foreach ($conversionJobs as $job) {
+            dispatch($job);
         }
 
-        // dispatch(new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath))
-        //     ->delay(now()->addSeconds(10));
+
+        $finalizeJob = new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath);
+        $finalizeJob->onQueue('low')->delay(now()->addSeconds(20));
+        dispatch($finalizeJob);
     }
     private function downloadVideoLocally($url): ?string
     {

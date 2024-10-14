@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ConvertedVideo;
 use App\Notifications\LectureStatusNotification;
 use App\Services\AdminNotificationService;
 use FFMpeg\Coordinate\Dimension;
@@ -51,7 +52,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
             return;
         }
 
-        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 10);
+        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
         $watermarkPath = asset('asset/logo-100.png');
         // Log::info('watermark: ' . $watermarkPath);
 
@@ -61,16 +62,17 @@ class ConvertSingleVideoFormat implements ShouldQueue
                 ->addFilter(function (VideoFilters $filters) {
                     $filters->resize(new Dimension($this->videoWidth, $this->videoHeight));
                 })
-                // ->addWatermark(function (WatermarkFactory $watermark) use ($watermarkPath) {
-                //     $watermark->openUrl($watermarkPath)
-                //         ->horizontalAlignment(WatermarkFactory::RIGHT, 25)
-                //         ->verticalAlignment(WatermarkFactory::BOTTOM, 25);
-                // })
+                ->addWatermark(function (WatermarkFactory $watermark) use ($watermarkPath) {
+                    $watermark->openUrl($watermarkPath)
+                        ->horizontalAlignment(WatermarkFactory::RIGHT, 25)
+                        ->verticalAlignment(WatermarkFactory::BOTTOM, 25);
+                })
                 ->export()
                 ->toDisk('public')
                 ->inFormat($this->format)
                 ->save($chunkName, [
-                    '-preset', 'ultrafast', // Faster encoding preset
+                    '-preset',
+                    'ultrafast', // Faster encoding preset
                     '-bufsize',
                     '512k', // Reduce buffer size
                 ]);
@@ -138,7 +140,25 @@ class ConvertSingleVideoFormat implements ShouldQueue
         }
 
         // Upload the merged video to public storage
-        $v = Storage::disk('s3')->put($outputName, fopen($outputPath, 'r+'));
+        Storage::disk('s3')->put($outputName, fopen($outputPath, 'r+'));
+
+        preg_match('/-(\d{3})p\.(\w+)$/', $this->name, $matches);
+        if ($matches) {
+            $resolution = $matches[1]; // "240"
+            $extension = $matches[2];  // "mp4"
+            $names = [
+                $extension . '_Format_' . $resolution => $outputName
+            ];
+            DB::transaction(function () use ($names) {
+
+                ConvertedVideo::updateOrCreate(
+                    ['lecture_id' => $this->lecture->id],
+                    $names
+                );
+            });
+        } else {
+            Log::error('Failed to extract resolution and extension from video name: ' . $this->name);
+        }
 
         // Clean up temporary files
         foreach ($chunks as $chunk) {

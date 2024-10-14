@@ -122,4 +122,6 @@ return [
     'withdrawal_request' => 'Withdrawal Request',
     'withdrawal_requests' => 'Withdrawal Requests',
     'word' => 'Word',
+    'logs' => 'Logs',
+    'log' => 'Log',
 ];

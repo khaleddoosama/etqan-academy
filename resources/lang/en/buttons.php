@@ -84,4 +84,6 @@
     'submit' => 'Submit',
     'update' => 'Update',
     'verify_email' => 'Verify Email',
+
+    'search' => 'Search',
 );

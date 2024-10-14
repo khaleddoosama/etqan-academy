@@ -122,4 +122,6 @@ return [
     'withdrawal_request' => 'طلب السحب',
     'withdrawal_requests' => 'طلبات السحب',
     'word' => 'الكلمة',
+    'logs' => 'السجلات',
+    'log' => 'السجل',
 ];

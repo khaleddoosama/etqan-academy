@@ -82,7 +82,7 @@ class ProcessVideo implements ShouldQueue
         Log::info('Downloading video from URL: ' . $url);
 
         $response = Http::retry(3, 5000)
-            ->timeout(300) // Set a high timeout for the HTTP request
+            ->timeout(600)
             ->withOptions(['sink' => $file])
             ->get($url);
         Log::info('Video downloaded to: ' . $path);
@@ -176,22 +176,36 @@ class ProcessVideo implements ShouldQueue
 
     private function collectConversionJobs($durationInSeconds)
     {
+        // $formats = [
+        //     [(new X264('aac', 'libx264'))->setKiloBitrate(4096), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(4096)],
+        //     [(new X264('aac', 'libx264'))->setKiloBitrate(2048), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(2048)],
+        //     [(new X264('aac', 'libx264'))->setKiloBitrate(750), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(750)],
+        //     [(new X264('aac', 'libx264'))->setKiloBitrate(500), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(500)],
+        //     [(new X264('aac', 'libx264'))->setKiloBitrate(300), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(300)]
+        // ];
         $formats = [
-            [(new X264('aac', 'libx264'))->setKiloBitrate(4096), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(4096)],
-            [(new X264('aac', 'libx264'))->setKiloBitrate(2048), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(2048)],
-            [(new X264('aac', 'libx264'))->setKiloBitrate(750), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(750)],
-            [(new X264('aac', 'libx264'))->setKiloBitrate(500), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(500)],
-            [(new X264('aac', 'libx264'))->setKiloBitrate(300), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(300)]
+            [(new X264('aac', 'libx264'))->setKiloBitrate(4096)],
+            [(new X264('aac', 'libx264'))->setKiloBitrate(2048)],
+            [(new X264('aac', 'libx264'))->setKiloBitrate(750)],
+            [(new X264('aac', 'libx264'))->setKiloBitrate(500)],
+            [(new X264('aac', 'libx264'))->setKiloBitrate(300)]
         ];
 
         $videoWidths = [1920, 1280, 854, 640, 426];
         $videoHeights = [1080, 720, 480, 360, 240];
+        // $names = [
+        //     [$this->getFileName($this->lecture->video, 'mp4', '1080p'), $this->getFileName($this->lecture->video, 'webm', '1080p')],
+        //     [$this->getFileName($this->lecture->video, 'mp4', '720p'), $this->getFileName($this->lecture->video, 'webm', '720p')],
+        //     [$this->getFileName($this->lecture->video, 'mp4', '480p'), $this->getFileName($this->lecture->video, 'webm', '480p')],
+        //     [$this->getFileName($this->lecture->video, 'mp4', '360p'), $this->getFileName($this->lecture->video, 'webm', '360p')],
+        //     [$this->getFileName($this->lecture->video, 'mp4', '240p'), $this->getFileName($this->lecture->video, 'webm', '240p')]
+        // ];
         $names = [
-            [$this->getFileName($this->lecture->video, 'mp4', '1080p'), $this->getFileName($this->lecture->video, 'webm', '1080p')],
-            [$this->getFileName($this->lecture->video, 'mp4', '720p'), $this->getFileName($this->lecture->video, 'webm', '720p')],
-            [$this->getFileName($this->lecture->video, 'mp4', '480p'), $this->getFileName($this->lecture->video, 'webm', '480p')],
-            [$this->getFileName($this->lecture->video, 'mp4', '360p'), $this->getFileName($this->lecture->video, 'webm', '360p')],
-            [$this->getFileName($this->lecture->video, 'mp4', '240p'), $this->getFileName($this->lecture->video, 'webm', '240p')]
+            [$this->getFileName($this->lecture->video, 'mp4', '1080p')],
+            [$this->getFileName($this->lecture->video, 'mp4', '720p')],
+            [$this->getFileName($this->lecture->video, 'mp4', '480p')],
+            [$this->getFileName($this->lecture->video, 'mp4', '360p')],
+            [$this->getFileName($this->lecture->video, 'mp4', '240p')]
         ];
 
         $conversionJobs = [];

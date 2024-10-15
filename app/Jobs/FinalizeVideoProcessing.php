@@ -86,10 +86,6 @@ class FinalizeVideoProcessing implements ShouldQueue
         DB::transaction(function () use ($hours, $minutes, $seconds, $quality) {
             $this->lecture->update([
                 'processed' => true,
-                'hours' => $hours,
-                'minutes' => $minutes,
-                'seconds' => $seconds,
-                'quality' => $quality
             ]);
         });
     }

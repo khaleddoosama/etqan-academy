@@ -53,7 +53,9 @@ class ProcessVideo implements ShouldQueue
         $durationInSeconds = $this->getVideoDuration($this->videoPath);
         [$hours, $minutes, $seconds] = $this->convertDuration($durationInSeconds);
         $quality = $this->determineQualityAndConvert($width, $height);
-
+        DB::transaction(function () use ($hours, $minutes, $seconds, $quality) {
+            $this->lecture->update(['hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds, 'quality' => $quality]);
+        });
 
         $conversionJobs = $this->collectConversionJobs($durationInSeconds);
         // تشغيل التحويلات بشكل منفصل
@@ -78,7 +80,10 @@ class ProcessVideo implements ShouldQueue
 
         $file = fopen($path, 'w');
         Log::info('Downloading video from URL: ' . $url);
-        $response = Http::withOptions(['sink' => $file])->get($url);
+        $response = Http::retry(3, 5000)
+            ->timeout(120)
+            ->withOptions(['sink' => $file])
+            ->get($url);
         Log::info('Video downloaded to: ' . $path);
         if ($response->successful()) {
             Log::info('Video downloaded successfully');

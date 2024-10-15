@@ -25,7 +25,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 //----------------------------- Admin Routes -----------------------------//
 
 
-
+ 
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),

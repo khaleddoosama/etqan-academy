@@ -78,8 +78,9 @@ class ConvertSingleVideoFormat implements ShouldQueue
                 ]);
 
 
-            Log::info('Converted: ' . $chunkName);
+            Log::info(message: 'Converted: ' . $chunkName);
             $processedChunks[] = storage_path('app/public/' . $chunkName);
+            Log::info('processedChunks: ' . json_encode($processedChunks));
         }
         // Remove the original chunks
         foreach ($chunks as $chunk) {
@@ -180,7 +181,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
         DB::transaction(function () {
             $this->lecture->update(['processed' => -1]);
         });
-        $notification = new LectureStatusNotification($this->lecture->id, 0);
-        AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
+        // $notification = new LectureStatusNotification($this->lecture->id, 0);
+        // AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 }

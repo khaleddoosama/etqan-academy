@@ -71,7 +71,8 @@ class DuplicateLecture implements ShouldQueue
                     }
                     $path = Storage::path($convertedVideo->$method);
                     if ($path && Storage::exists($path)) {
-
+                        Log::info('$convertedVideo->$method: ' . $convertedVideo->$method);
+                        Log::info('path: ' . $path);
                         $newFilePath =  "{$newPathFolder}/videos/{$newName}-{$resolution}.{$format}";
 
                         $awsS3Service->duplicateObject($path, $newFilePath);

@@ -127,5 +127,16 @@ return [
     'discount_price' => 'سعر الخصم',
     'number_of_levels' => 'عدد المستويات',
     'instructor_id' => 'المدرب',
-
+    'course_id' => 'الدورة',
+    'section_id' => 'القسم',
+    'lecture_id' => 'المحاضرة',
+    'job_name' => 'الوظيفة',
+    'priority' => 'الأولوية',
+    'attempts' => 'المحاولات',
+    'jobs' => 'الوظائف',
+    'job' => 'الوظيفة',
+    'failed_jobs' => 'الوظائف الفاشلة',
+    'failed_job' => 'الوظيفة الفاشلة',
+    'payload' => 'الحمولة',
+    'exception' => 'الاستثناء',
 ];

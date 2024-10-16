@@ -164,7 +164,7 @@
                                 {{-- quailties --}}
                                 <div class="row mx-3 my-3 callout callout-info">
                                     <div class="col-12">
-                                        <table id="example2" class="table table-bordered table-hover">
+                                        <table id="" class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
                                                     <th>240 MP4</th>
@@ -292,20 +292,13 @@
                                                                 target="_blank" class="text-primary">1080 Webm</a>
                                                         @endif
                                                     </td>
+                                                @else
+                                                    <td colspan="10" class="text-center">
+                                                        <span class="text-danger">Not Converted Yet</span>
+                                                    </td>
                                                 @endif
                                             </tbody>
-                                            <tfoot>
-                                                <th>240 MP4</th>
-                                                <th>360 MP4</th>
-                                                <th>480 MP4</th>
-                                                <th>720 MP4</th>
-                                                <th>1080 MP4</th>
-                                                <th>240 Webm</th>
-                                                <th>360 Webm</th>
-                                                <th>480 Webm</th>
-                                                <th>720 Webm</th>
-                                                <th>1080 Webm</th>
-                                            </tfoot>
+
                                         </table>
                                     </div>
                                 </div>

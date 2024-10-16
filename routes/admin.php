@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\InstructorController;
+use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\LectureController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -155,11 +156,11 @@ Route::group(
             });
 
             // jobs
-            // Route::controller(JobController::class)->group(function () {
-            //     Route::get('/jobs', 'index')->name('jobs.index');
-            //     Route::get('/jobs/{job}', 'show')->name('jobs.show');
-            //     Route::delete('/jobs/{job}', 'delete')->name('jobs.delete');
-            // });
+            Route::controller(JobController::class)->group(function () {
+                Route::get('/jobs', 'index')->name('jobs.index');
+                Route::get('/failed_jobs', 'failedJobs')->name('failed_jobs.index');
+                Route::post('/failed_jobs/retry/{id}', 'retry')->name('failed_jobs.retry');
+            });
         });
     }
 );

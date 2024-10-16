@@ -66,9 +66,10 @@ class DuplicateLecture implements ShouldQueue
                 foreach ($resolutions as $resolution) {
 
                     $method = "{$format}_Format_{$resolution}";
-                    Log::info('Video path for method ' . $method . ': ' . $convertedVideo->$method);
+                    if (!isset($convertedVideo->$method)) {
+                        continue;
+                    }
                     $path = Storage::path($convertedVideo->$method);
-                    Log::info('path: ' . $path);
                     if ($path && Storage::exists($path)) {
 
                         $newFilePath =  "{$newPathFolder}/videos/{$newName}-{$resolution}.{$format}";

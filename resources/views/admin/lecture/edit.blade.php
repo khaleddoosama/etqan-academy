@@ -161,6 +161,155 @@
                                         </video>
                                     </div>
                                 </div>
+                                {{-- quailties --}}
+                                <div class="row mx-3 my-3 callout callout-info">
+                                    <div class="col-12">
+                                        <table id="example2" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>240 MP4</th>
+                                                    <th>360 MP4</th>
+                                                    <th>480 MP4</th>
+                                                    <th>720 MP4</th>
+                                                    <th>1080 MP4</th>
+                                                    <th>240 Webm</th>
+                                                    <th>360 Webm</th>
+                                                    <th>480 Webm</th>
+                                                    <th>720 Webm</th>
+                                                    <th>1080 Webm</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (!is_null($lecture->convertedVideo))
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['mp4_Format_240'] == null)
+                                                            <span class="text-danger">Not Converted</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['mp4_Format_240']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['mp4_Format_240']) }}"
+                                                                target="_blank" class="text-primary">240 MP4</a>
+                                                        @endif
+
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['mp4_Format_360'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['mp4_Format_360']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['mp4_Format_360']) }}"
+                                                                target="_blank" class="text-primary">360 MP4</a>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['mp4_Format_480'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['mp4_Format_480']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['mp4_Format_480']) }}"
+                                                                target="_blank" class="text-primary">480 MP4</a>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['mp4_Format_720'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['mp4_Format_720']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['mp4_Format_720']) }}"
+                                                                target="_blank" class="text-primary">720 MP4</a>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['mp4_Format_1080'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['mp4_Format_1080']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['mp4_Format_1080']) }}"
+                                                                target="_blank" class="text-primary">1080 MP4</a>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['webm_Format_240'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['webm_Format_240']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['webm_Format_240']) }}"
+                                                                target="_blank" class="text-primary">240 Webm</a>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['webm_Format_360'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['webm_Format_360']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['webm_Format_360']) }}"
+                                                                target="_blank" class="text-primary">360 Webm</a>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['webm_Format_480'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['webm_Format_480']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['webm_Format_480']) }}"
+                                                                target="_blank" class="text-primary">480 Webm</a>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['webm_Format_720'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['webm_Format_720']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['webm_Format_720']) }}"
+                                                                target="_blank" class="text-primary">720 Webm</a>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($lecture->convertedVideo['webm_Format_1080'] == null)
+                                                            <span class="text-danger">Not Found</span>
+                                                        @elseif (Storage::exists($lecture->convertedVideo['webm_Format_1080']) == false)
+                                                            <span class="text-danger">Converted But Not Found In
+                                                                Server</span>
+                                                        @else
+                                                            <a href="{{ Storage::url($lecture->convertedVideo['webm_Format_1080']) }}"
+                                                                target="_blank" class="text-primary">1080 Webm</a>
+                                                        @endif
+                                                    </td>
+                                                @endif
+                                            </tbody>
+                                            <tfoot>
+                                                <th>240 MP4</th>
+                                                <th>360 MP4</th>
+                                                <th>480 MP4</th>
+                                                <th>720 MP4</th>
+                                                <th>1080 MP4</th>
+                                                <th>240 Webm</th>
+                                                <th>360 Webm</th>
+                                                <th>480 Webm</th>
+                                                <th>720 Webm</th>
+                                                <th>1080 Webm</th>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
 
                                 {{-- thumbnail --}}
                                 <div class="row mx-3 my-3 callout callout-info">
@@ -169,7 +318,8 @@
 
                                     <div class="col-md-6 col-12">
                                         <img src="{{ $lecture->thumbnail_url }}" alt="{{ $lecture->title }} image"
-                                            class="img-thumbnail" id="show-thumbnail" style="max-height: 50vh;float: right">
+                                            class="img-thumbnail" id="show-thumbnail"
+                                            style="max-height: 50vh;float: right">
                                     </div>
                                 </div>
 

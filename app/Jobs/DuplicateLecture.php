@@ -41,7 +41,7 @@ class DuplicateLecture implements ShouldQueue
 
         $formats = [
             'mp4' => ['1080', '720', '480', '360', '240'],
-            'webm' => ['1080', '720', '480', '360', '240']
+            // 'webm' => ['1080', '720', '480', '360', '240']
         ];
 
         // get converted video

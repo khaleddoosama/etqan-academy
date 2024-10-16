@@ -124,4 +124,8 @@ return [
     'word' => 'الكلمة',
     'logs' => 'السجلات',
     'log' => 'السجل',
+    'discount_price' => 'سعر الخصم',
+    'number_of_levels' => 'عدد المستويات',
+    'instructor_id' => 'المدرب',
+
 ];

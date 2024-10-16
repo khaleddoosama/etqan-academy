@@ -55,8 +55,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">{{ __('buttons.close') }}</button>
+                                                    <x-custom.close-modal-button />
                                                     <button type="submit"
                                                         class="btn btn-primary">{{ __('buttons.add') }}</button>
                                                 </div>

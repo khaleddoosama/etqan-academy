@@ -172,4 +172,12 @@ class LectureController extends Controller
         Toastr::success(__('messages.lecture_updated'), __('status.success'));
         return redirect()->back();
     }
+
+    // get lecture based on section
+    public function getLectures($section_id)
+    {
+        $lectures = $this->lectureService->getLectures($section_id);
+
+        return $this->apiResponse($lectures, 'ok', 200);
+    }
 }

@@ -124,4 +124,8 @@ return [
     'word' => 'Word',
     'logs' => 'Logs',
     'log' => 'Log',
+
+    'discount_price' => 'Discount Price',
+    'number_of_levels' => 'Number of Levels',
+    'instructor_id' => 'Instructor',
 ];

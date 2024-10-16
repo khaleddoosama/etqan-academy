@@ -37,4 +37,10 @@ class SectionService
             })->get();
         });
     }
+
+    //getSectionsByCourseId
+    public function getSectionsByCourseId($course_id)
+    {
+        return Section::where('course_id', $course_id)->get(['id', 'title']);
+    }
 }

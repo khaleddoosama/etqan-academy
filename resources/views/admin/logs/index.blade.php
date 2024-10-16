@@ -68,8 +68,7 @@
                                                                     {{ __('messages.you_want_to_delete_it') }}
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        data-dismiss="modal">{{ __('buttons.close') }}</button>
+                                                                    <x-custom.close-modal-button />
 
                                                                     <form action="{{ route('admin.logs.delete', $file) }}"
                                                                         method="POST" style="display: inline-block;">

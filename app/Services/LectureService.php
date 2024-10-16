@@ -198,4 +198,10 @@ class LectureService
         $lecture->save();
         return $lecture;
     }
+
+    // get lectures based on section
+    public function getLectures(int $section_id)
+    {
+        return Lecture::where('section_id', $section_id)->get();
+    }
 }

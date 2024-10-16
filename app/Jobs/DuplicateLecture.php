@@ -73,14 +73,14 @@ class DuplicateLecture implements ShouldQueue
                     if ($path && Storage::exists($path)) {
 
                         $newFilePath =  "{$newPathFolder}/videos/{$newName}-{$resolution}.{$format}";
-                        Log::info('newFilePath: ' . $newFilePath);
+
                         $awsS3Service->duplicateObject($path, $newFilePath);
 
                         $pathes[$method] = $newFilePath;
                     }
                 }
             }
-            Log::info('Good pathes: ' . json_encode($pathes));
+
             $this->updateModel($pathes, $newPathFolder . '/videos/' . $newName . '.mp4');
         }
 

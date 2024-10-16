@@ -25,7 +25,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 //----------------------------- Admin Routes -----------------------------//
 
 
- 
+
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
@@ -99,6 +99,8 @@ Route::group(
             Route::controller(SectionController::class)->group(function () {
                 // show section
                 Route::get('/sections/{section}', 'show')->name('sections.show');
+                // get sections based on course
+                Route::get('/sections/{course_id}/get', 'getSections')->name('sections.get');
             });
 
             // Lecture Controller
@@ -111,6 +113,8 @@ Route::group(
             Route::put('/update-attachment/{lecture}', [LectureController::class, 'updateAttachment'])->name('lectures.updateAttachment');
             Route::put('/delete-attachment/{lecture}', [LectureController::class, 'deleteAttachment'])->name('lectures.deleteAttachment');
             Route::put('lectures/is-free/{lecture}', [LectureController::class, 'changeIsFree'])->name('lectures.changeIsFree');
+            // get lectures based on section
+            Route::get('/lectures/{section_id}/get', [LectureController::class, 'getLectures'])->name('lectures.get');
 
             // Inquiry Controller
             Route::controller(InquiryController::class)->group(function () {
@@ -149,6 +153,13 @@ Route::group(
                 Route::get('/logs/{file}/download', 'download')->name('logs.download');
                 Route::delete('/logs/{file}', 'delete')->name('logs.delete');
             });
+
+            // jobs
+            // Route::controller(JobController::class)->group(function () {
+            //     Route::get('/jobs', 'index')->name('jobs.index');
+            //     Route::get('/jobs/{job}', 'show')->name('jobs.show');
+            //     Route::delete('/jobs/{job}', 'delete')->name('jobs.delete');
+            // });
         });
     }
 );

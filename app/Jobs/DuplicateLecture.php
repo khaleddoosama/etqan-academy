@@ -174,7 +174,7 @@ class DuplicateLecture implements ShouldQueue
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
         DB::transaction(function () {
-            $this->lecture->update(['processed' => -1]);
+            $this->new_lecture->update(['processed' => -1]);
         });
         $notification = new LectureStatusNotification($this->new_lecture->id, 0);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);

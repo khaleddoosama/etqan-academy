@@ -64,20 +64,22 @@ class DuplicateLecture implements ShouldQueue
             $pathes = [];
             foreach ($formats as $format => $resolutions) {
                 foreach ($resolutions as $resolution) {
-                    $method = "{$format}_Format_{$resolution}";
-                    $path = Storage::path($convertedVideo->$method);
 
+                    $method = "{$format}_Format_{$resolution}";
+                    Log::info('Video path for method ' . $method . ': ' . $convertedVideo->$method);
+                    $path = Storage::path($convertedVideo->$method);
+                    Log::info('path: ' . $path);
                     if ($path && Storage::exists($path)) {
 
                         $newFilePath =  "{$newPathFolder}/videos/{$newName}-{$resolution}.{$format}";
-
+                        Log::info('newFilePath: ' . $newFilePath);
                         $awsS3Service->duplicateObject($path, $newFilePath);
 
                         $pathes[$method] = $newFilePath;
                     }
                 }
             }
-
+            Log::info('Good pathes: ' . json_encode($pathes));
             $this->updateModel($pathes, $newPathFolder . '/videos/' . $newName . '.mp4');
         }
 

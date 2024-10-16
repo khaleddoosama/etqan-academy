@@ -37,7 +37,7 @@ class FinalizeVideoProcessing implements ShouldQueue
 
     public function handle()
     {
-        $this->deleteOldVideo();
+        // $this->deleteOldVideo();
         // $this->updateConvertedVideo();
         $this->updateLecture($this->hours, $this->minutes, $this->seconds, $this->quality);
         Log::info('Lecture updated: ' . $this->lecture->id);

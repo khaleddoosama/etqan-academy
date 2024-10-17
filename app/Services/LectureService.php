@@ -204,4 +204,9 @@ class LectureService
     {
         return Lecture::where('section_id', $section_id)->get();
     }
+
+    public function getAllLectures()
+    {
+        return Lecture::get();
+    }
 }

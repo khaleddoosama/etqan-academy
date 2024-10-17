@@ -33,6 +33,13 @@ class LectureController extends Controller
         $this->middleware('permission:course.create|course.edit', ['except' => ['index']]);
     }
 
+    // index
+    public function index()
+    {
+        $lectures = $this->lectureService->getAllLectures();
+        return view('admin.lecture.index', compact('lectures'));
+    }
+
     //generatePresignedUrl
     public function generatePresignedUrl(LectureRequest $request)
     {

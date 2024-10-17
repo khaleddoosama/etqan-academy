@@ -67,8 +67,12 @@ class Lecture extends Model
 
             // get all videos from quality or less
             foreach (array_slice($qualities, $i) as $quality) {
-                $videos[] = Storage::url($this->convertedVideo->{"mp4_Format_$quality"});
-                $videos[] = Storage::url($this->convertedVideo->{"webm_Format_$quality"});
+                if ($this->convertedVideo->{"mp4_Format_$quality"}) {
+                    $videos[] = Storage::url($this->convertedVideo->{"mp4_Format_$quality"});
+                }
+                if ($this->convertedVideo->{"webm_Format_$quality"}) {
+                    $videos[] = Storage::url($this->convertedVideo->{"webm_Format_$quality"});
+                }
             }
 
             return $videos;

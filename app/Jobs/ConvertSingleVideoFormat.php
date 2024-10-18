@@ -215,19 +215,20 @@ class ConvertSingleVideoFormat implements ShouldQueue
         $tempPath = $tempDir . DIRECTORY_SEPARATOR . uniqid() . '_' . basename($this->lecture->video);
 
         // فتح ملف مؤقت للتنزيل
-        $file = fopen($tempPath, 'w');
-        if (!$file) {
-            Log::error("Failed to open temporary file for writing: $tempPath");
-            return null;
-        }
+        // $file = fopen($tempPath, 'w');
+        // if (!$file) {
+        //     Log::error("Failed to open temporary file for writing: $tempPath");
+        //     return null;
+        // }
 
-        Log::info('Downloading video from URL: ' . $url);
+        Log::info('ConvertSingleVideoFormat Downloading video from URL: ' . $url);
 
         $response = Http::retry(3, 5000)
             ->timeout(600)
-            ->withOptions(['sink' => $file])
+            ->withOptions(['sink' => $tempPath])
             ->get($url);
-        fclose($file);
+
+        // fclose($file);
 
         if ($response->successful()) {
             Log::info('Video downloaded successfully to: ' . $tempPath);

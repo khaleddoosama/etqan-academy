@@ -59,7 +59,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
             $this->videoPath = $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
             $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
         }
-        
+
         $watermarkPath = asset('asset/logo-100.png');
         // Log::info('watermark: ' . $watermarkPath);
 
@@ -87,7 +87,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
 
             Log::info(message: 'Converted: ' . $chunkName);
             $processedChunks[] = storage_path('app/public/' . $chunkName);
-            Log::info('processedChunks: ' . json_encode($processedChunks));
+            // Log::info('processedChunks: ' . json_encode($processedChunks));
         }
         // Remove the original chunks
         foreach ($chunks as $chunk) {

@@ -177,33 +177,33 @@ class ConvertSingleVideoFormat implements ShouldQueue
     }
     private function downloadVideoLocally($url): ?string
     {
-        $path = Storage::disk('public')->path($this->lecture->video);
+        $tempDir = sys_get_temp_dir();
+        $tempPath = $tempDir . DIRECTORY_SEPARATOR . uniqid() . '_' . basename($this->lecture->video);
 
-        // Ensure the directory exists
-        $directory = dirname($path);
-        if (!is_dir($directory)) {
-            mkdir($directory, 0755, true);
+        // فتح ملف مؤقت للتنزيل
+        $file = fopen($tempPath, 'w');
+        if (!$file) {
+            Log::error("Failed to open temporary file for writing: $tempPath");
+            return null;
         }
 
-        $file = fopen($path, 'w');
         Log::info('Downloading video from URL: ' . $url);
 
         $response = Http::retry(3, 5000)
             ->timeout(600)
             ->withOptions(['sink' => $file])
             ->get($url);
-        Log::info('Video downloaded to: ' . $path);
+        fclose($file);
 
         if ($response->successful()) {
-            Log::info('Video downloaded successfully');
-            fclose($file);
-            return str_replace('//', '/', $path);
+            Log::info('Video downloaded successfully to: ' . $tempPath);
+            return str_replace('//', '/', $tempPath);
         }
 
         Log::error("Failed to download video from URL: $url");
-        fclose($file);
         return null;
     }
+
 
     public function failed($exception)
     {

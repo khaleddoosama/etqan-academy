@@ -28,17 +28,10 @@ class FinalizeVideoProcessing implements ShouldQueue
     public function __construct($lecture, $hours, $minutes, $seconds, $quality, $videoPath)
     {
         $this->lecture = $lecture;
-        $this->hours = $hours;
-        $this->minutes = $minutes;
-        $this->seconds = $seconds;
-        $this->quality = $quality;
-        $this->videoPath = $videoPath;
     }
 
     public function handle()
     {
-        // $this->deleteOldVideo();
-        // $this->updateConvertedVideo();
         $this->updateLecture();
         Log::info('Lecture updated: ' . $this->lecture->id);
 
@@ -48,39 +41,6 @@ class FinalizeVideoProcessing implements ShouldQueue
         Log::info(message: 'Time after: ' . now());
     }
 
-    private function deleteOldVideo()
-    {
-        if (file_exists($this->videoPath)) {
-            unlink($this->videoPath);
-        }
-        if (Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
-            Storage::disk($this->lecture->disk)->delete($this->lecture->video);
-        }
-    }
-
-    private function updateConvertedVideo()
-    {
-        $names = [
-            'mp4_Format_1080' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'mp4', '1080p')),
-            'webm_Format_1080' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'webm', '1080p')),
-            'mp4_Format_720' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'mp4', '720p')),
-            'webm_Format_720' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'webm', '720p')),
-            'mp4_Format_480' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'mp4', '480p')),
-            'webm_Format_480' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'webm', '480p')),
-            'mp4_Format_360' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'mp4', '360p')),
-            'webm_Format_360' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'webm', '360p')),
-            'mp4_Format_240' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'mp4', '240p')),
-            'webm_Format_240' => str_replace('//', '/', $this->getFileName($this->lecture->video, 'webm', '240p'))
-        ];
-        DB::transaction(function () use ($names) {
-
-            ConvertedVideo::updateOrCreate(
-                ['lecture_id' => $this->lecture->id],
-                $names
-            );
-        });
-    }
-
     private function updateLecture()
     {
         DB::transaction(function () {
@@ -88,11 +48,6 @@ class FinalizeVideoProcessing implements ShouldQueue
                 'processed' => true,
             ]);
         });
-    }
-
-    private function getFileName($fileName, $type, $quality)
-    {
-        return preg_replace('/\\.[^.\\s]{3,4}$/', '', $fileName) . '-' . $quality . '.' . $type;
     }
 
     // faild

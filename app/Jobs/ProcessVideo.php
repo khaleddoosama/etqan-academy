@@ -69,6 +69,7 @@ class ProcessVideo implements ShouldQueue
         $finalizeJob->onQueue('low')->delay(now()->addSeconds(20));
         dispatch($finalizeJob);
     }
+
     private function downloadVideoLocally($url): ?string
     {
         $tempDir = sys_get_temp_dir();
@@ -97,6 +98,8 @@ class ProcessVideo implements ShouldQueue
         Log::error("Failed to download video from URL: $url");
         return null;
     }
+
+
 
     private function getVideoStream(string $videoPath)
     {

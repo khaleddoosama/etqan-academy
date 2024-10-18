@@ -99,8 +99,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>UUID</th>
-                                            <th>{{ __('attributes.connection') }}</th>
-                                            <th>{{ __('attributes.queue') }}</th>
+                                            <th>{{ __('attributes.priority') }}</th>
                                             <th>{{ __('attributes.payload') }}</th>
                                             {{-- <th>{{ __('attributes.exception') }}</th> --}}
                                             <th>{{ __('attributes.failed_at') }}</th>

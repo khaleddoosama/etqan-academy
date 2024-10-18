@@ -42,7 +42,7 @@
                                                         href="{{ route('admin.lectures.edit', $lecture->id) }}">{{ $lecture->title }}</a>
                                                 </td>
                                                 <td><a
-                                                        href="{{ route('admin.sections.show', $lecture->id) }}">{{ $lecture->section->title }}</a>
+                                                        href="{{ route('admin.sections.show', $lecture->section_id) }}">{{ $lecture->section->title }}</a>
                                                 </td>
                                                 <td>{{ $lecture->course->title }}</td>
 

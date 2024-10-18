@@ -43,6 +43,7 @@ class ProcessVideo implements ShouldQueue
         });
         DB::transaction(function () {
             ConvertedVideo::where('lecture_id', $this->lecture->id)->delete();
+            ConvertedVideo::create(['lecture_id' => $this->lecture->id, 'mp4_Format_1080' => $this->lecture->video]);
         });
 
         $this->videoPath = $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
@@ -148,7 +149,7 @@ class ProcessVideo implements ShouldQueue
     private function convertVideoBasedOnResolution(int $width, int $height, bool $isPortrait): int
     {
         $resolutions = [
-            ['width' => 1920, 'height' => 1080, 'quality' => 1080],
+            // ['width' => 1920, 'height' => 1080, 'quality' => 1080],
             ['width' => 1280, 'height' => 720, 'quality' => 720],
             ['width' => 854, 'height' => 480, 'quality' => 480],
             ['width' => 640, 'height' => 360, 'quality' => 360],
@@ -184,15 +185,15 @@ class ProcessVideo implements ShouldQueue
         //     [(new X264('aac', 'libx264'))->setKiloBitrate(300), (new WebM('libvorbis', 'libvpx'))->setKiloBitrate(300)]
         // ];
         $formats = [
-            [(new X264('aac', 'libx264'))->setKiloBitrate(4096)],
+            // [(new X264('aac', 'libx264'))->setKiloBitrate(4096)],
             [(new X264('aac', 'libx264'))->setKiloBitrate(2048)],
             [(new X264('aac', 'libx264'))->setKiloBitrate(750)],
             [(new X264('aac', 'libx264'))->setKiloBitrate(500)],
             [(new X264('aac', 'libx264'))->setKiloBitrate(300)]
         ];
 
-        $videoWidths = [1920, 1280, 854, 640, 426];
-        $videoHeights = [1080, 720, 480, 360, 240];
+        // $videoWidths = [1920, 1280, 854, 640, 426];
+        // $videoHeights = [1080, 720, 480, 360, 240];
         // $names = [
         //     [$this->getFileName($this->lecture->video, 'mp4', '1080p'), $this->getFileName($this->lecture->video, 'webm', '1080p')],
         //     [$this->getFileName($this->lecture->video, 'mp4', '720p'), $this->getFileName($this->lecture->video, 'webm', '720p')],
@@ -200,8 +201,11 @@ class ProcessVideo implements ShouldQueue
         //     [$this->getFileName($this->lecture->video, 'mp4', '360p'), $this->getFileName($this->lecture->video, 'webm', '360p')],
         //     [$this->getFileName($this->lecture->video, 'mp4', '240p'), $this->getFileName($this->lecture->video, 'webm', '240p')]
         // ];
+
+        $videoWidths = [1280, 854, 640, 426];
+        $videoHeights = [720, 480, 360, 240];
         $names = [
-            [$this->getFileName($this->lecture->video, 'mp4', '1080p')],
+            // [$this->getFileName($this->lecture->video, 'mp4', '1080p')],
             [$this->getFileName($this->lecture->video, 'mp4', '720p')],
             [$this->getFileName($this->lecture->video, 'mp4', '480p')],
             [$this->getFileName($this->lecture->video, 'mp4', '360p')],
@@ -211,9 +215,9 @@ class ProcessVideo implements ShouldQueue
         $conversionJobs = [];
 
         for ($this->i = $this->index; $this->i < count($formats); $this->i++) {
-            // Log::info("this->i: " . $this->i);
+            Log::info("this->i: " . $this->i);
             for ($j = 0; $j < count($formats[$this->i]); $j++) {
-                // Log::info("j: " . $j);
+                Log::info("j: " . $j);
                 $job = new ConvertSingleVideoFormat(
                     $this->lecture,
                     $formats[$this->i][$j],

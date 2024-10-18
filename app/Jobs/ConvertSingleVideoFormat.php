@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use ProtoneMedia\LaravelFFMpeg\Filters\WatermarkFactory;
+use Illuminate\Support\Facades\Http;
 
 class ConvertSingleVideoFormat implements ShouldQueue
 {
@@ -53,6 +54,12 @@ class ConvertSingleVideoFormat implements ShouldQueue
         }
 
         $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
+        if (empty($chunks)) {
+            Log::error('Failed to split video into chunks: ' . $this->videoPath);
+            $this->videoPath = $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
+            $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
+        }
+        
         $watermarkPath = asset('asset/logo-100.png');
         // Log::info('watermark: ' . $watermarkPath);
 
@@ -168,7 +175,35 @@ class ConvertSingleVideoFormat implements ShouldQueue
         unlink($fileList);
         unlink($outputPath);
     }
+    private function downloadVideoLocally($url): ?string
+    {
+        $path = Storage::disk('public')->path($this->lecture->video);
 
+        // Ensure the directory exists
+        $directory = dirname($path);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        $file = fopen($path, 'w');
+        Log::info('Downloading video from URL: ' . $url);
+
+        $response = Http::retry(3, 5000)
+            ->timeout(600)
+            ->withOptions(['sink' => $file])
+            ->get($url);
+        Log::info('Video downloaded to: ' . $path);
+
+        if ($response->successful()) {
+            Log::info('Video downloaded successfully');
+            fclose($file);
+            return str_replace('//', '/', $path);
+        }
+
+        Log::error("Failed to download video from URL: $url");
+        fclose($file);
+        return null;
+    }
 
     public function failed($exception)
     {

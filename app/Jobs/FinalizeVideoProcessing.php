@@ -39,7 +39,7 @@ class FinalizeVideoProcessing implements ShouldQueue
     {
         // $this->deleteOldVideo();
         // $this->updateConvertedVideo();
-        $this->updateLecture($this->hours, $this->minutes, $this->seconds, $this->quality);
+        $this->updateLecture();
         Log::info('Lecture updated: ' . $this->lecture->id);
 
         $notification = new LectureStatusNotification($this->lecture->id, 1);
@@ -81,9 +81,9 @@ class FinalizeVideoProcessing implements ShouldQueue
         });
     }
 
-    private function updateLecture(int $hours, int $minutes, int $seconds, int $quality)
+    private function updateLecture()
     {
-        DB::transaction(function () use ($hours, $minutes, $seconds, $quality) {
+        DB::transaction(function () {
             $this->lecture->update([
                 'processed' => true,
             ]);

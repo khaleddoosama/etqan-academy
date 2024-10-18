@@ -164,114 +164,110 @@
                                 {{-- quailties --}}
                                 <div class="row mx-3 my-3 callout callout-info">
                                     <div class="col-12">
-                                        <form action="{{ route('admin.lectures.updateVideoPath', $lecture) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <table id="" class="table table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="5" class="text-center">MP4 Formats</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>240 MP4</th>
-                                                        <th>360 MP4</th>
-                                                        <th>480 MP4</th>
-                                                        <th>720 MP4</th>
-                                                        <th>1080 MP4</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @if (!is_null($lecture->convertedVideo))
-                                                        @php
-                                                            $mp4_formats = [
-                                                                'mp4_Format_240' => '240 MP4',
-                                                                'mp4_Format_360' => '360 MP4',
-                                                                'mp4_Format_480' => '480 MP4',
-                                                                'mp4_Format_720' => '720 MP4',
-                                                                'mp4_Format_1080' => '1080 MP4',
-                                                            ];
-                                                            $webm_formats = [
-                                                                'webm_Format_240' => '240 Webm',
-                                                                'webm_Format_360' => '360 Webm',
-                                                                'webm_Format_480' => '480 Webm',
-                                                                'webm_Format_720' => '720 Webm',
-                                                                'webm_Format_1080' => '1080 Webm',
-                                                            ];
-                                                        @endphp
 
-                                                        <tr>
-                                                            @foreach ($mp4_formats as $key => $label)
-                                                                <td>
-                                                                    @if (is_null($lecture->convertedVideo[$key]))
-                                                                        <span class="text-danger">Not Found</span>
-                                                                    @elseif (!Storage::exists($lecture->convertedVideo[$key]))
-                                                                        <span class="text-danger">Converted But Not Found In
-                                                                            Server</span>
-                                                                    @else
-                                                                        <a href="{{ Storage::url($lecture->convertedVideo[$key]) }}"
-                                                                            target="_blank"
-                                                                            class="text-primary">{{ $label }}</a>
-                                                                    @endif
-                                                                    {{-- <input type="text" name="video_paths[{{ $key }}]" value="{{ $lecture->convertedVideo[$key] }}" class="form-control mt-2" /> --}}
-                                                                    {{-- convert to textarea --}}
-                                                                    <textarea name="video_paths[{{ $key }}]" class="form-control mt-2" rows="5">{{ $lecture->convertedVideo[$key] }}</textarea>
+                                        <table id="" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="5" class="text-center">MP4 Formats</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>240 MP4</th>
+                                                    <th>360 MP4</th>
+                                                    <th>480 MP4</th>
+                                                    <th>720 MP4</th>
+                                                    <th>1080 MP4</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (!is_null($lecture->convertedVideo))
+                                                    @php
+                                                        $mp4_formats = [
+                                                            'mp4_Format_240' => '240 MP4',
+                                                            'mp4_Format_360' => '360 MP4',
+                                                            'mp4_Format_480' => '480 MP4',
+                                                            'mp4_Format_720' => '720 MP4',
+                                                            'mp4_Format_1080' => '1080 MP4',
+                                                        ];
+                                                        $webm_formats = [
+                                                            'webm_Format_240' => '240 Webm',
+                                                            'webm_Format_360' => '360 Webm',
+                                                            'webm_Format_480' => '480 Webm',
+                                                            'webm_Format_720' => '720 Webm',
+                                                            'webm_Format_1080' => '1080 Webm',
+                                                        ];
+                                                    @endphp
 
-                                                                </td>
-                                                            @endforeach
-                                                        </tr>
-                                                    @else
-                                                        <td colspan="5" class="text-center">
-                                                            <span class="text-danger">Not Converted Yet</span>
-                                                        </td>
-                                                    @endif
-                                                </tbody>
+                                                    <tr>
+                                                        @foreach ($mp4_formats as $key => $label)
+                                                            <td>
+                                                                @if (is_null($lecture->convertedVideo[$key]))
+                                                                    <span class="text-danger">Not Found</span>
+                                                                @elseif (!Storage::exists($lecture->convertedVideo[$key]))
+                                                                    <span class="text-danger">Converted But Not Found In
+                                                                        Server</span>
+                                                                @else
+                                                                    <a href="{{ Storage::url($lecture->convertedVideo[$key]) }}"
+                                                                        target="_blank"
+                                                                        class="text-primary">{{ $label }}</a>
+                                                                @endif
+                                                                {{-- <input type="text" name="video_paths[{{ $key }}]" value="{{ $lecture->convertedVideo[$key] }}" class="form-control mt-2" /> --}}
+                                                                {{-- convert to textarea --}}
+                                                                <textarea name="video_paths[{{ $key }}]" class="form-control mt-2" rows="5">{{ $lecture->convertedVideo[$key] }}</textarea>
 
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="5" class="text-center">WebM Formats</th>
+                                                            </td>
+                                                        @endforeach
                                                     </tr>
+                                                @else
+                                                    <td colspan="5" class="text-center">
+                                                        <span class="text-danger">Not Converted Yet</span>
+                                                    </td>
+                                                @endif
+                                            </tbody>
+
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="5" class="text-center">WebM Formats</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>240 Webm</th>
+                                                    <th>360 Webm</th>
+                                                    <th>480 Webm</th>
+                                                    <th>720 Webm</th>
+                                                    <th>1080 Webm</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (!is_null($lecture->convertedVideo))
                                                     <tr>
-                                                        <th>240 Webm</th>
-                                                        <th>360 Webm</th>
-                                                        <th>480 Webm</th>
-                                                        <th>720 Webm</th>
-                                                        <th>1080 Webm</th>
+                                                        @foreach ($webm_formats as $key => $label)
+                                                            <td>
+                                                                @if (is_null($lecture->convertedVideo[$key]))
+                                                                    <span class="text-danger">Not Found</span>
+                                                                @elseif (!Storage::exists($lecture->convertedVideo[$key]))
+                                                                    <span class="text-danger">Converted But Not Found
+                                                                        In Server</span>
+                                                                @else
+                                                                    <a href="{{ Storage::url($lecture->convertedVideo[$key]) }}"
+                                                                        target="_blank"
+                                                                        class="text-primary">{{ $label }}</a>
+                                                                @endif
+                                                                {{-- <input type="text" name="video_paths[{{ $key }}]" value="{{ $lecture->convertedVideo[$key] }}" class="form-control mt-2" /> --}}
+                                                                {{-- convert to textarea --}}
+                                                                <textarea name="video_paths[{{ $key }}]" class="form-control mt-2" rows="5">{{ $lecture->convertedVideo[$key] }}</textarea>
+                                                            </td>
+                                                        @endforeach
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @if (!is_null($lecture->convertedVideo))
-                                                        <tr>
-                                                            @foreach ($webm_formats as $key => $label)
-                                                                <td>
-                                                                    @if (is_null($lecture->convertedVideo[$key]))
-                                                                        <span class="text-danger">Not Found</span>
-                                                                    @elseif (!Storage::exists($lecture->convertedVideo[$key]))
-                                                                        <span class="text-danger">Converted But Not Found
-                                                                            In Server</span>
-                                                                    @else
-                                                                        <a href="{{ Storage::url($lecture->convertedVideo[$key]) }}"
-                                                                            target="_blank"
-                                                                            class="text-primary">{{ $label }}</a>
-                                                                    @endif
-                                                                    {{-- <input type="text" name="video_paths[{{ $key }}]" value="{{ $lecture->convertedVideo[$key] }}" class="form-control mt-2" /> --}}
-                                                                    {{-- convert to textarea --}}
-                                                                    <textarea name="video_paths[{{ $key }}]" class="form-control mt-2" rows="5">{{ $lecture->convertedVideo[$key] }}</textarea>
-                                                                </td>
-                                                            @endforeach
-                                                        </tr>
-                                                    @else
-                                                        <td colspan="5" class="text-center">
-                                                            <span class="text-danger">Not Converted Yet</span>
-                                                        </td>
-                                                    @endif
-                                                </tbody>
-                                            </table>
-                                            <div class="text-center mt-3">
-                                                <button type="button" class="btn btn-primary"
-                                                    id="updateAllButton">Update All</button>
-                                            </div>
-                                        </form>
+                                                @else
+                                                    <td colspan="5" class="text-center">
+                                                        <span class="text-danger">Not Converted Yet</span>
+                                                    </td>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                        <div class="text-center mt-3">
+                                            <button type="button" class="btn btn-primary" id="updateAllButton">Update
+                                                All</button>
+                                        </div>
 
 
                                     </div>

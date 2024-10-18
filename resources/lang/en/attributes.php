@@ -140,4 +140,7 @@ return [
     'failed_job' => 'Failed Job',
     'payload' => 'Payload',
     'exception' => 'Exception',
+    'failed_at' => 'Failed At',
+    'slug' => 'Slug',
+    'processed' => 'Processed',
 ];

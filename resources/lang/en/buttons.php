@@ -86,4 +86,8 @@
     'verify_email' => 'Verify Email',
 
     'search' => 'Search',
+    'retry' => 'Retry',
+    'show' => 'Show',
+    'retry_all' => 'Retry All',
+    'delete_all' => 'Delete All',
 );

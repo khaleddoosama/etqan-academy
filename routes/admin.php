@@ -158,8 +158,12 @@ Route::group(
             // jobs
             Route::controller(JobController::class)->group(function () {
                 Route::get('/jobs', 'index')->name('jobs.index');
+
                 Route::get('/failed_jobs', 'failedJobs')->name('failed_jobs.index');
                 Route::post('/failed_jobs/retry/{id}', 'retry')->name('failed_jobs.retry');
+                Route::delete('/failed_jobs/delete/{id}', 'delete')->name('failed_jobs.delete');
+                Route::post('/failed_jobs/retry_all', 'retryAll')->name('failed_jobs.retry_all');
+                Route::delete('/failed_jobs/delete_all', 'deleteAll')->name('failed_jobs.delete_all');
             });
         });
     }

@@ -14,8 +14,25 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
+                            <div class="card-header">
+                                <!-- Retry All and Delete All Buttons -->
+                                <form action="{{ route('admin.failed_jobs.retry_all') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm" title="{{ __('buttons.retry_all') }}">
+                                        <i class="fas fa-redo"></i> {{ __('buttons.retry_all') }}
+                                    </button>
+                                </form>
 
+                                <form action="{{ route('admin.failed_jobs.delete_all') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" title="{{ __('buttons.delete_all') }}">
+                                        <i class="fas fa-trash"></i> {{ __('buttons.delete_all') }}
+                                    </button>
+                                </form>
+                            </div>
                             <!-- /.card-header -->
+
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
@@ -36,23 +53,33 @@
                                                 <td>{{ $failed_job->uuid }}</td>
                                                 <td>{{ $failed_job->queue }}</td>
                                                 <td>{{ json_decode($failed_job->payload)->displayName }}</td>
-                                                <td>{{ \Carbon\Carbon::createFromTimestamp($failed_job->failed_at)->format('Y-m-d H:i:s') }}
+                                                <td>{{ \Carbon\Carbon::parse($failed_job->failed_at)->format('Y-m-d H:i:s') }}
                                                 </td>
                                                 <td>
-
                                                     <button type="button" class="btn btn-warning btn-sm"
-                                                        title="{{ __('main.show') }}" data-toggle="modal"
+                                                        title="{{ __('buttons.show') }}" data-toggle="modal"
                                                         data-target="#show-{{ $failed_job->id }}">
                                                         <i class="fas fa-eye fa-fw"></i>
                                                     </button>
 
                                                     {{-- retry --}}
-                                                    <form action="{{ route('admin.failed_jobs.retry', $failed_job->id) }}"
+                                                    <form action="{{ route('admin.failed_jobs.retry', $failed_job->uuid) }}"
                                                         method="POST" class="d-inline">
                                                         @csrf
                                                         <button type="submit" class="btn btn-success btn-sm"
-                                                            title="{{ __('main.retry') }}">
-                                                            <i class="fas fa-red fa-fw"></i>
+                                                            title="{{ __('buttons.retry') }}">
+                                                            <i class="fas fa-redo"></i>
+                                                        </button>
+                                                    </form>
+
+                                                    {{-- delete --}}
+                                                    <form action="{{ route('admin.failed_jobs.delete', $failed_job->uuid) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                            title="{{ __('buttons.delete') }}">
+                                                            <i class="fas fa-trash"></i>
                                                         </button>
                                                     </form>
                                                 </td>
@@ -70,10 +97,8 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body text-left">
-
                                                             <p>#{{ $failed_job->id }} {{ $failed_job->uuid }}:
                                                                 {{ json_decode($failed_job->payload)->displayName }}</p>
-
 
                                                             <p>{{ __('attributes.payload') }} :
                                                                 <pre style="max-height: 300px">{{ json_encode(json_decode($failed_job->payload), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
@@ -83,7 +108,6 @@
                                                                 <pre style="max-height: 300px">{{ $failed_job->exception }}</pre>
 
                                                             </p>
-
                                                         </div>
                                                         <div class="modal-footer">
                                                             <x-custom.close-modal-button />

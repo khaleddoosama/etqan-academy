@@ -15,4 +15,5 @@
     'success' => 'Success',
     'warning' => 'Warning',
     'yes' => 'Yes',
+    'failed' => 'Failed',
 );

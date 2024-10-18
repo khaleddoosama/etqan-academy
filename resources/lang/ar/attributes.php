@@ -139,4 +139,7 @@ return [
     'failed_job' => 'الوظيفة الفاشلة',
     'payload' => 'الحمولة',
     'exception' => 'الاستثناء',
+    'failed_at' => 'فشل في',
+    'slug' => 'الرابط',
+    'processed' => 'تم المعالجة',
 ];

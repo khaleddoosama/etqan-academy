@@ -262,7 +262,8 @@
                       <li class="nav-item">
                           <a href="{{ route('admin.failed_jobs.index') }}"
                               class="nav-link @if (Request::is('*/admin/failed_jobs') || Request::is('*/admin/failed_jobs/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="briefcase-outline"></ion-icon></span>
+                              {{-- <span class="icon nav-icon"><ion-icon name="briefcase-outline"></ion-icon></span> --}}
+                                <span class="icon nav-icon"><ion-icon name="close-circle-outline"></ion-icon></span>
                               <span class="title">{{ __('attributes.failed_jobs') }}</span>
                           </a>
                       </li>

@@ -72,6 +72,12 @@ class ProcessVideo implements ShouldQueue
 
     private function downloadVideoLocally($url): ?string
     {
+        // check if url is exist on the server
+        if (!Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
+            Log::error("Video not found on the server: $url");
+            return null;
+        }
+
         $tempDir = sys_get_temp_dir();
         $tempPath = $tempDir . DIRECTORY_SEPARATOR . uniqid() . '_' . basename($this->lecture->video);
 

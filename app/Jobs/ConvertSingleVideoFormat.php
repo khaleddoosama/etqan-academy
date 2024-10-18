@@ -30,8 +30,9 @@ class ConvertSingleVideoFormat implements ShouldQueue
     protected $name;
     protected $videoPath;
     protected $durationInSeconds;
+    protected $retryAttempts;
 
-    public function __construct($lecture, $format, $videoWidth, $videoHeight, $name, $durationInSeconds, $videoPath)
+    public function __construct($lecture, $format, $videoWidth, $videoHeight, $name, $durationInSeconds, $videoPath, $retryAttempts = 3)
     {
         $this->lecture = $lecture;
         $this->format = $format;
@@ -40,24 +41,35 @@ class ConvertSingleVideoFormat implements ShouldQueue
         $this->name = $name;
         $this->durationInSeconds = $durationInSeconds;
         $this->videoPath = $videoPath;
+        $this->retryAttempts = $retryAttempts;
     }
 
     public function handle()
     {
         Log::info('Convert: ' . $this->videoPath);
 
-
         // Check if video exists
-        if (!$this->videoPath) {
+        if (!$this->videoPath || !file_exists($this->videoPath)) {
             Log::error('Video not found: ' . $this->videoPath);
             return;
         }
 
-        $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
+        try {
+            $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
+        } catch (\Exception $e) {
+            Log::error('Error splitting video into chunks: ' . $e->getMessage());
+            return;
+        }
+
         if (empty($chunks)) {
             Log::error('Failed to split video into chunks: ' . $this->videoPath);
             $this->videoPath = $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
-            $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
+            try {
+                $chunks = $this->splitVideoIntoChunks($this->videoPath, $this->durationInSeconds / 5);
+            } catch (\Exception $e) {
+                Log::error('Error splitting video into chunks after download: ' . $e->getMessage());
+                return;
+            }
         }
 
         $watermarkPath = asset('asset/logo-100.png');
@@ -65,25 +77,29 @@ class ConvertSingleVideoFormat implements ShouldQueue
 
         foreach ($chunks as $index => $chunk) {
             $chunkName = $this->name . '_part' . $index . '.' . pathinfo($chunk, PATHINFO_EXTENSION);
-            FFMpeg::openUrl($chunk)
-                ->addFilter(function (VideoFilters $filters) {
-                    $filters->resize(new Dimension($this->videoWidth, $this->videoHeight));
-                })
-                ->addWatermark(function (WatermarkFactory $watermark) use ($watermarkPath) {
-                    $watermark->openUrl($watermarkPath)
-                        ->horizontalAlignment(WatermarkFactory::RIGHT, 25)
-                        ->verticalAlignment(WatermarkFactory::BOTTOM, 25);
-                })
-                ->export()
-                ->toDisk('public')
-                ->inFormat($this->format)
-                ->save($chunkName, [
-                    '-preset',
-                    'ultrafast', // Faster encoding preset
-                    '-bufsize',
-                    '512k', // Reduce buffer size
-                ]);
-
+            try {
+                FFMpeg::openUrl($chunk)
+                    ->addFilter(function (VideoFilters $filters) {
+                        $filters->resize(new Dimension($this->videoWidth, $this->videoHeight));
+                    })
+                    ->addWatermark(function (WatermarkFactory $watermark) use ($watermarkPath) {
+                        $watermark->openUrl($watermarkPath)
+                            ->horizontalAlignment(WatermarkFactory::RIGHT, 25)
+                            ->verticalAlignment(WatermarkFactory::BOTTOM, 25);
+                    })
+                    ->export()
+                    ->toDisk('public')
+                    ->inFormat($this->format)
+                    ->save($chunkName, [
+                        '-preset',
+                        'ultrafast', // Faster encoding preset
+                        '-bufsize',
+                        '512k', // Reduce buffer size
+                    ]);
+            } catch (\Exception $e) {
+                Log::error('Error processing video chunk: ' . $chunk . ' - ' . $e->getMessage());
+                continue;
+            }
 
             Log::info(message: 'Converted: ' . $chunkName);
             $processedChunks[] = storage_path('app/public/' . $chunkName);
@@ -108,9 +124,13 @@ class ConvertSingleVideoFormat implements ShouldQueue
             mkdir($outputDirectory, 0755, true);
         }
 
-        $command = "ffmpeg -i $videoPath -c copy -map 0 -segment_time $chunkDuration -f segment -reset_timestamps 1 {$outputDirectory}output%03d.mp4";
+        $command = "ffmpeg -i " . escapeshellarg($videoPath) . " -c copy -map 0 -segment_time " . escapeshellarg($chunkDuration) . " -f segment -reset_timestamps 1 " . escapeshellarg($outputDirectory) . "output%03d.mp4";
 
-        exec($command);
+        exec($command, $output, $return_var);
+
+        if ($return_var !== 0) {
+            throw new \Exception('Error executing ffmpeg command: ' . implode("\n", $output));
+        }
 
         foreach (glob($outputDirectory . 'output*.mp4') as $chunk) {
             $chunks[] = $chunk;
@@ -125,13 +145,17 @@ class ConvertSingleVideoFormat implements ShouldQueue
         $fileList = $outputDirectory . 'filelist.txt';
 
         $file = fopen($fileList, 'w');
+        if (!$file) {
+            Log::error('Failed to open file for writing: ' . $fileList);
+            return;
+        }
         foreach ($chunks as $chunk) {
             fwrite($file, "file '$chunk'\n");
         }
         fclose($file);
 
         $outputPath = storage_path('app/public/' . $outputName);
-        $command = "ffmpeg -f concat -safe 0 -i $fileList -c copy $outputPath";
+        $command = "ffmpeg -f concat -safe 0 -i " . escapeshellarg($fileList) . " -c copy " . escapeshellarg($outputPath);
 
         exec($command, $output, $return_var);
 
@@ -139,7 +163,6 @@ class ConvertSingleVideoFormat implements ShouldQueue
             Log::error('Error merging video chunks: ' . implode("\n", $output));
             return;
         }
-
 
         // Check if the merged file exists before uploading
         if (!file_exists($outputPath) || filesize($outputPath) === 0) {
@@ -157,13 +180,24 @@ class ConvertSingleVideoFormat implements ShouldQueue
             $names = [
                 $extension . '_Format_' . $resolution => $outputName
             ];
-            DB::transaction(function () use ($names) {
-
-                ConvertedVideo::updateOrCreate(
-                    ['lecture_id' => $this->lecture->id],
-                    $names
-                );
-            });
+            $attempts = $this->retryAttempts;
+            while ($attempts > 0) {
+                try {
+                    DB::transaction(function () use ($names) {
+                        ConvertedVideo::updateOrCreate(
+                            ['lecture_id' => $this->lecture->id],
+                            $names
+                        );
+                    });
+                    break;
+                } catch (\Exception $e) {
+                    Log::error('Database transaction failed: ' . $e->getMessage());
+                    $attempts--;
+                    if ($attempts === 0) {
+                        throw $e;
+                    }
+                }
+            }
         } else {
             Log::error('Failed to extract resolution and extension from video name: ' . $this->name);
         }
@@ -204,19 +238,18 @@ class ConvertSingleVideoFormat implements ShouldQueue
         return null;
     }
 
-
     public function failed($exception)
     {
-        DB::rollBack();
-
         Log::error('error from ConvertSingleVideoFormat: ' . $exception->getMessage());
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
 
         DB::transaction(function () {
-            $this->lecture->update(['processed' => -1]);
+            try {
+                $this->lecture->update(['processed' => -1]);
+            } catch (\Exception $e) {
+                Log::error('Failed to update lecture status: ' . $e->getMessage());
+            }
         });
-        // $notification = new LectureStatusNotification($this->lecture->id, 0);
-        // AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 }

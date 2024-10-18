@@ -187,4 +187,16 @@ class LectureController extends Controller
 
         return $this->apiResponse($lectures, 'ok', 200);
     }
+
+    public function updateVideoPath(Request $request, $lectureId)
+    {
+        $this->validate($request, [
+            'video_paths' => 'required|array',
+            'video_paths.*' => 'string|nullable',
+        ]);
+
+        $result = $this->lectureService->updateVideoPaths($lectureId, $request->input('video_paths'));
+
+        return $this->apiResponse($result, 'Video Pathes Updated Successfully', 200);
+    }
 }

@@ -114,8 +114,8 @@ Route::group(
             Route::put('/update-attachment/{lecture}', [LectureController::class, 'updateAttachment'])->name('lectures.updateAttachment');
             Route::put('/delete-attachment/{lecture}', [LectureController::class, 'deleteAttachment'])->name('lectures.deleteAttachment');
             Route::put('lectures/is-free/{lecture}', [LectureController::class, 'changeIsFree'])->name('lectures.changeIsFree');
-            // get lectures based on section
             Route::get('/lectures/{section_id}/get', [LectureController::class, 'getLectures'])->name('lectures.get');
+            Route::put('/update-video-path/{lecture}', [LectureController::class, 'updateVideoPath'])->name('lectures.updateVideoPath');
 
             // Inquiry Controller
             Route::controller(InquiryController::class)->group(function () {

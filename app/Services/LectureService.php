@@ -209,4 +209,22 @@ class LectureService
     {
         return Lecture::get();
     }
+
+    public function updateVideoPaths($lectureId, $videoPaths)
+    {
+        $lecture = Lecture::find($lectureId);
+
+        if (!$lecture) {
+            return false;
+        }
+
+        foreach ($videoPaths as $format => $path) {
+            if ($path) {
+                $lecture->convertedVideo[$format] = $path;
+            } else {
+                $lecture->convertedVideo[$format] = null;
+            }
+        }
+        return $lecture->convertedVideo->save();
+    }
 }

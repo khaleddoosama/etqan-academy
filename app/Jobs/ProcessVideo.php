@@ -46,6 +46,12 @@ class ProcessVideo implements ShouldQueue
             ConvertedVideo::create(['lecture_id' => $this->lecture->id, 'mp4_Format_1080' => $this->lecture->video]);
         });
 
+        // check if url is exist on the server
+        if (!Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
+            Log::error("Video not found on the server: ");
+            return;
+        }
+
         $this->videoPath = $this->downloadVideoLocally(Storage::disk($this->lecture->disk)->url($this->lecture->video));
         // $videoPath = $this->getVideoPath();
 
@@ -72,11 +78,7 @@ class ProcessVideo implements ShouldQueue
 
     private function downloadVideoLocally($url): ?string
     {
-        // check if url is exist on the server
-        if (!Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
-            Log::error("Video not found on the server: $url");
-            return null;
-        }
+
 
         $tempDir = sys_get_temp_dir();
         $tempPath = $tempDir . DIRECTORY_SEPARATOR . uniqid() . '_' . basename($this->lecture->video);

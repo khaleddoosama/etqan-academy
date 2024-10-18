@@ -51,7 +51,11 @@ class ConvertSingleVideoFormat implements ShouldQueue
         // Check if video exists
         if (!$this->videoPath || !file_exists($this->videoPath)) {
             Log::error('Video not found: ' . $this->videoPath);
-            return;
+            $this->videoPath = $this->downloadVideoLocally(url: Storage::disk($this->lecture->disk)->url($this->lecture->video));
+            if (!$this->videoPath || !file_exists($this->videoPath)) {
+                Log::error('Failed to download video: ' . $this->videoPath);
+                return;
+            }
         }
 
         try {

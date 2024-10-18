@@ -48,7 +48,15 @@ class ProcessVideo implements ShouldQueue
 
         // check if url is exist on the server
         if (!Storage::disk($this->lecture->disk)->exists($this->lecture->video)) {
-            Log::error("Video not found on the server: ");
+            Log::error("Video not found on the server: " . Storage::disk($this->lecture->disk)->url($this->lecture->video));
+
+            DB::transaction(function () {
+                $this->lecture->update(['processed' => -1]);
+            });
+
+            $notification = new LectureStatusNotification($this->lecture->id, 0);
+            AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
+
             return;
         }
 

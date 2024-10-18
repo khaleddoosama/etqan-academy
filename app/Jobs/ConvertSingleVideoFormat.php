@@ -243,13 +243,5 @@ class ConvertSingleVideoFormat implements ShouldQueue
         Log::error('error from ConvertSingleVideoFormat: ' . $exception->getMessage());
         Log::error('Exception Trace: ' . $exception->getTraceAsString());
         Log::error('getline: ' . $exception->getLine());
-
-        DB::transaction(function () {
-            try {
-                $this->lecture->update(['processed' => -1]);
-            } catch (\Exception $e) {
-                Log::error('Failed to update lecture status: ' . $e->getMessage());
-            }
-        });
     }
 }

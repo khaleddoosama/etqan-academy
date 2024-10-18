@@ -65,7 +65,7 @@ class ProcessVideo implements ShouldQueue
         }
 
 
-        $finalizeJob = new FinalizeVideoProcessing($this->lecture, $hours, $minutes, $seconds, $quality, $this->videoPath);
+        $finalizeJob = new FinalizeVideoProcessing($this->lecture);
         $finalizeJob->onQueue('low')->delay(now()->addSeconds(20));
         dispatch($finalizeJob);
     }

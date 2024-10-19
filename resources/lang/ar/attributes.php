@@ -142,4 +142,7 @@ return [
     'failed_at' => 'فشل في',
     'slug' => 'الرابط',
     'processed' => 'تم المعالجة',
+    'request' => 'الطلب',
+    'requests' => 'الطلبات',
+    'failed_lectures' =>  'محاضرات لا تعمل'
 ];

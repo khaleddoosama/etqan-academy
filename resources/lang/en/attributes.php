@@ -143,4 +143,7 @@ return [
     'failed_at' => 'Failed At',
     'slug' => 'Slug',
     'processed' => 'Processed',
+    'request' => 'Request',
+    'requests' => 'Requests',
+    'failed_lectures' => 'Failed Lectures',
 ];

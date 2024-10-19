@@ -199,4 +199,11 @@ class LectureController extends Controller
 
         return $this->apiResponse($result, 'Video Pathes Updated Successfully', 200);
     }
+
+    // failedLectures
+    public function failedLectures()
+    {
+        $lectures = $this->lectureService->getFailedLectures();
+        return view('admin.lecture.failed', compact('lectures'));
+    }
 }

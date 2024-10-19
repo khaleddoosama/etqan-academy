@@ -227,4 +227,14 @@ class LectureService
         }
         return $lecture->convertedVideo->save();
     }
+
+    // getFailedLectures
+    public function getFailedLectures()
+    {
+        $lectures = Lecture::where('processed', 0)->orWhereHas('convertedVideo', function ($query) {
+            $query->whereNull('mp4_Format_720')->whereNull('mp4_Format_1080');
+        })->get();
+
+        return $lectures;
+    }
 }

@@ -136,7 +136,7 @@ class DuplicateLecture implements ShouldQueue
             });
         }
 
-        $notification = new LectureStatusNotification($this->new_lecture->id, 1);
+        $notification = new LectureStatusNotification($this->new_lecture->id, 1, $this->new_lecture->title);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
     private function getSanitizedPath(): string
@@ -179,7 +179,7 @@ class DuplicateLecture implements ShouldQueue
         DB::transaction(function () {
             $this->new_lecture->update(['processed' => -1]);
         });
-        $notification = new LectureStatusNotification($this->new_lecture->id, 0);
+        $notification = new LectureStatusNotification($this->new_lecture->id, 0, $this->new_lecture->title);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 }

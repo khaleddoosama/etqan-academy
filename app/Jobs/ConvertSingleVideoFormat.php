@@ -186,6 +186,7 @@ class ConvertSingleVideoFormat implements ShouldQueue
             ];
             $attempts = $this->retryAttempts;
             while ($attempts > 0) {
+                Log::info('attempts: ' . $attempts);
                 try {
                     DB::transaction(function () use ($names) {
                         ConvertedVideo::updateOrCreate(

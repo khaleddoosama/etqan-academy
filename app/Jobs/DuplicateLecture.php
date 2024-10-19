@@ -55,7 +55,7 @@ class DuplicateLecture implements ShouldQueue
         // Log::info('convertedVideo: ' . $convertedVideo);
         if ($convertedVideo) {
 
-            DB::transaction(function () use ($formats, $newPathFolder, $newName) {
+            DB::transaction(function () use ($newPathFolder, $newName) {
                 $this->new_lecture->update([
                     'video' => "{$newPathFolder}/videos/{$newName}.mp4",
                 ]);
@@ -67,6 +67,7 @@ class DuplicateLecture implements ShouldQueue
 
                     $method = "{$format}_Format_{$resolution}";
                     if (!isset($convertedVideo->$method)) {
+                        Log::info('method not found: ' . $method);
                         continue;
                     }
                     $path = Storage::path($convertedVideo->$method);

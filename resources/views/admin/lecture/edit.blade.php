@@ -202,9 +202,9 @@
                                                             <td>
                                                                 @if (is_null($lecture->convertedVideo[$key]))
                                                                     <span class="text-danger">Not Found</span>
-                                                                @elseif (!Storage::exists($lecture->convertedVideo[$key]))
+                                                                {{-- @elseif (!Storage::exists($lecture->convertedVideo[$key]))
                                                                     <span class="text-danger">Converted But Not Found In
-                                                                        Server</span>
+                                                                        Server</span> --}}
                                                                 @else
                                                                     <a href="{{ Storage::url($lecture->convertedVideo[$key]) }}"
                                                                         target="_blank"
@@ -243,9 +243,9 @@
                                                             <td>
                                                                 @if (is_null($lecture->convertedVideo[$key]))
                                                                     <span class="text-danger">Not Found</span>
-                                                                @elseif (!Storage::exists($lecture->convertedVideo[$key]))
+                                                                {{-- @elseif (!Storage::exists($lecture->convertedVideo[$key]))
                                                                     <span class="text-danger">Converted But Not Found
-                                                                        In Server</span>
+                                                                        In Server</span> --}}
                                                                 @else
                                                                     <a href="{{ Storage::url($lecture->convertedVideo[$key]) }}"
                                                                         target="_blank"

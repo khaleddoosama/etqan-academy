@@ -56,6 +56,34 @@
                                                             id="{{ $course->id }}" />
                                                     @endcan
 
+                                                    @can('course.edit')
+                                                        @if ($course->status == 0)
+                                                            <form action="{{ route('admin.courses.status', $course->id) }}" method="POST"
+                                                                style="display: inline-block;">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <input type="hidden" name="status" value="1">
+                                                                <button type="submit" class="btn btn-success"
+                                                                    title="{{ __('buttons.activate') }}"
+                                                                    style="color: white; text-decoration: none;">
+                                                                    <i class="fas fa-toggle-off"></i>
+                                                                </button>
+                                                            </form>
+                                                        @elseif ($course->status == 1)
+                                                            <form action="{{ route('admin.courses.status', $course->id) }}" method="POST"
+                                                                style="display: inline-block;">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <input type="hidden" name="status" value="0">
+                                                                <button type="submit" class="btn btn-danger"
+                                                                    title="{{ __('buttons.deactivate') }}"
+                                                                    style="color: white; text-decoration: none;">
+                                                                    <i class="fas fa-toggle-on"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    @endcan
+
                                                     @can('user_course.list')
                                                         <a href="{{ route('admin.courses.students.index', $course) }}"
                                                             class="btn btn-warning" title="{{ __('buttons.show_students') }}"

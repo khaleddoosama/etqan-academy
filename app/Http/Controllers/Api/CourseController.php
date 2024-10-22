@@ -19,7 +19,7 @@ class CourseController extends Controller
 
     public function index()
     {
-        $courses = CourseResource::collection($this->courseService->getCourses());
+        $courses = CourseResource::collection($this->courseService->getActiveCourses());
         return $this->apiResponse($courses, 'ok', 200);
     }
 

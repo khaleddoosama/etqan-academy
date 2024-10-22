@@ -107,4 +107,16 @@ class CourseController extends Controller
         $this->courseService->deleteCourse($course) ? Toastr::success(__('messages.course_deleted'), __('status.success')) : '';
         return redirect()->back();
     }
+
+    // status
+    public function status(Request $request, $id)
+    {
+        $data = $request->validate([
+            'status' => 'required',
+        ]);
+        $this->courseService->changeStatus($request->status, $id) ?
+            Toastr::success(__('messages.course_status_updated'), __('status.success'))
+            : Toastr::error(__('messages.something_went_wrong'), __('status.error'));
+        return redirect()->back();
+    }
 }

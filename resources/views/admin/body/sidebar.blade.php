@@ -144,7 +144,7 @@
                                   <i class="fas fa-angle-left right"></i>
                               </p>
                           </a>
-                          <ul class="nav nav-treeview" style="@if (!(Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures'))) display: none @endif">
+                          <ul class="nav nav-treeview" style="background-color:rgba(255, 255, 255, 0.1);@if (!(Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures'))) display: none @endif">
                               {{-- Lectures --}}
                               <li class="nav-item">
                                   <a href="{{ route('admin.lectures.index') }}"

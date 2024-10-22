@@ -86,7 +86,10 @@ Route::group(
             Route::resource('courses', CourseController::class)->except(['show'])->missing(function () {
                 return redirect()->route('admin.courses.index');
             });
-
+            Route::controller(CourseController::class)->group(function () {
+                Route::put('/courses/{course}/status', 'status')->name('courses.status');
+            });
+            
             // UserCourse Controller
             Route::controller(UserCoursesController::class)->group(function () {
                 Route::get('/users/{user}/courses', 'index')->name('users.courses.index');

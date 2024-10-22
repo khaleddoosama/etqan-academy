@@ -28,6 +28,13 @@ class CourseService
         });
     }
 
+    public function getActiveCourses(): Collection
+    {
+        return Cache::remember('active_courses', 60, function () {
+            return Course::active()->get();
+        });
+    }
+
     public function createCourse(array $data): Course
     {
         DB::beginTransaction();
@@ -51,9 +58,6 @@ class CourseService
             throw $e;
         }
     }
-
-
-
 
     public function updateCourse(Course $course, array $data): bool
     {
@@ -126,5 +130,15 @@ class CourseService
             DB::rollBack();
             return false;
         }
+    }
+
+    // change status
+    public function changeStatus($status, $id): bool
+    {
+        $course = $this->getCourse($id);
+        $course->update(['status' => $status]);
+        // Clear cache after updating a course
+        Cache::forget('courses');
+        return $course->wasChanged();
     }
 }

@@ -33,7 +33,7 @@ Route::group(
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
     ],
     function () {
-        Route::prefix('admin')->middleware(['auth', 'role:admin', 'web', 'throttle:60,1'])->as('admin.')->group(function () {
+        Route::prefix('admin')->middleware(['auth', 'role:admin', 'web', 'throttle:60,1', 'log_user_activity:web'])->as('admin.')->group(function () {
 
             Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
             Route::get('/notifications/read', [NotificationController::class, 'read'])->name('notifications.read');
@@ -153,10 +153,13 @@ Route::group(
 
             // logs
             Route::controller(LogController::class)->group(function () {
+                Route::get('/logs/files', 'allFiles')->name('logs.files.index');
+                Route::get('/logs/files/{file}', 'showFile')->name('logs.files.show');
+                Route::get('/logs/files/{file}/download', 'download')->name('logs.files.download');
+                Route::delete('/logs/files/{file}', 'delete')->name('logs.files.delete');
                 Route::get('/logs', 'index')->name('logs.index');
-                Route::get('/logs/{file}', 'show')->name('logs.show');
-                Route::get('/logs/{file}/download', 'download')->name('logs.download');
-                Route::delete('/logs/{file}', 'delete')->name('logs.delete');
+                Route::get('/logs/{log}', 'show')->name('logs.show');
+                Route::delete('/logs/bulk-delete/{type}', 'bulkDelete')->name('logs.bulk_delete');
             });
 
             // jobs

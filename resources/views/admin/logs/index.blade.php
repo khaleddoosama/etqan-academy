@@ -14,86 +14,59 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-
+                            <div class="card-header">
+                               
+                            </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped">
+                                <table id="example3" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>{{ __('attributes.name') }}</th>
-                                            <th>{{ __('main.actions') }}</th>
+                                            <th>Logs</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($files as $file)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $file }}</td>
-                                                <td>
-                                                    <a href="{{ route('admin.logs.show', $file) }}" class="btn btn-success"
-                                                        title="{{ __('main.show') }}">
-                                                        <i class="fas fa-eye text-white"></i>
-                                                    </a>
-                                                    <a href="{{ route('admin.logs.download', $file) }}"
-                                                        class="btn btn-primary" title="{{ __('main.download') }}">
-                                                        <i class="fas fa-download text-white"></i>
-                                                    </a>
-
-
-
-
-                                                    <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                        data-target="#deleteModal-{{ $loop->iteration }}"
-                                                        title="{{ __('buttons.delete') }}">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-
-                                                    <!-- Modal -->
-                                                    <div class="modal fade" id="deleteModal-{{ $loop->iteration }}"
-                                                        tabindex="-1" role="dialog"
-                                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLongTitle">
-                                                                        {{ __('messages.are_you_sure') }}</h5>
-                                                                    <button type="button" class="close"
-                                                                        data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    {{ __('messages.you_want_to_delete_it') }}
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <x-custom.close-modal-button />
-
-                                                                    <form action="{{ route('admin.logs.delete', $file) }}"
-                                                                        method="POST" style="display: inline-block;">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button type="submit"
-                                                                            class="btn btn-danger">{{ __('buttons.delete') }}</button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                        {{-- show Default Logs --}}
+                                        <tr>
+                                            <td>{{ __('attributes.default_logs') }}</td>
+                                            <td>
+                                                <a href="{{ route('admin.logs.show', 'default') }}"
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {{-- show Web Logs --}}
+                                        <tr>
+                                            <td>{{ __('attributes.web_logs') }}</td>
+                                            <td>
+                                                <a href="{{ route('admin.logs.show', 'web') }}"
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {{-- show Api Logs --}}
+                                        <tr>
+                                            <td>{{ __('attributes.api_logs') }}</td>
+                                            <td>
+                                                <a href="{{ route('admin.logs.show', 'api') }}"
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>{{ __('attributes.name') }}</th>
-                                            <th>{{ __('main.actions') }}</th>
-                                        </tr>
+                                        <th>Logs</th>
+                                        <th>Actions</th>
                                     </tfoot>
+
                                 </table>
+
+
+
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -108,4 +81,39 @@
         <!-- /.content -->
 
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(function() {
+            $("#example3").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "ordering": true, // Enable ordering
+                "order": [], // No default ordering (columns are unsorted initially)
+                "buttons": ["copy", "csv", "excel"],
+                "pageLength": 50,
+                "language": {
+                    "emptyTable": "{{ __('datatable.no_data_available_in_table') }}",
+                    "lengthMenu": "{{ __('datatable.show _MENU_ entries') }}",
+                    "search": "{{ __('datatable.search') }}:",
+                    "zeroRecords": "{{ __('datatable.no_matching_records_found') }}",
+                    "paginate": {
+                        "next": "{{ __('datatable.next') }}",
+                        "previous": "{{ __('datatable.previous') }}"
+                    },
+                    "info": "{{ __('datatable.showing from _START_ to _END_ of _TOTAL_ entries') }}",
+                    "infoEmpty": "{{ __('datatable.showing 0 to 0 of 0 entries') }}",
+                    "infoFiltered": "({{ __('datatable.filtered from _MAX_ total entries') }})",
+                    "thousands": ",",
+                    "loadingRecords": "{{ __('datatable.loading...') }}",
+                    "processing": "{{ __('datatable.processing...') }}",
+                },
+
+            }).buttons().container().appendTo('#example3_wrapper .col-md-6:eq(0)');
+
+
+        });
+    </script>
 @endsection

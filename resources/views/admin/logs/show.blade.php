@@ -15,15 +15,122 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">All Logs For {{ $file }}</h3>
-                                <div class="float-right">
-                                    <input type="text" id="logSearchInput" class="form-control"
-                                        placeholder="Search logs..." onkeyup="searchLogs()">
-                                </div>
+                                <form action="{{ route('admin.logs.bulk_delete', $type) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                        title="{{ __('buttons.delete_all') }}">
+                                        <i class="fas fa-trash"></i> {{ __('buttons.delete_all') }}
+                                    </button>
+                                </form>
                             </div>
+                            <!-- /.card-header -->
                             <div class="card-body">
-                                <pre id="logContent" style="max-height: 600px; overflow-y: scroll;">{{ $log }}</pre>
+                                <table id="example3" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Logs</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($logs as $log)
+                                            <div>
+                                                <tr>
+                                                    <td>
+                                                        #{{ $log->id }} -
+                                                        {!! $log->description !!}
+                                                        {{-- @if ($log->event == 'updated' || $log->event == 'created' || $log->event == 'deleted')
+                                                            <ul>
+                                                                @foreach ($log->properties as $key => $property)
+                                                                    <li>
+                                                                        {{ $key }}:
+                                                                        @if (is_array($property))
+                                                                            <strong>{{ json_encode($property) }}</strong>
+                                                                        @else
+                                                                            @if (\Carbon\Carbon::parse($property, null, false))
+                                                                                <strong>{{ \Carbon\Carbon::parse($property)->diffForHumans() }}</strong>
+                                                                            @else
+                                                                                <strong>{{ $property }}</strong>
+                                                                            @endif
+                                                                        @endif
+
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @endif --}}
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-warning btn-sm"
+                                                            title="{{ __('main.show') }}" data-toggle="modal"
+                                                            data-target="#show-{{ $log->id }}">
+                                                            <i class="fas fa-eye fa-fw"></i>
+                                                        </button>
+                                                    </td>
+
+                                                    <!-- Modal -->
+                                                    <div class="modal fade show" id="show-{{ $log->id }}"
+                                                        aria-modal="true" role="dialog">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title">{{ __('main.show') }} {{ ucfirst($log->event) }}</h4>
+                                                                    <button type="button" class="close"
+                                                                        data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">×</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body text-left">
+                                                                    @php
+                                                                        $logData = json_decode($log->properties, true);
+                                                                    @endphp
+                                                                    <p><strong>ID:</strong> {{ $log->id }}</p>
+                                                                    <p><strong>Event:</strong> {{ $log->event }}</p>
+                                                                    <p><strong>by:</strong> {{ $log->causer?->name }}</p>
+                                                                    <p><strong>Created at:</strong> {{ $log->created_at }}</p>
+
+                                                                    @if (is_array($logData))
+                                                                        <ul class="list-group">
+                                                                            @foreach ($logData as $key => $value)
+                                                                                <li class="list-group-item">
+                                                                                    <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong>
+                                                                                    @if (is_array($value))
+                                                                                        <pre>{{ json_encode($value, JSON_PRETTY_PRINT) }}</pre>
+                                                                                    @else
+                                                                                        {{ $value }}
+                                                                                    @endif
+                                                                                </li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    @else
+                                                                        <p>{{ $log->properties }}</p>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <x-custom.close-modal-button />
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.modal-content -->
+                                                        </div>
+                                                        <!-- /.modal-dialog -->
+                                                    </div>
+
+                                                </tr>
+                                            </div>
+                                        @endforeach
+
+                                    </tbody>
+                                    <tfoot>
+                                        <th>ID</th>
+                                        <th>Actions</th>
+                                    </tfoot>
+
+                                </table>
+
+
+
                             </div>
+                            <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
                     </div>
@@ -40,33 +147,35 @@
 
 @section('scripts')
     <script>
-        function searchLogs() {
-            // Get the input field and filter
-            var input = document.getElementById("logSearchInput");
-            var filter = input.value.toLowerCase();
-            var logContent = document.getElementById("logContent");
+        $(function() {
+            $("#example3").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "ordering": true, // Enable ordering
+                "order": [], // No default ordering (columns are unsorted initially)
+                "buttons": ["copy", "csv", "excel"],
+                "pageLength": 50,
+                "language": {
+                    "emptyTable": "{{ __('datatable.no_data_available_in_table') }}",
+                    "lengthMenu": "{{ __('datatable.show _MENU_ entries') }}",
+                    "search": "{{ __('datatable.search') }}:",
+                    "zeroRecords": "{{ __('datatable.no_matching_records_found') }}",
+                    "paginate": {
+                        "next": "{{ __('datatable.next') }}",
+                        "previous": "{{ __('datatable.previous') }}"
+                    },
+                    "info": "{{ __('datatable.showing from _START_ to _END_ of _TOTAL_ entries') }}",
+                    "infoEmpty": "{{ __('datatable.showing 0 to 0 of 0 entries') }}",
+                    "infoFiltered": "({{ __('datatable.filtered from _MAX_ total entries') }})",
+                    "thousands": ",",
+                    "loadingRecords": "{{ __('datatable.loading...') }}",
+                    "processing": "{{ __('datatable.processing...') }}",
+                },
 
-            // Get the lines of the log
-            var lines = logContent.innerText.split("\n");
+            }).buttons().container().appendTo('#example3_wrapper .col-md-6:eq(0)');
 
-            // Initialize a variable to store the filtered lines
-            var filteredLines = "";
 
-            // Loop through the lines and check if the search term exists
-            for (var i = 0; i < lines.length; i++) {
-                if (lines[i].toLowerCase().includes(filter)) {
-                    // Highlight the matching text with a custom color (red in this example)
-                    var highlightedLine = lines[i].replace(new RegExp(filter, 'gi'), (match) =>
-                        `<span style="background-color: yellow; color: red;">${match}</span>`);
-                    filteredLines += highlightedLine + "\n";
-                } else {
-                    // If no match, just append the line without changes
-                    filteredLines += lines[i] + "\n";
-                }
-            }
-
-            // Update the content of the log with the filtered lines
-            logContent.innerHTML = `${filteredLines}`;
-        }
+        });
     </script>
 @endsection

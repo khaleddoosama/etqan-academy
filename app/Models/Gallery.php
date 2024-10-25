@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivityForModels;
 use App\Traits\UploadTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Gallery extends Model
 {
-    use HasFactory, UploadTrait;
+    use HasFactory, UploadTrait, LogsActivityForModels;
     protected $guarded = [];
 
 

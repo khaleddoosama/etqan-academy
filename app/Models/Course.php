@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivityForModels;
 use App\Traits\UploadTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Course extends Model
 {
-    use HasFactory, UploadTrait, Sluggable;
+    use HasFactory, UploadTrait, Sluggable, LogsActivityForModels;
 
     protected $guarded = [];
 
@@ -68,7 +69,11 @@ class Course extends Model
         })->sum();
     }
 
-
+    // scope active
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 
 
     // calculate total duration of lectures in course

@@ -34,6 +34,13 @@ class CourseService
         });
     }
 
+    public function getActiveCourses(): Collection
+    {
+        return Cache::remember('active_courses', 60, function () {
+            return Course::active()->get();
+        });
+    }
+
     public function createCourse(array $data): Course
     {
         DB::beginTransaction();
@@ -57,9 +64,6 @@ class CourseService
             throw $e;
         }
     }
-
-
-
 
     public function updateCourse(Course $course, array $data): bool
     {

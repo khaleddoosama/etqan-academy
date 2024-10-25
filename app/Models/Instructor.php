@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivityForModels;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 
 class Instructor extends Model
 {
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, LogsActivityForModels;
 
     protected $guarded = ['id'];
 

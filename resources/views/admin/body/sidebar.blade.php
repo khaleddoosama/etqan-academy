@@ -136,35 +136,36 @@
 
                   {{-- Lecture Management --}}
                   {{-- @if (auth()->user()->can('lectures.list')) --}}
-                      <li class="nav-item @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures')) menu-open @endif">
-                          <a href="#" class="nav-link @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="videocam-outline"></ion-icon></span>
-                              <p>
-                                  {{ __('Lecture Management') }}
-                                  <i class="fas fa-angle-left right"></i>
-                              </p>
-                          </a>
-                          <ul class="nav nav-treeview" style="background-color:rgba(255, 255, 255, 0.1);@if (!(Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures'))) display: none @endif">
-                              {{-- Lectures --}}
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.lectures.index') }}"
-                                      class="nav-link @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon name="videocam-outline"></ion-icon></span>
+                  <li class="nav-item @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures')) menu-open @endif">
+                      <a href="#" class="nav-link @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures')) active @endif">
+                          <span class="icon nav-icon"><ion-icon name="videocam-outline"></ion-icon></span>
+                          <p>
+                              {{ __('Lecture Management') }}
+                              <i class="fas fa-angle-left right"></i>
+                          </p>
+                      </a>
+                      <ul class="nav nav-treeview"
+                          style="background-color:rgba(255, 255, 255, 0.1);@if (!(Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures'))) display: none @endif">
+                          {{-- Lectures --}}
+                          <li class="nav-item">
+                              <a href="{{ route('admin.lectures.index') }}"
+                                  class="nav-link @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*')) active @endif">
+                                  <span class="icon nav-icon"><ion-icon name="videocam-outline"></ion-icon></span>
 
-                                      <p>{{ __('attributes.lectures') }}</p>
-                                  </a>
-                              </li>
+                                  <p>{{ __('attributes.lectures') }}</p>
+                              </a>
+                          </li>
 
-                              {{-- Failed Lectures --}}
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.lectures.failed.index') }}"
-                                      class="nav-link @if (Request::is('*/admin/failed-lectures')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon name="close-circle-outline"></ion-icon></span>
-                                      <p>{{ __('attributes.failed_lectures') }}</p>
-                                  </a>
-                              </li>
-                          </ul>
-                      </li>
+                          {{-- Failed Lectures --}}
+                          <li class="nav-item">
+                              <a href="{{ route('admin.lectures.failed.index') }}"
+                                  class="nav-link @if (Request::is('*/admin/failed-lectures')) active @endif">
+                                  <span class="icon nav-icon"><ion-icon name="close-circle-outline"></ion-icon></span>
+                                  <p>{{ __('attributes.failed_lectures') }}</p>
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
                   {{-- @endif --}}
 
 
@@ -348,15 +349,61 @@
 
                   {{-- Show Logs --}}
                   {{-- @can('log.list') --}}
+                  {{-- Logs Management --}}
                   @if (auth()->id() == 1)
-                      <li class="nav-item">
-                          <a href="{{ route('admin.logs.index') }}"
-                              class="nav-link @if (Request::is('*/admin/logs') || Request::is('*/admin/logs/*')) active @endif">
+                      <li class="nav-item @if (Request::is('*/admin/logs/files') ||
+                              Request::is('*/admin/logs/files/*') ||
+                              Request::is('*/admin/logs') ||
+                              Request::is('*/admin/logs/default') ||
+                              Request::is('*/admin/logs/web') ||
+                              Request::is('*/admin/logs/api')) menu-open @endif">
+                          <a href="#" class="nav-link @if (Request::is('*/admin/logs/files') ||
+                                  Request::is('*/admin/logs/files/*') ||
+                                  Request::is('*/admin/logs') ||
+                                  Request::is('*/admin/logs/default') ||
+                                  Request::is('*/admin/logs/web') ||
+                                  Request::is('*/admin/logs/api')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
-                              <span class="title">{{ __('attributes.logs') }}</span>
+                              <p>
+                                  {{ __('Logs Management') }}
+                                  <i class="fas fa-angle-left right"></i>
+                              </p>
                           </a>
+                          <ul class="nav nav-treeview"
+                              style="background-color:rgba(255, 255, 255, 0.1); @if (
+                                  !(Request::is('*/admin/logs/files') ||
+                                      Request::is('*/admin/logs/files/*') ||
+                                      Request::is('*/admin/logs') ||
+                                      Request::is('*/admin/logs/default') ||
+                                      Request::is('*/admin/logs/web') ||
+                                      Request::is('*/admin/logs/api')
+                                  )) display: none @endif">
+
+                              {{-- Logs Files --}}
+                              <li class="nav-item">
+                                  <a href="{{ route('admin.logs.files.index') }}"
+                                      class="nav-link @if (Request::is('*/admin/logs/files') || Request::is('*/admin/logs/files/*')) active @endif">
+                                      <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
+                                      <p>{{ __('attributes.logs_files') }}</p>
+                                  </a>
+                              </li>
+
+                              {{-- Logs --}}
+                              <li class="nav-item">
+                                  <a href="{{ route('admin.logs.index') }}"
+                                      class="nav-link @if (Request::is('*/admin/logs') ||
+                                              Request::is('*/admin/logs/default') ||
+                                              Request::is('*/admin/logs/web') ||
+                                              Request::is('*/admin/logs/api')) active @endif">
+                                      <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
+                                      <p>{{ __('attributes.logs') }}</p>
+                                  </a>
+                              </li>
+
+                          </ul>
                       </li>
                   @endif
+
 
                   {{-- @endcan --}}
 

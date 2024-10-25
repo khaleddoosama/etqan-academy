@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivityForModels;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -12,7 +13,7 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class Program extends Model
 {
-    use HasFactory, Sluggable, UploadTrait;
+    use HasFactory, Sluggable, UploadTrait, LogsActivityForModels;
 
     protected $guarded = [];
 

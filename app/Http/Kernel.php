@@ -79,5 +79,7 @@ class Kernel extends HttpKernel
 
         'jwt.authenticate' => \App\Http\Middleware\JwtMiddleware::class,
         'jwt.verified' => \App\Http\Middleware\EnsureEmailVerified::class,
+
+        'log_user_activity' => \App\Http\Middleware\LogUserActivity::class,
     ];
 }

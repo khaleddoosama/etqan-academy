@@ -51,6 +51,7 @@ class AuthController extends Controller
     }
     public function register(Request $request)
     {
+
         DB::beginTransaction();
         try {
             $validator = Validator::make($request->all(), [
@@ -66,6 +67,8 @@ class AuthController extends Controller
                 'password' => 'required|string|confirmed|min:6',
             ]);
             if ($validator->fails()) {
+                DB::rollBack();
+
                 return $this->apiResponse(null, $validator->errors()->first(), 400);
             }
 

@@ -74,15 +74,37 @@
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h4 class="modal-title">{{ __('main.show') }}</h4>
+                                                                    <h4 class="modal-title">{{ __('main.show') }} {{ ucfirst($log->event) }}</h4>
                                                                     <button type="button" class="close"
                                                                         data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">×</span>
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body text-left">
+                                                                    @php
+                                                                        $logData = json_decode($log->properties, true);
+                                                                    @endphp
+                                                                    <p><strong>ID:</strong> {{ $log->id }}</p>
+                                                                    <p><strong>Event:</strong> {{ $log->event }}</p>
+                                                                    <p><strong>by:</strong> {{ $log->causer?->name }}</p>
+                                                                    <p><strong>Created at:</strong> {{ $log->created_at }}</p>
 
-
+                                                                    @if (is_array($logData))
+                                                                        <ul class="list-group">
+                                                                            @foreach ($logData as $key => $value)
+                                                                                <li class="list-group-item">
+                                                                                    <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong>
+                                                                                    @if (is_array($value))
+                                                                                        <pre>{{ json_encode($value, JSON_PRETTY_PRINT) }}</pre>
+                                                                                    @else
+                                                                                        {{ $value }}
+                                                                                    @endif
+                                                                                </li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    @else
+                                                                        <p>{{ $log->properties }}</p>
+                                                                    @endif
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <x-custom.close-modal-button />
@@ -92,6 +114,7 @@
                                                         </div>
                                                         <!-- /.modal-dialog -->
                                                     </div>
+
                                                 </tr>
                                             </div>
                                         @endforeach

@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'middleware' => ['api', 'throttle:60,1', 'log_user_activity:api,web'],
+    'middleware' => ['api', 'throttle:60,1', 'log_user_activity:api'],
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);
@@ -40,33 +40,33 @@ Route::group([
 });
 
 // send Inquiry
-Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry'])->middleware(['throttle:6,1', 'log_user_activity:api,web']);
+Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry'])->middleware(['throttle:6,1', 'log_user_activity:api']);
 
 // show categories
-Route::get('/categories', [CategoryController::class, 'index'])->middleware(['log_user_activity:api,web']);
+Route::get('/categories', [CategoryController::class, 'index'])->middleware(['log_user_activity:api']);
 
 // send Request Course
-Route::post('/request-course', [RequestCourseController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api,web']);
+Route::post('/request-course', [RequestCourseController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api']);
 
-Route::get('/home', [HomeController::class, 'home'])->middleware(['log_user_activity:api,web']);
+Route::get('/home', [HomeController::class, 'home'])->middleware(['log_user_activity:api']);
 
 
 // show courses
-Route::get('/courses', [CourseController::class, 'index'])->middleware(['log_user_activity:api,web']);
+Route::get('/courses', [CourseController::class, 'index'])->middleware(['log_user_activity:api']);
 
 // show single course
-Route::get('/course/{course_slug}', [CourseController::class, 'show'])->middleware(['log_user_activity:api,web']);
+Route::get('/course/{course_slug}', [CourseController::class, 'show'])->middleware(['log_user_activity:api']);
 // show sections
-Route::get('/course/{course_slug}/sections', [SectionController::class, 'index'])->middleware(['log_user_activity:api,web']);
+Route::get('/course/{course_slug}/sections', [SectionController::class, 'index'])->middleware(['log_user_activity:api']);
 
 // show single section
-Route::get('course/{course_slug}/section/{section_slug}', [SectionController::class, 'show'])->middleware(['log_user_activity:api,web']);
+Route::get('course/{course_slug}/section/{section_slug}', [SectionController::class, 'show'])->middleware(['log_user_activity:api']);
 
 // show lectures
-Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index'])->middleware(['log_user_activity:api,web']);
+Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index'])->middleware(['log_user_activity:api']);
 
 // verified
-Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_user_activity:api,web'])->group(function () {
+Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_user_activity:api'])->group(function () {
     // show single lecture
     Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);
 
@@ -86,7 +86,7 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
 });
 
 //
-Route::middleware(['jwt.authenticate', 'throttle:6,1', 'log_user_activity:api,web'])->group(function () {
+Route::middleware(['jwt.authenticate', 'throttle:6,1', 'log_user_activity:api'])->group(function () {
     // Send the email verification link
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
         ->name('verification.send');
@@ -94,4 +94,4 @@ Route::middleware(['jwt.authenticate', 'throttle:6,1', 'log_user_activity:api,we
 
 // Handle email verification
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyEmail'])
-    ->name('jwt.verification.verify')->middleware(['signed', 'throttle:6,1', 'log_user_activity:api,web']);
+    ->name('jwt.verification.verify')->middleware(['signed', 'throttle:6,1', 'log_user_activity:api']);

@@ -20,6 +20,7 @@
         "spatie/image": "^3.7",
         "spatie/laravel-activitylog": "^4.9",
         "spatie/laravel-permission": "^6.4",
+        "stevebauman/location": "^7.3",
         "tymon/jwt-auth": "^2.1",
         "yoeunes/toastr": "^2.3"
     },

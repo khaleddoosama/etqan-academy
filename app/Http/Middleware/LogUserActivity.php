@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Stevebauman\Location\Facades\Location;
 
 class LogUserActivity
 {
@@ -31,10 +32,12 @@ class LogUserActivity
 
         foreach ($guards as $guard) {
             $user = Auth::guard($guard)->check() ? Auth::guard($guard)->user() : null;
+
+            $ip = $request->ip();
             activity()
                 ->causedBy($user)
                 ->withProperties([
-                    'ip' => $request->ip(),
+                    'ip' => $ip,
                     'url' => $request->fullUrl(),
                     'user_agent' => $request->userAgent(),
                     'input' => $request->all(),
@@ -44,7 +47,7 @@ class LogUserActivity
                     'duration' => microtime(true) - LARAVEL_START . ' Seconds',
                     'route_name' => $request->route()->getName(),
                     'action' => $request->route()->getActionName(),
-                    // 'geo_location' => geoip($request->ip())->toArray(), // Requires a suitable package like "torann/geoip"
+                    'geo_location' => Location::get($ip), // Requires a suitable package like "torann/geoip"
                     'referrer_domain' => parse_url($request->server('HTTP_REFERER'), PHP_URL_HOST) ?? 'Direct Access',
                     'via' => $via,
                     'error_message' => $error_message,

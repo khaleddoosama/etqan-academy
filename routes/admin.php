@@ -33,7 +33,7 @@ Route::group(
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
     ],
     function () {
-        Route::prefix('admin')->middleware(['auth', 'role:admin', 'web', 'throttle:60,1', 'log_user_activity:api,web'])->as('admin.')->group(function () {
+        Route::prefix('admin')->middleware(['auth', 'role:admin', 'web', 'throttle:60,1', 'log_user_activity:web'])->as('admin.')->group(function () {
 
             Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
             Route::get('/notifications/read', [NotificationController::class, 'read'])->name('notifications.read');

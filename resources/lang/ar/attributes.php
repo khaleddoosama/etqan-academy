@@ -144,5 +144,13 @@ return [
     'processed' => 'تم المعالجة',
     'request' => 'الطلب',
     'requests' => 'الطلبات',
-    'failed_lectures' =>  'محاضرات لا تعمل'
+    'failed_lectures' =>  'محاضرات لا تعمل',
+    'logs_files' => 'ملفات السجلات',
+    'logs_file' => 'ملف السجل',
+    'default' => 'افتراضي',
+    'default_logs' => 'السجلات الافتراضية',
+    'web' => 'الويب',
+    'web_logs' => 'سجلات الويب',
+    'api' => 'API',
+    'api_logs' => 'سجلات API',
 ];

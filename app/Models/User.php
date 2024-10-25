@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\CustomVerifyEmail;
+use App\Traits\LogsActivityForModels;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Traits\UploadTrait;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\UploadedFile;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -20,7 +22,7 @@ use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, UploadTrait, Sluggable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, UploadTrait, Sluggable, CausesActivity, LogsActivityForModels;
 
 
     protected $guarded = [];

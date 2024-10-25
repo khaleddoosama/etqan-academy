@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivityForModels;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UserCourse extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivityForModels;
 
 
     const STATUS_ACTIVE = 1;

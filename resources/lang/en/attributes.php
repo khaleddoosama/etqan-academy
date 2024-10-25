@@ -146,4 +146,12 @@ return [
     'request' => 'Request',
     'requests' => 'Requests',
     'failed_lectures' => 'Failed Lectures',
+    'logs_files' => 'Logs Files',
+    'logs_file' => 'Logs File',
+    'default' => 'Default',
+    'default_logs' => 'Default Logs',
+    'web' => 'Web',
+    'web_logs' => 'Web Logs',
+    'api' => 'API',
+    'api_logs' => 'API Logs',
 ];

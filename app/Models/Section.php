@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\LogsActivityForModels;
 
 class Section extends Model
 {
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, LogsActivityForModels;
 
     protected $guarded = [];
 

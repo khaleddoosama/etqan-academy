@@ -18,6 +18,7 @@
         "mews/purifier": "^3.4",
         "pbmedia/laravel-ffmpeg": "^8.5",
         "spatie/image": "^3.7",
+        "spatie/laravel-activitylog": "^4.9",
         "spatie/laravel-permission": "^6.4",
         "tymon/jwt-auth": "^2.1",
         "yoeunes/toastr": "^2.3"

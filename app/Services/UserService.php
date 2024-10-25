@@ -16,13 +16,13 @@ class UserService
     // get active users
     public function getActiveUsers()
     {
-        return User::studentActive()->get();
+        return User::studentActive()->orderBy('last_login', 'desc')->get();
     }
 
     // get inactive users
     public function getInactiveUsers()
     {
-        return User::studentInactive()->get();
+        return User::studentInactive()->orderBy('last_login', 'desc')->get();
     }
 
     // get students

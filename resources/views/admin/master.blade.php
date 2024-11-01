@@ -76,6 +76,9 @@
             /* تأكد من أن العناصر تظهر كعناصر قائمة */
         }
     </style>
+
+    @yield('styles')
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

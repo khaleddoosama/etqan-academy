@@ -69,12 +69,6 @@ class Course extends Model
         })->sum();
     }
 
-    // scope active
-    public function scopeActive($query)
-    {
-        return $query->where('status', 1);
-    }
-
 
     // calculate total duration of lectures in course
     public function totalDuration()

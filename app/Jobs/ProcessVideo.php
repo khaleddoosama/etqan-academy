@@ -54,7 +54,7 @@ class ProcessVideo implements ShouldQueue
                 $this->lecture->update(['processed' => -1]);
             });
 
-            $notification = new LectureStatusNotification($this->lecture->id, 0);
+            $notification = new LectureStatusNotification($this->lecture->id, 0, $this->lecture->title);
             AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
 
             return;
@@ -270,7 +270,7 @@ class ProcessVideo implements ShouldQueue
             $this->lecture->update(['processed' => -1]);
         });
 
-        $notification = new LectureStatusNotification($this->lecture->id, 0);
+        $notification = new LectureStatusNotification($this->lecture->id, 0, $this->lecture->title);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 }

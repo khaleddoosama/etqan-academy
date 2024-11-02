@@ -41,6 +41,9 @@ class LogUserActivity
             'longitude' => $locationData->longitude,
         ] : null;
 
+        $url = $request->url();
+        $parsedUrl = parse_url($url, PHP_URL_PATH);
+
         foreach ($guards as $guard) {
             $user = Auth::guard($guard)->check() ? Auth::guard($guard)->user() : null;
 
@@ -48,7 +51,7 @@ class LogUserActivity
                 ->causedBy($user)
                 ->withProperties([
                     'ip' => $ip,
-                    'url' => $request->fullUrl(),
+                    'url' => $parsedUrl,
                     'user_agent' => $request->userAgent(),
                     'input' => $request->all(),
                     'method' => $request->method(),
@@ -62,7 +65,7 @@ class LogUserActivity
                     'via' => $via,
                     'error_message' => $error_message,
                 ])
-                ->log("User " . ($user ? $user->name : 'Guest') ." Visit {$statusMessage} - {$via} - {$request->fullUrl()}");
+                ->log("User " . ($user ? $user->name : 'Guest') . " Visit {$statusMessage} - {$via} - {$parsedUrl}");
             // }
         }
 

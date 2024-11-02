@@ -25,7 +25,22 @@ class DashboardService
     public function getMostAccessedURLs()
     {
         return Cache::remember('mostAccessedURLs', $this->cacheDuration, function () {
-            return DB::select("SELECT JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) AS url, COUNT(*) AS access_count FROM activity_log WHERE JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) IS NOT NULL GROUP BY url ORDER BY access_count DESC LIMIT 10");
+            return DB::select(
+                "
+                SELECT JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) AS url, COUNT(*) AS access_count
+                FROM activity_log WHERE JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) IS NOT NULL
+                GROUP BY url
+                ORDER BY access_count DESC
+                LIMIT 10
+                "
+            );
+        });
+    }
+
+    public function getMostAccessedCourses()
+    {
+        return Cache::remember('mostAccessedCourses', $this->cacheDuration, function () {
+            return DB::select("SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')), '/course/', -1), '/', 1) AS course, COUNT(*) AS access_count FROM activity_log WHERE JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) LIKE '%/course/%' GROUP BY course ORDER BY access_count DESC LIMIT 10");
         });
     }
 
@@ -56,12 +71,7 @@ class DashboardService
         return $this->getUniqueIPs(10);
     }
 
-    public function getMostAccessedCourses()
-    {
-        return Cache::remember('mostAccessedCourses', $this->cacheDuration, function () {
-            return DB::select("SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')), '/course/', -1), '/', 1) AS course, COUNT(*) AS access_count FROM activity_log WHERE JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) LIKE '%/course/%' GROUP BY course ORDER BY access_count DESC LIMIT 10");
-        });
-    }
+
 
     public function getPeakHours()
     {

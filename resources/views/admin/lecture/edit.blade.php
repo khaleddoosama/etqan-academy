@@ -2,6 +2,9 @@
 @section('title')
     {{ __('buttons.edit_lecture') }}
 @endsection
+@section('styles')
+    <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+@endsection
 @section('content')
     <div class="content-wrapper">
 
@@ -156,8 +159,21 @@
 
                                     <div class="col-md-6 col-12">
                                         {{-- <h5 class="text-right">{{ __('attributes.video') }}</h5> --}}
-                                        <video width="320" height="240" controls style="float: right" id="show-video">
+                                        {{-- <video width="320" height="240" controls style="float: right" id="show-video">
                                             <source src="{{ $lecture->getBestQualityVideoAttribute() }}" type="video/mp4">
+                                        </video> --}}
+                                        {{-- no-download --}}
+                                        <video id="my-video" class="video-js" controls preload="auto" width="320"
+                                            height="240" poster="{{ $lecture->thumbnail_url }}" data-setup="{}"
+                                            controlsList="nodownload">
+                                            <source src="{{ $lecture->getBestQualityVideoAttribute() }}"
+                                                type="video/webm" />
+                                            <p class="vjs-no-js">
+                                                To view this video please enable JavaScript, and consider upgrading to a
+                                                web browser that
+                                                <a href="https://videojs.com/html5-video-support/" target="_blank">supports
+                                                    HTML5 video</a>
+                                            </p>
                                         </video>
                                     </div>
                                 </div>
@@ -202,7 +218,7 @@
                                                             <td>
                                                                 @if (is_null($lecture->convertedVideo[$key]))
                                                                     <span class="text-danger">Not Found</span>
-                                                                {{-- @elseif (!Storage::exists($lecture->convertedVideo[$key]))
+                                                                    {{-- @elseif (!Storage::exists($lecture->convertedVideo[$key]))
                                                                     <span class="text-danger">Converted But Not Found In
                                                                         Server</span> --}}
                                                                 @else
@@ -243,7 +259,7 @@
                                                             <td>
                                                                 @if (is_null($lecture->convertedVideo[$key]))
                                                                     <span class="text-danger">Not Found</span>
-                                                                {{-- @elseif (!Storage::exists($lecture->convertedVideo[$key]))
+                                                                    {{-- @elseif (!Storage::exists($lecture->convertedVideo[$key]))
                                                                     <span class="text-danger">Converted But Not Found
                                                                         In Server</span> --}}
                                                                 @else
@@ -612,6 +628,22 @@
                         console.error('Error:', error);
                         alert('An error occurred while updating the video paths.');
                     }
+                });
+            });
+        });
+    </script>
+
+    <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var player = videojs('my-video');
+
+            player.ready(function() {
+                console.log('Player is ready');
+
+                // Optional: handle errors
+                player.on('error', function() {
+                    console.error('Video.js encountered an error:', player.error());
                 });
             });
         });

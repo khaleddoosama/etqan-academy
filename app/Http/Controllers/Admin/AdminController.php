@@ -7,30 +7,63 @@ use App\Http\Requests\Admin\AdminRequest;
 use App\Http\Requests\PasswordRequest;
 use App\Http\Requests\ProfileRequest;
 use App\Services\AdminService;
+use App\Services\DashboardService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Role;
 use Yoeunes\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
 
     protected $adminService;
+    protected $dashboardService;
     //constructor
-    public function __construct(AdminService $adminService)
+    public function __construct(AdminService $adminService, DashboardService $dashboardService)
     {
-        //     //admin.list admin.create admin.edit admin.delete
-            $this->middleware('permission:admin.list')->only('index');
-            $this->middleware('permission:admin.create')->only('create', 'store');
-            $this->middleware('permission:admin.edit')->only('edit', 'update');
-            $this->middleware('permission:admin.delete')->only('destroy');
+        //admin.list admin.create admin.edit admin.delete
+        $this->middleware('permission:admin.list')->only('index');
+        $this->middleware('permission:admin.create')->only('create', 'store');
+        $this->middleware('permission:admin.edit')->only('edit', 'update');
+        $this->middleware('permission:admin.delete')->only('destroy');
 
         $this->adminService = $adminService;
+        $this->dashboardService = $dashboardService;
     }
 
-    // home
     public function home()
     {
-        return view('admin.home');
+        $dataKeys = [
+            'eventFrequencyOverTime',
+            'mostAccessedURLs',
+            'uniqueIPCounts',
+            'uniqueIPCount',
+            'mostAccessedCourses',
+            'peakHours',
+            'ipCounts',
+            'studentsPerCourse',
+            'topStudentsCourses',
+            'cityActivity',
+            'activityByDayOfWeek',
+            'activeUserCount',
+            'activeLectureCount',
+            'activeCourseCount'
+        ];
+
+        $data = [];
+        foreach ($dataKeys as $key) {
+            $methodName = 'get' . ucfirst($key);
+            $data[$key] = $this->dashboardService->$methodName();
+        }
+
+        return view('admin.home', $data);
     }
+
+
+
 
     // profile
     public function profile()

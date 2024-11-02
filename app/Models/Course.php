@@ -55,18 +55,18 @@ class Course extends Model
         return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
     }
 
+    // scope active
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
+
     // count number of lectures in course
     public function countLectures()
     {
         return $this->sections->map(function ($section) {
             return $section->lectures->count();
         })->sum();
-    }
-
-    // scope active
-    public function scopeActive($query)
-    {
-        return $query->where('status', 1);
     }
 
 

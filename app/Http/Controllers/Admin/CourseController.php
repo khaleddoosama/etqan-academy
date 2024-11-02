@@ -114,9 +114,11 @@ class CourseController extends Controller
         $data = $request->validate([
             'status' => 'required',
         ]);
+
         $this->courseService->changeStatus($request->status, $id) ?
             Toastr::success(__('messages.course_status_updated'), __('status.success'))
             : Toastr::error(__('messages.something_went_wrong'), __('status.error'));
+
         return redirect()->back();
     }
 }

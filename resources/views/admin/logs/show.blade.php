@@ -40,26 +40,8 @@
                                                     <td>
                                                         #{{ $log->id }} -
                                                         {!! $log->description !!}
-                                                        {{-- @if ($log->event == 'updated' || $log->event == 'created' || $log->event == 'deleted')
-                                                            <ul>
-                                                                @foreach ($log->properties as $key => $property)
-                                                                    <li>
-                                                                        {{ $key }}:
-                                                                        @if (is_array($property))
-                                                                            <strong>{{ json_encode($property) }}</strong>
-                                                                        @else
-                                                                            @if (\Carbon\Carbon::parse($property, null, false))
-                                                                                <strong>{{ \Carbon\Carbon::parse($property)->diffForHumans() }}</strong>
-                                                                            @else
-                                                                                <strong>{{ $property }}</strong>
-                                                                            @endif
-                                                                        @endif
-
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        @endif --}}
                                                     </td>
+
                                                     <td>
                                                         <button type="button" class="btn btn-warning btn-sm"
                                                             title="{{ __('main.show') }}" data-toggle="modal"
@@ -88,16 +70,17 @@
                                                                     <p><strong>Event:</strong> {{ $log->event }}</p>
                                                                     <p><strong>by:</strong> {{ $log->causer?->name }}</p>
                                                                     <p><strong>Created at:</strong> {{ $log->created_at }}</p>
-
+                                                                    <p><strong>Table:</strong> {{ $log->subject_type }}</p>
+                                                                    <p><strong>Table ID:</strong> {{ $log->subject_id }}</p>
                                                                     @if (is_array($logData))
                                                                         <ul class="list-group">
                                                                             @foreach ($logData as $key => $value)
                                                                                 <li class="list-group-item">
                                                                                     <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong>
                                                                                     @if (is_array($value))
-                                                                                        <pre>{{ json_encode($value, JSON_PRETTY_PRINT) }}</pre>
+                                                                                        <pre>{!! json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) !!}</pre>
                                                                                     @else
-                                                                                        {{ $value }}
+                                                                                        {!! $value !!}
                                                                                     @endif
                                                                                 </li>
                                                                             @endforeach

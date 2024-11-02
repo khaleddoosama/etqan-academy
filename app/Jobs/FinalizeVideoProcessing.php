@@ -31,7 +31,7 @@ class FinalizeVideoProcessing implements ShouldQueue
         $this->updateLecture();
         Log::info('Lecture updated: ' . $this->lecture->id);
 
-        $notification = new LectureStatusNotification($this->lecture->id, 1);
+        $notification = new LectureStatusNotification($this->lecture->id, 1, $this->lecture->title);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
         // print time now in log
         Log::info('Time after lecture update and notification: ' . now());
@@ -101,7 +101,7 @@ class FinalizeVideoProcessing implements ShouldQueue
         } catch (\Exception $e) {
             Log::error('Failed to update lecture status to -1: ' . $e->getMessage());
         }
-        $notification = new LectureStatusNotification($this->lecture->id, 0);
+        $notification = new LectureStatusNotification($this->lecture->id, 0, $this->lecture->title);
         AdminNotificationService::notifyAdmins($notification, ['course.list', 'course.show']);
     }
 }

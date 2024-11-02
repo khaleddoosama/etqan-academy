@@ -56,7 +56,7 @@ class DashboardService
             $query .= " LIMIT $limit";
         }
 
-        return Cache::remember('uniqueIPs', $this->cacheDuration, function () use ($query) {
+        return Cache::remember('uniqueIPs_' . ($limit ?? 'all'), $this->cacheDuration, function () use ($query) {
             return DB::select($query);
         });
     }

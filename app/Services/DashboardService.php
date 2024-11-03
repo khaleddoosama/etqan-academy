@@ -12,7 +12,7 @@ class DashboardService
     //constructor
     public function __construct()
     {
-        $this->cacheDuration = 60 * 60 * 24;
+        $this->cacheDuration = 60 * 60 * 3; // 3 hours
     }
 
     public function getEventFrequencyOverTime()

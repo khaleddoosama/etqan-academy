@@ -7,7 +7,12 @@
              <li class="nav-item">
                  <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
              </li>
-
+             <li class="nav-item d-none d-sm-inline-block">
+                 <a href="{{ route('admin.clear_cache') }}" class="nav-link btn btn-default">
+                     <i class="fas fa-sync"></i>
+                     {{ __('main.clear_cache') }}
+                 </a>
+             </li>
          </ul>
 
          <!-- Right navbar links -->
@@ -15,27 +20,27 @@
              <!-- Navbar Search -->
              {{-- change lang --}}
              <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="fas fa-globe"></i> {{ LaravelLocalization::getCurrentLocaleName() }}
-                </a>
-                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item d-flex align-items-center justify-content-between" rel="alternate" hreflang="ar"
-                        href="{{ LaravelLocalization::getLocalizedURL('ar', null, [], true) }}">
-                        <img src="{{ asset('asset/admin/imgs/flags/EG.png') }}" alt=""
-                            style="width: 20px;height: 20px;">
-                        العربية
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item d-flex align-items-center justify-content-between" rel="alternate" hreflang="en"
-                        href="{{ LaravelLocalization::getLocalizedURL('en', null, [], true) }}">
-                        <img src="{{ asset('asset/admin/imgs/flags/US.png') }}" alt=""
-                            style="width: 20px;height: 20px;">
-                        English
-                    </a>
+                 <a class="nav-link" data-toggle="dropdown" href="#">
+                     <i class="fas fa-globe"></i> {{ LaravelLocalization::getCurrentLocaleName() }}
+                 </a>
+                 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                     <div class="dropdown-divider"></div>
+                     <a class="dropdown-item d-flex align-items-center justify-content-between" rel="alternate"
+                         hreflang="ar" href="{{ LaravelLocalization::getLocalizedURL('ar', null, [], true) }}">
+                         <img src="{{ asset('asset/admin/imgs/flags/EG.png') }}" alt=""
+                             style="width: 20px;height: 20px;">
+                         العربية
+                     </a>
+                     <div class="dropdown-divider"></div>
+                     <a class="dropdown-item d-flex align-items-center justify-content-between" rel="alternate"
+                         hreflang="en" href="{{ LaravelLocalization::getLocalizedURL('en', null, [], true) }}">
+                         <img src="{{ asset('asset/admin/imgs/flags/US.png') }}" alt=""
+                             style="width: 20px;height: 20px;">
+                         English
+                     </a>
 
-                </div>
-            </li>
+                 </div>
+             </li>
              <li class="nav-item">
                  <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                      <i class="fas fa-search"></i>
@@ -105,8 +110,8 @@
                              @if ($notification->read_at == null) style="background-color:#f1f4f8" @endif>
                              <i class="mr-2 {{ $notification->data['icon'] }}"></i>
                              {{ $notification->data['title'] }}
-                             <span
-                                 class="float-right text-sm text-muted" title="{{ $notification->created_at }}">{{ $notification->created_at->diffForHumans() }}</span>
+                             <span class="float-right text-sm text-muted"
+                                 title="{{ $notification->created_at }}">{{ $notification->created_at->diffForHumans() }}</span>
                              <div class="pl-1 mx-4 dropdown-message">
                                  <p class="text-sm">{{ $notification->data['message'] }}</p>
                              </div>
@@ -114,7 +119,8 @@
                      @endforeach
 
                      <div class="dropdown-divider"></div>
-                     <a href="{{ route('admin.notifications.index') }}" class="dropdown-item dropdown-footer">{{ __('main.see_all_notifications') }}</a>
+                     <a href="{{ route('admin.notifications.index') }}"
+                         class="dropdown-item dropdown-footer">{{ __('main.see_all_notifications') }}</a>
                  </div>
              </li>
 

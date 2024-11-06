@@ -38,6 +38,7 @@ class AdminController extends Controller
     {
         $dataKeys = [
             'eventFrequencyOverTime',
+            'countEventsFrequencyOverTime',
             'mostAccessedURLs',
             'uniqueIPCounts',
             'uniqueIPCount',
@@ -50,7 +51,9 @@ class AdminController extends Controller
             'activityByDayOfWeek',
             'activeUserCount',
             'activeLectureCount',
-            'activeCourseCount'
+            'activeCourseCount',
+            'browsers',
+            'lastMembers',
         ];
 
         $data = [];

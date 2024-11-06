@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\JobController;
@@ -37,7 +38,7 @@ Route::group(
 
             Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
             Route::get('/notifications/read', [NotificationController::class, 'read'])->name('notifications.read');
-
+            Route::get('/clear-cache', [GeneralController::class, 'clearCache'])->name('clear_cache');
             // admin controller (resource)
             Route::resource('all_admin', AdminController::class)->except(['show']);
             // Admin Controller

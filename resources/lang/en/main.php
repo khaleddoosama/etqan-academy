@@ -25,4 +25,5 @@
     'show' => 'Show',
     'transfer_lecture' => 'Transfer Lecture',
     'user' => 'User',
+    'clear_cache' => 'Clear Cache',
 );

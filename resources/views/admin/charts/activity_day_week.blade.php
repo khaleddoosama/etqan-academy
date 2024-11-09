@@ -44,7 +44,7 @@
         var salesChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                labels: ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
                 datasets: [{
                         label: 'This Week',
                         borderColor: '#007bff',

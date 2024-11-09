@@ -166,15 +166,15 @@ class DashboardService
 
     public function getActivityByDayOfWeek()
     {
-        // return Cache::remember('activityByDayOfWeek', 60 * 60 * 12, function () {
-        $today = Carbon::now();
+        return Cache::remember('activityByDayOfWeek', 60 * 60 * 12, function () {
+            $today = Carbon::now();
 
-        // تحديد بداية الأسبوع (السبت)
-        $startOfWeek = $today->copy()->startOfWeek(Carbon::SATURDAY);
+            // تحديد بداية الأسبوع (السبت)
+            $startOfWeek = $today->copy()->startOfWeek(Carbon::SATURDAY);
 
-        // البيانات لهذا الأسبوع (تبدأ من السبت وتزداد كل يوم)
-        $thisWeek = DB::select(
-            "
+            // البيانات لهذا الأسبوع (تبدأ من السبت وتزداد كل يوم)
+            $thisWeek = DB::select(
+                "
                         SELECT d.day_of_week, COALESCE(a.activity_count, 0) AS activity_count
                         FROM (
                             SELECT 1 AS day_of_week UNION ALL
@@ -193,55 +193,52 @@ class DashboardService
                         ) a ON d.day_of_week = a.day_of_week
                         ORDER BY d.day_of_week
                     ",
-            [
-                'start_of_week' => $startOfWeek,
-                'today' => $today,
-            ]
-        );
+                [
+                    'start_of_week' => $startOfWeek,
+                    'today' => $today,
+                ]
+            );
 
 
-        // البيانات للأسبوع السابق بالكامل
-        $lastWeekStart = $startOfWeek->copy()->subWeek();
-        $lastWeekEnd = $startOfWeek->copy()->subDay();
+            // البيانات للأسبوع السابق بالكامل
+            $lastWeekStart = $startOfWeek->copy()->subWeek();
+            $lastWeekEnd = $startOfWeek->copy()->subDay();
 
-        $lastWeek = DB::select(
-            "
+            $lastWeek = DB::select(
+                "
                             SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
                             FROM activity_log
                             WHERE DATE(created_at) >= DATE(:last_week_start) AND DATE(created_at) <= DATE(:last_week_end)
                             GROUP BY day_of_week
                             ORDER BY day_of_week
                         ",
-            [
-                'last_week_start' => $lastWeekStart,
-                'last_week_end' => $lastWeekEnd,
-            ]
-        );
-        // dd($thisWeek, $lastWeek);
-        // حساب إجمالي الأحداث لكل فترة
-        $totalThisWeek = 0;
-        $totalLastWeek = 0;
-        for ($i = 0; $i < 7; $i++) {
-            $totalThisWeek += $thisWeek[$i]->activity_count ?? 0;
-            if ($thisWeek[$i]->activity_count != 0) {
-                $totalLastWeek += $lastWeek[$i]->activity_count ?? 0;
+                [
+                    'last_week_start' => $lastWeekStart,
+                    'last_week_end' => $lastWeekEnd,
+                ]
+            );
+
+            $totalThisWeek = 0;
+            $totalLastWeek = 0;
+            for ($i = 0; $i < 7; $i++) {
+                $totalThisWeek += $thisWeek[$i]->activity_count ?? 0;
+                if ($thisWeek[$i]->activity_count != 0) {
+                    $totalLastWeek += $lastWeek[$i]->activity_count ?? 0;
+                }
             }
-        }
 
-        // حساب التغيير بالنسبة المئوية
-        if ($totalLastWeek == 0) {
-            $percentageChange = $totalThisWeek > 0 ? 100 : 0;
-        } else {
-            $percentageChange = (($totalThisWeek - $totalLastWeek) / $totalLastWeek) * 100;
-        }
+            if ($totalLastWeek == 0) {
+                $percentageChange = $totalThisWeek > 0 ? 100 : 0;
+            } else {
+                $percentageChange = (($totalThisWeek - $totalLastWeek) / $totalLastWeek) * 100;
+            }
 
-        // إرجاع البيانات
-        return [
-            'this_week' => $thisWeek,
-            'last_week' => $lastWeek,
-            'percentage_change' => $percentageChange,
-        ];
-        // });
+            return [
+                'this_week' => $thisWeek,
+                'last_week' => $lastWeek,
+                'percentage_change' => $percentageChange,
+            ];
+        });
     }
 
     public function getActiveUserCount()
@@ -286,6 +283,27 @@ class DashboardService
                 COUNT(*) AS count
             FROM activity_log
             GROUP BY browser
+            ORDER BY count DESC;
+            ");
+        });
+    }
+
+    public function getOs()
+    {
+        return Cache::remember('os', 60 * 60, function () {
+        return DB::select("SELECT
+                CASE
+                WHEN JSON_UNQUOTE(JSON_EXTRACT(properties, '$.user_agent')) LIKE '%Windows%' THEN 'Windows'
+                WHEN JSON_UNQUOTE(JSON_EXTRACT(properties, '$.user_agent')) LIKE '%Linux%' THEN 'Linux'
+                WHEN JSON_UNQUOTE(JSON_EXTRACT(properties, '$.user_agent')) LIKE '%Mac%' THEN 'Mac'
+                WHEN JSON_UNQUOTE(JSON_EXTRACT(properties, '$.user_agent')) LIKE '%Android%' THEN 'Android'
+                WHEN JSON_UNQUOTE(JSON_EXTRACT(properties, '$.user_agent')) LIKE '%iOS%' THEN 'iOS'
+                WHEN JSON_UNQUOTE(JSON_EXTRACT(properties, '$.user_agent')) LIKE '%iPhone%' OR JSON_UNQUOTE(JSON_EXTRACT(properties, '$.os')) LIKE '%iPad%' THEN 'iOS'
+                ELSE 'Other/Unknown'
+                END AS os,
+                COUNT(*) AS count
+            FROM activity_log
+            GROUP BY os
             ORDER BY count DESC;
             ");
         });

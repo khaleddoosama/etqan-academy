@@ -88,7 +88,10 @@
 
                     {{-- Browser Usage Chart --}}
                     @include('admin.charts.browser')
-                    
+
+                    {{-- OS Usage Chart --}}
+                    {{-- @include('admin.charts.os') --}}
+
                     {{-- Event Frequency Over Time Chart --}}
                     @include('admin.charts.event_frequency')
 

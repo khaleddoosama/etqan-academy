@@ -71,15 +71,15 @@ class LectureController extends Controller
         $data = $request->validated();
 
         $lecture = $this->lectureService->createLecture($data);
-        $lecture->video = $request['video_path'];
+        // $lecture->video = $request['video_path'];
         $lecture->save();
 
         // ConvertVideoForStreaming::dispatch($lecture);
-        ProcessVideo::dispatch($lecture)->onQueue('low');
+        // ProcessVideo::dispatch($lecture)->onQueue('low');
 
         Toastr::success(__('messages.lecture_created'), __('status.success'));
-        // return response()->json(['message' => __('messages.lecture_created')]);
-        return $this->apiResponse($lecture, __('messages.lecture_created'), 201);
+        // return $this->apiResponse($lecture, __('messages.lecture_created'), 201);
+        return redirect()->route('admin.lectures.edit', $lecture->id);
     }
 
     //edit
@@ -98,20 +98,22 @@ class LectureController extends Controller
             $lecture = $this->lectureService->updateLecture($lecture, $data);
 
             // check if data has video or thumbnail
-            if ($request->has('video_path')) {
-                $lecture->video = $request['video_path'];
-                $lecture->processed = 0;
-                $lecture->save();
-                ProcessVideo::dispatch($lecture)->onQueue('low');
-            }
+            // if ($request->has('video_path')) {
+            //     $lecture->video = $request['video_path'];
+            //     $lecture->processed = 0;
+            //     $lecture->save();
+            //     ProcessVideo::dispatch($lecture)->onQueue('low');
+            // }
 
             Toastr::success(__('messages.lecture_updated'), __('status.success'));
 
-            // return response()->json(['message' => __('messages.lecture_updated')]);
-            return $this->apiResponse($lecture, __('messages.lecture_updated'), 200);
+            // return $this->apiResponse($lecture, __('messages.lecture_updated'), 200);
+
+            return redirect()->route('admin.lectures.edit', $lecture->id);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return $this->apiResponse(null, $e->getMessage(), 500);
+            Toastr::error($e->getMessage());
+            return redirect()->back();
         }
     }
     public function destroy(string $id)

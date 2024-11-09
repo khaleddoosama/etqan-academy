@@ -51,98 +51,21 @@ class Lecture extends Model
         return $this->hours + ($this->minutes / 60) + ($this->seconds / 3600);
     }
 
-
     // convertedvideo
     public function convertedVideo()
     {
         return $this->hasOne(ConvertedVideo::class, 'lecture_id');
     }
 
-    // get video
-    public function getConvertedVideosAttribute()
+    // get video url
+    public function getVideoUrlAttribute()
     {
-        if ($this->convertedVideo) {
-            $qualities = [1080, 720, 480, 360, 240];
-            $i = array_search($this->quality, $qualities); // 360
-            $videos = [];
-
-            // get all videos from quality or less
-            foreach (array_slice($qualities, $i) as $quality) {
-                if ($this->convertedVideo->{"mp4_Format_$quality"} && Storage::exists($this->convertedVideo->{"mp4_Format_$quality"})) {
-                    $videos[] = Storage::url($this->convertedVideo->{"mp4_Format_$quality"});
-                }
-                if ($this->convertedVideo->{"webm_Format_$quality"} && Storage::exists($this->convertedVideo->{"webm_Format_$quality"})) {
-                    $videos[] = Storage::url($this->convertedVideo->{"webm_Format_$quality"});
-                }
-            }
-
-            return $videos;
-        }
-    }
-
-    // get best quality video
-    public function getBestQualityVideoAttribute()
-    {
-        if ($this->convertedVideo) {
-            $qualities = [1080, 720, 480, 360, 240];
-            $i = array_search($this->quality, $qualities); // 360
-
-            // get all videos from quality or less
-            foreach (array_slice($qualities, $i) as $quality) {
-                if ($this->convertedVideo->{"mp4_Format_$quality"} != null) {
-                    return Storage::url($this->convertedVideo->{"mp4_Format_$quality"});
-                }
-            }
-        }
-    }
-
-    // get thumbnail ur
-    public function getThumbnailUrlAttribute()
-    {
-        if ($this->thumbnail != null) {
-            return Storage::url($this->thumbnail);
+        if ($this->video != null) {
+            return "https://www.youtube.com/embed/" . $this->video . "?rel=0";
         } else {
             return null;
         }
     }
-
-    /* methods */
-    // set video Attribute
-    public function setVideoAttribute($path)
-    {
-        // to lower case $this->section->course->title
-        // $folderName = str_replace(' ', '-', strtolower($this->section->course->slug)) . '/' . str_replace(' ', '-', strtolower($this->section->slug)) . '/' . str_replace(' ', '-', strtolower($this->slug)) . '/videos';
-
-        $this->deleteIfExists($this->video); // Delete the old video if it exists
-
-        $this->deleteIfExists($this->convertedVideo?->mp4_Format_240); // Delete the old video if it
-        $this->deleteIfExists($this->convertedVideo?->mp4_Format_360); // Delete the old video if it
-        $this->deleteIfExists($this->convertedVideo?->mp4_Format_480); // Delete the old video if it
-        $this->deleteIfExists($this->convertedVideo?->mp4_Format_720); // Delete the old video if it
-        $this->deleteIfExists($this->convertedVideo?->mp4_Format_1080); // Delete the old video if it
-
-        $this->deleteIfExists($this->convertedVideo?->webm_Format_240); // Delete the old video if it
-        $this->deleteIfExists($this->convertedVideo?->webm_Format_360); // Delete the old video if it
-        $this->deleteIfExists($this->convertedVideo?->webm_Format_480); // Delete the old video if it
-        $this->deleteIfExists($this->convertedVideo?->webm_Format_720); // Delete the old video if it
-        $this->deleteIfExists($this->convertedVideo?->webm_Format_1080); // Delete the old video if it
-
-        // $this->attributes['video'] = $this->uploadFile($video, $folderName);
-        $this->attributes['video'] = $path;
-    }
-
-
-    // set thumbnail Attribute
-    public function setThumbnailAttribute(UploadedFile $thumbnail)
-    {
-        $folderName = $this->getFolderName('thumbnails');
-
-
-        $this->deleteIfExists($this->thumbnail);
-        $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 's3');
-    }
-
-
 
     // set attachments Attribute
     public function setAttachmentsAttribute($attachments)

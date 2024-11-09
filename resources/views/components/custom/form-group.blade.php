@@ -1,4 +1,14 @@
-@props(['name', 'type', 'value', 'COLINPUT', 'COLLABEL', 'options', 'selected', 'multiple' => false])
+@props([
+    'name',
+    'placeholder' => '',
+    'type',
+    'value',
+    'COLINPUT',
+    'COLLABEL',
+    'options',
+    'selected',
+    'multiple' => false,
+])
 
 @php
     //example sections[0][title] must be transformed to sections_title
@@ -44,14 +54,14 @@
         <div class="input-group {{ $COLINPUT ?? 'col-sm-12' }}">
             <div class="custom-file">
                 <input type="{{ $type }}" name="{{ $name }}" id="{{ $inputId }}"
-                    class="custom-file-input" {{ $multiple ? 'multiple' : '' }}>
+                    placeholder="{{ $placeholder }}" class="custom-file-input" {{ $multiple ? 'multiple' : '' }}>
                 <x-input-label for="{{ $inputId }}" class="custom-file-label col-form-label"
                     data-browse="{{ __('buttons.browse') }}">{{ __('buttons.choose') }}</x-input-label>
             </div>
         </div>
     @elseif ($type === 'select')
         <div class="{{ $COLINPUT ?? 'col-sm-12' }}">
-            <select class="form-control select2" style="width: 100%;" name="{{ $name }}"
+            <select class="form-control select2" style="width: 100%;" name="{{ $name }}" placeholder="{{ $placeholder }}"
                 {{ $multiple ? 'multiple' : '' }}>
                 <option {{ $multiple ? '' : 'selected' }} disabled>{{ __('buttons.choose') }}</option>
                 @foreach ($options as $option)
@@ -65,12 +75,12 @@
 
         </div>
     @elseif ($type === 'textarea')
-        <div class="{{ $COLINPUT ?? 'col-sm-12' }}">
+        <div class="{{ $COLINPUT ?? 'col-sm-12' }}" placeholder="{{ $placeholder }}">
             <textarea name="{{ $name }}" id="{{ $inputId }}" class="form-control" rows="1">{{ old($name) ?? ($value ?? '') }}</textarea>
         </div>
     @else
         <div class="{{ $COLINPUT ?? 'col-sm-12' }}">
-            <x-text-input type="{{ $type }}" name="{{ $name }}" id="{{ $inputId }}"
+            <x-text-input type="{{ $type }}" name="{{ $name }}" id="{{ $inputId }}" placeholder="{{ $placeholder }}"
                 value="{{ old($name) ?? ($value ?? '') }}" class="form-control" />
         </div>
     @endif

@@ -19,20 +19,21 @@ class LectureResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = [
-            'id' => $this->id,
+            // 'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'description' => $this->description,
-            'image' => $this->thumbnail_url,
+            // 'image' => $this->thumbnail_url,
             'hours' => $this->hours,
             'minutes' => $this->minutes,
             'seconds' => $this->seconds,
-            'quality' => $this->quality,
+            // 'quality' => $this->quality,
         ];
 
         if ($this->withVideo) {
-            $data['converted_videos'] = $this->converted_videos;
+            // $data['converted_videos'] = $this->converted_videos;
+            $data['video'] = $this->video_url;
             $data['attachments'] = $this->attachments_url;
+            $data['description'] = $this->description;
         }
         return $data;
     }

@@ -5,27 +5,7 @@
             <form action="{{ route('admin.lectures.store') }}" method="POST" id="form1"
                 enctype="multipart/form-data">
                 @csrf
-                <div class="toggler">
-                    <div id="effect" class="text-center ui-widget-content ui-corner-all bg-primary">
-                        <p>
-                            <strong>{{ __('messages.dont_close_or_reload') }}</strong>
-                        </p>
 
-                        <div id="progressBarContainer" class="relative w-100 bg-light">
-                            <div id="progressBar" style="height: 20px; background-color: #4CAF50; width: 0%;">
-                            </div>
-                            <p id="progressText" class="position-absolute"
-                                style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                                0%
-                            </p>
-                        </div>
-                        <div id="status" class="flex items-center justify-between px-3 pt-2">
-                            <p id="statusText"></p>
-                            <button type="button" id="cancelUpload" class="mb-3 btn btn-danger btn-xs">Cancel
-                                Upload</button>
-                        </div>
-                    </div>
-                </div>
 
 
 
@@ -44,34 +24,17 @@
                     <x-custom.form-group type="text" name="title" />
 
 
-                    <div class='form-group row'>
-                        <x-input-label for="input-video"
-                            class="col-sm-12 col-form-label">{{ __('attributes.video') }}</x-input-label>
-
-                        <div class="input-group col-sm-12">
-                            <div class="custom-file">
-                                <input type="file" name="video" id="input-video" class="custom-file-input"
-                                    accept="video/*">
-                                <x-input-label for="input-video" class="custom-file-label col-form-label"
-                                    data-browse="{{ __('buttons.browse') }}">{{ __('buttons.choose') }}</x-input-label>
-                            </div>
-                        </div>
-                    </div>
+                    <x-custom.form-group type="text" name="video" placeholder="Video ID From YouTube"/>
 
                     {{-- show video --}}
-                    <div class="form-group" style="display: none" id="showVideo">
-                        <video width="320" height="240" controls id="video">
-                            <source src="" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
+                    <iframe src="" id="showVideo" width="100%" style="display: none" frameborder="0" allowfullscreen></iframe>
 
-                    <x-custom.form-group type="file" name="thumbnail" />
+                    {{-- duration --}}
+                    <x-custom.form-group type="number" name="hours" value="0" class="col-md-4 d-inline-block" />
 
-                    {{-- show thumbnail --}}
-                    <div class="form-group" style="display: none" id="showThumbnail">
-                        <img src="" alt="" id="thumbnail" class="img-thumbnail" style="height: 240px">
-                    </div>
+                    <x-custom.form-group type="number" name="minutes" value="0" class="col-md-4 d-inline-block" />
+
+                    <x-custom.form-group type="number" name="seconds" value="0" class="col-md-4 d-inline-block" />
 
                     <div class='row form-group col-md-12'>
                         <x-input-label for="summernote"

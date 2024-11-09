@@ -36,10 +36,14 @@ class LectureRequest extends FormRequest
                 })->ignore($this->id),
             ],
             'section_id' => 'required|exists:sections,id',
+            'video' => 'required|string',
             'description' => 'nullable|string',
             'attachments' => 'nullable|array',
             'attachments.*' => 'nullable|file|max:10240', // max 10mb
             'thumbnail' => 'nullable|image|max:10240', // max 10mb
+            'hours' => 'required|numeric',
+            'minutes' => 'required|numeric',
+            'seconds' => 'required|numeric',
         ];
 
         // Check if video is being updated

@@ -154,4 +154,9 @@ return [
     'web_logs' => 'Web Logs',
     'api' => 'API',
     'api_logs' => 'API Logs',
+    'hours' => 'Hours',
+    'minutes' => 'Minutes',
+    'seconds' => 'Seconds',
+    'days' => 'Days',
+    'weeks' => 'Weeks',
 ];

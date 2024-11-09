@@ -87,8 +87,8 @@
                                 <x-custom.form-submit text="{{ __('buttons.add_lecture') }}" class="mb-3 btn-primary"
                                     attr='data-toggle=modal data-target=#createVideoModal' />
 
-                                <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class="btn-secondary"
-                                    attr='data-toggle=modal data-target=#getVideoModal' />
+                                {{-- <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class="btn-secondary"
+                                    attr='data-toggle=modal data-target=#getVideoModal' /> --}}
                             </div>
                             <!-- form start -->
 
@@ -100,7 +100,7 @@
                 <!-- /.row -->
                 @include('admin.section.create-lecture-modal')
 
-                @include('admin.section.duplicate-lecture-modal')
+                {{-- @include('admin.section.duplicate-lecture-modal') --}}
             </div><!-- /.container-fluid -->
         </section>
         <!-- /.content -->
@@ -109,45 +109,6 @@
 
 @section('scripts')
     <script>
-        var operationType = 'store'; // Pass the variable
-    </script>
-    <script src="{{ asset('asset/admin/dist/js/uploadvideo.js') }}" defer></script>
-
-    <script>
-        // when upload thumbnail show the thumbnail preview
-        $('#input-thumbnail').change(function() {
-            $('#showThumbnail').show('blind');
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#showThumbnail img').attr('src', e.target
-                    .result);
-            }
-            reader.readAsDataURL(this.files[0]);
-        })
-        // when upload video show the video preview
-        $('#input-video').change(function() {
-            $('#showVideo').show('blind');
-
-            // Get the selected file
-            var file = this.files[0];
-
-            // Check file size (in bytes), for example, limit to 100MB (100 * 1024 * 1024 bytes)
-            var maxSize = 100 * 1024 * 1024; // 100MB
-
-            if (file.size > maxSize) {
-                // can't preview this file but you can upload it to the server
-                toastr.warning('File size is too large to preview but you can upload it to the server');
-                return;
-            }
-
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#showVideo video').attr('src', e.target
-                    .result);
-            }
-            reader.readAsDataURL(this.files[0]);
-        });
-
         // when upload attachments show the attachments preview
         $('#input-attachments').change(function() {
             console.log('attachments');
@@ -193,108 +154,48 @@
             }
 
         });
+
+        // show video from youtube
+        $('#input-video').change(function() {
+            var videoId = $(this).val();
+            var videoUrl = 'https://www.youtube.com/embed/' + videoId + '?enablejsapi=1';
+            $('#showVideo').show('blind');
+            $('#showVideo').attr('src', videoUrl);
+        });
     </script>
-
-
+    
     <script>
-        $(function() {
-            $('#accordion').sortable({
-                update: function(event, ui) {
-                    var lectureOrder = [];
-                    $('#accordion .card-lecture').each(function(index) {
-                        lectureOrder.push($(this).data('id'));
-                    });
-
-                    $.ajax({
-                        url: '{{ route('admin.lectures.updateOrder') }}',
-                        method: 'Post',
-                        data: {
-                            lectures: lectureOrder,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            // toastr.success
-                            toastr.success('Order updated successfully');
-                            //btnn rewrite the order
-                            $('#accordion .card-lecture').each(function(index) {
-                                $(this).find('.btnn').text(
-                                    `{{ __('attributes.video') }} #${index + 1}: ${$(this).find('.btnn').text().split(':')[1]}`
-                                );
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+        $('#form1').validate({
+            rules: {
+                title: {
+                    required: true,
+                },
+                video: {
+                    required: true,
                 }
-            });
+            },
+            messages: {
+                title: {
+                    required: "{{ __('validation.required', ['attribute' => __('attributes.title')]) }}"
+                },
+                video: {
+                    required: "{{ __('validation.required', ['attribute' => __('attributes.video')]) }}",
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                error.css('padding', '0 7.5px');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            },
 
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#getVideoModal').on('shown.bs.modal', function() {
-                $('#input-get-course').select2({
-                    dropdownParent: $('#getVideoModal')
-                });
-                $('#input-get-section').select2({
-                    dropdownParent: $('#getVideoModal')
-                });
-                $('#input-get-lecture').select2({
-                    dropdownParent: $('#getVideoModal')
-                });
-            });
-        });
-    </script>
 
-    <script>
-        $('#input-get-course').change(function() {
-            var course_id = $(this).val();
-            if (course_id) {
-                $.ajax({
-
-                    url: '{{ route('admin.sections.get', ':course_id') }}'.replace(':course_id',
-                        course_id),
-                    type: 'Get',
-                    success: function(data) {
-                        $('#div-get-setion').show('blind');
-                        $options =
-                            '<option selected="selected" disabled>{{ __('buttons.choose') }}</option>';
-                        data.data.forEach(element => {
-                            $options +=
-                                `<option value="${element.id}">${element.title}</option>`;
-                        });
-                        $('#input-get-section').html($options);
-                    }
-                });
-            } else {
-                $('#div-get-setion').hide('blind');
-                $('#div-get-lecture').hide('blind');
-            }
-        });
-
-        $('#input-get-section').change(function() {
-            var section_id = $(this).val();
-            if (section_id) {
-                $.ajax({
-                    url: '{{ route('admin.lectures.get', ':section_id') }}'.replace(':section_id',
-                        section_id),
-                    type: 'Get',
-                    success: function(data) {
-                        $('#div-get-lecture').show('blind');
-                        $options =
-                            '<option selected="selected" disabled>{{ __('buttons.choose') }}</option>';
-                        data.data.forEach(element => {
-                            $options +=
-                                `<option value="${element.id}">${element.title}</option>`;
-                        });
-                        $('#input-get-lecture').html($options);
-                    }
-                });
-            } else {
-                $('#div-get-lecture').hide('blind');
-            }
         });
     </script>
 @endsection

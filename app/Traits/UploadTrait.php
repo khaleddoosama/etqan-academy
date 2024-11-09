@@ -18,19 +18,9 @@ trait UploadTrait
         $name_gen = hexdec(uniqid()) . '.' . $picture->getClientOriginalExtension();
         $path = "uploads/{$folderName}/{$name_gen}";
 
-        // Ensure the directory exists or create it
-        $this->ensureDirectoryExists($folderName);
-
-        // Image::make($picture)->resize($width, $height)->save(public_path("{$path}"));
-        // Image::read($picture)->resize($width, $height)->save(public_path("{$path}"));
-
         $image = Image::read($picture)->resize($width, $height);
-        if ($disk == 's3') {
-            Storage::disk($disk)->put($path, (string) $image->encode());
-        } elseif ($disk == 'public') {
-            // in public path
-            $image->save(public_path("{$path}"));
-        }
+        Storage::disk($disk)->put($path, (string) $image->encode());
+
 
         //reomve // from $path
         $path = str_replace('//', '/', $path);
@@ -45,11 +35,7 @@ trait UploadTrait
             $name_gen = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
             $path = "uploads/{$folderName}/{$name_gen}";
 
-            if ($disk == 's3') {
-                Storage::disk($disk)->put($path, file_get_contents($file));
-            } elseif ($disk == 'public') {
-                $file->move(public_path("uploads/{$folderName}/"), $name_gen);
-            }
+            Storage::disk($disk)->put($path, file_get_contents($file));
 
             return $path;
         } catch (\Exception $e) {
@@ -112,14 +98,6 @@ trait UploadTrait
     {
         foreach ($attachments as $attachment) {
             $this->deleteIfExists($attachment['path']);
-        }
-    }
-
-    // Ensure the directory exists or create it
-    public function ensureDirectoryExists($folderName)
-    {
-        if (!is_dir(public_path("uploads/{$folderName}/"))) {
-            mkdir(public_path("uploads/{$folderName}/"), 0755, true);
         }
     }
 }

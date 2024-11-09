@@ -214,6 +214,6 @@ class Course extends Model
     {
         $folderName = str_replace(' ', '-', strtolower($this->slug)) . '/thumbnails';
         $this->deleteIfExists($this->thumbnail); // Delete the old thumbnail if it exists
-        $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 's3');
+        $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 'public');
     }
 }

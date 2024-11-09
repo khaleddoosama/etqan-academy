@@ -167,7 +167,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         $folderName = 'users/' . $this->role . '/' . $this->slug . '/pictures';
 
         $this->deleteIfExists($this->picture); // Delete the old image if it exists
-        $this->attributes['picture'] = $this->uploadImage($picture, $folderName, 640, 480, 's3');
+        $this->attributes['picture'] = $this->uploadImage($picture, $folderName, 640, 480, 'public');
     }
 
     protected static function boot()

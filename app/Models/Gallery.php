@@ -28,7 +28,6 @@ class Gallery extends Model
     {
         $folderName = $this->getFolderName('galleries');
 
-        Log::info('from Gallery folderName: ' . $folderName);
 
         $this->deleteIfExists($this->path); // Delete the old image if it exists
         $this->attributes['path'] = $this->uploadFile($file, $folderName, 'public');

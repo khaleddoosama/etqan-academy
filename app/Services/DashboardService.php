@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class DashboardService
 {
@@ -222,11 +223,12 @@ class DashboardService
             $totalLastWeek = 0;
             for ($i = 0; $i < 7; $i++) {
                 $totalThisWeek += $thisWeek[$i]->activity_count ?? 0;
-                if ($thisWeek[$i]->activity_count != 0) {
+                // check if activity count not 0 and day not day
+                if ($thisWeek[$i]->activity_count != 0 && $thisWeek[$i]->day_of_week != $today->dayOfWeek + 1) {
                     $totalLastWeek += $lastWeek[$i]->activity_count ?? 0;
                 }
             }
-
+            // dd($totalThisWeek, $totalLastWeek);
             if ($totalLastWeek == 0) {
                 $percentageChange = $totalThisWeek > 0 ? 100 : 0;
             } else {
@@ -291,7 +293,7 @@ class DashboardService
     public function getOs()
     {
         return Cache::remember('os', 60 * 60, function () {
-        return DB::select("SELECT
+            return DB::select("SELECT
                 CASE
                 WHEN JSON_UNQUOTE(JSON_EXTRACT(properties, '$.user_agent')) LIKE '%Windows%' THEN 'Windows'
                 WHEN JSON_UNQUOTE(JSON_EXTRACT(properties, '$.user_agent')) LIKE '%Linux%' THEN 'Linux'

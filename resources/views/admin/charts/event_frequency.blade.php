@@ -13,8 +13,8 @@
                     <span>Event Frequency Over Time</span>
                 </p>
                 <p class="ml-auto text-right d-flex flex-column">
-                    <span class="text-success">
-                        <i class="fas fa-arrow-up"></i> {{ $eventFrequencyOverTime['percentage_change'] }}%
+                    <span class="{{ $eventFrequencyOverTime['percentage_change'] < 0 ? 'text-danger' : 'text-success' }}">
+                        <i class="{{ $eventFrequencyOverTime['percentage_change'] < 0 ? 'fas fa-arrow-down' : 'fas fa-arrow-up' }}"></i> {{ $eventFrequencyOverTime['percentage_change'] }}%
                     </span>
                     <span class="text-muted">Since last 10 days</span>
                 </p>

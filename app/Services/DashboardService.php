@@ -166,64 +166,82 @@ class DashboardService
 
     public function getActivityByDayOfWeek()
     {
-        return Cache::remember('activityByDayOfWeek', 60 * 60 * 12, function () {
-            $today = Carbon::now();
-            $dayOfWeek = $today->dayOfWeek; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        // return Cache::remember('activityByDayOfWeek', 60 * 60 * 12, function () {
+        $today = Carbon::now();
 
-            // تحديد بداية الأسبوع (السبت)
-            $startOfWeek = $today->copy()->startOfWeek(Carbon::SATURDAY);
+        // تحديد بداية الأسبوع (السبت)
+        $startOfWeek = $today->copy()->startOfWeek(Carbon::SATURDAY);
 
-            // البيانات لهذا الأسبوع (تبدأ من السبت وتزداد كل يوم)
-            $thisWeek = DB::select(
-                "
-        SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
-        FROM activity_log
-        WHERE created_at >= :start_of_week AND created_at <= :today
-        GROUP BY day_of_week
-        ORDER BY day_of_week
-        ",
-                [
-                    'start_of_week' => $startOfWeek,
-                    'today' => $today,
-                ]
-            );
+        // البيانات لهذا الأسبوع (تبدأ من السبت وتزداد كل يوم)
+        $thisWeek = DB::select(
+            "
+                        SELECT d.day_of_week, COALESCE(a.activity_count, 0) AS activity_count
+                        FROM (
+                            SELECT 1 AS day_of_week UNION ALL
+                            SELECT 2 UNION ALL
+                            SELECT 3 UNION ALL
+                            SELECT 4 UNION ALL
+                            SELECT 5 UNION ALL
+                            SELECT 6 UNION ALL
+                            SELECT 7
+                        ) d
+                        LEFT JOIN (
+                            SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
+                            FROM activity_log
+                            WHERE DATE(created_at) >= DATE(:start_of_week) AND DATE(created_at) <= DATE(:today)
+                            GROUP BY day_of_week
+                        ) a ON d.day_of_week = a.day_of_week
+                        ORDER BY d.day_of_week
+                    ",
+            [
+                'start_of_week' => $startOfWeek,
+                'today' => $today,
+            ]
+        );
 
-            // البيانات للأسبوع السابق بالكامل
-            $lastWeekStart = $startOfWeek->copy()->subWeek();
-            $lastWeekEnd = $startOfWeek->copy()->subDay();
 
-            $lastWeek = DB::select(
-                "
-        SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
-        FROM activity_log
-        WHERE created_at >= :last_week_start AND created_at <= :last_week_end
-        GROUP BY day_of_week
-        ORDER BY day_of_week
-        ",
-                [
-                    'last_week_start' => $lastWeekStart,
-                    'last_week_end' => $lastWeekEnd,
-                ]
-            );
+        // البيانات للأسبوع السابق بالكامل
+        $lastWeekStart = $startOfWeek->copy()->subWeek();
+        $lastWeekEnd = $startOfWeek->copy()->subDay();
 
-            // حساب إجمالي الأحداث لكل فترة
-            $totalThisWeek = array_sum(array_map(fn($item) => $item->activity_count, $thisWeek));
-            $totalLastWeek = array_sum(array_map(fn($item) => $item->activity_count, $lastWeek));
-
-            // حساب التغيير بالنسبة المئوية
-            if ($totalLastWeek == 0) {
-                $percentageChange = $totalThisWeek > 0 ? 100 : 0;
-            } else {
-                $percentageChange = (($totalThisWeek - $totalLastWeek) / $totalLastWeek) * 100;
+        $lastWeek = DB::select(
+            "
+                            SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
+                            FROM activity_log
+                            WHERE DATE(created_at) >= DATE(:last_week_start) AND DATE(created_at) <= DATE(:last_week_end)
+                            GROUP BY day_of_week
+                            ORDER BY day_of_week
+                        ",
+            [
+                'last_week_start' => $lastWeekStart,
+                'last_week_end' => $lastWeekEnd,
+            ]
+        );
+        // dd($thisWeek, $lastWeek);
+        // حساب إجمالي الأحداث لكل فترة
+        $totalThisWeek = 0;
+        $totalLastWeek = 0;
+        for ($i = 0; $i < 7; $i++) {
+            $totalThisWeek += $thisWeek[$i]->activity_count ?? 0;
+            if ($thisWeek[$i]->activity_count != 0) {
+                $totalLastWeek += $lastWeek[$i]->activity_count ?? 0;
             }
+        }
 
-            // إرجاع البيانات
-            return [
-                'this_week' => $thisWeek,
-                'last_week' => $lastWeek,
-                'percentage_change' => $percentageChange,
-            ];
-        });
+        // حساب التغيير بالنسبة المئوية
+        if ($totalLastWeek == 0) {
+            $percentageChange = $totalThisWeek > 0 ? 100 : 0;
+        } else {
+            $percentageChange = (($totalThisWeek - $totalLastWeek) / $totalLastWeek) * 100;
+        }
+
+        // إرجاع البيانات
+        return [
+            'this_week' => $thisWeek,
+            'last_week' => $lastWeek,
+            'percentage_change' => $percentageChange,
+        ];
+        // });
     }
 
     public function getActiveUserCount()

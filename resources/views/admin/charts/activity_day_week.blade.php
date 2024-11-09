@@ -13,8 +13,10 @@
                     <span>Activity by Day of the Week</span>
                 </p> --}}
                 <p class="ml-auto text-right d-flex flex-column">
-                    <span class="text-success">
-                        <i class="fas fa-arrow-up"></i> {{ $activityByDayOfWeek['percentage_change'] }}%
+                    <span class="{{ $activityByDayOfWeek['percentage_change'] < 0 ? 'text-danger' : 'text-success' }}">
+                        <i
+                            class="{{ $activityByDayOfWeek['percentage_change'] < 0 ? 'fas fa-arrow-down' : 'fas fa-arrow-up' }}"></i>
+                        {{ $activityByDayOfWeek['percentage_change'] }}%
                     </span>
                     <span class="text-muted">Since last week</span>
                 </p>
@@ -44,7 +46,7 @@
         var salesChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
                 datasets: [{
                         label: 'This Week',
                         borderColor: '#007bff',

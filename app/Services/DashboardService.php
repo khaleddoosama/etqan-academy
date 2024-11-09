@@ -167,37 +167,57 @@ class DashboardService
     public function getActivityByDayOfWeek()
     {
         return Cache::remember('activityByDayOfWeek', 60 * 60 * 12, function () {
+            $today = Carbon::now();
+            $dayOfWeek = $today->dayOfWeek; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+            // تحديد بداية الأسبوع (السبت)
+            $startOfWeek = $today->copy()->startOfWeek(Carbon::SATURDAY);
+
+            // البيانات لهذا الأسبوع (تبدأ من السبت وتزداد كل يوم)
             $thisWeek = DB::select(
                 "
-                SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
-                FROM activity_log
-                GROUP BY day_of_week
-                ORDER BY day_of_week
-                "
+        SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
+        FROM activity_log
+        WHERE created_at >= :start_of_week AND created_at <= :today
+        GROUP BY day_of_week
+        ORDER BY day_of_week
+        ",
+                [
+                    'start_of_week' => $startOfWeek,
+                    'today' => $today,
+                ]
             );
+
+            // البيانات للأسبوع السابق بالكامل
+            $lastWeekStart = $startOfWeek->copy()->subWeek();
+            $lastWeekEnd = $startOfWeek->copy()->subDay();
 
             $lastWeek = DB::select(
                 "
-                SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
-                FROM activity_log
-                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                GROUP BY day_of_week
-                ORDER BY day_of_week
-                "
+        SELECT DAYOFWEEK(created_at) AS day_of_week, COUNT(*) AS activity_count
+        FROM activity_log
+        WHERE created_at >= :last_week_start AND created_at <= :last_week_end
+        GROUP BY day_of_week
+        ORDER BY day_of_week
+        ",
+                [
+                    'last_week_start' => $lastWeekStart,
+                    'last_week_end' => $lastWeekEnd,
+                ]
             );
 
-            // Calculate total events for each period
+            // حساب إجمالي الأحداث لكل فترة
             $totalThisWeek = array_sum(array_map(fn($item) => $item->activity_count, $thisWeek));
             $totalLastWeek = array_sum(array_map(fn($item) => $item->activity_count, $lastWeek));
 
-            // Calculate percentage change
+            // حساب التغيير بالنسبة المئوية
             if ($totalLastWeek == 0) {
                 $percentageChange = $totalThisWeek > 0 ? 100 : 0;
             } else {
                 $percentageChange = (($totalThisWeek - $totalLastWeek) / $totalLastWeek) * 100;
             }
 
-            // Return data
+            // إرجاع البيانات
             return [
                 'this_week' => $thisWeek,
                 'last_week' => $lastWeek,

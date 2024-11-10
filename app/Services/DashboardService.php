@@ -223,7 +223,7 @@ class DashboardService
             $totalLastWeek = 0;
             for ($i = 0; $i < 7; $i++) {
 
-                if ($thisWeek[$i]->day_of_week >= $today->dayOfWeek) {
+                if ($thisWeek[$i]->day_of_week > $today->dayOfWeek) {
                     continue;
                 }
 

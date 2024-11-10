@@ -222,14 +222,14 @@ class DashboardService
             $totalThisWeek = 0;
             $totalLastWeek = 0;
             for ($i = 0; $i < 7; $i++) {
-
-                if ($thisWeek[$i]->day_of_week > $today->dayOfWeek) {
+                if ($thisWeek[$i]->day_of_week === $today->dayOfWeek + 1) {
                     continue;
                 }
-
                 $totalThisWeek += $thisWeek[$i]->activity_count ?? 0;
 
-                $totalLastWeek += $lastWeek[$i]->activity_count ?? 0;
+                if ($thisWeek[$i]->activity_count != 0 ) {
+                    $totalLastWeek += $lastWeek[$i]->activity_count ?? 0;
+                }
             }
             // dd($totalThisWeek, $totalLastWeek);
             if ($totalLastWeek == 0) {

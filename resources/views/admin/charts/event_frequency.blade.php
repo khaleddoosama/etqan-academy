@@ -35,11 +35,11 @@
 
             <div class="d-flex flex-row justify-content-end">
                 <span class="mr-2">
-                    <i class="fas fa-square text-primary"></i> This Week
+                    <i class="fas fa-square text-primary"></i> This Month
                 </span>
 
                 <span>
-                    <i class="fas fa-square text-gray"></i> Last Week
+                    <i class="fas fa-square text-gray"></i> Last Month
                 </span>
             </div>
         </div>
@@ -57,14 +57,14 @@
             data: {
                 labels: @json(array_column($eventFrequencyOverTime['last_10_days'], 'date')),
                 datasets: [{
-                        label: 'This Week',
+                        label: 'This Month',
                         data: @json(array_column($eventFrequencyOverTime['last_10_days'], 'event_count')),
                         borderColor: '#007bff',
                         fill: false,
                         tension: 0.4,
                     },
                     {
-                        label: 'Last Week',
+                        label: 'Last Month',
                         data: @json(array_column($eventFrequencyOverTime['same_days_last_month'], 'event_count')),
                         borderColor: '#ced4da',
                         fill: true,

@@ -69,10 +69,17 @@ class DashboardService
         return Cache::remember('mostAccessedURLs', 60 * 60, function () {
             return DB::select(
                 "
-                SELECT JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) AS url, COUNT(*) AS access_count
-                FROM activity_log WHERE JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) IS NOT NULL
-                GROUP BY url
-                ORDER BY access_count DESC
+                SELECT
+                    REPLACE(JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')), '/api', '') AS url,
+                    COUNT(*) AS access_count
+                FROM
+                    activity_log
+                WHERE
+                    JSON_UNQUOTE(JSON_EXTRACT(properties, '$.url')) IS NOT NULL
+                GROUP BY
+                    url
+                ORDER BY
+                    access_count DESC
                 LIMIT 10
                 "
             );
@@ -227,7 +234,7 @@ class DashboardService
                 }
                 $totalThisWeek += $thisWeek[$i]->activity_count ?? 0;
 
-                if ($thisWeek[$i]->activity_count != 0 ) {
+                if ($thisWeek[$i]->activity_count != 0) {
                     $totalLastWeek += $lastWeek[$i]->activity_count ?? 0;
                 }
             }

@@ -7,6 +7,7 @@
 /storage/*.key
 /storage/app
 /storage/debugbar
+/storage/backups
 /storage/framework/cache
 /vendor
 .env

@@ -356,13 +356,15 @@
                               Request::is('*/admin/logs') ||
                               Request::is('*/admin/logs/default') ||
                               Request::is('*/admin/logs/web') ||
-                              Request::is('*/admin/logs/api')) menu-open @endif">
+                              Request::is('*/admin/logs/api') ||
+                              Request::is('*/admin/databases')) menu-open @endif">
                           <a href="#" class="nav-link @if (Request::is('*/admin/logs/files') ||
                                   Request::is('*/admin/logs/files/*') ||
                                   Request::is('*/admin/logs') ||
                                   Request::is('*/admin/logs/default') ||
                                   Request::is('*/admin/logs/web') ||
-                                  Request::is('*/admin/logs/api')) active @endif">
+                                  Request::is('*/admin/logs/api')||
+                                  Request::is('*/admin/databases')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
                               <p>
                                   {{ __('Logs Management') }}
@@ -376,14 +378,16 @@
                                       Request::is('*/admin/logs') ||
                                       Request::is('*/admin/logs/default') ||
                                       Request::is('*/admin/logs/web') ||
-                                      Request::is('*/admin/logs/api')
+                                      Request::is('*/admin/logs/api') ||
+                                      Request::is('*/admin/databases')
                                   )) display: none @endif">
 
                               {{-- Logs Files --}}
                               <li class="nav-item">
                                   <a href="{{ route('admin.logs.files.index') }}"
                                       class="nav-link @if (Request::is('*/admin/logs/files') || Request::is('*/admin/logs/files/*')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
+                                      <span class="icon nav-icon"><ion-icon name="folder-outline"></ion-icon></span>
+                                      <!-- Second icon -->
                                       <p>{{ __('attributes.logs_files') }}</p>
                                   </a>
                               </li>
@@ -395,8 +399,18 @@
                                               Request::is('*/admin/logs/default') ||
                                               Request::is('*/admin/logs/web') ||
                                               Request::is('*/admin/logs/api')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
+                                      <span class="icon nav-icon"><ion-icon name="document-outline"></ion-icon></span>
+                                      <!-- Second icon -->
                                       <p>{{ __('attributes.logs') }}</p>
+                                  </a>
+                              </li>
+
+                              {{-- Databases --}}
+                              <li class="nav-item">
+                                  <a href="{{ route('admin.databases.index') }}"
+                                      class="nav-link @if (Request::is('*/admin/databases')) active @endif">
+                                      <span class="icon nav-icon"><ion-icon name="server-outline"></ion-icon></span>
+                                      <p>{{ __('attributes.databases') }}</p>
                                   </a>
                               </li>
 

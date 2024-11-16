@@ -154,4 +154,5 @@ return [
     'web_logs' => 'Web Logs',
     'api' => 'API',
     'api_logs' => 'API Logs',
+    'databases' => 'Databases',
 ];

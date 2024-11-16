@@ -68,4 +68,33 @@ class LogController extends Controller
         }
         return back();
     }
+
+    // allDatabases
+    public function allDatabases()
+    {
+        $databases = storage_path('backups');
+        $databases = array_map('basename', glob($databases . '/*.sql'));
+
+        return view('admin.databases.index', compact('databases'));
+    }
+
+    public function downloadDatabase($database)
+    {
+        $database = storage_path('backups/' . $database);
+        if (file_exists($database)) {
+            return response()->download($database);
+        } else {
+            return redirect()->route('admin.databases.index');
+        }
+    }
+
+    public function deleteDatabase($database)
+    {
+        $database = storage_path('backups/' . $database);
+        if (file_exists($database)) {
+            unlink($database);
+            Toastr::success('Database deleted successfully', 'Success');
+        }
+        return redirect()->route('admin.databases.index');
+    }
 }

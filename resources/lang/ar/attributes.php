@@ -153,4 +153,5 @@ return [
     'web_logs' => 'سجلات الويب',
     'api' => 'API',
     'api_logs' => 'سجلات API',
+    'databases' => 'قواعد البيانات',
 ];

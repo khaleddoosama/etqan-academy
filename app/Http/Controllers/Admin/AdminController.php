@@ -55,6 +55,7 @@ class AdminController extends Controller
             'browsers',
             'os',
             'lastMembers',
+            'heatMap'
         ];
 
         $data = [];

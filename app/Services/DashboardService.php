@@ -327,4 +327,31 @@ class DashboardService
             return User::orderBy('created_at', 'desc')->select('first_name', 'last_name', 'created_at')->limit(8)->get();
         });
     }
+
+    public function getHeatMap()
+    {
+        return Cache::remember('activity_heatmap_data', 60 * 12, function () {
+            $activityData = DB::select(
+                "SELECT DAYNAME(created_at) as weekday, HOUR(created_at) as hour, COUNT(*) as count
+                FROM activity_log
+                GROUP BY weekday, hour"
+            );
+
+            $heatmapData = [];
+            foreach ($activityData as $activity) {
+                $heatmapData[$activity->weekday][$activity->hour] = $activity->count;
+            }
+
+            $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            for ($hour = 0; $hour < 24; $hour++) {
+                foreach ($days as $day) {
+                    if (!isset($heatmapData[$day][$hour])) {
+                        $heatmapData[$day][$hour] = 0;
+                    }
+                }
+            }
+
+            return $heatmapData;
+        });
+    }
 }

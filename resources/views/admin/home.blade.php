@@ -121,6 +121,11 @@
 
                     {{-- Most Accessed URLs Chart --}}
                     @include('admin.charts.most_accessed_urls')
+
+                    {{-- Heat Map --}}
+                    @include('admin.charts.heat_map')
+
+
                 </div>
             </div>
         @endcan

@@ -56,7 +56,7 @@
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h4 class="modal-title">{{ __('main.show') }} {{ ucfirst($log->event) }}</h4>
+                                                                    <h4 class="modal-title">{{ __('main.show') }} {{ $log->event ? ucfirst($log->event) : '' }}</h4>
                                                                     <button type="button" class="close"
                                                                         data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">×</span>

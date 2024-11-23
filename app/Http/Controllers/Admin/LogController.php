@@ -16,7 +16,9 @@ class LogController extends Controller
 
     public function show($type)
     {
-        $logs = Activity::where('log_name', 'like', '%' . $type . '%')->orderBy('created_at', 'desc')->paginate(100);
+        $logs = Activity::with('causer')->where('log_name', 'like', '%' . $type . '%')
+            ->orderBy('created_at', 'desc')
+            ->paginate(100);
 
         return view('admin.logs.show', compact('logs', 'type'));
     }

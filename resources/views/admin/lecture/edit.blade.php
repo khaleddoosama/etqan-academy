@@ -23,7 +23,7 @@
                             <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">{{ __('main.dashboard') }}</a>
                             </li>
                             <li class="breadcrumb-item"><a
-                                    href="{{ route('admin.courses.index') }}">{{ $lecture->course->title }}</a></li>
+                                    href="{{ route('admin.courses.index') }}">{{ $lecture->section->course->title }}</a></li>
                             <li class="breadcrumb-item"><a
                                     href="{{ route('admin.sections.show', $lecture->section->id) }}">{{ $lecture->section->title }}</a>
                             </li>

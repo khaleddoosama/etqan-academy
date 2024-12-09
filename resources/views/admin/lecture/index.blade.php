@@ -44,7 +44,7 @@
                                                 <td><a
                                                         href="{{ route('admin.sections.show', $lecture->section_id) }}">{{ $lecture->section->title }}</a>
                                                 </td>
-                                                <td>{{ $lecture->course->title }}</td>
+                                                <td>{{ $lecture->section->course->title }}</td>
 
                                                 <td>
                                                     @if ($lecture->processed == 0)

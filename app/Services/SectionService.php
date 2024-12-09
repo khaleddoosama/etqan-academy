@@ -34,7 +34,7 @@ class SectionService
         return Cache::remember($cacheKey, 60, function () use ($courseSlug) {
             return Section::whereHas('course', function ($query) use ($courseSlug) {
                 $query->where('slug', $courseSlug);
-            })->get();
+            })->with('course')->get();
         });
     }
 

@@ -85,6 +85,10 @@ class LectureController extends Controller
     //edit
     public function edit(Lecture $lecture)
     {
+        // lecture with course and section
+        $lecture->load('section');
+        // lecture with course
+        $lecture->load('section.course');
         $sections = $this->lectureService->getSections($lecture->section->course->slug);
         return view('admin.lecture.edit', compact('lecture', 'sections'));
     }

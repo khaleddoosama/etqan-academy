@@ -188,7 +188,7 @@ class LectureService
 
     public function getAllLectures()
     {
-        return Lecture::get();
+        return Lecture::with(['section', 'section.course'])->get();
     }
 
     public function updateVideoPaths($lectureId, $videoPaths)

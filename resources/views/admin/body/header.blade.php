@@ -94,16 +94,28 @@
              </li>
              -->
              <!-- Notifications Dropdown Menu -->
+             @php
+                 $user = auth()
+                     ->user()
+                     ->loadCount('unreadNotifications')
+                     ->load([
+                         'notifications' => function ($query) {
+                             $query->latest()->take(5);
+                         },
+                     ]);
+
+                 $unreadNotificationsCount = $user->unread_notifications_count;
+                 $latestNotifications = $user->notifications;
+             @endphp
              <li class="nav-item dropdown">
                  <a class="nav-link" data-toggle="dropdown" href="#">
                      <i class="far fa-bell"></i>
-                     <span
-                         class="badge badge-warning navbar-badge">{{ count(auth()->user()->unreadNotifications) }}</span>
+                     <span class="badge badge-warning navbar-badge">{{ $unreadNotificationsCount }}</span>
                  </a>
                  <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                     <span class="dropdown-item dropdown-header">{{ count(auth()->user()->unreadNotifications) }}
+                     <span class="dropdown-item dropdown-header">{{ $unreadNotificationsCount }}
                          الإشعارات</span>
-                     @foreach (auth()->user()->notifications->take(5) as $notification)
+                     @foreach ($latestNotifications as $notification)
                          <div class="dropdown-divider"></div>
                          <a href="#" class="dropdown-item notification" data-id="{{ $notification->id }}"
                              data-url="{{ $notification->data['action'] }}"

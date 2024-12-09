@@ -53,7 +53,9 @@ class AdminController extends Controller
             'activeLectureCount',
             'activeCourseCount',
             'browsers',
+            'os',
             'lastMembers',
+            'heatMap'
         ];
 
         $data = [];

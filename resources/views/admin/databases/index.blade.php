@@ -1,12 +1,12 @@
 @extends('admin.master')
 @section('title')
-    {{ __('attributes.files') }}
+    {{ __('attributes.databases') }}
 @endsection
 @section('content')
     <div class="content-wrapper">
         <!-- Content Wrapper. Contains page content -->
         <!-- Content Header (Page header) -->
-        <x-custom.header-page title="{{ __('attributes.files') }}" />
+        <x-custom.header-page title="{{ __('attributes.databases') }}" />
 
         <!-- Main content -->
         <section class="content">
@@ -26,16 +26,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($files as $log)
+                                        @foreach ($databases as $database)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $log }}</td>
+                                                <td>{{ $database }}</td>
                                                 <td>
-                                                    <a href="{{ route('admin.logs.files.show', $log) }}" class="btn btn-success"
-                                                        title="{{ __('main.show') }}">
-                                                        <i class="fas fa-eye text-white"></i>
-                                                    </a>
-                                                    <a href="{{ route('admin.logs.files.download', $log) }}"
+
+                                                    <a href="{{ route('admin.databases.download', $database) }}"
                                                         class="btn btn-primary" title="{{ __('buttons.download') }}">
                                                         <i class="fas fa-download text-white"></i>
                                                     </a>
@@ -70,7 +67,7 @@
                                                                 <div class="modal-footer">
                                                                     <x-custom.close-modal-button />
 
-                                                                    <form action="{{ route('admin.logs.files.delete', $log) }}"
+                                                                    <form action="{{ route('admin.databases.delete', $database) }}"
                                                                         method="POST" style="display: inline-block;">
                                                                         @csrf
                                                                         @method('DELETE')

@@ -16,7 +16,9 @@ class LogController extends Controller
 
     public function show($type)
     {
-        $logs = Activity::where('log_name', 'like', '%' . $type . '%')->orderBy('created_at', 'desc')->paginate(100);
+        $logs = Activity::with('causer')->where('log_name', 'like', '%' . $type . '%')
+            ->orderBy('created_at', 'desc')
+            ->paginate(100);
 
         return view('admin.logs.show', compact('logs', 'type'));
     }
@@ -67,5 +69,34 @@ class LogController extends Controller
             unlink($logFile);
         }
         return back();
+    }
+
+    // allDatabases
+    public function allDatabases()
+    {
+        $databases = storage_path('backups');
+        $databases = array_map('basename', glob($databases . '/*.sql'));
+
+        return view('admin.databases.index', compact('databases'));
+    }
+
+    public function downloadDatabase($database)
+    {
+        $database = storage_path('backups/' . $database);
+        if (file_exists($database)) {
+            return response()->download($database);
+        } else {
+            return redirect()->route('admin.databases.index');
+        }
+    }
+
+    public function deleteDatabase($database)
+    {
+        $database = storage_path('backups/' . $database);
+        if (file_exists($database)) {
+            unlink($database);
+            Toastr::success('Database deleted successfully', 'Success');
+        }
+        return redirect()->route('admin.databases.index');
     }
 }

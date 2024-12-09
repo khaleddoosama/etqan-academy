@@ -159,4 +159,5 @@ return [
     'seconds' => 'Seconds',
     'days' => 'Days',
     'weeks' => 'Weeks',
+    'databases' => 'Databases',
 ];

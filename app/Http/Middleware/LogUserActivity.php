@@ -22,7 +22,7 @@ class LogUserActivity
         $statusCode = $response->getStatusCode();
         $statusMessage = '<span class="badge badge-success">Success</span>';
         $error_message = "";
-        if ($via == 'Web' && $response->exception) {
+        if ($via == 'Web' && method_exists($response, 'exception') && $response->exception) {
             $statusMessage = '<span class="badge badge-danger">Failed</span>';
             $error_message = $response->exception->getMessage();
         } elseif ($via == 'API' && $statusCode >= 400) {

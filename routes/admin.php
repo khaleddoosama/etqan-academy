@@ -158,9 +158,14 @@ Route::group(
                 Route::get('/logs/files/{file}', 'showFile')->name('logs.files.show');
                 Route::get('/logs/files/{file}/download', 'download')->name('logs.files.download');
                 Route::delete('/logs/files/{file}', 'delete')->name('logs.files.delete');
+
                 Route::get('/logs', 'index')->name('logs.index');
                 Route::get('/logs/{log}', 'show')->name('logs.show');
                 Route::delete('/logs/bulk-delete/{type}', 'bulkDelete')->name('logs.bulk_delete');
+
+                Route::get('/databases', 'allDatabases')->name('databases.index');
+                Route::get('/databases/{database}/download', 'downloadDatabase')->name('databases.download');
+                Route::delete('/databases/{database}', 'deleteDatabase')->name('databases.delete');
             });
 
             // jobs

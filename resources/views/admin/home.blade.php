@@ -88,7 +88,10 @@
 
                     {{-- Browser Usage Chart --}}
                     @include('admin.charts.browser')
-                    
+
+                    {{-- OS Usage Chart --}}
+                    {{-- @include('admin.charts.os') --}}
+
                     {{-- Event Frequency Over Time Chart --}}
                     @include('admin.charts.event_frequency')
 
@@ -118,6 +121,11 @@
 
                     {{-- Most Accessed URLs Chart --}}
                     @include('admin.charts.most_accessed_urls')
+
+                    {{-- Heat Map --}}
+                    @include('admin.charts.heat_map')
+
+
                 </div>
             </div>
         @endcan

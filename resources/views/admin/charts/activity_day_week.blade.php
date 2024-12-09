@@ -4,6 +4,14 @@
             <div class="d-flex justify-content-between">
                 <h3 class="card-title">Activity by Day of the Week</h3>
                 {{-- <a href="javascript:void(0);">View Report</a> --}}
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -13,8 +21,10 @@
                     <span>Activity by Day of the Week</span>
                 </p> --}}
                 <p class="ml-auto text-right d-flex flex-column">
-                    <span class="text-success">
-                        <i class="fas fa-arrow-up"></i> {{ $activityByDayOfWeek['percentage_change'] }}%
+                    <span class="{{ $activityByDayOfWeek['percentage_change'] < 0 ? 'text-danger' : 'text-success' }}">
+                        <i
+                            class="{{ $activityByDayOfWeek['percentage_change'] < 0 ? 'fas fa-arrow-down' : 'fas fa-arrow-up' }}"></i>
+                        {{ $activityByDayOfWeek['percentage_change'] }}%
                     </span>
                     <span class="text-muted">Since last week</span>
                 </p>

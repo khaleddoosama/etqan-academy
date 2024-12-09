@@ -112,15 +112,15 @@ Route::group(
             Route::resource('lectures', LectureController::class)->except(['show', 'create'])->missing(function () {
                 return redirect()->route('admin.courses.index');
             });
-            Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
+            // Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
             Route::get('failed-lectures', [LectureController::class, 'failedLectures'])->name('lectures.failed.index');
             Route::post('/lectures/update-order', [LectureController::class, 'updateOrder'])->name('lectures.updateOrder');
-            Route::post('/upload-video', [LectureController::class, 'generatePresignedUrl']);
+            // Route::post('/upload-video', [LectureController::class, 'generatePresignedUrl']);
             Route::put('/update-attachment/{lecture}', [LectureController::class, 'updateAttachment'])->name('lectures.updateAttachment');
             Route::put('/delete-attachment/{lecture}', [LectureController::class, 'deleteAttachment'])->name('lectures.deleteAttachment');
             Route::put('lectures/is-free/{lecture}', [LectureController::class, 'changeIsFree'])->name('lectures.changeIsFree');
             Route::get('/lectures/{section_id}/get', [LectureController::class, 'getLectures'])->name('lectures.get');
-            Route::put('/update-video-path/{lecture}', [LectureController::class, 'updateVideoPath'])->name('lectures.updateVideoPath');
+            // Route::put('/update-video-path/{lecture}', [LectureController::class, 'updateVideoPath'])->name('lectures.updateVideoPath');
 
             // Inquiry Controller
             Route::controller(InquiryController::class)->group(function () {

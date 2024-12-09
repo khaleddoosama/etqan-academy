@@ -153,5 +153,10 @@ return [
     'web_logs' => 'سجلات الويب',
     'api' => 'API',
     'api_logs' => 'سجلات API',
+    'hours' => 'ساعات',
+    'minutes' => 'دقائق',
+    'seconds' => 'ثواني',
+    'days' => 'أيام',
+    'weeks' => 'أسابيع',
     'databases' => 'قواعد البيانات',
 ];

@@ -55,8 +55,9 @@ class LectureService
 
     public function createLecture(array $data): Lecture
     {
-        $data['disk'] = 's3';
+        $data['disk'] = 'public';
         $data['position'] = Lecture::where('section_id', $data['section_id'])->max('position') + 1;
+        $data['processed'] = 1;
         $lecture = Lecture::create($data); // Create the lecture without the 'lectures' data
 
         // Clear cache after creating a new lecture
@@ -67,6 +68,7 @@ class LectureService
 
     public function updateLecture(Lecture $lecture, array $data)
     {
+
         $lecture->update($data);
 
         // Clear cache after updating a lecture
@@ -78,27 +80,6 @@ class LectureService
 
     public function deleteLecture(Lecture $lecture): bool
     {
-        $convertedVideo = $lecture->convertedVideo;
-        if ($convertedVideo) {
-            $convertedVideo->mp4_Format_240 !== null ? Storage::delete($convertedVideo->mp4_Format_240) : null;
-            $convertedVideo->mp4_Format_360 !== null ? Storage::delete($convertedVideo->mp4_Format_360) : null;
-            $convertedVideo->mp4_Format_480 !== null ? Storage::delete($convertedVideo->mp4_Format_480) : null;
-            $convertedVideo->mp4_Format_720 !== null ? Storage::delete($convertedVideo->mp4_Format_720) : null;
-            $convertedVideo->mp4_Format_1080 !== null ? Storage::delete($convertedVideo->mp4_Format_1080) : null;
-            $convertedVideo->webm_Format_240 !== null ? Storage::delete($convertedVideo->webm_Format_240) : null;
-            $convertedVideo->webm_Format_360 !== null ? Storage::delete($convertedVideo->webm_Format_360) : null;
-            $convertedVideo->webm_Format_480 !== null ? Storage::delete($convertedVideo->webm_Format_480) : null;
-            $convertedVideo->webm_Format_720 !== null ? Storage::delete($convertedVideo->webm_Format_720) : null;
-            $convertedVideo->webm_Format_1080 !== null ? Storage::delete($convertedVideo->webm_Format_1080) : null;
-        }
-        if ($lecture->thumbnail) {
-            Storage::delete($lecture->thumbnail);
-        }
-
-        if ($lecture->video) {
-            Storage::disk($lecture->disk)->delete($lecture->video);
-        }
-
         if ($lecture->attachments) {
             foreach ($lecture->attachments as $attachment) {
                 Storage::disk($lecture->disk)->delete($attachment['path']);

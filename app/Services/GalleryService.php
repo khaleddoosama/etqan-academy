@@ -22,8 +22,8 @@ class GalleryService
 
     public function createGallery(array $data)
     {
-        $data['disk'] = 's3';
-        Log::info('from GalleryService data: ' . json_encode($data));
+        $data['disk'] = 'public';
+
         $gallery = Gallery::create($data);
         return $gallery;
     }

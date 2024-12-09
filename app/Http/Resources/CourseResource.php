@@ -8,24 +8,24 @@ use Illuminate\Support\Facades\Auth;
 
 class CourseResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+    protected $is_collection;
+
+    public function __construct($resource, $is_collection = true)
+    {
+        parent::__construct($resource);
+        $this->is_collection = $is_collection;
+    }
     public function toArray(Request $request): array
     {
-        return [
+        $data =  [
             'title' => $this->title,
             'slug' => $this->slug,
-            'description' => $this->description,
             'image' => $this->thumbnail_url,
             'category' => $this->category->name,
             'price' => $this->price,
             'discount_price' => $this->discount_price,
             'num_of_levels' => $this->number_of_levels_text,
             'programs' => $this->programs ? ProgramResource::collection($this->programs()) : [],
-            'sections' => SectionResource::collection($this->sections),
             'lessons' => $this->countLectures(),
             'total_duration' => $this->totalDuration(),
             'students_count' => $this->studentsCount(),
@@ -34,5 +34,20 @@ class CourseResource extends JsonResource
             // check if the user is enrolled in the course
             'is_enrolled' => auth('api')->check() && auth('api')->user()->isEnrolledInCourse($this->id),
         ];
+
+        if ($this->is_collection) {
+            $data['video'] = $this->video_url;
+            $data['attachments'] = $this->attachments_url;
+            $data['description'] = $this->description;
+            $data['sections'] = SectionResource::collection($this->sections);
+        }
+        return $data;
+    }
+
+    public static function collection($resource, $is_collection = false)
+    {
+        return parent::collection($resource)->each(function ($resource) use ($is_collection) {
+            $resource->is_collection = $is_collection;
+        });
     }
 }

@@ -43,7 +43,7 @@ class Program extends Model
         $folderName = 'programs/' . str_replace(' ', '-', strtolower($slug)) . '/icons';
 
         $this->deleteIfExists($this->icon); // Delete the old icon if it exists
-        $this->attributes['icon'] = $this->uploadImage($icon, $folderName, 100, 100, 's3');
+        $this->attributes['icon'] = $this->uploadImage($icon, $folderName, 100, 100, 'public');
     }
 
     // get icon attribute

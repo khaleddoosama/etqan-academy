@@ -61,12 +61,12 @@ trait UploadTrait
             }
         }
 
-        $disks = ['public', 's3'];
-        foreach ($disks as $disk) {
-            if (Storage::disk($disk)->exists($path)) {
-                Storage::disk($disk)->delete($path);
+        // $disks = ['public', 's3'];
+        // foreach ($disks as $disk) {
+            if (Storage::exists($path)) {
+                Storage::delete($path);
             }
-        }
+        // }
 
         return true;
     }

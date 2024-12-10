@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
+use App\Http\Controllers\Api\PaymentDetailController;
 use App\Http\Controllers\Api\RequestCourseController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
@@ -83,6 +84,8 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
     Route::post('/gallery', [GalleryController::class, 'store']);
     // delete gallery
     Route::delete('/gallery/{id}', [GalleryController::class, 'destroy']);
+
+    Route::post('/payment-details', [PaymentDetailController::class, 'store']);
 });
 
 //

@@ -94,4 +94,7 @@
     'you_wont_be_able_to_revert_this' => 'You won\'t be able to revert this!',
     'course_access_denied' => 'You are not allowed to access this course.',
     'cache_cleared' => 'Cache cleared successfully.',
+
+    "payment_detail_created" => "Payment detail created successfully.",
+    "payment_detail_fail" => "Payment detail failed.",
 );

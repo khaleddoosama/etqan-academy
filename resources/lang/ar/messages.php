@@ -94,4 +94,7 @@
     'you_wont_be_able_to_revert_this' => 'لن تتمكن من التراجع عن هذا الإجراء!',
     'course_access_denied' => 'عذرًا، لا يمكنك الوصول إلى هذه الدورة لأنك غير مسجل بها.',
     'cache_cleared' => 'تم تحديث الكاش بنجاح.',
+
+    "payment_detail_created" => "تم إضافة تفاصيل الدفع بنجاح",
+    "payment_detail_fail" => "فشل في إضافة تفاصيل الدفع",
 );

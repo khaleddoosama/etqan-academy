@@ -23,9 +23,9 @@ class LectureResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             // 'image' => $this->thumbnail_url,
-            'hours' => $this->hours,
-            'minutes' => $this->minutes,
-            'seconds' => $this->seconds,
+            'hours' => $this->hours >= 10 ? $this->hours : '0' . $this->hours,
+            'minutes' => $this->minutes >= 10 ? $this->minutes : '0' . $this->minutes,
+            'seconds' => $this->seconds >= 10 ? $this->seconds : '0' . $this->seconds,
             // 'quality' => $this->quality,
         ];
 

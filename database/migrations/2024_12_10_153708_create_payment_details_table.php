@@ -27,6 +27,14 @@ return new class extends Migration
             $table->string('transfer_image')->nullable();
             $table->string('status')->default(Status::PENDING->value);
 
+            // approved by admin
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->timestamp('approved_at')->nullable();
+
+            // rejected by admin
+            $table->foreignId('rejected_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->timestamp('rejected_at')->nullable();
+
             $table->timestamps();
         });
     }

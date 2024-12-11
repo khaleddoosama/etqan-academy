@@ -6,6 +6,7 @@ use App\Enums\PaymentMethod;
 use App\Enums\PaymentType;
 use App\Enums\Status;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PaymentDetailRequest extends FormRequest
 {
@@ -25,12 +26,16 @@ class PaymentDetailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'course_id' => 'required|exists:courses,id',
+            'course_slug' => 'required|exists:courses,slug',
             'whatsapp_number' => 'required|string',
             'payment_type' => 'required|in:' . implode(',', array_column(PaymentType::cases(), 'value')),
             'payment_method' => 'required|in:' . implode(',', array_column(PaymentMethod::cases(), 'value')),
-            'transfer_number' => 'nullable|string',
-            'transfer_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'transfer_number' => [
+                'nullable',
+                'string',
+                Rule::requiredIf($this->payment_method === 'wallet'),
+            ],
+            'transfer_image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:2048',
         ];
     }
 

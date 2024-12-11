@@ -97,4 +97,6 @@
 
     "payment_detail_created" => "تم إضافة تفاصيل الدفع بنجاح",
     "payment_detail_fail" => "فشل في إضافة تفاصيل الدفع",
+    "payment_detail_changed" => "تم تغيير حالة التفاصيل الدفع بنجاح",
 );
+

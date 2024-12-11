@@ -57,7 +57,7 @@ class LectureStatusNotification extends Notification implements ShouldQueue
     protected function getMessage()
     {
         // $message = $this->status == 1 ? 'Video Published Successfully' : 'Video Failed to Publish';
-        $message = $this->status == 1 ? 'Video' . $this->title . ' Published Successfully' : 'Video' . $this->title . ' Failed to Publish';
+        $message = $this->status == 1 ? 'Video ' . $this->title . ' Published Successfully' : 'Video' . $this->title . ' Failed to Publish';
         return $message;
     }
 

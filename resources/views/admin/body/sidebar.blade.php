@@ -106,7 +106,9 @@
                           <a href="{{ route('admin.instructors.index') }}"
                               class="nav-link @if (Request::is('*/admin/instructors') || Request::is('*/admin/instructors/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="school-outline"></ion-icon></span>
-                              <span class="title">{{ __('attributes.instructors') }}</span>
+                              <p>
+                                  {{ __('attributes.instructors') }}
+                              </p>
                           </a>
                       </li>
                   @endcan
@@ -117,7 +119,7 @@
                           <a href="{{ route('admin.programs.index') }}"
                               class="nav-link @if (Request::is('*/admin/programs') || Request::is('*/admin/programs/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="code-slash-outline"></ion-icon></span>
-                              <span class="title">{{ __('attributes.programs') }}</span>
+                              <p>{{ __('attributes.programs') }}</p>
                           </a>
                       </li>
                   @endcan
@@ -128,7 +130,7 @@
                           <a href="{{ route('admin.courses.index') }}"
                               class="nav-link @if (Request::is('*/admin/courses') || Request::is('*/admin/courses/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="book-outline"></ion-icon></span>
-                              <span class="title">{{ __('attributes.courses') }}</span>
+                              <p>{{ __('attributes.courses') }}</p>
                           </a>
                       </li>
                   @endcan
@@ -179,13 +181,17 @@
                               Request::is('*/admin/withdrawal-requests') ||
                               Request::is('*/admin/withdrawal-requests/*') ||
                               Request::is('*/admin/request-courses') ||
-                              Request::is('*/admin/request-courses/*')) menu-open @endif">
+                              Request::is('*/admin/request-courses/*') ||
+                              Request::is('*/admin/payment-details') ||
+                              Request::is('*/admin/payment-details/*')) menu-open @endif">
                           <a href="#" class="nav-link @if (Request::is('*/admin/inquiries') ||
                                   Request::is('*/admin/inquiries/*') ||
                                   Request::is('*/admin/withdrawal-requests') ||
                                   Request::is('*/admin/withdrawal-requests/*') ||
                                   Request::is('*/admin/request-courses') ||
-                                  Request::is('*/admin/request-courses/*')) active @endif">
+                                  Request::is('*/admin/request-courses/*') ||
+                                  Request::is('*/admin/payment-details') ||
+                                  Request::is('*/admin/payment-details/*')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="notifications-outline"></ion-icon></span>
                               <p>
                                   {{ __('attributes.requests') }}
@@ -195,6 +201,7 @@
                                               'App\Notifications\InquiryNotification',
                                               'App\Notifications\WithdrawalRequestNotification',
                                               'App\Notifications\CourseRequestNotification',
+                                              'App\Notifications\PaymentDetailCreatedNotification',
                                           ])->count() }}
                                   </span>
                               </p>
@@ -206,7 +213,9 @@
                                       Request::is('*/admin/withdrawal-requests') ||
                                       Request::is('*/admin/withdrawal-requests/*') ||
                                       Request::is('*/admin/request-courses') ||
-                                      Request::is('*/admin/request-courses/*')
+                                      Request::is('*/admin/request-courses/*') ||
+                                      Request::is('*/admin/payment-details') ||
+                                      Request::is('*/admin/payment-details/*')
                                   )) display: none @endif">
                               {{-- Inquiry --}}
                               @can('inquiry.list')
@@ -247,6 +256,20 @@
                                           <p>{{ __('attributes.request_course') }}</p>
                                           <span class="badge badge-info right">
                                               {{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\CourseRequestNotification')->count() }}
+                                          </span>
+                                      </a>
+                                  </li>
+                              @endcan
+
+                              {{-- PaymentDetail --}}
+                              @can('payment_detail.list')
+                                  <li class="nav-item">
+                                      <a href="{{ route('admin.payment_details.index') }}"
+                                          class="nav-link @if (Request::is('*/admin/payment-details') || Request::is('*/admin/payment-details/*')) active @endif">
+                                          <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
+                                          <p>{{ __('attributes.payment_details') }}</p>
+                                          <span class="badge badge-info right">
+                                              {{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\PaymentDetailCreatedNotification')->count() }}
                                           </span>
                                       </a>
                                   </li>
@@ -363,7 +386,7 @@
                                   Request::is('*/admin/logs') ||
                                   Request::is('*/admin/logs/default') ||
                                   Request::is('*/admin/logs/web') ||
-                                  Request::is('*/admin/logs/api')||
+                                  Request::is('*/admin/logs/api') ||
                                   Request::is('*/admin/databases')) active @endif">
                               <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
                               <p>

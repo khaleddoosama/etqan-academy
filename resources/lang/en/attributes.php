@@ -160,4 +160,12 @@ return [
     'days' => 'Days',
     'weeks' => 'Weeks',
     'databases' => 'Databases',
+    'payment_details' => 'Payment Details',
+    'payment_detail' => 'Payment Detail',
+    'payment_detail_changed' => 'Payment Detail Changed',
+    'whatsapp' => 'WhatsApp',
+    'transfer_phone' => 'Transfer Phone',
+    'transfer_image' => 'Transfer Image',
+    'payment_method' => 'Payment Method',
+    'payment_type' => 'Payment Type',
 ];

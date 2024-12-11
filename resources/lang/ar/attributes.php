@@ -159,4 +159,12 @@ return [
     'days' => 'أيام',
     'weeks' => 'أسابيع',
     'databases' => 'قواعد البيانات',
+    "payment_details" => "تفاصيل الدفع",
+    "payment_detail" => "تفاصيل الدفع",
+    'payment_detail_changed' => 'تم تغيير تفاصيل الدفع',
+    'whatsapp' => 'واتساب',
+    'transfer_phone' => 'رقم التحويل',
+    'transfer_image' => 'صورة التحويل',
+    'payment_method' => 'طريقة الدفع',
+    'payment_type' => 'نوع الدفع',
 ];

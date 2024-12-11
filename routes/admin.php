@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\LectureController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PaymentDetailController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\RequestCourseController;
@@ -141,6 +142,13 @@ Route::group(
                 Route::get('/request-courses', 'index')->name('request_courses.index');
                 Route::get('/request-courses/{id}', 'show')->name('request_courses.show');
                 Route::put('/request-courses/{id}/status', 'status')->name('request_courses.status');
+            });
+
+            // Payment Detail Controller
+            Route::controller(PaymentDetailController::class)->group(function () {
+                Route::get('/payment-details', 'index')->name('payment_details.index');
+                Route::get('/payment-details/{id}', 'show')->name('payment_details.show');
+                Route::put('/payment-details/{id}/status', 'status')->name('payment_details.status');
             });
 
             // Permission controller (resource)

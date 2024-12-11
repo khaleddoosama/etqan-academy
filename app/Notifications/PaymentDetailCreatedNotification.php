@@ -59,7 +59,7 @@ class PaymentDetailCreatedNotification extends Notification
 
     protected function getUrl()
     {
-        return route('admin.payment-details.show', $this->payment_detail_id);
+        return route('admin.payment_details.show', $this->payment_detail_id);
     }
 
     protected function getIcon()

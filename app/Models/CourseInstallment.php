@@ -12,10 +12,14 @@ class CourseInstallment extends Model
     protected $fillable = [
         'course_id',
         'number_of_installments',
-        'installment_value',
+        'installment_amounts',
         'installment_duration',
         'description',
         'status',
+    ];
+
+    protected $casts = [
+        'installment_amounts' => 'array',
     ];
 
     public function course()

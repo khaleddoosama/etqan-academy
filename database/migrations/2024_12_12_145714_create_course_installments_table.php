@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->integer('number_of_installments')->default(1);
-            $table->float('installment_value')->default(0);
+            $table->json('installment_amounts')->nullable();
             $table->integer('installment_duration')->default(0)->comment('In days');
             $table->LONGTEXT('description')->nullable();
             $table->integer('status')->default(1);

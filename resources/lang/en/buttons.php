@@ -91,4 +91,5 @@
     'retry_all' => 'Retry All',
     'delete_all' => 'Delete All',
     'download' => 'Download',
+    'enter' => 'Enter',
 );

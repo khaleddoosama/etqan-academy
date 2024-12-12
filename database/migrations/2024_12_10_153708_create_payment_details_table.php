@@ -25,6 +25,9 @@ return new class extends Migration
 
             $table->string('transfer_number')->nullable();
             $table->string('transfer_image')->nullable();
+
+            $table->decimal('amount', 10, 2)->default(0.00);
+
             $table->string('status')->default(Status::PENDING->value);
 
             // approved by admin

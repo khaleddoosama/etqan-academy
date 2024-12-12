@@ -32,8 +32,11 @@
                                     <x-custom.form-group class="col-md-6" type="select" name="course_id"
                                         :options="$courses" />
                                     <x-custom.form-group class="col-md-6" type="number" name="number_of_installments" />
-                                    <x-custom.form-group class="col-md-6" type="number" name="installment_value" />
-                                    <x-custom.form-group class="col-md-6" type="number" name="installment_duration"  placeholder="{{ __('main.duration_in_days') }}"/>
+                                    <x-custom.form-group class="col-md-6" type="number" name="installment_duration"
+                                        placeholder="{{ __('main.duration_in_days') }}" />
+
+                                    <div id="installment-values-container" class="col-md-12 mt-3 row"></div>
+
                                     <div class='row form-group col-md-12'>
                                         <x-input-label for="summernote"
                                             class='col-sm-12 col-form-label'>{{ __('attributes.description') }}</x-input-label>
@@ -42,8 +45,6 @@
                                             <textarea name="description" id="summernote" class="form-control summernote" rows="1">{{ old('description') ?? ($value ?? '') }}</textarea>
                                         </div>
                                     </div>
-
-
 
                                 </div>
                                 <!-- /.card-body -->
@@ -77,9 +78,6 @@
                     number_of_installments: {
                         required: true,
                     },
-                    installment_value: {
-                        required: true,
-                    },
                     installment_duration: {
                         required: true,
                     },
@@ -90,9 +88,6 @@
                     },
                     number_of_installments: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.number_of_installments')]) }}",
-                    },
-                    installment_value: {
-                        required: "{{ __('validation.required', ['attribute' => __('attributes.installment_value')]) }}",
                     },
                     installment_duration: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.installment_duration')]) }}",
@@ -111,6 +106,44 @@
                 unhighlight: function(element, errorClass, validClass) {
                     $(element).removeClass('is-invalid');
                 }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Reference to the container for dynamic inputs
+            const container = $('#installment-values-container');
+
+            // Event listener for number_of_installments input
+            $('#input-number_of_installments').on('change', function() {
+                const numberOfInstallments = $(this).val();
+
+                // Clear previous inputs
+                container.empty();
+
+                // Generate new inputs based on the entered value
+                if (numberOfInstallments > 0) {
+                    for (let i = 1; i <= numberOfInstallments; i++) {
+                        container.append(`
+                        <div class="form-group col-md-6">
+                            <label for="installment_amount_${i}">{{ __('attributes.installment_amount') }} #${i}</label>
+                            <input type="number" required min="0" name="installment_amounts[]" id="installment_amount_${i}" class="form-control" placeholder="{{ __('buttons.enter') }} {{ __('attributes.installment_amount') }}">
+                        </div>
+                    `);
+                    }
+                }
+            });
+
+            container.on('change', 'input[name^="installment_amounts"]', function() {
+                const firstValue = $(this).val();
+
+                // Update all inputs with the first value if empty
+                container.find('input[name^="installment_amounts"]').each(function() {
+                    if (!$(this).val()) {
+                        $(this).val(firstValue);
+                    }
+                });
             });
         });
     </script>

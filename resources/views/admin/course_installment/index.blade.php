@@ -32,7 +32,7 @@
                                             <th>#</th>
                                             <th>{{ __('attributes.course_title') }}</th>
                                             <th>{{ __('attributes.number_of_installments') }}</th>
-                                            <th>{{ __('attributes.installment_value') }}</th>
+                                            <th>{{ __('attributes.installment_amounts') }}</th>
                                             <th>{{ __('attributes.installment_duration') }}</th>
                                             <th>{{ __('attributes.description') }}</th>
                                             <th>{{ __('main.actions') }}</th>
@@ -44,7 +44,11 @@
                                                 <td>{{ $courseInstallment->id }}</td>
                                                 <td>{{ $courseInstallment->course->title }}</td>
                                                 <td>{{ $courseInstallment->number_of_installments }}</td>
-                                                <td>{{ $courseInstallment->installment_value }}</td>
+                                                <td>
+                                                    @foreach ($courseInstallment->installment_amounts as $amount)
+                                                        {{ $amount }},
+                                                    @endforeach
+                                                </td>
                                                 <td>{{ $courseInstallment->installment_duration }}</td>
                                                 <td>{{ Str::limit(strip_tags($courseInstallment->description), 100) }}</td>
                                                 <td>
@@ -65,7 +69,7 @@
                                             <th>#</th>
                                             <th>{{ __('attributes.course_title') }}</th>
                                             <th>{{ __('attributes.number_of_installments') }}</th>
-                                            <th>{{ __('attributes.installment_value') }}</th>
+                                            <th>{{ __('attributes.installment_amounts') }}</th>
                                             <th>{{ __('attributes.installment_duration') }}</th>
                                             <th>{{ __('attributes.description') }}</th>
                                             <th>{{ __('main.actions') }}</th>

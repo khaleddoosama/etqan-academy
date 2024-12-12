@@ -50,9 +50,8 @@ class PaymentDetailController extends Controller
             $notification = new PaymentApprovedNotification($paymentDetail->course->slug, $paymentDetail->course->title, $paymentDetail);
             $this->studentsNotificationService->notify($notification, $paymentDetail->user);
         } else if ($paymentDetail->status == Status::REJECTED) {
-            // send email
-            // $notification = new PaymentRejectedNotification($paymentDetail->course->slug, $paymentDetail->course->title);
-            // $this->studentsNotificationService->notify($notification, $paymentDetail->student);
+            $notification = new PaymentRejectedNotification($paymentDetail->course->slug, $paymentDetail->course->title);
+            $this->studentsNotificationService->notify($notification, $paymentDetail->student);
         }
 
 

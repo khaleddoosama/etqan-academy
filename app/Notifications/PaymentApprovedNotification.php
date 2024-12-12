@@ -16,13 +16,13 @@ class PaymentApprovedNotification extends Notification
     use Queueable, NotificationToArray;
 
     private $course_slug;
-    private $title;
+    private $cours_title;
     private $payment;
 
-    public function __construct(string $course_slug, string $title, $payment)
+    public function __construct(string $course_slug, string $cours_title, $payment)
     {
         $this->course_slug = $course_slug;
-        $this->title = $title;
+        $this->cours_title = $cours_title;
         $this->payment = $payment;
         $this->queue = 'high';
     }
@@ -45,8 +45,8 @@ class PaymentApprovedNotification extends Notification
         $pdf = Pdf::loadView('invoice.payment_approved', ['payment' => $this->payment]);
 
         return (new MailMessage)
-            ->subject('Access Approved: New Course Available!')
-            ->line('Congratulations! You have been approved to access the course: ' . $this->title)
+            ->subject('Access Approved: ' . $this->cours_title)
+            ->line('Congratulations! You have been approved to access the course: ' . $this->cours_title)
             ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->course_slug)
             ->line('We hope you enjoy the learning experience!')
             ->line('Your invoice is attached below.')

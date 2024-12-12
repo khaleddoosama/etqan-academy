@@ -26,4 +26,5 @@
     'transfer_lecture' => 'Transfer Lecture',
     'user' => 'User',
     'clear_cache' => 'Clear Cache',
+    'duration_in_days' => 'Duration in days',
 );

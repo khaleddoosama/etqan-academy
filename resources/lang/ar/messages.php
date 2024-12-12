@@ -98,5 +98,8 @@
     "payment_detail_created" => "تم إضافة تفاصيل الدفع بنجاح",
     "payment_detail_fail" => "فشل في إضافة تفاصيل الدفع",
     "payment_detail_changed" => "تم تغيير حالة التفاصيل الدفع بنجاح",
+    "course_installment_created" => "تم إضافة اقساط الدورة بنجاح",
+    "course_installment_updated" => "تم تعديل اقساط الدورة بنجاح",
+    "course_installment_deleted" => "تم حذف اقساط الدورة بنجاح",
 );
 

@@ -135,6 +135,16 @@
                       </li>
                   @endcan
 
+                  {{-- course installments --}}
+                  @can('course_installment.list')
+                      <li class="nav-item">
+                          <a href="{{ route('admin.course_installments.index') }}"
+                              class="nav-link @if (Request::is('*/admin/course_installments') || Request::is('*/admin/course_installments/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
+                              <p>{{ __('attributes.course_installments') }}</p>
+                          </a>
+                      </li>
+                  @endcan
 
                   {{-- Lecture Management --}}
                   {{-- @if (auth()->user()->can('lectures.list')) --}}

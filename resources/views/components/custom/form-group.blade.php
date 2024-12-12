@@ -61,15 +61,15 @@
         </div>
     @elseif ($type === 'select')
         <div class="{{ $COLINPUT ?? 'col-sm-12' }}">
-            <select class="form-control select2" style="width: 100%;" name="{{ $name }}" placeholder="{{ $placeholder }}"
-                {{ $multiple ? 'multiple' : '' }}>
+            <select class="form-control select2" style="width: 100%;" name="{{ $name }}"
+                placeholder="{{ $placeholder }}" {{ $multiple ? 'multiple' : '' }}>
                 <option {{ $multiple ? '' : 'selected' }} disabled>{{ __('buttons.choose') }}</option>
                 @foreach ($options as $option)
                     <option value="{{ $option->id }}" {{-- check if selected is exist --}}
                         {{ in_array($option->id, $selectedArray) ? 'selected' : '' }}>
+                        {{ $option->name }} {{ $option->title }}
 
-
-                        {{ $option->name }}</option>
+                    </option>
                 @endforeach
             </select>
 
@@ -80,8 +80,8 @@
         </div>
     @else
         <div class="{{ $COLINPUT ?? 'col-sm-12' }}">
-            <x-text-input type="{{ $type }}" name="{{ $name }}" id="{{ $inputId }}" placeholder="{{ $placeholder }}"
-                value="{{ old($name) ?? ($value ?? '') }}" class="form-control" />
+            <x-text-input type="{{ $type }}" name="{{ $name }}" id="{{ $inputId }}"
+                placeholder="{{ $placeholder }}" value="{{ old($name) ?? ($value ?? '') }}" class="form-control" />
         </div>
     @endif
 

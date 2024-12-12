@@ -98,4 +98,7 @@
     "payment_detail_created" => "Payment detail created successfully.",
     "payment_detail_fail" => "Payment detail failed.",
     "payment_detail_changed" => "Payment detail changed successfully.",
+    "course_installment_created" => "Course Installment Created",
+    "course_installment_updated" => "Course Installment Updated",
+    "course_installment_deleted" => "Course Installment Deleted",
 );

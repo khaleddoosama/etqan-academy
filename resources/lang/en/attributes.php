@@ -168,4 +168,12 @@ return [
     'transfer_image' => 'Transfer Image',
     'payment_method' => 'Payment Method',
     'payment_type' => 'Payment Type',
+    'number_of_installments' => 'Number of Installments',
+    'installment_value' => 'Installment Value',
+    'installment_duration' => 'Installment Duration',
+    'installment' => 'Installment',
+    'installments' => 'Installments',
+    'course_installment' => 'Course Installment',
+    'course_installments' => 'Course Installments',
+
 ];

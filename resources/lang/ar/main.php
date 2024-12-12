@@ -27,4 +27,5 @@
     'transfer_lecture' => 'نقل المحاضرة',
     'user' => 'المستخدم',
     'clear_cache' => 'مسح التخزين المؤقت',
+    'duration_in_days' => 'المدة بالأيام',
 );

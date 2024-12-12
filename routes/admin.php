@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\CourseInstallmentController;
 use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\InstructorController;
@@ -90,6 +91,11 @@ Route::group(
             });
             Route::controller(CourseController::class)->group(function () {
                 Route::put('/courses/{course}/status', 'status')->name('courses.status');
+            });
+
+            // Course Installment Controller
+            Route::resource('course_installments', CourseInstallmentController::class)->except(['show'])->missing(function () {
+                return redirect()->route('admin.course_installments.index');
             });
 
             // UserCourse Controller

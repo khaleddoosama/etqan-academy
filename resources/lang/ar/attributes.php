@@ -167,4 +167,11 @@ return [
     'transfer_image' => 'صورة التحويل',
     'payment_method' => 'طريقة الدفع',
     'payment_type' => 'نوع الدفع',
+    'number_of_installments' => 'عدد الأقساط',
+    'installment_value' => 'قيمة القسط',
+    'installment_duration' => 'مدة القسط',
+    'installment' => 'القسط',
+    'installments' => 'الأقساط',
+    'course_installment' => 'قسط الدورة',
+    'course_installments' => 'أقساط الدورة',
 ];

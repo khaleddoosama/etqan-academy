@@ -55,6 +55,14 @@ class Course extends Model
         return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
     }
 
+    // offer
+    public function offer()
+    {
+        return $this->hasOne(CourseOffer::class)
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now());
+    }
+
     // scope active
     public function scopeActive($query)
     {

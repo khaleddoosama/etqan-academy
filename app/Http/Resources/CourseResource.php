@@ -33,11 +33,10 @@ class CourseResource extends JsonResource
             'instructor' => $this->instructor ? new InstructorResource($this->instructor) : null,
             // check if the user is enrolled in the course
             'is_enrolled' => auth('api')->check() && auth('api')->user()->isEnrolledInCourse($this->id),
+            'offer' => $this->offer ? new OfferResource($this->offer) : null
         ];
 
         if ($this->is_collection) {
-            $data['video'] = $this->video_url;
-            $data['attachments'] = $this->attachments_url;
             $data['description'] = $this->description;
             $data['sections'] = SectionResource::collection($this->sections);
         }

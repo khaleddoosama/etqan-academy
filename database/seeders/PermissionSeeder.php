@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
@@ -24,6 +25,7 @@ class PermissionSeeder extends Seeder
                 'user.show',
                 'user.edit',
                 'user.status',
+                'user.verify',
             ],
             'category' => [
                 'category.list',
@@ -92,13 +94,31 @@ class PermissionSeeder extends Seeder
                 'request_course.show',
                 'request_course.status',
             ],
+            'payment_detail' => [
+                'payment_detail.list',
+                'payment_detail.show',
+                'payment_detail.status',
+            ],
+            'course_installment' => [
+                'course_installment.list',
+                'course_installment.create',
+                'course_installment.edit',
+                'course_installment.delete',
+            ],
+            'course_offer' => [
+                'course_offer.list',
+                'course_offer.create',
+                'course_offer.edit',
+                'course_offer.delete',
+            ],
         ];
 
         // Insert permissions
         foreach ($permissions as $module => $names) {
             foreach ($names as $name) {
-                DB::table('permissions')->insert([
+                Permission::updateOrCreate([
                     'name' => $name,
+                ], [
                     'guard_name' => 'web',
                     'module' => $module,
                 ]);

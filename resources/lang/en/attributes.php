@@ -175,5 +175,9 @@ return [
     'installments' => 'Installments',
     'course_installment' => 'Course Installment',
     'course_installments' => 'Course Installments',
-
+    'start_date' => 'Start Date',
+    'end_date' => 'End Date',
+    'max_students' => 'Max Students',
+    'course_offer' => 'Course Offer',
+    'course_offers' => 'Course Offers',
 ];

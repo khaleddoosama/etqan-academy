@@ -101,5 +101,16 @@
     "course_installment_created" => "تم إضافة اقساط الدورة بنجاح",
     "course_installment_updated" => "تم تعديل اقساط الدورة بنجاح",
     "course_installment_deleted" => "تم حذف اقساط الدورة بنجاح",
+    "course_installment_not_found" => "لم يتم العثور على اقساط الدورة",
+    "course_installment_status_changed" => "تم تغيير حالة اقساط الدورة بنجاح",
+    "course_installment_paid" => "تم دفع القسط بنجاح",
+    "course_installment_not_paid" => "لم يتم دفع القسط",
+    "course_installment_already_paid" => "القسط مدفوع بالفعل",
+    'course_offer_created' => 'تم إنشاء عرض الدورة بنجاح.',
+    'course_offer_updated' => 'تم تحديث عرض الدورة بنجاح.',
+    'course_offer_deleted' => 'تم حذف عرض الدورة بنجاح.',
+    'course_offer_not_found' => 'عذرًا، لم نتمكن من العثور على عرض الدورة المطلوب.',
+    'course_offers_not_found' => 'لا توجد عروض دورات متاحة في الوقت الحالي.',
+    
 );
 

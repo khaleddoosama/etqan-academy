@@ -146,6 +146,17 @@
                       </li>
                   @endcan
 
+                  {{-- course Offers --}}
+                  @can('course_offer.list')
+                      <li class="nav-item">
+                          <a href="{{ route('admin.course_offers.index') }}"
+                              class="nav-link @if (Request::is('*/admin/course_offers') || Request::is('*/admin/course_offers/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="pricetag-outline"></ion-icon></span>
+                              <p>{{ __('attributes.course_offers') }}</p>
+                          </a>
+                      </li>
+                  @endcan
+
                   {{-- Lecture Management --}}
                   {{-- @if (auth()->user()->can('lectures.list')) --}}
                   <li class="nav-item @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures')) menu-open @endif">

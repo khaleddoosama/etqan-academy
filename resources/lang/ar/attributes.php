@@ -174,4 +174,9 @@ return [
     'installments' => 'الأقساط',
     'course_installment' => 'قسط الدورة',
     'course_installments' => 'أقساط الدورة',
+    'start_date' => 'تاريخ البدء',
+    'end_date' => 'تاريخ الانتهاء',
+    'max_students' => 'الحد الأقصى للطلاب',
+    'course_offer' => 'عرض الدورة',
+    'course_offers' => 'عروض الدورة',
 ];

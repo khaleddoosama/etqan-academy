@@ -12,6 +12,19 @@ class CourseInstallmentService
         return CourseInstallment::all();
     }
 
+    public function getCourseInstallment($id): CourseInstallment
+    {
+        return CourseInstallment::find($id);
+    }
+
+    // get course
+    public function getCourse($course_installment_id): Collection
+    {
+        $courseInstallment = CourseInstallment::find($course_installment_id);
+
+        return $courseInstallment->course;
+    }
+
     public function createCourseInstallment(array $data): CourseInstallment
     {
         $courseInstallment = CourseInstallment::create($data);

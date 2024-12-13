@@ -25,8 +25,9 @@ class PaymentDetailRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd($this->all());
         return [
-            'course_slug' => 'required|exists:courses,slug',
+            'course_installment_id' => 'required|exists:course_installments,id',
             'whatsapp_number' => 'required|string',
             'payment_type' => 'required|in:' . implode(',', array_column(PaymentType::cases(), 'value')),
             'payment_method' => 'required|in:' . implode(',', array_column(PaymentMethod::cases(), 'value')),
@@ -35,7 +36,7 @@ class PaymentDetailRequest extends FormRequest
                 'string',
                 Rule::requiredIf($this->payment_method === 'wallet'),
             ],
-            'transfer_image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:2048',
+            // 'transfer_image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:2048',
         ];
     }
 

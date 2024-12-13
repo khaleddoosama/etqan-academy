@@ -6,9 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
-class PaymentRejectedNotification extends Notification
+class CourseRevokeSoonNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -19,8 +19,14 @@ class PaymentRejectedNotification extends Notification
     {
         $this->course_slug = $course_slug;
         $this->course_title = $course_title;
+        $this->queue = 'high';
     }
 
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
     public function via(object $notifiable): array
     {
         return ['mail'];
@@ -32,20 +38,9 @@ class PaymentRejectedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Access Rejected: ' . $this->course_title)
-            ->line('Sorry, your payment for the course ' . $this->course_title . ' has been rejected.')
-            ->line('Please contact support for more information.');
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
+            ->subject('Course Revoke Soon: ' . $this->course_title)
+            ->line('The course ' . $this->course_title . ' is about to end soon.')
+            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->course_slug)
+            ->line('Please renew your access to continue accessing the course.');
     }
 }

@@ -59,13 +59,13 @@ class PaymentDetailController extends Controller
     public function status(Request $request, $id)
     {
         $paymentDetail = $this->paymentDetailService->changeStatus($request->status, $id);
-        if ($paymentDetail->status == Status::APPROVED) {
-            $notification = new PaymentApprovedNotification($paymentDetail->course->slug, $paymentDetail->course->title, $paymentDetail);
-            $this->studentsNotificationService->notify($notification, $paymentDetail->user);
-        } else if ($paymentDetail->status == Status::REJECTED) {
-            $notification = new PaymentRejectedNotification($paymentDetail->course->slug, $paymentDetail->course->title);
-            $this->studentsNotificationService->notify($notification, $paymentDetail->user);
-        }
+        // if ($paymentDetail->status == Status::APPROVED) {
+        //     $notification = new PaymentApprovedNotification($paymentDetail->course->slug, $paymentDetail->course->title, $paymentDetail);
+        //     $this->studentsNotificationService->notify($notification, $paymentDetail->user);
+        // } else if ($paymentDetail->status == Status::REJECTED) {
+        //     $notification = new PaymentRejectedNotification($paymentDetail->course->slug, $paymentDetail->course->title);
+        //     $this->studentsNotificationService->notify($notification, $paymentDetail->user);
+        // }
 
 
         Toastr::success(__('messages.payment_detail_changed'), __('status.success'));

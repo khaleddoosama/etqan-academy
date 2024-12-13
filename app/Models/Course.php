@@ -63,6 +63,12 @@ class Course extends Model
             ->where('end_date', '>=', now());
     }
 
+    // installments
+    public function courseInstallments()
+    {
+        return $this->hasMany(CourseInstallment::class);
+    }
+
     // scope active
     public function scopeActive($query)
     {

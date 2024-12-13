@@ -2,26 +2,28 @@
 
 namespace App\Services;
 
+use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Models\PaymentDetails;
+use App\Services\PaymentStrategy\CashPayment;
+use App\Services\PaymentStrategy\InstallmentPayment;
+use App\Services\PaymentStrategy\PaymentContext;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class PaymentDetailService
 {
-    protected $courseService;
-    protected $userService;
-    // constructor for CourseService
-    public function __construct(CourseService $courseService, UserService $userService)
+    protected $paymentContext;
+    public function __construct(PaymentContext $paymentContext)
     {
-        $this->courseService = $courseService;
-        $this->userService = $userService;
+        $this->paymentContext = $paymentContext;
     }
 
     public function store(array $data): PaymentDetails
     {
-        $course = $this->courseService->getCourseBySlug($data['course_slug']);
-        $data['course_id'] = $course->id;
-        unset($data['course_slug']);
+        // $course = $this->courseService->getCourseBySlug($data['course_slug']);
+        // $data['course_id'] = $course->id;
+        // unset($data['course_slug']);
 
         return PaymentDetails::create($data);
     }
@@ -54,6 +56,17 @@ class PaymentDetailService
             }
             $paymentDetail->approved_by = auth()->user()->id;
             $paymentDetail->approved_at = now();
+
+            $type = $paymentDetail->payment_type;
+            if ($type === PaymentType::CASH) {
+                $this->paymentContext->setPaymentStrategy(new CashPayment());
+            } elseif ($type === PaymentType::INSTALLMENT) {
+                $this->paymentContext->setPaymentStrategy(new InstallmentPayment());
+            } else {
+                throw new \Exception('Invalid payment type');
+            }
+
+            $this->paymentContext->handlePayment($paymentDetail, $paymentDetail->user_id);
         } elseif ($status == Status::REJECTED->value) {
             $paymentDetail->rejected_by = auth()->user()->id;
             $paymentDetail->rejected_at = now();

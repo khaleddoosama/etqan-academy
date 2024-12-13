@@ -27,7 +27,7 @@
                                         href="https://wa.me/{{ $paymentDetail->user->phone }}" target="_blank">
                                         {{ $paymentDetail->user->phone }}
                                     </a></p>
-                                <p><strong>{{ __('attributes.course') }}:</strong> {{ $paymentDetail->course->title }}</p>
+                                <p><strong>{{ __('attributes.course') }}:</strong> {{ $paymentDetail->courseInstallment->course->title }}</p>
 
                                 <p><strong>{{ __('attributes.whatsapp') }}:</strong> <a
                                         href="https://wa.me/{{ $paymentDetail->whatsapp_number }}" target="_blank">

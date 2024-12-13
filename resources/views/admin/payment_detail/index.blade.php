@@ -56,7 +56,7 @@
                                                         {{ $paymentDetail->user->phone }}
                                                     </a></td>
                                                 <td>
-                                                    {{ $paymentDetail->course->title }}
+                                                    {{ $paymentDetail->courseInstallment->course->title }}
                                                 </td>
                                                 <td><a href="https://wa.me/{{ $paymentDetail->whatsapp_number }}"
                                                         target="_blank">

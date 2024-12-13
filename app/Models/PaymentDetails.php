@@ -15,7 +15,7 @@ class PaymentDetails extends Model
     use HasFactory, UploadTrait;
 
     protected $fillable = [
-        'course_id',
+        'course_installment_id',
         'user_id',
         'whatsapp_number',
         'payment_type',
@@ -35,11 +35,13 @@ class PaymentDetails extends Model
         'payment_type' => PaymentType::class,
         'payment_method' => PaymentMethod::class,
         'status' => Status::class,
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
     ];
 
-    public function course()
+    public function courseInstallment()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(CourseInstallment::class, 'course_installment_id');
     }
 
     public function user()

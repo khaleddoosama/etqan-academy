@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('course_offers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->string('name')->nullable();
             $table->timestamp('start_date');
             $table->timestamp('end_date')->nullable();
             $table->integer('price');

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('course_installments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->string('name')->nullable();
             $table->integer('number_of_installments')->default(1);
             $table->json('installment_amounts')->nullable();
             $table->integer('installment_duration')->default(0)->comment('In days');

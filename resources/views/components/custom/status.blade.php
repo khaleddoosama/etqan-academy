@@ -1,9 +1,9 @@
 @php
     use App\Enums\Status;
 @endphp
-<div class="row d-inline-flex">
+<div class="row d-inline-flex m-0">
     @if ($model->status === Status::PENDING)
-        <form action="{{ route($routeName, $model->id) }}" method="POST" class="mx-2">
+        <form action="{{ route($routeName, $model->id) }}" method="POST">
             @csrf
             @method('PUT')
             <input type="hidden" name="status" value="{{ Status::APPROVED->value }}">

@@ -111,6 +111,5 @@
     'course_offer_deleted' => 'تم حذف عرض الدورة بنجاح.',
     'course_offer_not_found' => 'عذرًا، لم نتمكن من العثور على عرض الدورة المطلوب.',
     'course_offers_not_found' => 'لا توجد عروض دورات متاحة في الوقت الحالي.',
-    
+    'amount_updated_successfully' => 'تم تحديث المبلغ بنجاح.',
 );
-

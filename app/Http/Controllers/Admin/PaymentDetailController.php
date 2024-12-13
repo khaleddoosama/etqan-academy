@@ -43,6 +43,19 @@ class PaymentDetailController extends Controller
         return view('admin.payment_detail.show', compact('paymentDetail'));
     }
 
+    public function updateAmount(Request $request, $id)
+    {
+        $data = $request->validate([
+            'amount' => 'required|numeric',
+        ]);
+
+        $this->paymentDetailService->update($data, $id);
+
+        Toastr::success(__('messages.amount_updated_successfully'), __('status.success'));
+
+        return redirect()->back();
+    }
+
     public function status(Request $request, $id)
     {
         $paymentDetail = $this->paymentDetailService->changeStatus($request->status, $id);
@@ -51,12 +64,12 @@ class PaymentDetailController extends Controller
             $this->studentsNotificationService->notify($notification, $paymentDetail->user);
         } else if ($paymentDetail->status == Status::REJECTED) {
             $notification = new PaymentRejectedNotification($paymentDetail->course->slug, $paymentDetail->course->title);
-            $this->studentsNotificationService->notify($notification, $paymentDetail->student);
+            $this->studentsNotificationService->notify($notification, $paymentDetail->user);
         }
 
 
         Toastr::success(__('messages.payment_detail_changed'), __('status.success'));
 
-        return redirect()->route('admin.payment_details.index');
+        return redirect()->back();
     }
 }

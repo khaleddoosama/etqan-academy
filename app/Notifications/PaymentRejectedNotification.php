@@ -34,8 +34,7 @@ class PaymentRejectedNotification extends Notification
         return (new MailMessage)
             ->subject('Access Rejected: ' . $this->cours_title)
             ->line('Sorry, your payment for the course ' . $this->cours_title . ' has been rejected.')
-            ->line('Please contact support for more information.')
-            ->line('Your invoice is attached below.');
+            ->line('Please contact support for more information.');
     }
 
     /**

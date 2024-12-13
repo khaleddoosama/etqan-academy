@@ -111,4 +111,6 @@
     'course_offer_deleted' => 'Course Offer Deleted Successfully',
     'course_offer_not_found' => 'Course Offer Not Found',
     'course_offers_not_found' => 'No Course Offers Found',
+    'amount_updated_successfully' => 'Amount Updated Successfully',
+
 );

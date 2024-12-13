@@ -180,4 +180,5 @@ return [
     'max_students' => 'الحد الأقصى للطلاب',
     'course_offer' => 'عرض الدورة',
     'course_offers' => 'عروض الدورة',
+    'amount_updated_successfully' => 'تم تحديث المبلغ بنجاح',
 ];

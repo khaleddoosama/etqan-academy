@@ -44,6 +44,18 @@
                                     </a>
                                 </p>
 
+                                <form action="{{ route('admin.payment_details.update', $paymentDetail) }}" method="POST"
+                                    class="d-flex align-items-end mb-2">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <label for="amount" class="mr-2">{{ __('attributes.amount') }}:</label>
+                                    <input type="number" name="amount" class="form-control mr-2 w-auto" id="amount"
+                                        value="{{ $paymentDetail->amount }}" min="0" step="0.01" required>
+
+                                    <x-custom.form-submit text="{{ __('buttons.update') }}" class="btn-primary" />
+                                </form>
+
 
                                 <p><strong>{{ __('attributes.status') }}:</strong> <span
                                         class="badge badge-{{ $paymentDetail->status->Color() }}">{{ $paymentDetail->status }}</span>

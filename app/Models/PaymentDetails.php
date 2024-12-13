@@ -23,7 +23,13 @@ class PaymentDetails extends Model
         'transfer_number',
         'transfer_image',
         'status',
+        'approved_at',
+        'approved_by',
+        'rejected_by',
+        'rejected_at',
+        'amount',
     ];
+
 
     protected $casts = [
         'payment_type' => PaymentType::class,

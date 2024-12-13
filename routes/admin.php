@@ -161,6 +161,7 @@ Route::group(
                 Route::get('/payment-details', 'index')->name('payment_details.index');
                 Route::get('/payment-details/{id}', 'show')->name('payment_details.show');
                 Route::put('/payment-details/{id}/status', 'status')->name('payment_details.status');
+                Route::put('/payment-details/{id}/update', 'updateAmount')->name('payment_details.update');
             });
 
             // Permission controller (resource)

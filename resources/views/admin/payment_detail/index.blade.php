@@ -17,7 +17,7 @@
 
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped">
+                                <table id="unresponsive-table" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -30,6 +30,7 @@
                                             <th>{{ __('attributes.payment_method') }}</th>
                                             <th>{{ __('attributes.transfer_phone') }}</th>
                                             <th>{{ __('attributes.transfer_image') }}</th>
+                                            <th>{{ __('attributes.amount') }}</th>
                                             <th>{{ __('attributes.status') }}</th>
                                             <th>{{ __('attributes.created_at') }}</th>
                                             <th>{{ __('main.actions') }}</th>
@@ -72,7 +73,7 @@
                                                             alt="transfer_image" width="50px" height="50px">
                                                     </a>
                                                 </td>
-
+                                                <td>{{ $paymentDetail->amount }}</td>
 
                                                 <td>
                                                     <span
@@ -84,14 +85,63 @@
                                                 <td>
                                                     @can('payment_detail.show')
                                                         <a href="{{ route('admin.payment_details.show', $paymentDetail) }}"
-                                                            class="btn btn-success mx-2" title="{{ __('main.show') }}">
+                                                            class="btn btn-success my-1" title="{{ __('main.show') }}">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     @endcan
                                                     @can('payment_detail.status')
-                                                        <x-custom.status :model="$paymentDetail" routeName="admin.payment_details.status" />
+                                                        <button class="btn btn-primary my-1" data-toggle="modal"
+                                                            data-target="#updateAmountModal"
+                                                            style="color: white; text-decoration: none;">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <div class="modal fade" id="updateAmountModal" tabindex="-1"
+                                                            role="dialog" aria-labelledby="updateAmountModalLabel"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <form
+                                                                        action="{{ route('admin.payment_details.update', $paymentDetail) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title text-dark"
+                                                                                id="updateAmountModalLabel">
+                                                                                {{ __('buttons.update') }}
+                                                                            </h5>
+                                                                            <button type="button" class="close"
+                                                                                data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+
+                                                                            <div class="form-group">
+                                                                                <label for="amount"
+                                                                                    class="text-dark">{{ __('attributes.amount') }}</label>
+                                                                                <input type="number" name="amount"
+                                                                                    class="form-control" id="amount"
+                                                                                    value="{{ $paymentDetail->amount }}"
+                                                                                    required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <x-custom.close-modal-button />
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary">{{ __('buttons.update') }}</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     @endcan
 
+
+                                                    @can('payment_detail.status')
+                                                        <x-custom.status :model="$paymentDetail"
+                                                            routeName="admin.payment_details.status" />
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -108,6 +158,7 @@
                                             <th>{{ __('attributes.payment_method') }}</th>
                                             <th>{{ __('attributes.transfer_phone') }}</th>
                                             <th>{{ __('attributes.transfer_image') }}</th>
+                                            <th>{{ __('attributes.amount') }}</th>
                                             <th>{{ __('attributes.status') }}</th>
                                             <th>{{ __('attributes.created_at') }}</th>
                                             <th>{{ __('main.actions') }}</th>

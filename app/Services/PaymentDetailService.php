@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\Status;
 use App\Models\PaymentDetails;
+use Illuminate\Validation\ValidationException;
 
 class PaymentDetailService
 {
@@ -35,15 +36,25 @@ class PaymentDetailService
         return PaymentDetails::find($id);
     }
 
+    public function update(array $data, $id): PaymentDetails
+    {
+        $paymentDetail = $this->getPaymentDetail($id);
+        $paymentDetail->update($data);
+        return $paymentDetail;
+    }
+
     public function changeStatus($status, $id)
     {
-        $paymentDetail = PaymentDetails::find($id);
+        $paymentDetail = $this->getPaymentDetail($id);
         $paymentDetail->status = $status;
-
-        if ($status == Status::APPROVED) {
+        if ($status == Status::APPROVED->value) {
+            // if amount == 0 then throw error
+            if ($paymentDetail->amount == 0) {
+                throw ValidationException::withMessages(['amount' => 'please enter amount first']);
+            }
             $paymentDetail->approved_by = auth()->user()->id;
             $paymentDetail->approved_at = now();
-        } elseif ($status == Status::REJECTED) {
+        } elseif ($status == Status::REJECTED->value) {
             $paymentDetail->rejected_by = auth()->user()->id;
             $paymentDetail->rejected_at = now();
         }

@@ -36,7 +36,7 @@ class PaymentDetailRequest extends FormRequest
                 'string',
                 Rule::requiredIf($this->payment_method === 'wallet'),
             ],
-            // 'transfer_image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:2048',
+            'transfer_image' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:2048',
         ];
     }
 

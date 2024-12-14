@@ -35,7 +35,7 @@ class PaymentDetailService
 
     public function getPaymentDetail($id): PaymentDetails
     {
-        return PaymentDetails::find($id);
+        return PaymentDetails::findOrFail($id);
     }
 
     public function update(array $data, $id): PaymentDetails

@@ -47,7 +47,7 @@
                                             <tr class="{{ $isToday ? 'bg-dark' : '' }}">
                                                 <td>{{ $paymentDetail->id }}</td>
                                                 <td>{{ $paymentDetail->user->name ?? 'Guest' }}</td>
-                                                <td style="max-width: 100px">
+                                                <td style="max-width: 150px">
                                                     <a
                                                         href="mailto:{{ $paymentDetail->user->email ?? '' }}">{{ $paymentDetail->user->email ?? '' }}</a>
                                                 </td>

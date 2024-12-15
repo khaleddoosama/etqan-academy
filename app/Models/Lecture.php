@@ -17,6 +17,16 @@ class Lecture extends Model
     use HasFactory, Sluggable, UploadTrait, LogsActivityForModels;
 
     protected $guarded = [];
+    
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Apply global scope to order by 'position'
+        static::addGlobalScope('orderByPosition', function ($query) {
+            $query->orderBy('position');
+        });
+    }
 
     public function sluggable(): array
     {

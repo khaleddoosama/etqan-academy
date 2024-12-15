@@ -25,8 +25,8 @@ class GalleryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
-            'path' => 'required|file'
+            'title' => 'required|string|max:255',
+            'path' => 'required|file|mimes:jpeg,png,jpg,gif,mp4,avi|max:20480', // max 20mb
         ];
     }
 

@@ -21,10 +21,17 @@ class GalleryController extends Controller
 
     public function store(GalleryRequest $request)
     {
-        $data = $request->validated();
+        try {
+            $data = $request->validated();
 
-        $gallery = $this->galleryService->createGallery($data);
-        return $this->apiResponse($gallery, __('messages.gallery_created'), 201);
+            $gallery = $this->galleryService->createGallery($data);
+            Log::info("File uploaded successfully.");
+
+            return $this->apiResponse($gallery, __('messages.gallery_created'), 201);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->apiResponse(null, $e->getMessage(), 500);
+        }
     }
 
 

@@ -3,13 +3,7 @@
     {{ __('attributes.logs') }}
 @endsection
 @section('content')
-<div class="content-wrapper">
-        @php
-
-            echo 'upload_max_filesize: ' . ini_get('upload_max_filesize') . '<br>';
-            echo 'post_max_size: ' . ini_get('post_max_size') . '<br>';
-
-        @endphp
+    <div class="content-wrapper">
         <!-- Content Wrapper. Contains page content -->
         <!-- Content Header (Page header) -->
         <x-custom.header-page title="{{ __('attributes.logs') }}" />

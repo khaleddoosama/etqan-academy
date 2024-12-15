@@ -26,7 +26,7 @@ class GalleryRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'path' => 'required|file|mimes:jpeg,png,jpg,gif,mp4,avi|max:20480', // max 20mb
+            'path' => 'required|file|max:20480', // max 20mb
         ];
     }
 

@@ -59,6 +59,7 @@ class PaymentDetailController extends Controller
     public function status(Request $request, $id)
     {
         $paymentDetail = $this->paymentDetailService->changeStatus($request->status, $id);
+
         // if ($paymentDetail->status == Status::APPROVED) {
         //     $notification = new PaymentApprovedNotification($paymentDetail->course->slug, $paymentDetail->course->title, $paymentDetail);
         //     $this->studentsNotificationService->notify($notification, $paymentDetail->user);

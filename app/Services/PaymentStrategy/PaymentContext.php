@@ -11,16 +11,26 @@ use App\Services\UserService;
 class PaymentContext
 {
     private PaymentStrategyInterface $strategy;
+    private UserCoursesService $userCoursesService;
 
+    public function __construct(UserCoursesService $userCoursesService)
+    {
+        $this->userCoursesService = $userCoursesService;
+    }
     public function setPaymentStrategy(PaymentStrategyInterface $strategy): void
     {
         $this->strategy = $strategy;
     }
 
-    public function handlePayment(PaymentDetails $paymentDetail, $user_id, $amount = null): bool
+    public function handlePayment(PaymentDetails $paymentDetail, $user_id): bool
     {
-        $userCoursesService = new UserCoursesService(new CourseService(), new UserService());
+        // $userCoursesService = new UserCoursesService(new CourseService(), new UserService());
+        return $this->strategy->handlePayment($this->userCoursesService, $paymentDetail, $user_id);
+    }
 
-        return $this->strategy->handlePayment($userCoursesService, $paymentDetail, $user_id, $amount);
+    public function handleRejectPayment(PaymentDetails $paymentDetail, $user_id): bool
+    {
+        // $userCoursesService = new UserCoursesService(new CourseService(), new UserService());
+        return $this->strategy->handleRejectPayment($this->userCoursesService, $paymentDetail, $user_id);
     }
 }

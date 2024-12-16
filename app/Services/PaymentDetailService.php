@@ -70,7 +70,7 @@ class PaymentDetailService
         $paymentDetail->approved_by = auth()->user()->id;
         $paymentDetail->approved_at = now();
 
-        $this->setPaymentStrategy($paymentDetail->payment_type->value);
+        $this->setPaymentStrategy($paymentDetail->payment_type);
         $this->paymentContext->handlePayment($paymentDetail, $paymentDetail->user_id);
     }
 
@@ -81,7 +81,7 @@ class PaymentDetailService
         $paymentDetail->rejected_by = auth()->user()->id;
         $paymentDetail->rejected_at = now();
 
-        $this->setPaymentStrategy($paymentDetail->payment_type->value);
+        $this->setPaymentStrategy($paymentDetail->payment_type);
         $this->paymentContext->handleRejectPayment($paymentDetail, $paymentDetail->user_id);
     }
 
@@ -106,11 +106,11 @@ class PaymentDetailService
         }
     }
 
-    private function setPaymentStrategy(string $paymentType): void
+    private function setPaymentStrategy(PaymentType $paymentType): void
     {
         $strategy = match ($paymentType) {
             PaymentType::CASH => new CashPayment(),
-            PaymentType::INSTALLMENT => new InstallmentPayment(),
+            PaymentType::INSTALLMENT => new InstallmentPayment($this->studentInstallmentService),
             default => throw new \InvalidArgumentException('Invalid payment type.'),
         };
 

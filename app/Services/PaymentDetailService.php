@@ -70,7 +70,7 @@ class PaymentDetailService
         $paymentDetail->approved_by = auth()->user()->id;
         $paymentDetail->approved_at = now();
 
-        $this->setPaymentStrategy($paymentDetail->payment_type);
+        $this->setPaymentStrategy($paymentDetail->payment_type->value);
         $this->paymentContext->handlePayment($paymentDetail, $paymentDetail->user_id);
     }
 
@@ -81,7 +81,7 @@ class PaymentDetailService
         $paymentDetail->rejected_by = auth()->user()->id;
         $paymentDetail->rejected_at = now();
 
-        $this->setPaymentStrategy($paymentDetail->payment_type);
+        $this->setPaymentStrategy($paymentDetail->payment_type->value);
         $this->paymentContext->handleRejectPayment($paymentDetail, $paymentDetail->user_id);
     }
 

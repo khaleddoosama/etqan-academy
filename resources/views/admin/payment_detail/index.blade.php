@@ -91,11 +91,11 @@
                                                     @endcan
                                                     @can('payment_detail.status')
                                                         <button class="btn btn-primary my-1" data-toggle="modal"
-                                                            data-target="#updateAmountModal"
+                                                            data-target="#updateAmountModal-{{ $paymentDetail->id }}"
                                                             style="color: white; text-decoration: none;">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                                        <div class="modal fade" id="updateAmountModal" tabindex="-1"
+                                                        <div class="modal fade" id="updateAmountModal-{{ $paymentDetail->id }}" tabindex="-1"
                                                             role="dialog" aria-labelledby="updateAmountModalLabel"
                                                             aria-hidden="true">
                                                             <div class="modal-dialog" role="document">

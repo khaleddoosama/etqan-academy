@@ -163,7 +163,7 @@
             $('#showVideo').attr('src', videoUrl);
         });
     </script>
-    
+
     <script>
         $('#form1').validate({
             rules: {
@@ -195,6 +195,43 @@
                 $(element).removeClass('is-invalid');
             },
 
+
+        });
+    </script>
+
+    <script>
+        $(function() {
+            $('#accordion').sortable({
+                update: function(event, ui) {
+                    var lectureOrder = [];
+                    $('#accordion .card-lecture').each(function(index) {
+                        lectureOrder.push($(this).data('id'));
+                    });
+
+                    $.ajax({
+                        url: '{{ route('admin.lectures.updateOrder') }}',
+                        method: 'Post',
+                        data: {
+                            lectures: lectureOrder,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            // toastr.success
+                            toastr.success('Order updated successfully');
+                            //btnn rewrite the order
+                            $('#accordion .card-lecture').each(function(index) {
+                                $(this).find('.btnn').text(
+                                    `{{ __('attributes.video') }} #${index + 1}: ${$(this).find('.btnn').text().split(':')[1]}`
+                                );
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            });
 
         });
     </script>

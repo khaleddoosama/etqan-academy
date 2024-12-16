@@ -7,6 +7,7 @@ use App\Enums\Status;
 use App\Models\PaymentDetails;
 use App\Models\StudentInstallment;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -65,7 +66,7 @@ class InstallmentPaymentsExport implements FromCollection, WithHeadings, WithSty
             $payment->payment_type->value ?? 'N/A',
             $payment->payment_method->value ?? 'N/A',
             strval($payment->transfer_number ?? 'N/A'),
-            asset($payment->transfer_image) ?? 'N/A',
+            Storage::url($payment->transfer_image) ?? 'N/A',
             $payment->amount ?? 0,
             $payment->created_at->toDateTimeString(),
             $payment->approved_at->toDateTimeString(),

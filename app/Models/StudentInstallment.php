@@ -17,6 +17,10 @@ class StudentInstallment extends Model
         'due_date',
     ];
 
+    protected $casts = [
+        'due_date' => 'datetime',
+    ];
+
     public function courseInstallment()
     {
         return $this->belongsTo(CourseInstallment::class);

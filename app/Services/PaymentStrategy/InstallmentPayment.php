@@ -38,8 +38,8 @@ class InstallmentPayment implements PaymentStrategyInterface
         } elseif ($num_installments_paid > $number_of_installments) {
             throw new \Exception('Installments already paid');
         }
-        $amount = $course_installment->installment_amounts[$num_installments_paid - 1];
-        $remaining_amount = $paymentDetail->amount - $amount;
+        $amount = $paymentDetail->amount;
+        $remaining_amount = $paymentDetail->amount - $course_installment->installment_amounts[$num_installments_paid - 1];
 
         StudentInstallment::create(
             [

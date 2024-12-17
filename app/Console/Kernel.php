@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:check-installment-access')->daily();
         // $schedule->command('report:weekly-payments')->weeklyOn(5, '00:01');
-        $schedule->command('report:weekly-payments')->daily();
+        $schedule->command('report:weekly-payments')->dailyAt('00:12');
     }
 
     /**

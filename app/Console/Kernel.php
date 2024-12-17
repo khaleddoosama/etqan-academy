@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:check-installment-access')->daily();
-        $schedule->command('report:weekly-payments')->weeklyOn(5, '00:01');
+        $schedule->command('report:weekly-payments')->weeklyOn(3, '00:01'); // Run on Wednesday at 00:01
     }
 
     /**

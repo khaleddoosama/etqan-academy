@@ -3,10 +3,6 @@
     {{ __('attributes.payment_details') }}
 @endsection
 @section('content')
-    {{-- phpinfo --}}
-    @php
-        phpinfo();
-    @endphp
     <div class="content-wrapper">
         <!-- Content Wrapper. Contains page content -->
         <!-- Content Header (Page header) -->

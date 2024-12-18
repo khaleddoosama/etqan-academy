@@ -176,6 +176,7 @@ return [
 
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider::class
 
     ])->toArray(),
 
@@ -196,6 +197,9 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+        'PDF' => Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::class
+
     ])->toArray(),
 
 ];

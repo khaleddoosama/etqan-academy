@@ -6,9 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Barryvdh\DomPDF\Facade\Pdf;
 
-class PaymentRejectedNotification extends Notification
+class PaymentRejectedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -19,6 +18,7 @@ class PaymentRejectedNotification extends Notification
     {
         $this->course_slug = $course_slug;
         $this->course_title = $course_title;
+        $this->queue = 'high';
     }
 
     public function via(object $notifiable): array

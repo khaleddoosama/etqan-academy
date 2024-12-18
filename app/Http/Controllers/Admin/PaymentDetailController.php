@@ -10,6 +10,8 @@ use App\Notifications\PaymentRejectedNotification;
 use App\Services\PaymentDetailService;
 use App\Services\StudentsNotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Yoeunes\Toastr\Facades\Toastr;
@@ -58,18 +60,36 @@ class PaymentDetailController extends Controller
 
     public function status(Request $request, $id)
     {
-        $paymentDetail = $this->paymentDetailService->changeStatus($request->status, $id);
+        DB::beginTransaction();
+        try {
+            $paymentDetail = $this->paymentDetailService->changeStatus($request->status, $id);
 
-        // if ($paymentDetail->status == Status::APPROVED) {
-        //     $notification = new PaymentApprovedNotification($paymentDetail->course->slug, $paymentDetail->course->title, $paymentDetail);
-        //     $this->studentsNotificationService->notify($notification, $paymentDetail->user);
-        // } else if ($paymentDetail->status == Status::REJECTED) {
-        //     $notification = new PaymentRejectedNotification($paymentDetail->course->slug, $paymentDetail->course->title);
-        //     $this->studentsNotificationService->notify($notification, $paymentDetail->user);
-        // }
+            if ($paymentDetail->status == Status::APPROVED) {
+                $notification = new PaymentApprovedNotification($paymentDetail->courseInstallment->course->slug, $paymentDetail->courseInstallment->course->title, $paymentDetail);
+                $this->studentsNotificationService->notify($notification, $paymentDetail->user);
+            } else if ($paymentDetail->status == Status::REJECTED) {
+                $notification = new PaymentRejectedNotification($paymentDetail->courseInstallment->course->slug, $paymentDetail->courseInstallment->course->title);
+                $this->studentsNotificationService->notify($notification, $paymentDetail->user);
+            }
 
+            DB::commit();
 
-        Toastr::success(__('messages.payment_detail_changed'), __('status.success'));
+            Toastr::success(__('messages.payment_detail_changed'), __('status.success'));
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            Toastr::error($e->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    // export
+    public function export()
+    {
+        // run artisan command report:weekly-payments
+        Artisan::call('report:weekly-payments');
 
         return redirect()->back();
     }

@@ -27,7 +27,8 @@
                                         href="https://wa.me/{{ $paymentDetail->user->phone }}" target="_blank">
                                         {{ $paymentDetail->user->phone }}
                                     </a></p>
-                                <p><strong>{{ __('attributes.course') }}:</strong> {{ $paymentDetail->courseInstallment->course->title }}</p>
+                                <p><strong>{{ __('attributes.course') }}:</strong>
+                                    {{ $paymentDetail->courseInstallment->course->title }}</p>
 
                                 <p><strong>{{ __('attributes.whatsapp') }}:</strong> <a
                                         href="https://wa.me/{{ $paymentDetail->whatsapp_number }}" target="_blank">
@@ -43,18 +44,19 @@
                                             style="width: 100px">
                                     </a>
                                 </p>
+                                @if (auth()->user()->can('payment_detail.update') && $paymentDetail->status != \App\Enums\Status::APPROVED)
+                                    <form action="{{ route('admin.payment_details.update', $paymentDetail) }}"
+                                        method="POST" class="d-flex align-items-end mb-2">
+                                        @csrf
+                                        @method('PUT')
 
-                                <form action="{{ route('admin.payment_details.update', $paymentDetail) }}" method="POST"
-                                    class="d-flex align-items-end mb-2">
-                                    @csrf
-                                    @method('PUT')
+                                        <label for="amount" class="mr-2">{{ __('attributes.amount') }}:</label>
+                                        <input type="number" name="amount" class="form-control mr-2 w-auto" id="amount"
+                                            value="{{ $paymentDetail->amount }}" min="0" step="0.01" required>
 
-                                    <label for="amount" class="mr-2">{{ __('attributes.amount') }}:</label>
-                                    <input type="number" name="amount" class="form-control mr-2 w-auto" id="amount"
-                                        value="{{ $paymentDetail->amount }}" min="0" step="0.01" required>
-
-                                    <x-custom.form-submit text="{{ __('buttons.update') }}" class="btn-primary" />
-                                </form>
+                                        <x-custom.form-submit text="{{ __('buttons.update') }}" class="btn-primary" />
+                                    </form>
+                                @endif
 
 
                                 <p><strong>{{ __('attributes.status') }}:</strong> <span

@@ -118,6 +118,7 @@ return [
     'video' => 'الفيديو',
     'videos' => 'الفيديوهات',
     'wallet' => 'المحفظة',
+    'isntapay' => 'Instapay',
     'wallet_phone' => 'هاتف المحفظة',
     'withdrawal_request' => 'طلب السحب',
     'withdrawal_requests' => 'طلبات السحب',
@@ -181,4 +182,5 @@ return [
     'course_offer' => 'عرض الدورة',
     'course_offers' => 'عروض الدورة',
     'amount_updated_successfully' => 'تم تحديث المبلغ بنجاح',
+    'cash' => 'نقدا',
 ];

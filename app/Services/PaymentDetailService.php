@@ -87,7 +87,7 @@ class PaymentDetailService
 
     private function validateApproval(PaymentDetails $paymentDetail): void
     {
-        if ($paymentDetail->amount === 0) {
+        if ($paymentDetail->amount == 0) {
             throw ValidationException::withMessages(['amount' => 'Please enter an amount first.']);
         }
     }

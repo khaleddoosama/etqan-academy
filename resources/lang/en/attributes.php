@@ -118,6 +118,7 @@ return [
     'video' => 'Video ',
     'videos' => 'Videos',
     'wallet' => 'Wallet',
+    'instapay' => 'Instapay',
     'wallet_phone' => 'Wallet Phone',
     'withdrawal_request' => 'Withdrawal Request',
     'withdrawal_requests' => 'Withdrawal Requests',
@@ -181,4 +182,6 @@ return [
     'max_students' => 'Max Students',
     'course_offer' => 'Course Offer',
     'course_offers' => 'Course Offers',
+    'cash' => 'Cash',
+
 ];

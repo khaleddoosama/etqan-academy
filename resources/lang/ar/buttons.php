@@ -92,4 +92,9 @@
     'delete_all' => 'حذف الكل',
     'download' => 'تحميل',
     'enter' => 'ادخل',
+    'export' => 'تصدير',
+    'print' => 'طباعة',
+    'import' => 'استيراد',
+    'export_sheets' => 'تصدير الشيتات',
+    'import_sheets' => 'استيراد الشيتات',
 );

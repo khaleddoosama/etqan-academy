@@ -3,6 +3,10 @@
     {{ __('attributes.payment_details') }}
 @endsection
 @section('content')
+    {{-- phpinfo --}}
+    @php
+        phpinfo();
+    @endphp
     <div class="content-wrapper">
         <!-- Content Wrapper. Contains page content -->
         <!-- Content Header (Page header) -->
@@ -14,7 +18,11 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-
+                            <div class="card-header">
+                                <a href="{{ route('admin.payment_details.export') }}" class="btn btn-primary">
+                                    {{ __('buttons.export_sheets') }}
+                                </a>
+                            </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="unresponsive-table" class="table table-bordered table-striped">
@@ -89,13 +97,15 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     @endcan
-                                                    @can('payment_detail.status')
+                                                    {{-- @can('payment_detail.status') --}}
+                                                    @if (auth()->user()->can('payment_detail.status') && $paymentDetail->status != \App\Enums\Status::APPROVED)
                                                         <button class="btn btn-primary my-1" data-toggle="modal"
                                                             data-target="#updateAmountModal-{{ $paymentDetail->id }}"
                                                             style="color: white; text-decoration: none;">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                                        <div class="modal fade" id="updateAmountModal-{{ $paymentDetail->id }}" tabindex="-1"
+                                                        <div class="modal fade"
+                                                            id="updateAmountModal-{{ $paymentDetail->id }}" tabindex="-1"
                                                             role="dialog" aria-labelledby="updateAmountModalLabel"
                                                             aria-hidden="true">
                                                             <div class="modal-dialog" role="document">
@@ -135,7 +145,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    @endcan
+                                                    @endif
+                                                    {{-- @endcan --}}
 
 
                                                     @can('payment_detail.status')

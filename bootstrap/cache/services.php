@@ -24,7 +24,7 @@
     20 => 'Illuminate\\Validation\\ValidationServiceProvider',
     21 => 'Illuminate\\View\\ViewServiceProvider',
     22 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    23 => 'Barryvdh\\DomPDF\\ServiceProvider',
+    23 => 'Mccarlosen\\LaravelMpdf\\LaravelMpdfServiceProvider',
     24 => 'Cviebrock\\EloquentSluggable\\ServiceProvider',
     25 => 'Intervention\\Image\\Laravel\\ServiceProvider',
     26 => 'Laravel\\Breeze\\BreezeServiceProvider',
@@ -53,6 +53,7 @@
     49 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
     50 => 'ProtoneMedia\\LaravelFFMpeg\\Support\\ServiceProvider',
     51 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    52 => 'Mccarlosen\\LaravelMpdf\\LaravelMpdfServiceProvider',
   ),
   'eager' => 
   array (
@@ -67,7 +68,7 @@
     8 => 'Illuminate\\Session\\SessionServiceProvider',
     9 => 'Illuminate\\View\\ViewServiceProvider',
     10 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    11 => 'Barryvdh\\DomPDF\\ServiceProvider',
+    11 => 'Mccarlosen\\LaravelMpdf\\LaravelMpdfServiceProvider',
     12 => 'Cviebrock\\EloquentSluggable\\ServiceProvider',
     13 => 'Intervention\\Image\\Laravel\\ServiceProvider',
     14 => 'Laravel\\Sanctum\\SanctumServiceProvider',
@@ -93,6 +94,7 @@
     34 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
     35 => 'ProtoneMedia\\LaravelFFMpeg\\Support\\ServiceProvider',
     36 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    37 => 'Mccarlosen\\LaravelMpdf\\LaravelMpdfServiceProvider',
   ),
   'deferred' => 
   array (

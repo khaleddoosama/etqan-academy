@@ -92,4 +92,9 @@
     'delete_all' => 'Delete All',
     'download' => 'Download',
     'enter' => 'Enter',
+    'export' => 'Export',
+    'import' => 'Import',
+    'print' => 'Print',
+    'export_sheets' => 'Export Sheets',
+    'import_sheets' => 'Import Sheets',
 );

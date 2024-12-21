@@ -183,7 +183,7 @@
     <script>
         $(function() {
             $("#example1").DataTable({
-                "responsive": true,
+                "responsive": false,
                 "lengthChange": false,
                 "autoWidth": false,
                 "ordering": true, // Enable ordering
@@ -207,32 +207,6 @@
 
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-            $("#unresponsive-table").DataTable({
-                "responsive": false,
-                "lengthChange": false,
-                "autoWidth": false,
-                "ordering": true, // Enable ordering
-                "order": [], // No default ordering (columns are unsorted initially)
-                // "buttons": ["copy", "csv", "excel", "print", "colvis"],
-                "language": {
-                    "emptyTable": "{{ __('datatable.no_data_available_in_table') }}",
-                    "lengthMenu": "{{ __('datatable.show _MENU_ entries') }}",
-                    "search": "{{ __('datatable.search') }}:",
-                    "zeroRecords": "{{ __('datatable.no_matching_records_found') }}",
-                    "paginate": {
-                        "next": "{{ __('datatable.next') }}",
-                        "previous": "{{ __('datatable.previous') }}"
-                    },
-                    "info": "{{ __('datatable.showing from _START_ to _END_ of _TOTAL_ entries') }}",
-                    "infoEmpty": "{{ __('datatable.showing 0 to 0 of 0 entries') }}",
-                    "infoFiltered": "({{ __('datatable.filtered from _MAX_ total entries') }})",
-                    "thousands": ",",
-                    "loadingRecords": "{{ __('datatable.loading...') }}",
-                    "processing": "{{ __('datatable.processing...') }}",
-                },
-
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,

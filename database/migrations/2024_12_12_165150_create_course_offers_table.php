@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('start_date');
             $table->timestamp('end_date')->nullable();
             $table->integer('price');
+            $table->text('description')->nullable();
             $table->integer('max_students')->nullable();
             $table->timestamps();
         });

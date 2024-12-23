@@ -36,6 +36,8 @@
                                         value="{{ $courseOffer->start_date->format('Y-m-d') }}" />
                                     <x-custom.form-group class="col-md-6" type="date" name="end_date"
                                         value="{{ $courseOffer->end_date->format('Y-m-d') }}" />
+                                    <x-custom.form-group class="col-md-6" type="textarea" name="description"
+                                        value="{{ $courseOffer->description }}" />
 
                                 </div>
                                 <!-- /.card-body -->
@@ -72,11 +74,15 @@
                     start_date: {
                         required: true,
                         date: true,
+                        min: new Date().toISOString().split('T')[0]
                     },
 
                     end_date: {
                         required: true,
                         date: true,
+                        min: function() {
+                            return $("#input-start_date").val();
+                        }
                     },
                 },
                 messages: {
@@ -88,9 +94,13 @@
                     },
                     start_date: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.start_date')]) }}",
+                        date: "{{ __('validation.date', ['attribute' => __('attributes.start_date')]) }}",
+                        min: "{{ __('validation.after', ['attribute' => __('attributes.start_date'), 'date' => 'yesterday']) }}",
                     },
                     end_date: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.end_date')]) }}",
+                        date: "{{ __('validation.date', ['attribute' => __('attributes.end_date')]) }}",
+                        min: "{{ __('validation.after', ['attribute' => __('attributes.end_date'), 'date' => __('attributes.start_date')]) }}",
                     },
 
                 },

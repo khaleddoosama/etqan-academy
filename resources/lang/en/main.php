@@ -27,4 +27,5 @@
     'user' => 'User',
     'clear_cache' => 'Clear Cache',
     'duration_in_days' => 'Duration in days',
+    'yesterday' => 'Yesterday',
 );

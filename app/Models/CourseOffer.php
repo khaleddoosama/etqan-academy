@@ -14,6 +14,7 @@ class CourseOffer extends Model
         'start_date',
         'end_date',
         'price',
+        'description',
         'max_students',
     ];
 

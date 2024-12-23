@@ -34,6 +34,7 @@
                                             <th>{{ __('attributes.price') }}</th>
                                             <th>{{ __('attributes.start_date') }}</th>
                                             <th>{{ __('attributes.end_date') }}</th>
+                                            <th>{{ __('attributes.description') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </thead>
@@ -49,6 +50,7 @@
                                                 <td>{{ $courseOffer->price }}</td>
                                                 <td>{{ $courseOffer->start_date }}</td>
                                                 <td>{{ $courseOffer->end_date }}</td>
+                                                <td>{{ $courseOffer->description }}</td>
                                                 <td>
                                                     @can('course_offer.edit')
                                                         <x-custom.edit-button route="admin.course_offers.edit"
@@ -69,6 +71,7 @@
                                             <th>{{ __('attributes.price') }}</th>
                                             <th>{{ __('attributes.start_date') }}</th>
                                             <th>{{ __('attributes.end_date') }}</th>
+                                            <th>{{ __('attributes.description') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </tfoot>

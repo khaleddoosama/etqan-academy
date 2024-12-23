@@ -26,6 +26,7 @@ class CourseOfferRequest extends FormRequest
             'start_date' => 'required|date|after:yesterday',
             'end_date' => 'required|date|after:start_date',
             'price' => 'required|numeric',
+            'description' => 'nullable|string',
         ];
     }
 }

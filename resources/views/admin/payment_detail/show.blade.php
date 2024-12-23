@@ -44,7 +44,7 @@
                                             style="width: 100px">
                                     </a>
                                 </p>
-                                @if (auth()->user()->can('payment_detail.update') && $paymentDetail->status != \App\Enums\Status::APPROVED)
+                                @if (auth()->user()->can('payment_detail.status') && $paymentDetail->status != \App\Enums\Status::APPROVED)
                                     <form action="{{ route('admin.payment_details.update', $paymentDetail) }}"
                                         method="POST" class="d-flex align-items-end mb-2">
                                         @csrf

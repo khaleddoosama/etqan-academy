@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\PaymentDetailController;
 use App\Http\Controllers\Api\RequestCourseController;
+use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\VerificationController;
@@ -98,3 +99,7 @@ Route::middleware(['jwt.authenticate', 'throttle:6,1', 'log_user_activity:api'])
 // Handle email verification
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyEmail'])
     ->name('jwt.verification.verify')->middleware(['signed', 'throttle:6,1', 'log_user_activity:api']);
+
+
+Route::post('password/request', [ResetPasswordController::class, 'requestPassword'])->middleware(['throttle:6,1', 'log_user_activity:api'])->name('password.request');
+Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->middleware(['throttle:6,1', 'log_user_activity:api'])->name('password.reset');

@@ -64,7 +64,7 @@ class AuthController extends Controller
                 'phone' => 'required|string|max:20',
                 // 'username' => 'required|string|between:2,50|alpha_dash|unique:users',
                 'email' => 'required|string|email|max:50|unique:users',
-                'password' => 'required|string|confirmed|min:6',
+                'password' => 'required|string|confirmed|min:8',
             ]);
             if ($validator->fails()) {
                 DB::rollBack();

@@ -207,9 +207,9 @@ class LectureController extends Controller
     }
 
     // failedLectures
-    public function failedLectures()
-    {
-        $lectures = $this->lectureService->getFailedLectures();
-        return view('admin.lecture.failed', compact('lectures'));
-    }
+    // public function failedLectures()
+    // {
+    //     $lectures = $this->lectureService->getFailedLectures();
+    //     return view('admin.lecture.failed', compact('lectures'));
+    // }
 }

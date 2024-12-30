@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\RequestCourseController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\StudentWorkController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\WithdrawalRequestController;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,7 @@ Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry'])->middlew
 
 // show categories
 Route::get('/categories', [CategoryController::class, 'index'])->middleware(['log_user_activity:api']);
+Route::get('/student-works', [StudentWorkController::class, 'index'])->middleware(['log_user_activity:api']);
 
 // send Request Course
 Route::post('/request-course', [RequestCourseController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api']);

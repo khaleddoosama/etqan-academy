@@ -183,5 +183,11 @@ return [
     'course_offer' => 'Course Offer',
     'course_offers' => 'Course Offers',
     'cash' => 'Cash',
+    'images' => 'Images',
+    'student_work' => 'Student Work',
+    'student_work_category_id' => 'Student Work Category',
+    'student_work_category' => 'Student Work Category',
+    'pathes' => 'Files',
+    'student_works' => 'Student Works',
 
 ];

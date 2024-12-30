@@ -113,13 +113,15 @@
                       </li>
                   @endcan
 
-                  {{-- programs --}}
-                  @can('program.list')
+                  {{--  student works  --}}
+                  @can('student_work.list')
+                      {{-- student works --}}
                       <li class="nav-item">
-                          <a href="{{ route('admin.programs.index') }}"
-                              class="nav-link @if (Request::is('*/admin/programs') || Request::is('*/admin/programs/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="code-slash-outline"></ion-icon></span>
-                              <p>{{ __('attributes.programs') }}</p>
+                          <a href="{{ route('admin.student_works.index') }}"
+                              class="nav-link @if (Request::is('*/admin/student_works') || Request::is('*/admin/student_works/*')) active @endif">
+                              <span class="icon nav-icon"><ion-icon name="clipboard-outline"></ion-icon>
+                              </span>
+                              <p>{{ __('attributes.student_works') }}</p>
                           </a>
                       </li>
                   @endcan
@@ -180,13 +182,13 @@
                           </li>
 
                           {{-- Failed Lectures --}}
-                          <li class="nav-item">
+                          {{-- <li class="nav-item">
                               <a href="{{ route('admin.lectures.failed.index') }}"
                                   class="nav-link @if (Request::is('*/admin/failed-lectures')) active @endif">
                                   <span class="icon nav-icon"><ion-icon name="close-circle-outline"></ion-icon></span>
                                   <p>{{ __('attributes.failed_lectures') }}</p>
                               </a>
-                          </li>
+                          </li> --}}
                       </ul>
                   </li>
                   {{-- @endif --}}

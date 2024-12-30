@@ -112,4 +112,8 @@
     'course_offer_not_found' => 'عذرًا، لم نتمكن من العثور على عرض الدورة المطلوب.',
     'course_offers_not_found' => 'لا توجد عروض دورات متاحة في الوقت الحالي.',
     'amount_updated_successfully' => 'تم تحديث المبلغ بنجاح.',
+    'student_work_created' => 'تم إنشاء عملية الطالب بنجاح.',
+    'student_works_order_updated' => 'تم تحديث ترتيب عمليات الطلاب بنجاح.',
+    'student_work_deleted' => 'تم حذف عملية الطالب بنجاح.',
+    'student_work_not_found' => 'عذرًا، لم نتمكن من العثور على عملية الطالب المطلوبة.',
 );

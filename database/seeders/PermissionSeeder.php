@@ -111,6 +111,12 @@ class PermissionSeeder extends Seeder
                 'course_offer.edit',
                 'course_offer.delete',
             ],
+            'student_work' => [
+                'student_work.list',
+                'student_work.create',
+                'student_work.edit',
+                'student_work.delete',
+            ],
         ];
 
         // Insert permissions

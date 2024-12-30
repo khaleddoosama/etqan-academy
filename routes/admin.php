@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\RequestCourseController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\StudentWorkController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserCoursesController;
 use App\Http\Controllers\Admin\WithdrawalRequestController;
@@ -76,6 +77,12 @@ Route::group(
                 return redirect()->route('admin.instructors.index');
             });
 
+            // Student Works Controller
+            Route::resource('student_works', StudentWorkController::class)->except(['show', 'edit', 'update'])->missing(function () {
+                return redirect()->route('admin.student_works.index');
+            });
+            Route::post('/student_works/update-order', [StudentWorkController::class, 'updateOrder'])->name('student_works.updateOrder');
+
             // Category Controller
             Route::resource('categories', CategoryController::class)->except(['show'])->missing(function () {
                 return redirect()->route('admin.categories.index');
@@ -126,7 +133,7 @@ Route::group(
                 return redirect()->route('admin.courses.index');
             });
             // Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
-            Route::get('failed-lectures', [LectureController::class, 'failedLectures'])->name('lectures.failed.index');
+            // Route::get('failed-lectures', [LectureController::class, 'failedLectures'])->name('lectures.failed.index');
             Route::post('/lectures/update-order', [LectureController::class, 'updateOrder'])->name('lectures.updateOrder');
             // Route::post('/upload-video', [LectureController::class, 'generatePresignedUrl']);
             Route::put('/update-attachment/{lecture}', [LectureController::class, 'updateAttachment'])->name('lectures.updateAttachment');

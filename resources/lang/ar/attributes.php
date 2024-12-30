@@ -183,4 +183,10 @@ return [
     'course_offers' => 'عروض الدورة',
     'amount_updated_successfully' => 'تم تحديث المبلغ بنجاح',
     'cash' => 'نقدا',
+    'images' => 'صور',
+    'student_work' => 'عمل الطالب',
+    'student_work_category_id' => 'فئة عمل الطالب',
+    'student_work_category' => 'فئة عمل الطالب',
+    'pathes' => 'ملفات',
+    'student_works' => 'عمل الطلاب',
 ];

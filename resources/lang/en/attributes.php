@@ -189,5 +189,9 @@ return [
     'student_work_category' => 'Student Work Category',
     'pathes' => 'Files',
     'student_works' => 'Student Works',
-
+    'course_management' => 'Course Management',
+    'user_management' => 'User Management',
+    'admin_management' => 'Admin Management',
+    'logs_management' => 'Logs Management',
+    'jobs_management' => 'Jobs Management',
 ];

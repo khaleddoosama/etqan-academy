@@ -50,42 +50,112 @@
                       </li>
                   @endcan
 
-                  {{--  users  --}}
-                  @can('user.list')
-                      <li class="nav-item @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) menu-open @endif">
-                          <a href="#" class="nav-link  @if (Request::is('*/admin/users') || Request::is('*/admin/users/*')) active @endif">
-                              <i class="nav-icon fas fa-users"></i>
+                  @php
+                      $userManagementItems = [
+                          [
+                              'key' => 'users',
+                              'permission' => 'user.list',
+                              'label' => __('attributes.users'),
+                              'icon' => 'fas fa-users',
+                              'badge' => auth()
+                                  ->user()
+                                  ->unreadNotifications()
+                                  ->where('type', 'App\Notifications\UserRegisteredNotification')
+                                  ->count(),
+                              'subItems' => [
+                                  [
+                                      'route' => 'admin.users.active',
+                                      'label' => __('attributes.users_active'),
+                                      'request_patterns' => ['*/admin/users/active', '*/admin/users/active/*'],
+                                  ],
+                                  [
+                                      'route' => 'admin.users.inactive',
+                                      'label' => __('attributes.users_inactive'),
+                                      'request_patterns' => ['*/admin/users/inactive', '*/admin/users/inactive/*'],
+                                  ],
+                              ],
+                              'request_patterns' => ['*/admin/users', '*/admin/users/*'],
+                          ],
+                          [
+                              'key' => 'instructors',
+                              'permission' => 'instructor.list',
+                              'label' => __('attributes.instructors'),
+                              'icon' => 'school-outline',
+                              'route' => 'admin.instructors.index',
+                              'request_patterns' => ['*/admin/instructors', '*/admin/instructors/*'],
+                          ],
+                          [
+                              'key' => 'student_works',
+                              'permission' => 'student_work.list',
+                              'label' => __('attributes.student_works'),
+                              'icon' => 'clipboard-outline',
+                              'route' => 'admin.student_works.index',
+                              'request_patterns' => ['*/admin/student_works', '*/admin/student_works/*'],
+                          ],
+                      ];
 
-                              <p>
-                                  {{ __('attributes.users') }}
-                                  <i class="fas fa-angle-left right"></i>
-                                  <span
-                                      class="badge badge-info right">{{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\UserRegisteredNotification')->count() }}</span>
-                              </p>
-                          </a>
-                          <ul class="nav nav-treeview" style=" @if (!(Request::is('*/admin/users') || Request::is('*/admin/users/*'))) display: none @endif">
+                      $isActive = function ($patterns) {
+                          return collect($patterns)->contains(fn($pattern) => Request::is($pattern));
+                      };
 
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.users.active') }}"
-                                      class="nav-link @if (Request::is('*/admin/users/active') || Request::is('*/admin/users/active/*')) active @endif">
-                                      <i class="far fa-circle nav-icon"></i>
-                                      <p>
-                                          {{ __('attributes.users_active') }}
-                                      </p>
-                                  </a>
-                              </li>
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.users.inactive') }}"
-                                      class="nav-link @if (Request::is('*/admin/users/inactive') || Request::is('*/admin/users/inactive/*')) active @endif">
-                                      <i class="far fa-circle nav-icon"></i>
-                                      <p>
-                                          {{ __('attributes.users_inactive') }}
-                                      </p>
-                                  </a>
-                              </li>
-                          </ul>
-                      </li>
-                  @endcan
+                      $isMenuOpen = collect($userManagementItems)->contains(
+                          fn($item) => (isset($item['subItems']) && $isActive($item['request_patterns'])) ||
+                              $isActive($item['request_patterns']),
+                      );
+                  @endphp
+
+                  <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                      <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-user-cog"></i>
+                          <p>
+                              {{ __('attributes.user_management') }}
+                              <i class="fas fa-angle-left right"></i>
+                          </p>
+                      </a>
+                      <ul class="nav nav-treeview"
+                          style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
+                          @foreach ($userManagementItems as $item)
+                              @can($item['permission'])
+                                  @if (isset($item['subItems']))
+                                      <li class="nav-item {{ $isActive($item['request_patterns']) ? 'menu-open' : '' }}">
+                                          <a href="#"
+                                              class="nav-link {{ $isActive($item['request_patterns']) ? 'active' : '' }}">
+                                              <i class="nav-icon {{ $item['icon'] }}"></i>
+                                              <p>
+                                                  {{ $item['label'] }}
+                                                  <i class="fas fa-angle-left right"></i>
+                                                  @if ($item['badge'] ?? false)
+                                                      <span class="badge badge-info right">{{ $item['badge'] }}</span>
+                                                  @endif
+                                              </p>
+                                          </a>
+                                          <ul class="nav nav-treeview">
+                                              @foreach ($item['subItems'] as $subItem)
+                                                  <li class="nav-item">
+                                                      <a href="{{ route($subItem['route']) }}"
+                                                          class="nav-link {{ $isActive($subItem['request_patterns']) ? 'active' : '' }}">
+                                                          <i class="far fa-circle nav-icon"></i>
+                                                          <p>{{ $subItem['label'] }}</p>
+                                                      </a>
+                                                  </li>
+                                              @endforeach
+                                          </ul>
+                                      </li>
+                                  @else
+                                      <li class="nav-item">
+                                          <a href="{{ route($item['route']) }}"
+                                              class="nav-link {{ $isActive($item['request_patterns']) ? 'active' : '' }}">
+                                              <span class="icon nav-icon"><ion-icon
+                                                      name="{{ $item['icon'] }}"></ion-icon></span>
+                                              <p>{{ $item['label'] }}</p>
+                                          </a>
+                                      </li>
+                                  @endif
+                              @endcan
+                          @endforeach
+                      </ul>
+                  </li>
+
 
                   {{--  categories  --}}
                   @can('category.list')
@@ -100,369 +170,286 @@
                       </li>
                   @endcan
 
-                  {{-- instructors --}}
-                  @can('instructor.list')
-                      <li class="nav-item">
-                          <a href="{{ route('admin.instructors.index') }}"
-                              class="nav-link @if (Request::is('*/admin/instructors') || Request::is('*/admin/instructors/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="school-outline"></ion-icon></span>
-                              <p>
-                                  {{ __('attributes.instructors') }}
-                              </p>
-                          </a>
-                      </li>
-                  @endcan
+                  @php
+                      $courseMenuItems = [
+                          'lectures' => [
+                              'route' => 'admin.lectures.index',
+                              'icon' => 'videocam-outline',
+                              'label' => __('attributes.lectures'),
+                              'permission' => null, // يمكنك إضافة الصلاحية لاحقًا
+                          ],
+                          'courses' => [
+                              'route' => 'admin.courses.index',
+                              'icon' => 'book-outline',
+                              'label' => __('attributes.courses'),
+                              'permission' => 'course.list',
+                          ],
+                          'course_installments' => [
+                              'route' => 'admin.course_installments.index',
+                              'icon' => 'cash-outline',
+                              'label' => __('attributes.course_installments'),
+                              'permission' => 'course_installment.list',
+                          ],
+                          'course_offers' => [
+                              'route' => 'admin.course_offers.index',
+                              'icon' => 'pricetag-outline',
+                              'label' => __('attributes.course_offers'),
+                              'permission' => 'course_offer.list',
+                          ],
+                      ];
 
-                  {{--  student works  --}}
-                  @can('student_work.list')
-                      {{-- student works --}}
-                      <li class="nav-item">
-                          <a href="{{ route('admin.student_works.index') }}"
-                              class="nav-link @if (Request::is('*/admin/student_works') || Request::is('*/admin/student_works/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="clipboard-outline"></ion-icon>
-                              </span>
-                              <p>{{ __('attributes.student_works') }}</p>
-                          </a>
-                      </li>
-                  @endcan
+                      $isActive = function ($prefix) {
+                          return Request::is("*/admin/$prefix*");
+                      };
 
-                  {{-- Courses --}}
-                  @can('course.list')
-                      <li class="nav-item">
-                          <a href="{{ route('admin.courses.index') }}"
-                              class="nav-link @if (Request::is('*/admin/courses') || Request::is('*/admin/courses/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="book-outline"></ion-icon></span>
-                              <p>{{ __('attributes.courses') }}</p>
-                          </a>
-                      </li>
-                  @endcan
+                      $isMenuOpen = collect(array_keys($courseMenuItems))->contains(fn($prefix) => $isActive($prefix));
+                  @endphp
 
-                  {{-- course installments --}}
-                  @can('course_installment.list')
-                      <li class="nav-item">
-                          <a href="{{ route('admin.course_installments.index') }}"
-                              class="nav-link @if (Request::is('*/admin/course_installments') || Request::is('*/admin/course_installments/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
-                              <p>{{ __('attributes.course_installments') }}</p>
-                          </a>
-                      </li>
-                  @endcan
-
-                  {{-- course Offers --}}
-                  @can('course_offer.list')
-                      <li class="nav-item">
-                          <a href="{{ route('admin.course_offers.index') }}"
-                              class="nav-link @if (Request::is('*/admin/course_offers') || Request::is('*/admin/course_offers/*')) active @endif">
-                              <span class="icon nav-icon"><ion-icon name="pricetag-outline"></ion-icon></span>
-                              <p>{{ __('attributes.course_offers') }}</p>
-                          </a>
-                      </li>
-                  @endcan
-
-                  {{-- Lecture Management --}}
-                  {{-- @if (auth()->user()->can('lectures.list')) --}}
-                  <li class="nav-item @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures')) menu-open @endif">
-                      <a href="#" class="nav-link @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures')) active @endif">
+                  <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                      <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
                           <span class="icon nav-icon"><ion-icon name="videocam-outline"></ion-icon></span>
                           <p>
-                              {{ __('Lecture Management') }}
+                              {{ __('attributes.course_management') }}
                               <i class="fas fa-angle-left right"></i>
                           </p>
                       </a>
                       <ul class="nav nav-treeview"
-                          style="background-color:rgba(255, 255, 255, 0.1);@if (!(Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*') || Request::is('*/admin/failed-lectures'))) display: none @endif">
-                          {{-- Lectures --}}
-                          <li class="nav-item">
-                              <a href="{{ route('admin.lectures.index') }}"
-                                  class="nav-link @if (Request::is('*/admin/lectures') || Request::is('*/admin/lectures/*')) active @endif">
-                                  <span class="icon nav-icon"><ion-icon name="videocam-outline"></ion-icon></span>
-
-                                  <p>{{ __('attributes.lectures') }}</p>
-                              </a>
-                          </li>
-
-                          {{-- Failed Lectures --}}
-                          {{-- <li class="nav-item">
-                              <a href="{{ route('admin.lectures.failed.index') }}"
-                                  class="nav-link @if (Request::is('*/admin/failed-lectures')) active @endif">
-                                  <span class="icon nav-icon"><ion-icon name="close-circle-outline"></ion-icon></span>
-                                  <p>{{ __('attributes.failed_lectures') }}</p>
-                              </a>
-                          </li> --}}
+                          style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
+                          @foreach ($courseMenuItems as $key => $item)
+                              @can($item['permission'])
+                                  <li class="nav-item">
+                                      <a href="{{ route($item['route']) }}"
+                                          class="nav-link {{ $isActive($key) ? 'active' : '' }}">
+                                          <span class="icon nav-icon"><ion-icon
+                                                  name="{{ $item['icon'] }}"></ion-icon></span>
+                                          <p>{{ $item['label'] }}</p>
+                                      </a>
+                                  </li>
+                              @endcan
+                          @endforeach
                       </ul>
                   </li>
-                  {{-- @endif --}}
+
 
 
 
                   {{-- Inquiry, Withdrawal, and Request Course --}}
-                  @if (auth()->user()->can('inquiry.list') ||
-                          auth()->user()->can('withdrawal.list') ||
-                          auth()->user()->can('request_course.list'))
-                      <li class="nav-item @if (Request::is('*/admin/inquiries') ||
-                              Request::is('*/admin/inquiries/*') ||
-                              Request::is('*/admin/withdrawal-requests') ||
-                              Request::is('*/admin/withdrawal-requests/*') ||
-                              Request::is('*/admin/request-courses') ||
-                              Request::is('*/admin/request-courses/*') ||
-                              Request::is('*/admin/payment-details') ||
-                              Request::is('*/admin/payment-details/*')) menu-open @endif">
-                          <a href="#" class="nav-link @if (Request::is('*/admin/inquiries') ||
-                                  Request::is('*/admin/inquiries/*') ||
-                                  Request::is('*/admin/withdrawal-requests') ||
-                                  Request::is('*/admin/withdrawal-requests/*') ||
-                                  Request::is('*/admin/request-courses') ||
-                                  Request::is('*/admin/request-courses/*') ||
-                                  Request::is('*/admin/payment-details') ||
-                                  Request::is('*/admin/payment-details/*')) active @endif">
+                  @php
+                      $requestMenuItems = [
+                          'inquiries' => [
+                              'route' => 'admin.inquiries.index',
+                              'icon' => 'chatbox-ellipses-outline',
+                              'label' => __('attributes.inquiry'),
+                              'permission' => 'inquiry.list',
+                              'notificationType' => 'App\Notifications\InquiryNotification',
+                          ],
+                          'withdrawal_requests' => [
+                              'route' => 'admin.withdrawal_requests.index',
+                              'icon' => 'cash-outline',
+                              'label' => __('attributes.withdrawal_request'),
+                              'permission' => 'withdrawal.list',
+                              'notificationType' => 'App\Notifications\WithdrawalRequestNotification',
+                          ],
+                          'request_courses' => [
+                              'route' => 'admin.request_courses.index',
+                              'icon' => 'chatbox-ellipses-outline',
+                              'label' => __('attributes.request_course'),
+                              'permission' => 'request_course.list',
+                              'notificationType' => 'App\Notifications\CourseRequestNotification',
+                          ],
+                          'payment_details' => [
+                              'route' => 'admin.payment_details.index',
+                              'icon' => 'cash-outline',
+                              'label' => __('attributes.payment_details'),
+                              'permission' => 'payment_detail.list',
+                              'notificationType' => 'App\Notifications\PaymentDetailCreatedNotification',
+                          ],
+                      ];
+
+                      $isActive = function ($prefix) {
+                          return Request::is("*/admin/$prefix*");
+                      };
+
+                      $hasPermission = collect($requestMenuItems)->contains(
+                          fn($item) => auth()
+                              ->user()
+                              ->can($item['permission']),
+                      );
+                      $isMenuOpen = collect(array_keys($requestMenuItems))->contains(fn($prefix) => $isActive($prefix));
+                      $unreadCount = auth()
+                          ->user()
+                          ->unreadNotifications()
+                          ->whereIn('type', collect($requestMenuItems)->pluck('notificationType')->toArray())
+                          ->count();
+                  @endphp
+
+                  @if ($hasPermission)
+                      <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                          <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
                               <span class="icon nav-icon"><ion-icon name="notifications-outline"></ion-icon></span>
                               <p>
                                   {{ __('attributes.requests') }}
                                   <i class="fas fa-angle-left right"></i>
-                                  <span class="badge badge-info right">
-                                      {{ auth()->user()->unreadNotifications()->whereIn('type', [
-                                              'App\Notifications\InquiryNotification',
-                                              'App\Notifications\WithdrawalRequestNotification',
-                                              'App\Notifications\CourseRequestNotification',
-                                              'App\Notifications\PaymentDetailCreatedNotification',
-                                          ])->count() }}
-                                  </span>
+                                  <span class="badge badge-info right">{{ $unreadCount }}</span>
                               </p>
                           </a>
                           <ul class="nav nav-treeview"
-                              style="background-color:rgba(255, 255, 255, 0.1); @if (
-                                  !(Request::is('*/admin/inquiries') ||
-                                      Request::is('*/admin/inquiries/*') ||
-                                      Request::is('*/admin/withdrawal-requests') ||
-                                      Request::is('*/admin/withdrawal-requests/*') ||
-                                      Request::is('*/admin/request-courses') ||
-                                      Request::is('*/admin/request-courses/*') ||
-                                      Request::is('*/admin/payment-details') ||
-                                      Request::is('*/admin/payment-details/*')
-                                  )) display: none @endif">
-                              {{-- Inquiry --}}
-                              @can('inquiry.list')
-                                  <li class="nav-item">
-                                      <a href="{{ route('admin.inquiries.index') }}"
-                                          class="nav-link @if (Request::is('*/admin/inquiries') || Request::is('*/admin/inquiries/*')) active @endif">
-                                          <span class="icon nav-icon"><ion-icon
-                                                  name="chatbox-ellipses-outline"></ion-icon></span>
-                                          <p>{{ __('attributes.inquiry') }}</p>
-                                          <span class="badge badge-info right">
-                                              {{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\InquiryNotification')->count() }}
-                                          </span>
-                                      </a>
-                                  </li>
-                              @endcan
-
-                              {{-- Withdrawal --}}
-                              @can('withdrawal.list')
-                                  <li class="nav-item">
-                                      <a href="{{ route('admin.withdrawal_requests.index') }}"
-                                          class="nav-link @if (Request::is('*/admin/withdrawal-requests') || Request::is('*/admin/withdrawal-requests/*')) active @endif">
-                                          <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
-                                          <p>{{ __('attributes.withdrawal_request') }}</p>
-                                          <span class="badge badge-info right">
-                                              {{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\WithdrawalRequestNotification')->count() }}
-                                          </span>
-                                      </a>
-                                  </li>
-                              @endcan
-
-                              {{-- RequestCourse --}}
-                              @can('request_course.list')
-                                  <li class="nav-item">
-                                      <a href="{{ route('admin.request_courses.index') }}"
-                                          class="nav-link @if (Request::is('*/admin/request-courses') || Request::is('*/admin/request-courses/*')) active @endif">
-                                          <span class="icon nav-icon"><ion-icon
-                                                  name="chatbox-ellipses-outline"></ion-icon></span>
-                                          <p>{{ __('attributes.request_course') }}</p>
-                                          <span class="badge badge-info right">
-                                              {{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\CourseRequestNotification')->count() }}
-                                          </span>
-                                      </a>
-                                  </li>
-                              @endcan
-
-                              {{-- PaymentDetail --}}
-                              @can('payment_detail.list')
-                                  <li class="nav-item">
-                                      <a href="{{ route('admin.payment_details.index') }}"
-                                          class="nav-link @if (Request::is('*/admin/payment-details') || Request::is('*/admin/payment-details/*')) active @endif">
-                                          <span class="icon nav-icon"><ion-icon name="cash-outline"></ion-icon></span>
-                                          <p>{{ __('attributes.payment_details') }}</p>
-                                          <span class="badge badge-info right">
-                                              {{ auth()->user()->unreadNotifications()->where('type', 'App\Notifications\PaymentDetailCreatedNotification')->count() }}
-                                          </span>
-                                      </a>
-                                  </li>
-                              @endcan
+                              style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
+                              @foreach ($requestMenuItems as $key => $item)
+                                  @can($item['permission'])
+                                      <li class="nav-item">
+                                          <a href="{{ route($item['route']) }}"
+                                              class="nav-link {{ $isActive($key) ? 'active' : '' }}">
+                                              <span class="icon nav-icon"><ion-icon
+                                                      name="{{ $item['icon'] }}"></ion-icon></span>
+                                              <p>{{ $item['label'] }}</p>
+                                              <span class="badge badge-info right">
+                                                  {{ auth()->user()->unreadNotifications()->where('type', $item['notificationType'])->count() }}
+                                              </span>
+                                          </a>
+                                      </li>
+                                  @endcan
+                              @endforeach
                           </ul>
                       </li>
                   @endif
+
 
 
 
 
                   {{-- Admin Management --}}
-                  @if (auth()->user()->can('admin.list') ||
-                          auth()->user()->can('permission.list') ||
-                          auth()->user()->can('role.list') ||
-                          auth()->user()->can('role_permission.list'))
-                      <li class="nav-item @if (Request::is('*/admin/all_admin') ||
-                              Request::is('*/admin/all_admin/*') ||
-                              Request::is('*/admin/permission') ||
-                              Request::is('*/admin/permission/*') ||
-                              Request::is('*/admin/role') ||
-                              Request::is('*/admin/role/*') ||
-                              Request::is('*/admin/role_permissions') ||
-                              Request::is('*/admin/role_permissions/*')) menu-open @endif">
-                          <a href="#" class="nav-link @if (Request::is('*/admin/all_admin') ||
-                                  Request::is('*/admin/all_admin/*') ||
-                                  Request::is('*/admin/permission') ||
-                                  Request::is('*/admin/permission/*') ||
-                                  Request::is('*/admin/role') ||
-                                  Request::is('*/admin/role/*') ||
-                                  Request::is('*/admin/role_permissions') ||
-                                  Request::is('*/admin/role_permissions/*')) active @endif">
+                  @php
+                      $adminMenuItems = [
+                          'all_admin' => [
+                              'route' => 'admin.all_admin.index',
+                              'icon' => 'person-circle-outline',
+                              'label' => __('attributes.admin_management'),
+                              'permission' => 'admin.list',
+                          ],
+                          'permission' => [
+                              'route' => 'admin.permission.index',
+                              'icon' => 'lock-closed-outline',
+                              'label' => __('attributes.permissions'),
+                              'permission' => 'permission.list',
+                          ],
+                          'role' => [
+                              'route' => 'admin.role.index',
+                              'icon' => 'key-outline',
+                              'label' => __('attributes.roles'),
+                              'permission' => 'role.list',
+                          ],
+                          'role_permissions' => [
+                              'route' => 'admin.role_permissions.index',
+                              'icon' => 'lock-open-outline',
+                              'label' => __('attributes.role_in_permissions'),
+                              'permission' => 'role_permission.list',
+                          ],
+                      ];
+
+                      $isActive = function ($prefix) {
+                          return Request::is("*/admin/$prefix*");
+                      };
+
+                      $hasPermission = collect($adminMenuItems)->contains(
+                          fn($item) => auth()
+                              ->user()
+                              ->can($item['permission']),
+                      );
+                      $isMenuOpen = collect(array_keys($adminMenuItems))->contains(fn($prefix) => $isActive($prefix));
+                  @endphp
+
+                  @if ($hasPermission)
+                      <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                          <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
                               <span class="icon nav-icon"><ion-icon name="settings-outline"></ion-icon></span>
                               <p>
-                                  {{ __('Admin Management') }}
+                                  {{ __('attributes.admin_management') }}
                                   <i class="fas fa-angle-left right"></i>
                               </p>
                           </a>
                           <ul class="nav nav-treeview"
-                              style="background-color:rgba(255, 255, 255, 0.1); @if (
-                                  !(Request::is('*/admin/all_admin') ||
-                                      Request::is('*/admin/all_admin/*') ||
-                                      Request::is('*/admin/permission') ||
-                                      Request::is('*/admin/permission/*') ||
-                                      Request::is('*/admin/role') ||
-                                      Request::is('*/admin/role/*') ||
-                                      Request::is('*/admin/role_permissions') ||
-                                      Request::is('*/admin/role_permissions/*')
-                                  )) display: none @endif">
-                              {{-- Admins --}}
-                              @can('admin.list')
-                                  <li class="nav-item">
-                                      <a href="{{ route('admin.all_admin.index') }}"
-                                          class="nav-link @if (Request::is('*/admin/all_admin') || Request::is('*/admin/all_admin/*')) active @endif">
-                                          <span class="icon nav-icon"><ion-icon
-                                                  name="person-circle-outline"></ion-icon></span>
-                                          <p>{{ __('attributes.admin_manage') }}</p>
-                                      </a>
-                                  </li>
-                              @endcan
-
-                              {{-- Permissions --}}
-                              @can('permission.list')
-                                  <li class="nav-item">
-                                      <a href="{{ route('admin.permission.index') }}"
-                                          class="nav-link @if (Request::is('*/admin/permission') || Request::is('*/admin/permission/*')) active @endif">
-                                          <span class="icon nav-icon"><ion-icon
-                                                  name="lock-closed-outline"></ion-icon></span>
-                                          <p>{{ __('attributes.permissions') }}</p>
-                                      </a>
-                                  </li>
-                              @endcan
-
-                              {{-- Roles --}}
-                              @can('role.list')
-                                  <li class="nav-item">
-                                      <a href="{{ route('admin.role.index') }}"
-                                          class="nav-link @if (Request::is('*/admin/role') || Request::is('*/admin/role/*')) active @endif">
-                                          <span class="icon nav-icon"><ion-icon name="key-outline"></ion-icon></span>
-                                          <p>{{ __('attributes.roles') }}</p>
-                                      </a>
-                                  </li>
-                              @endcan
-
-                              {{-- Roles In Permission --}}
-                              @can('role_permission.list')
-                                  <li class="nav-item">
-                                      <a href="{{ route('admin.role_permissions.index') }}"
-                                          class="nav-link @if (Request::is('*/admin/role_permissions') || Request::is('*/admin/role_permissions/*')) active @endif">
-                                          <span class="icon nav-icon"><ion-icon
-                                                  name="lock-open-outline"></ion-icon></span>
-                                          <p>{{ __('attributes.role_in_permissions') }}</p>
-                                      </a>
-                                  </li>
-                              @endcan
+                              style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
+                              @foreach ($adminMenuItems as $key => $item)
+                                  @can($item['permission'])
+                                      <li class="nav-item">
+                                          <a href="{{ route($item['route']) }}"
+                                              class="nav-link {{ $isActive($key) ? 'active' : '' }}">
+                                              <span class="icon nav-icon"><ion-icon
+                                                      name="{{ $item['icon'] }}"></ion-icon></span>
+                                              <p>{{ $item['label'] }}</p>
+                                          </a>
+                                      </li>
+                                  @endcan
+                              @endforeach
                           </ul>
                       </li>
                   @endif
+
 
 
                   {{-- Show Logs --}}
                   {{-- @can('log.list') --}}
                   {{-- Logs Management --}}
+                  @php
+                      $logMenuItems = [
+                          'logs_files' => [
+                              'route' => 'admin.logs.files.index',
+                              'icon' => 'folder-outline',
+                              'label' => __('attributes.logs_files'),
+                              'request_patterns' => ['*/admin/logs/files', '*/admin/logs/files/*'],
+                          ],
+                          'logs' => [
+                              'route' => 'admin.logs.index',
+                              'icon' => 'document-outline',
+                              'label' => __('attributes.logs'),
+                              'request_patterns' => [
+                                  '*/admin/logs',
+                                  '*/admin/logs/default',
+                                  '*/admin/logs/web',
+                                  '*/admin/logs/api',
+                              ],
+                          ],
+                          'databases' => [
+                              'route' => 'admin.databases.index',
+                              'icon' => 'server-outline',
+                              'label' => __('attributes.databases'),
+                              'request_patterns' => ['*/admin/databases'],
+                          ],
+                      ];
+
+                      $isActive = function ($patterns) {
+                          return collect($patterns)->contains(fn($pattern) => Request::is($pattern));
+                      };
+
+                      $isMenuOpen = collect($logMenuItems)->contains(fn($item) => $isActive($item['request_patterns']));
+                  @endphp
+
                   @if (auth()->id() == 1)
-                      <li class="nav-item @if (Request::is('*/admin/logs/files') ||
-                              Request::is('*/admin/logs/files/*') ||
-                              Request::is('*/admin/logs') ||
-                              Request::is('*/admin/logs/default') ||
-                              Request::is('*/admin/logs/web') ||
-                              Request::is('*/admin/logs/api') ||
-                              Request::is('*/admin/databases')) menu-open @endif">
-                          <a href="#" class="nav-link @if (Request::is('*/admin/logs/files') ||
-                                  Request::is('*/admin/logs/files/*') ||
-                                  Request::is('*/admin/logs') ||
-                                  Request::is('*/admin/logs/default') ||
-                                  Request::is('*/admin/logs/web') ||
-                                  Request::is('*/admin/logs/api') ||
-                                  Request::is('*/admin/databases')) active @endif">
+                      <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                          <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
                               <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
                               <p>
-                                  {{ __('Logs Management') }}
+                                  {{ __('attributes.logs_management') }}
                                   <i class="fas fa-angle-left right"></i>
                               </p>
                           </a>
                           <ul class="nav nav-treeview"
-                              style="background-color:rgba(255, 255, 255, 0.1); @if (
-                                  !(Request::is('*/admin/logs/files') ||
-                                      Request::is('*/admin/logs/files/*') ||
-                                      Request::is('*/admin/logs') ||
-                                      Request::is('*/admin/logs/default') ||
-                                      Request::is('*/admin/logs/web') ||
-                                      Request::is('*/admin/logs/api') ||
-                                      Request::is('*/admin/databases')
-                                  )) display: none @endif">
-
-                              {{-- Logs Files --}}
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.logs.files.index') }}"
-                                      class="nav-link @if (Request::is('*/admin/logs/files') || Request::is('*/admin/logs/files/*')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon name="folder-outline"></ion-icon></span>
-                                      <!-- Second icon -->
-                                      <p>{{ __('attributes.logs_files') }}</p>
-                                  </a>
-                              </li>
-
-                              {{-- Logs --}}
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.logs.index') }}"
-                                      class="nav-link @if (Request::is('*/admin/logs') ||
-                                              Request::is('*/admin/logs/default') ||
-                                              Request::is('*/admin/logs/web') ||
-                                              Request::is('*/admin/logs/api')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon name="document-outline"></ion-icon></span>
-                                      <!-- Second icon -->
-                                      <p>{{ __('attributes.logs') }}</p>
-                                  </a>
-                              </li>
-
-                              {{-- Databases --}}
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.databases.index') }}"
-                                      class="nav-link @if (Request::is('*/admin/databases')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon name="server-outline"></ion-icon></span>
-                                      <p>{{ __('attributes.databases') }}</p>
-                                  </a>
-                              </li>
-
+                              style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
+                              @foreach ($logMenuItems as $key => $item)
+                                  <li class="nav-item">
+                                      <a href="{{ route($item['route']) }}"
+                                          class="nav-link {{ $isActive($item['request_patterns']) ? 'active' : '' }}">
+                                          <span class="icon nav-icon"><ion-icon
+                                                  name="{{ $item['icon'] }}"></ion-icon></span>
+                                          <p>{{ $item['label'] }}</p>
+                                      </a>
+                                  </li>
+                              @endforeach
                           </ul>
                       </li>
                   @endif
+
 
 
                   {{-- @endcan --}}
@@ -470,50 +457,54 @@
                   {{-- Show jobs --}}
                   {{-- @can('job.list') --}}
                   {{-- Job Management --}}
+                  @php
+                      $jobMenuItems = [
+                          'jobs' => [
+                              'route' => 'admin.jobs.index',
+                              'icon' => 'briefcase-outline',
+                              'label' => __('attributes.jobs'),
+                              'request_patterns' => ['*/admin/jobs', '*/admin/jobs/*'],
+                          ],
+                          'failed_jobs' => [
+                              'route' => 'admin.failed_jobs.index',
+                              'icon' => 'close-circle-outline',
+                              'label' => __('attributes.failed_jobs'),
+                              'request_patterns' => ['*/admin/failed_jobs', '*/admin/failed_jobs/*'],
+                          ],
+                      ];
+
+                      $isActive = function ($patterns) {
+                          return collect($patterns)->contains(fn($pattern) => Request::is($pattern));
+                      };
+
+                      $isMenuOpen = collect($jobMenuItems)->contains(fn($item) => $isActive($item['request_patterns']));
+                  @endphp
+
                   @if (auth()->id() == 1)
-                      <li class="nav-item @if (Request::is('*/admin/jobs') ||
-                              Request::is('*/admin/jobs/*') ||
-                              Request::is('*/admin/failed_jobs') ||
-                              Request::is('*/admin/failed_jobs/*')) menu-open @endif">
-                          <a href="#" class="nav-link @if (Request::is('*/admin/jobs') ||
-                                  Request::is('*/admin/jobs/*') ||
-                                  Request::is('*/admin/failed_jobs') ||
-                                  Request::is('*/admin/failed_jobs/*')) active @endif">
+                      <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                          <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
                               <span class="icon nav-icon"><ion-icon name="briefcase-outline"></ion-icon></span>
                               <p>
-                                  {{ __('Job Management') }}
+                                  {{ __('attributes.jobs_management') }}
                                   <i class="fas fa-angle-left right"></i>
                               </p>
                           </a>
                           <ul class="nav nav-treeview"
-                              style="background-color:rgba(255, 255, 255, 0.1); @if (
-                                  !(Request::is('*/admin/jobs') ||
-                                      Request::is('*/admin/jobs/*') ||
-                                      Request::is('*/admin/failed_jobs') ||
-                                      Request::is('*/admin/failed_jobs/*')
-                                  )) display: none @endif">
-                              {{-- Show Jobs --}}
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.jobs.index') }}"
-                                      class="nav-link @if (Request::is('*/admin/jobs') || Request::is('*/admin/jobs/*')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon
-                                              name="briefcase-outline"></ion-icon></span>
-                                      <p>{{ __('attributes.jobs') }}</p>
-                                  </a>
-                              </li>
-
-                              {{-- Failed Jobs --}}
-                              <li class="nav-item">
-                                  <a href="{{ route('admin.failed_jobs.index') }}"
-                                      class="nav-link @if (Request::is('*/admin/failed_jobs') || Request::is('*/admin/failed_jobs/*')) active @endif">
-                                      <span class="icon nav-icon"><ion-icon
-                                              name="close-circle-outline"></ion-icon></span>
-                                      <p>{{ __('attributes.failed_jobs') }}</p>
-                                  </a>
-                              </li>
+                              style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
+                              @foreach ($jobMenuItems as $key => $item)
+                                  <li class="nav-item">
+                                      <a href="{{ route($item['route']) }}"
+                                          class="nav-link {{ $isActive($item['request_patterns']) ? 'active' : '' }}">
+                                          <span class="icon nav-icon"><ion-icon
+                                                  name="{{ $item['icon'] }}"></ion-icon></span>
+                                          <p>{{ $item['label'] }}</p>
+                                      </a>
+                                  </li>
+                              @endforeach
                           </ul>
                       </li>
                   @endif
+
 
 
                   {{-- @endcan --}}

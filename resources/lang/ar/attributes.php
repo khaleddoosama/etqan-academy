@@ -189,4 +189,9 @@ return [
     'student_work_category' => 'فئة عمل الطالب',
     'pathes' => 'ملفات',
     'student_works' => 'عمل الطلاب',
+    'course_management' => 'ادارة الدورة',
+    'user_management' => 'ادارة المستخدمين',
+    'admin_management' => 'ادارة المشرفين',
+    'logs_management' => 'ادارة السجلات',
+    'jobs_management' => 'ادارة الوظائف',
 ];

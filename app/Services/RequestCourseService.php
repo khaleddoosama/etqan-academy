@@ -11,16 +11,20 @@ use Illuminate\Validation\ValidationException;
 class RequestCourseService
 {
 
-    protected $userCoursesService;
+    protected UserCoursesService $userCoursesService;
+    protected UserService $userService;
+    protected CourseService $courseService;
     // constructor for CourseService
-    public function __construct(UserCoursesService $userCoursesService)
+    public function __construct(UserCoursesService $userCoursesService, UserService $userService, CourseService $courseService)
     {
         $this->userCoursesService = $userCoursesService;
+        $this->userService = $userService;
+        $this->courseService = $courseService;
     }
 
     public function createRequestCourse(array $data): RequestCourse
     {
-        $course = $this->userCoursesService->getCourseBySlug($data['course_slug']);
+        $course = $this->courseService->getCourseBySlug($data['course_slug']);
         unset($data['course_slug']);
         $data['course_id'] = $course->id;
         return RequestCourse::create($data);
@@ -42,7 +46,7 @@ class RequestCourseService
         $request = $this->getRequestCourse($id);
         if (!$request->student) {
             // search for user with phone
-            $student = $this->userCoursesService->getStudentByPhone($request->phone);
+            $student = $this->userService->getStudentByPhone($request->phone);
 
             if (!$student) {
                 // return error

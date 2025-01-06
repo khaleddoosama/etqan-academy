@@ -115,8 +115,8 @@ Route::group(
             Route::controller(UserCoursesController::class)->group(function () {
                 Route::get('/users/{user}/courses', 'index')->name('users.courses.index');
                 Route::get('courses/{course}/students', 'showStudents')->name('courses.students.index');
-                Route::post('/users/{user}/courses', 'store')->name('users.courses.store');
-                Route::post('/courses/{course}/students', 'store2')->name('courses.users.store');
+                Route::post('/users/{user}/courses', 'storeByUser')->name('users.courses.store');
+                Route::post('/courses/{course}/students', 'storeByCourse')->name('courses.users.store');
                 Route::put('/users/{user}/courses/{course}', 'changeStatus')->name('users.courses.change_status');
             });
 

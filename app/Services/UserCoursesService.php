@@ -8,8 +8,8 @@ use App\Models\UserCourse;
 
 class UserCoursesService
 {
-    protected $courseService;
-    protected $userService;
+    protected CourseService $courseService;
+    protected UserService $userService;
     // constructor for CourseService
     public function __construct(CourseService $courseService, UserService $userService)
     {
@@ -17,36 +17,11 @@ class UserCoursesService
         $this->userService = $userService;
     }
 
-    // add user course
-    public function storeUserCourse(array $data, User $user)
-    {
-        return $user->courses()->attach($data['course_id']);
-    }
-
-    // add course user
-    public function storeCourseUser(array $data, Course $course)
-    {
-        return $course->students()->attach($data['user_id']);
-    }
-
     //create user course
     public function createUserCourse($student_id, $course_id)
     {
         return UserCourse::updateOrCreate(['student_id' => $student_id, 'course_id' => $course_id], ['status' => 1]);
     }
-
-    // get courses
-    public function getCourses()
-    {
-        return $this->courseService->getCourses();
-    }
-
-    // get students
-    public function getStudents()
-    {
-        return $this->userService->getStudents();
-    }
-
 
 
     // change user course status
@@ -59,39 +34,5 @@ class UserCoursesService
         }
 
         return $course->pivot->update(['status' => $data['status']]);
-    }
-
-    // update progress
-    public function updateProgress($count, Course $course)
-    {
-        $total_count = $course->countLectures();
-        $progress = ($count / $total_count) * 100;
-        $userCourse = UserCourse::where('student_id', auth()->user()->id)->where('course_id', $course->id)->first();
-        if ($progress == 100) {
-            $userCourse->update(['completed' => '1']);
-        }
-        return $userCourse->update(['progress' => $progress]);
-    }
-
-    public function getStudentByPhone($phone)
-    {
-        return $this->userService->getStudentByPhone($phone);
-    }
-
-    // get course by slug
-    public function getCourseBySlug($slug)
-    {
-        return $this->courseService->getCourseBySlug($slug);
-    }
-    // get course
-    public function getCourse($id)
-    {
-        return $this->courseService->getCourse($id);
-    }
-
-    // get student
-    public function getStudent($id)
-    {
-        return $this->userService->getUser($id);
     }
 }

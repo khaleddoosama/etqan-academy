@@ -3,23 +3,32 @@
 namespace App\Services\PaymentStrategy;
 
 use App\Models\PaymentDetails;
-use App\Models\StudentInstallment;
 use App\Services\StudentInstallmentService;
 use App\Services\UserCoursesService;
+use App\Services\UserService;
 use Carbon\Carbon;
+use Exception;
 
 class InstallmentPayment implements PaymentStrategyInterface
 {
     protected StudentInstallmentService $studentInstallmentService;
+    private UserService $userService;
+    private UserCoursesService $userCoursesService;
 
-    public function __construct(StudentInstallmentService $studentInstallmentService)
+    public function __construct(StudentInstallmentService $studentInstallmentService, UserService $userService, UserCoursesService $userCoursesService)
     {
         $this->studentInstallmentService = $studentInstallmentService;
+        $this->userService = $userService;
+        $this->userCoursesService = $userCoursesService;
     }
-    public function handlePayment(UserCoursesService $userCoursesService, PaymentDetails $paymentDetail, $user_id): bool
+
+    /**
+     * @throws Exception
+     */
+    public function handlePayment(PaymentDetails $paymentDetail, $user_id): bool
     {
         $course_installment = $paymentDetail->courseInstallment;
-        $userCoursesService->createUserCourse($user_id, $course_installment->course_id);
+        $this->userCoursesService->createUserCourse($user_id, $course_installment->course_id);
 
 
         $number_of_installments = $course_installment->number_of_installments;
@@ -30,7 +39,7 @@ class InstallmentPayment implements PaymentStrategyInterface
         if ($num_installments_paid < $number_of_installments) {
             $due_date = $this->calculateNextDueDate($user_id, $course_installment, $num_installments_paid);
         } elseif ($num_installments_paid > $number_of_installments) {
-            throw new \Exception('Installments already paid');
+            throw new Exception('Installments already paid');
         }
 
         $amount = $paymentDetail->amount;
@@ -52,11 +61,6 @@ class InstallmentPayment implements PaymentStrategyInterface
         return now()->addDays($courseInstallment->installment_duration);
     }
 
-    private function calculateRemainingAmount(float $amountPaid, array $installmentAmounts, int $currentInstallmentIndex): float
-    {
-        return $amountPaid - $installmentAmounts[$currentInstallmentIndex - 1];
-    }
-
     private function createStudentInstallment(int $userId, int $courseInstallmentId, float $amount, float $remainingAmount, ?Carbon $dueDate): void
     {
         $data = [
@@ -70,10 +74,10 @@ class InstallmentPayment implements PaymentStrategyInterface
         $this->studentInstallmentService->createStudentInstallment($data);
     }
 
-    public function handleRejectPayment(UserCoursesService $userCoursesService, PaymentDetails $paymentDetail, $user_id): bool
+    public function handleRejectPayment(PaymentDetails $paymentDetail, $user_id): bool
     {
-        $student = $userCoursesService->getStudent($user_id);
-        $userCoursesService->changeUserCourseStatus(['status' => 0], $student, $paymentDetail->courseInstallment->course);
+        $student = $this->userService->getUser($user_id);
+        $this->userCoursesService->changeUserCourseStatus(['status' => 0], $student, $paymentDetail->courseInstallment->course);
 
 
         $installment = $this->studentInstallmentService->getStudentInstallmentByStudentIdAndCourseInstallmentId(

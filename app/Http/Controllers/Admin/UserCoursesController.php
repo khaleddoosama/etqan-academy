@@ -9,19 +9,26 @@ use App\Models\Course;
 use App\Models\User;
 use App\Models\UserCourse;
 use App\Notifications\StudentApprovedNotification;
+use App\Services\CourseService;
 use App\Services\StudentsNotificationService;
 use App\Services\UserCoursesService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Yoeunes\Toastr\Facades\Toastr;
 
 class UserCoursesController extends Controller
 {
-    private $userCoursesService;
-    private $studentsNotificationService;
-    // constructor for UserCoursesService
-    public function __construct(UserCoursesService $userCoursesService, StudentsNotificationService $studentsNotificationService)
+    private UserCoursesService $userCoursesService;
+    private CourseService $courseService;
+    private UserService $userService;
+    private StudentsNotificationService $studentsNotificationService;
+
+    public function __construct(UserCoursesService $userCoursesService, CourseService $courseService, UserService $userService,
+                                StudentsNotificationService $studentsNotificationService)
     {
         $this->userCoursesService = $userCoursesService;
+        $this->courseService = $courseService;
+        $this->userService = $userService;
         $this->studentsNotificationService = $studentsNotificationService;
 
         $this->middleware('permission:user_course.list')->only('index', 'showStudents');
@@ -34,7 +41,7 @@ class UserCoursesController extends Controller
     {
         // $user_courses = $user->courses()->get();
         $user_courses = UserCourse::where('student_id', $user->id)->with('course')->get();
-        $courses = $this->userCoursesService->getCourses();
+        $courses = $this->courseService->getCourses();
         $title = __('attributes.courses');
         return view('admin.user.courses', compact('user', 'user_courses', 'title', 'courses'));
     }
@@ -43,18 +50,18 @@ class UserCoursesController extends Controller
     {
         $course_students = UserCourse::where('course_id', $course->id)->with('student')->get();
         $title = __('attributes.students');
-        $students = $this->userCoursesService->getStudents();
+        $students = $this->userService->getStudents();
 
         return view('admin.course.show-students', compact('course_students', 'course', 'title', 'students'));
     }
 
     // store user courses
-    public function store(UserCoursesRequest $request, User $user)
+    public function storeByUser(UserCoursesRequest $request, User $user): \Illuminate\Http\RedirectResponse
     {
         $data = $request->validated();
 
-        $this->userCoursesService->storeUserCourse($data, $user);
-        $course = $this->userCoursesService->getCourse($data['course_id']);
+        $this->userCoursesService->createUserCourse($user->id, $data['course_id']);
+        $course = $this->courseService->getCourse($data['course_id']);
         // send email
         $notification = new StudentApprovedNotification($course->slug, $course->title);
         $this->studentsNotificationService->notify($notification, $user);
@@ -65,13 +72,13 @@ class UserCoursesController extends Controller
     }
 
     // store user courses
-    public function store2(CourseUsersRequest $request, Course $course)
+    public function storeByCourse(CourseUsersRequest $request, Course $course): \Illuminate\Http\RedirectResponse
     {
         $data = $request->validated();
 
-        $this->userCoursesService->storeCourseUser($data, $course);
+        $this->userCoursesService->createUserCourse($data['user_id'], $course->id);
 
-        $user = $this->userCoursesService->getStudent($data['user_id']);
+        $user = $this->userService->getUser($data['user_id']);
         // send email
         $notification = new StudentApprovedNotification($course->slug, $course->title);
         $this->studentsNotificationService->notify($notification, $user);

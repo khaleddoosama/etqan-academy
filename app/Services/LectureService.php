@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\DB;
 
 class LectureService
 {
-    protected $userCoursesService;
+    protected $progressService;
     protected $sectionService;
 
-    public function __construct(UserCoursesService $userCoursesService, SectionService $sectionService)
+    public function __construct(ProgressService $progressService, SectionService $sectionService)
     {
-        $this->userCoursesService = $userCoursesService;
+        $this->progressService = $progressService;
         $this->sectionService = $sectionService;
     }
 
@@ -117,7 +117,8 @@ class LectureService
         );
         $lectureView->increment('views');
         $count = $lectureView->lecture_views_count;
-        $this->userCoursesService->updateProgress($count, $lecture->course);
+        $course = $lecture->course;
+        $this->progressService->updateProgress(auth()->id(), $course->id, $count, $course->countLectures());
 
         return $lectureView;
     }

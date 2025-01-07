@@ -10,6 +10,7 @@ use App\Events\NewCourseEvent;
 use App\Events\PaymentApprovedEvent;
 use App\Events\PaymentRejectedEvent;
 use App\Events\RegisterUserEvent;
+use App\Events\ResetPasswordEvent;
 use App\Events\SentInquiryEvent;
 use App\Events\VerifyMailEvent;
 use App\Listeners\CourseRequestListener;
@@ -20,6 +21,7 @@ use App\Listeners\NewCourseListener;
 use App\Listeners\PaymentApprovedListener;
 use App\Listeners\PaymentRejectedListener;
 use App\Listeners\RegisterUserListener;
+use App\Listeners\ResetPasswordListener;
 use App\Listeners\SentInquiryListener;
 use App\Listeners\VerifyMailListener;
 use Illuminate\Auth\Events\Registered;
@@ -79,7 +81,10 @@ class EventServiceProvider extends ServiceProvider
             CreateWithdrawalRequestListener::class
         ],
 
-        
+        ResetPasswordEvent::class => [
+            ResetPasswordListener::class
+        ],
+
     ];
 
     /**

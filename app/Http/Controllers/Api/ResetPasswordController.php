@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\ResetPasswordEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -32,7 +33,8 @@ class ResetPasswordController extends Controller
             return $this->apiResponse(null, __('messages.user_not_found'), 400);
         } else {
             $token = app('auth.password.broker')->createToken($user);
-            $user->sendPasswordResetNotification($token);
+            // $user->sendPasswordResetNotification($token);
+            event(new ResetPasswordEvent([$user->id], ['token' => $token]));
         }
 
         return $this->apiResponse(null, __('messages.reset_link_sent'), 200);

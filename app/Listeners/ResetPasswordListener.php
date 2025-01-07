@@ -2,22 +2,23 @@
 
 namespace App\Listeners;
 
-use App\Events\VerifyMailEvent;
+use App\Events\ResetPasswordEvent;
 use App\Models\User;
-use App\Notifications\CustomVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use App\Notifications\NotificationContext;
 use App\Notifications\Strategies\EmailStrategy;
 use Illuminate\Support\Facades\Log;
 
-class VerifyMailListener
+class ResetPasswordListener
 {
 
-    public function handle(VerifyMailEvent $event): void
+    public function handle(ResetPasswordEvent $event): void
     {
         Log::info("From" . self::class);
 
 
         $data = [
+            'token' => $event->getData()['token'] ?? '',
         ];
 
         Log::info("data: " . json_encode($data));
@@ -28,7 +29,7 @@ class VerifyMailListener
 
         Log::info("---------------------------------------------");
 
-        $notification = new CustomVerifyEmail();
+        $notification = new ResetPasswordNotification($data['token']);
         $emailStrategy = new EmailStrategy($notification);
         $notificationContext = new NotificationContext($emailStrategy);
         $notificationContext->executeStrategy($users);

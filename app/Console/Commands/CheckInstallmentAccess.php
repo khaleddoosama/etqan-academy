@@ -63,7 +63,7 @@ class CheckInstallmentAccess extends Command
                     [$installment->student->id],
                     [
                         "course_title" => $installment->courseInstallment->course->title,
-                        "course_slug" => $installment->courseInstallment->course->slug
+                        "courseSlug" => $installment->courseInstallment->course->slug
                     ]
                 ));
             } else {

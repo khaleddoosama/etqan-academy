@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\Status;
+use App\Events\PaymentApprovedEvent;
+use App\Events\PaymentRejectedEvent;
 use App\Http\Controllers\Controller;
 use App\Mail\PaymentApprovedMail;
-use App\Notifications\PaymentApprovedNotification;
 use App\Notifications\PaymentRejectedNotification;
 use App\Services\PaymentDetailService;
 use App\Services\StudentsNotificationService;
@@ -65,11 +66,16 @@ class PaymentDetailController extends Controller
             $paymentDetail = $this->paymentDetailService->changeStatus($request->status, $id);
 
             if ($paymentDetail->status == Status::APPROVED) {
-                $notification = new PaymentApprovedNotification($paymentDetail->courseInstallment->course->slug, $paymentDetail->courseInstallment->course->title, $paymentDetail);
-                $this->studentsNotificationService->notify($notification, $paymentDetail->user);
+                event(new PaymentApprovedEvent([$paymentDetail->user_id], [
+                    'courseSlug' => $paymentDetail->courseInstallment->course->slug,
+                    'courseTitle' => $paymentDetail->courseInstallment->course->title,
+                    'payment' => $paymentDetail
+                ]));
             } else if ($paymentDetail->status == Status::REJECTED) {
-                $notification = new PaymentRejectedNotification($paymentDetail->courseInstallment->course->slug, $paymentDetail->courseInstallment->course->title);
-                $this->studentsNotificationService->notify($notification, $paymentDetail->user);
+                event(new PaymentRejectedEvent([$paymentDetail->user_id], [
+                    'courseSlug' => $paymentDetail->courseInstallment->course->slug,
+                    'courseTitle' => $paymentDetail->courseInstallment->course->title,
+                ]));
             }
 
             DB::commit();

@@ -18,7 +18,7 @@ class NewCourseListener
 
 
         $data = [
-            'course_slug' => $event->getData()['course_slug'] ?? '',
+            'courseSlug' => $event->getData()['courseSlug'] ?? '',
             'course_title' => $event->getData()['course_title'] ?? '',
         ];
 
@@ -32,7 +32,7 @@ class NewCourseListener
 
         Log::info("---------------------------------------------");
 
-        $notification = new NewCourseNotification($data['course_slug'], $data['course_title']);
+        $notification = new NewCourseNotification($data['courseSlug'], $data['course_title']);
         $emailStrategy = new EmailStrategy($notification);
         $notificationContext = new NotificationContext($emailStrategy);
         $notificationContext->executeStrategy($students);

@@ -109,8 +109,8 @@ class PaymentDetailService
     private function setPaymentStrategy(PaymentType $paymentType): void
     {
         $strategy = match ($paymentType) {
-            PaymentType::CASH => new CashPayment(),
-            PaymentType::INSTALLMENT => new InstallmentPayment($this->studentInstallmentService),
+            PaymentType::CASH => new CashPayment(new UserService(), new UserCoursesService()),
+            PaymentType::INSTALLMENT => new InstallmentPayment($this->studentInstallmentService, new UserService(), new UserCoursesService()),
             default => throw new \InvalidArgumentException('Invalid payment type.'),
         };
 

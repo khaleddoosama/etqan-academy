@@ -70,7 +70,7 @@ class CourseController extends Controller
         // send email
         // $notification = new NewCourseNotification($course->slug, $course->title);
         // $this->studentsNotificationService->notifyAll($notification);
-        event(new NewCourseEvent([$course->id], ['course_slug' => $course->slug, 'course_title' => $course->title]));
+        event(new NewCourseEvent([$course->id], ['courseSlug' => $course->slug, 'course_title' => $course->title]));
 
 
         Toastr::success(__('messages.course_created'), __('status.success'));

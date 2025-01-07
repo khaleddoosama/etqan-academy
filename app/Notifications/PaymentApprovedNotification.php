@@ -18,15 +18,15 @@ class PaymentApprovedNotification extends Notification implements ShouldQueue
 {
     use Queueable, NotificationToArray;
 
-    private $course_slug;
-    private $cours_title;
+    private $courseSlug;
+    private $courseTitle;
     private $payment;
     private $courseInstallment;
 
-    public function __construct(string $course_slug, string $cours_title, $payment)
+    public function __construct(string $courseSlug, string $courseTitle, $payment)
     {
-        $this->course_slug = $course_slug;
-        $this->cours_title = $cours_title;
+        $this->courseSlug = $courseSlug;
+        $this->courseTitle = $courseTitle;
         $this->payment = $payment;
         $this->courseInstallment = $payment->courseInstallment;
         $this->queue = 'high';
@@ -105,9 +105,9 @@ class PaymentApprovedNotification extends Notification implements ShouldQueue
         $pdf = LaravelMpdf::loadView('invoice.payment_approved', $data);
 
         return (new MailMessage)
-            ->subject('Access Approved: ' . $this->cours_title)
-            ->line('Congratulations! You have been approved to access the course: ' . $this->cours_title)
-            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->course_slug)
+            ->subject('Access Approved: ' . $this->courseTitle)
+            ->line('Congratulations! You have been approved to access the course: ' . $this->courseTitle)
+            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->courseSlug)
             ->line('We hope you enjoy the learning experience!')
             ->line('Your invoice is attached below.')
             ->attachData($pdf->output(), 'invoice.pdf');

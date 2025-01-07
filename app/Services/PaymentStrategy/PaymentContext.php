@@ -25,12 +25,12 @@ class PaymentContext
     public function handlePayment(PaymentDetails $paymentDetail, $user_id): bool
     {
         // $userCoursesService = new UserCoursesService(new CourseService(), new UserService());
-        return $this->strategy->handlePayment($this->userCoursesService, $paymentDetail, $user_id);
+        return $this->strategy->handlePayment($paymentDetail, $user_id);
     }
 
     public function handleRejectPayment(PaymentDetails $paymentDetail, $user_id): bool
     {
         // $userCoursesService = new UserCoursesService(new CourseService(), new UserService());
-        return $this->strategy->handleRejectPayment($this->userCoursesService, $paymentDetail, $user_id);
+        return $this->strategy->handleRejectPayment($paymentDetail, $user_id);
     }
 }

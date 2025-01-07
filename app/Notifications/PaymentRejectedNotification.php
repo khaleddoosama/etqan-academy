@@ -11,13 +11,13 @@ class PaymentRejectedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $course_slug;
-    private $course_title;
+    private $courseSlug;
+    private $courseTitle;
 
-    public function __construct(string $course_slug, string $course_title)
+    public function __construct(string $courseSlug, string $courseTitle)
     {
-        $this->course_slug = $course_slug;
-        $this->course_title = $course_title;
+        $this->courseSlug = $courseSlug;
+        $this->courseTitle = $courseTitle;
         $this->queue = 'high';
     }
 
@@ -32,8 +32,8 @@ class PaymentRejectedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Access Rejected: ' . $this->course_title)
-            ->line('Sorry, your payment for the course ' . $this->course_title . ' has been rejected.')
+            ->subject('Access Rejected: ' . $this->courseTitle)
+            ->line('Sorry, your payment for the course ' . $this->courseTitle . ' has been rejected.')
             ->line('Please contact support for more information.');
     }
 

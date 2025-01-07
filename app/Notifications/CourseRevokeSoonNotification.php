@@ -12,12 +12,12 @@ class CourseRevokeSoonNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $course_slug;
+    private $courseSlug;
     private $course_title;
 
-    public function __construct(string $course_slug, string $course_title)
+    public function __construct(string $courseSlug, string $course_title)
     {
-        $this->course_slug = $course_slug;
+        $this->courseSlug = $courseSlug;
         $this->course_title = $course_title;
         $this->queue = 'high';
     }
@@ -40,7 +40,7 @@ class CourseRevokeSoonNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('Course Revoke Soon: ' . $this->course_title)
             ->line('The course ' . $this->course_title . ' is about to end soon.')
-            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->course_slug)
+            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->courseSlug)
             ->line('Please renew your access to continue accessing the course.');
     }
 }

@@ -5,11 +5,15 @@ namespace App\Providers;
 use App\Events\CourseRequestEvent;
 use App\Events\CourseRevokeSoonEvent;
 use App\Events\NewCourseEvent;
+use App\Events\PaymentApprovedEvent;
+use App\Events\PaymentRejectedEvent;
 use App\Events\SentInquiryEvent;
 use App\Events\VerifyMailEvent;
 use App\Listeners\CourseRequestListener;
 use App\Listeners\CourseRevokeSoonListener;
 use App\Listeners\NewCourseListener;
+use App\Listeners\PaymentApprovedListener;
+use App\Listeners\PaymentRejectedListener;
 use App\Listeners\SentInquiryListener;
 use App\Listeners\VerifyMailListener;
 use Illuminate\Auth\Events\Registered;
@@ -47,7 +51,17 @@ class EventServiceProvider extends ServiceProvider
 
         NewCourseEvent::class => [
             NewCourseListener::class
-        ]
+        ],
+
+        PaymentApprovedEvent::class => [
+            PaymentApprovedListener::class
+        ],
+
+        PaymentRejectedEvent::class => [
+            PaymentRejectedListener::class
+        ],
+
+
     ];
 
     /**

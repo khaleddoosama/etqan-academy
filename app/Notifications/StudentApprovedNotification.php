@@ -13,11 +13,11 @@ class StudentApprovedNotification extends Notification
 {
     use Queueable, NotificationToArray;
 
-    private $course_slug;
+    private $courseSlug;
     private $title;
-    public function __construct(string $course_slug, string $title)
+    public function __construct(string $courseSlug, string $title)
     {
-        $this->course_slug = $course_slug;
+        $this->courseSlug = $courseSlug;
         $this->title = $title;
         $this->queue = 'high';  // Explicitly assign to the 'high' queue
 
@@ -41,7 +41,7 @@ class StudentApprovedNotification extends Notification
         return (new MailMessage)
             ->subject('Access Approved: New Course Available!')
             ->line('Congratulations! You have been approved to access the course: ' . $this->title)
-            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->course_slug)
+            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->courseSlug)
             ->line('We hope you enjoy the learning experience!');
     }
 
@@ -61,7 +61,7 @@ class StudentApprovedNotification extends Notification
     // get url
     protected function getUrl()
     {
-        return env('FRONTEND_URL') . 'courses/' . $this->course_slug;
+        return env('FRONTEND_URL') . 'courses/' . $this->courseSlug;
     }
 
     // get icon

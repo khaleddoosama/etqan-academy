@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\RegisterUserEvent;
 use App\Events\VerifyMailEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ChangePasswordRequest;
@@ -89,9 +90,8 @@ class AuthController extends Controller
             event(new VerifyMailEvent([$user->id]));
 
             // notify admins
-            $notification = new UserRegisteredNotification($user->name);
-            $this->adminNotificationService->notifyAdmins($notification, ['user.list', 'user.show']);
-
+            event(new RegisterUserEvent([], ['userName' => $user->name]));
+            
             return $this->apiResponse(new UserResource($user), __('messages.registered'), 201);
         } catch (Exception $e) {
             DB::rollBack();

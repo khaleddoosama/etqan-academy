@@ -13,13 +13,13 @@ class UserRegisteredNotification extends Notification implements ShouldQueue
     use Queueable, NotificationToArray;
 
 
-    private $user_name;
+    private $userName;
     /**
      * Create a new notification instance.
      */
-    public function __construct(string $user_name)
+    public function __construct(string $userName)
     {
-        $this->user_name = $user_name;
+        $this->userName = $userName;
         $this->queue = 'high';  // Explicitly assign to the 'high' queue
 
     }
@@ -53,7 +53,7 @@ class UserRegisteredNotification extends Notification implements ShouldQueue
 
     protected function getMessage()
     {
-        return $this->user_name . ' has registered on the platform.';
+        return $this->userName . ' has registered on the platform.';
     }
 
     protected function getType()

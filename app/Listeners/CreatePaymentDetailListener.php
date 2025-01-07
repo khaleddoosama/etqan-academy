@@ -2,33 +2,31 @@
 
 namespace App\Listeners;
 
-use App\Events\CourseRequestEvent;
+use App\Events\CreatePaymentDetailEvent;
 use App\Models\User;
-use App\Notifications\CourseRequestNotification;
+use App\Notifications\PaymentDetailCreatedNotification;
 use App\Notifications\NotificationContext;
 use App\Notifications\Strategies\NotificationStrategy;
 use Illuminate\Support\Facades\Log;
 
-class CourseRequestListener
+class CreatePaymentDetailListener
 {
 
-    public function handle(CourseRequestEvent $event): void
+    public function handle(CreatePaymentDetailEvent $event): void
     {
         Log::info("From " . __CLASS__ . ": ");
 
 
         $data = [
-            'student_name' => $event->getData()['student_name'] ?? '',
-            'course_request_id' => $event->getData()['course_request_id'] ?? '',
+            'paymentDetailId' => $event->getData()['paymentDetailId'] ?? '',
         ];
 
-        // $users = User::whereIn('id', $event->users_ids)->get();
-        $admins = User::where('role', 'admin')->permission(['request_course.list', 'request_course.show'])->get();
+        $admins = User::where('role', 'admin')->permission(['payment_detail.list', 'payment_detail.show'])->get();
 
         Log::info("admins: " . json_encode($admins));
 
         Log::info("---------------------------------------------");
-        $notification = new CourseRequestNotification($data['student_name'], $data['course_request_id']);
+        $notification = new PaymentDetailCreatedNotification($data['paymentDetailId']);
         $notificationStrategy = new NotificationStrategy($notification);
         $notificationContext = new NotificationContext($notificationStrategy);
         $notificationContext->executeStrategy($admins);

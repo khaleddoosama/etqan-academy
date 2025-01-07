@@ -12,11 +12,11 @@ class PaymentDetailCreatedNotification extends Notification
 {
     use Queueable, NotificationToArray;
 
-    public $payment_detail_id;
+    public $paymentDetailId;
 
-    public function __construct($payment_detail_id)
+    public function __construct($paymentDetailId)
     {
-        $this->payment_detail_id = $payment_detail_id;
+        $this->paymentDetailId = $paymentDetailId;
         $this->queue = 'high';
     }
 
@@ -59,7 +59,7 @@ class PaymentDetailCreatedNotification extends Notification
 
     protected function getUrl()
     {
-        return route('admin.payment_details.show', $this->payment_detail_id);
+        return route('admin.payment_details.show', $this->paymentDetailId);
     }
 
     protected function getIcon()

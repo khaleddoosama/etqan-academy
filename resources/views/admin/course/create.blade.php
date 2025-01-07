@@ -136,7 +136,6 @@
                     discount_price: {
                         required: true,
                         number: true,
-                        lessThan: '#input-price'
                     },
                     number_of_levels: {
                         required: true,
@@ -163,7 +162,6 @@
                     discount_price: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.discount_price')]) }}",
                         number: "{{ __('validation.number', ['attribute' => __('attributes.discount_price')]) }}",
-                        lessThan: "{{ __('validation.lt.numeric', ['attribute' => __('attributes.discount_price'), 'value' => __('attributes.price')]) }}"
                     },
                     number_of_levels: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.number_of_levels')]) }}",

@@ -16,12 +16,12 @@ class NewCourseNotification extends Notification implements ShouldQueue
      * Create a new notification instance.
      */
 
-    private $course_slug;
-    private $title;
-    public function __construct(string $course_slug, string $title)
+    private $courseSlug;
+    private $courseTitle;
+    public function __construct(string $courseSlug, string $courseTitle)
     {
-        $this->course_slug = $course_slug;
-        $this->title = $title;
+        $this->courseSlug = $courseSlug;
+        $this->courseTitle = $courseTitle;
         $this->queue = 'high';  // Explicitly assign to the 'high' queue
 
     }
@@ -43,8 +43,8 @@ class NewCourseNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('New Course Available!')
-            ->line('A new course has been created: ' . $this->title)
-            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->course_slug)
+            ->line('A new course has been created: ' . $this->courseTitle)
+            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->courseSlug)
             ->line('Thank you for using our application!');
     }
 
@@ -57,13 +57,13 @@ class NewCourseNotification extends Notification implements ShouldQueue
     // message
     protected function getMessage()
     {
-        return 'A new course has been created: ' . $this->title;
+        return 'A new course has been created: ' . $this->courseTitle;
     }
 
 
     protected function getUrl()
     {
-        return env('FRONTEND_URL') . 'courses/' . $this->course_slug;
+        return env('FRONTEND_URL') . 'courses/' . $this->courseSlug;
     }
 
 

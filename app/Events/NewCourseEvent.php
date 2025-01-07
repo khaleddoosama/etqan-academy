@@ -10,13 +10,13 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CourseRequestEvent
+class NewCourseEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private $users_ids;
     private $data;
-
+    
     public function __construct(array $users_ids, array $data = [])
     {
         $this->users_ids = $users_ids;
@@ -32,7 +32,8 @@ class CourseRequestEvent
     {
         return $this->data;
     }
-    
+
+
     public function broadcastOn(): array
     {
         return [

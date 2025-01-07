@@ -20,8 +20,8 @@ class CourseRequestListener
 
 
         $data = [
-            'student_name' => $event->data['student_name'] ?? '',
-            'course_request_id' => $event->data['course_request_id'] ?? '',
+            'student_name' => $event->getData()['student_name'] ?? '',
+            'course_request_id' => $event->getData()['course_request_id'] ?? '',
         ];
 
         // $users = User::whereIn('id', $event->users_ids)->get();

@@ -14,19 +14,25 @@ class CourseRevokeSoonEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $users_ids;
-    public $data;
+    private $users_ids;
+    private $data;
+
     public function __construct(array $users_ids, array $data = [])
     {
         $this->users_ids = $users_ids;
         $this->data = $data;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
+    public function getUsers()
+    {
+        return $this->users_ids;
+    }
+
+    public function getData()
+    {
+        return $this->data;
+    }
+
     public function broadcastOn(): array
     {
         return [

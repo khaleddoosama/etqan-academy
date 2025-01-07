@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\NewCourseEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CourseRequest;
 use App\Models\Course;
@@ -67,8 +68,10 @@ class CourseController extends Controller
         $course = $this->courseService->createCourse($data);
 
         // send email
-        $notification = new NewCourseNotification($course->slug, $course->title);
-        $this->studentsNotificationService->notifyAll($notification);
+        // $notification = new NewCourseNotification($course->slug, $course->title);
+        // $this->studentsNotificationService->notifyAll($notification);
+        event(new NewCourseEvent([$course->id], ['course_slug' => $course->slug, 'course_title' => $course->title]));
+
 
         Toastr::success(__('messages.course_created'), __('status.success'));
 

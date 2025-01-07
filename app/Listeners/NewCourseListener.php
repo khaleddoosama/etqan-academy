@@ -2,38 +2,40 @@
 
 namespace App\Listeners;
 
-use App\Events\CourseRevokeSoonEvent;
+use App\Events\NewCourseEvent;
 use App\Models\User;
-use App\Notifications\CourseRevokeSoonNotification;
+use App\Notifications\NewCourseNotification;
 use App\Notifications\NotificationContext;
 use App\Notifications\Strategies\EmailStrategy;
 use Illuminate\Support\Facades\Log;
 
-class CourseRevokeSoonListener
+class NewCourseListener
 {
 
-    public function handle(CourseRevokeSoonEvent $event): void
+    public function handle(NewCourseEvent $event): void
     {
         Log::info("From" . self::class);
 
 
         $data = [
-            'course_title' => $event->getData()['course_title'] ?? '',
             'course_slug' => $event->getData()['course_slug'] ?? '',
+            'course_title' => $event->getData()['course_title'] ?? '',
         ];
 
         Log::info("data: " . json_encode($data));
 
-        $users = User::whereIn('id', $event->getUsers())->get();
+        // $users = User::whereIn('id', $event->getUsers())->get();
+        $students = User::getNotifiedStudents();
 
-        Log::info("users: " . json_encode($users));
+
+        Log::info("students: " . json_encode($students));
 
         Log::info("---------------------------------------------");
 
-        $notification = new CourseRevokeSoonNotification($data['course_slug'], $data['course_title']);
+        $notification = new NewCourseNotification($data['course_slug'], $data['course_title']);
         $emailStrategy = new EmailStrategy($notification);
         $notificationContext = new NotificationContext($emailStrategy);
-        $notificationContext->executeStrategy($users);
+        $notificationContext->executeStrategy($students);
 
 
         Log::info("---------------------------------------------");

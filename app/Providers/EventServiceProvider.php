@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Events\CourseRequestEvent;
 use App\Events\CourseRevokeSoonEvent;
+use App\Events\NewCourseEvent;
 use App\Events\SentInquiryEvent;
 use App\Events\VerifyMailEvent;
 use App\Listeners\CourseRequestListener;
 use App\Listeners\CourseRevokeSoonListener;
+use App\Listeners\NewCourseListener;
 use App\Listeners\SentInquiryListener;
 use App\Listeners\VerifyMailListener;
 use Illuminate\Auth\Events\Registered;
@@ -41,6 +43,10 @@ class EventServiceProvider extends ServiceProvider
 
         SentInquiryEvent::class => [
             SentInquiryListener::class
+        ],
+
+        NewCourseEvent::class => [
+            NewCourseListener::class
         ]
     ];
 

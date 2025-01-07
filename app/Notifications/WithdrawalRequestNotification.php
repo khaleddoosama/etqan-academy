@@ -13,15 +13,15 @@ class WithdrawalRequestNotification extends Notification implements ShouldQueue
     use Queueable, NotificationToArray;
 
 
-    private $user_name;
-    private $withdrawalRequest_id;
+    private $userName;
+    private $withdrawalRequestId;
     /**
      * Create a new notification instance.
      */
-    public function __construct(string $user_name, int $withdrawalRequest_id)
+    public function __construct(string $userName, int $withdrawalRequestId)
     {
-        $this->user_name = $user_name;
-        $this->withdrawalRequest_id = $withdrawalRequest_id;
+        $this->userName = $userName;
+        $this->withdrawalRequestId = $withdrawalRequestId;
         $this->queue = 'high';  // Explicitly assign to the 'high' queue
 
     }
@@ -55,7 +55,7 @@ class WithdrawalRequestNotification extends Notification implements ShouldQueue
 
     protected function getMessage()
     {
-        return $this->user_name . ' has requested withdrawal.';
+        return $this->userName . ' has requested withdrawal.';
     }
 
     protected function getType()
@@ -65,7 +65,7 @@ class WithdrawalRequestNotification extends Notification implements ShouldQueue
 
     protected function getUrl()
     {
-        return route('admin.withdrawal_requests.show', $this->withdrawalRequest_id);
+        return route('admin.withdrawal_requests.show', $this->withdrawalRequestId);
     }
 
     protected function getIcon()

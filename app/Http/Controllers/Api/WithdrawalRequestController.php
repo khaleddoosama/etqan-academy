@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CreateWithdrawalRequestEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\WithdrawalRequestRequest;
-use App\Models\User;
 use App\Notifications\WithdrawalRequestNotification;
 use App\Services\AdminNotificationService;
 use App\Services\WithdrawalRequestService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Notification;
 
 class WithdrawalRequestController extends Controller
 {
@@ -31,9 +29,9 @@ class WithdrawalRequestController extends Controller
 
         $withdrawalRequest = $this->WithdwawalRequestService->store($data);
 
-        $notification = new WithdrawalRequestNotification($withdrawalRequest->user->name, $withdrawalRequest->id);
-        $this->adminNotificationService->notifyAdmins($notification,['withdrawal.list', 'withdrawal.show']);
-
+        // $notification = new WithdrawalRequestNotification($withdrawalRequest->user->name, $withdrawalRequest->id);
+        // $this->adminNotificationService->notifyAdmins($notification,['withdrawal.list', 'withdrawal.show']);
+        event (new CreateWithdrawalRequestEvent([], ['userName' => $withdrawalRequest->user->name, 'withdrawalRequestId' => $withdrawalRequest->id]));
         return $this->apiResponse($withdrawalRequest, __('messages.withdrawal_request_sent'), 201);
     }
 }

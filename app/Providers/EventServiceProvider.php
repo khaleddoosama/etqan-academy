@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\CourseRequestEvent;
 use App\Events\CourseRevokeSoonEvent;
 use App\Events\CreatePaymentDetailEvent;
+use App\Events\CreateWithdrawalRequestEvent;
 use App\Events\NewCourseEvent;
 use App\Events\PaymentApprovedEvent;
 use App\Events\PaymentRejectedEvent;
@@ -14,6 +15,7 @@ use App\Events\VerifyMailEvent;
 use App\Listeners\CourseRequestListener;
 use App\Listeners\CourseRevokeSoonListener;
 use App\Listeners\CreatePaymentDetailListener;
+use App\Listeners\CreateWithdrawalRequestListener;
 use App\Listeners\NewCourseListener;
 use App\Listeners\PaymentApprovedListener;
 use App\Listeners\PaymentRejectedListener;
@@ -71,7 +73,13 @@ class EventServiceProvider extends ServiceProvider
 
         RegisterUserEvent::class => [
             RegisterUserListener::class
-        ]
+        ],
+
+        CreateWithdrawalRequestEvent::class => [
+            CreateWithdrawalRequestListener::class
+        ],
+
+        
     ];
 
     /**

@@ -9,16 +9,16 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 
-class StudentApprovedNotification extends Notification
+class StudentApprovedAtCourseNotification extends Notification
 {
     use Queueable, NotificationToArray;
 
     private $courseSlug;
-    private $title;
-    public function __construct(string $courseSlug, string $title)
+    private $coursetitle;
+    public function __construct(string $courseSlug, string $coursetitle)
     {
         $this->courseSlug = $courseSlug;
-        $this->title = $title;
+        $this->coursetitle = $coursetitle;
         $this->queue = 'high';  // Explicitly assign to the 'high' queue
 
     }
@@ -40,7 +40,7 @@ class StudentApprovedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Access Approved: New Course Available!')
-            ->line('Congratulations! You have been approved to access the course: ' . $this->title)
+            ->line('Congratulations! You have been approved to access the course: ' . $this->coursetitle)
             ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->courseSlug)
             ->line('We hope you enjoy the learning experience!');
     }
@@ -54,7 +54,7 @@ class StudentApprovedNotification extends Notification
     // message
     protected function getMessage()
     {
-        return 'Congratulations! You have been approved to access the course: ' . $this->title;
+        return 'Congratulations! You have been approved to access the course: ' . $this->coursetitle;
     }
 
 

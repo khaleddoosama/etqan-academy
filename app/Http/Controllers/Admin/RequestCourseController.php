@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\StudentApprovedAtCourseEvent;
 use App\Http\Controllers\Controller;
-use App\Notifications\StudentApprovedNotification;
 use App\Services\RequestCourseService;
 use App\Services\StudentsNotificationService;
 use Illuminate\Http\Request;
@@ -43,8 +43,9 @@ class RequestCourseController extends Controller
         $request_course = $this->requestCourseService->changeStatus($request->status, $id);
         if ($request_course->status == 1) {
             // send email
-            $notification = new StudentApprovedNotification($request_course->course->slug, $request_course->course->title);
-            $this->studentsNotificationService->notify($notification, $request_course->student);
+            // $notification = new StudentApprovedNotification($request_course->course->slug, $request_course->course->title);
+            // $this->studentsNotificationService->notify($notification, $request_course->student);
+            event(new StudentApprovedAtCourseEvent([$request_course->student_id], ['courseSlug' => $request_course->course->slug, 'course_title' => $request_course->course->title]));
         }
 
 

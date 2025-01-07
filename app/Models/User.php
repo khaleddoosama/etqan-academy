@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Notifications\CustomVerifyEmail;
-use App\Notifications\ResetPasswordNotification;
+// use App\Notifications\CustomVerifyEmail;
+// use App\Notifications\ResetPasswordNotification;
 use App\Traits\LogsActivityForModels;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 

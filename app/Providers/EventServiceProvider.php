@@ -12,6 +12,7 @@ use App\Events\PaymentRejectedEvent;
 use App\Events\RegisterUserEvent;
 use App\Events\ResetPasswordEvent;
 use App\Events\SentInquiryEvent;
+use App\Events\StudentApprovedAtCourseEvent;
 use App\Events\VerifyMailEvent;
 use App\Listeners\CourseRequestListener;
 use App\Listeners\CourseRevokeSoonListener;
@@ -23,6 +24,7 @@ use App\Listeners\PaymentRejectedListener;
 use App\Listeners\RegisterUserListener;
 use App\Listeners\ResetPasswordListener;
 use App\Listeners\SentInquiryListener;
+use App\Listeners\StudentApprovedAtCourseListener;
 use App\Listeners\VerifyMailListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -85,6 +87,9 @@ class EventServiceProvider extends ServiceProvider
             ResetPasswordListener::class
         ],
 
+        StudentApprovedAtCourseEvent::class => [
+            StudentApprovedAtCourseListener::class
+        ],
     ];
 
     /**

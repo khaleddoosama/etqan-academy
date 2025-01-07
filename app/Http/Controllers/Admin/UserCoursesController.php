@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\StudentApprovedAtCourseEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CourseUsersRequest;
 use App\Http\Requests\Admin\UserCoursesRequest;
@@ -63,9 +64,9 @@ class UserCoursesController extends Controller
         $this->userCoursesService->createUserCourse($user->id, $data['course_id']);
         $course = $this->courseService->getCourse($data['course_id']);
         // send email
-        $notification = new StudentApprovedNotification($course->slug, $course->title);
-        $this->studentsNotificationService->notify($notification, $user);
-
+        // $notification = new StudentApprovedNotification($course->slug, $course->title);
+        // $this->studentsNotificationService->notify($notification, $user);
+        event(new StudentApprovedAtCourseEvent([$user->id], ['courseSlug' => $course->slug, 'course_title' => $course->title]));
         Toastr::success(__('messages.user_course_added'), __('status.success'));
 
         return redirect()->back();
@@ -80,9 +81,9 @@ class UserCoursesController extends Controller
 
         $user = $this->userService->getUser($data['user_id']);
         // send email
-        $notification = new StudentApprovedNotification($course->slug, $course->title);
-        $this->studentsNotificationService->notify($notification, $user);
-
+        // $notification = new StudentApprovedNotification($course->slug, $course->title);
+        // $this->studentsNotificationService->notify($notification, $user);
+        event(new StudentApprovedAtCourseEvent([$data['user_id']], ['courseSlug' => $course->slug, 'course_title' => $course->title]));
         Toastr::success(__('messages.user_course_added'), __('status.success'));
 
         return redirect()->back();
@@ -99,8 +100,9 @@ class UserCoursesController extends Controller
 
         if ($data['status'] == 1) {
             // send email
-            $notification = new StudentApprovedNotification($course->slug, $course->title);
-            $this->studentsNotificationService->notify($notification, $user);
+            // $notification = new StudentApprovedNotification($course->slug, $course->title);
+            // $this->studentsNotificationService->notify($notification, $user);
+            event(new StudentApprovedAtCourseEvent([$user->id], ['courseSlug' => $course->slug, 'course_title' => $course->title]));
         }
 
         Toastr::success(__('messages.user_course_status_updated'), __('status.success'));

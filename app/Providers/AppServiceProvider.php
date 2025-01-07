@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\AdminNotificationService;
 use App\Services\AdminService;
 use App\Services\AwsS3Service;
 use App\Services\CategoryService;
@@ -42,9 +41,7 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerSingletonServices(): void
     {
-        $this->app->singleton(AdminNotificationService::class, function ($app) {
-            return new AdminNotificationService();
-        });
+
 
         $this->app->singleton(AdminService::class, function ($app) {
             return new AdminService($app->make(RoleService::class));

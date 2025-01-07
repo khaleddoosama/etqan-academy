@@ -11,7 +11,6 @@ use App\Models\User;
 use App\Models\UserCourse;
 use App\Notifications\StudentApprovedNotification;
 use App\Services\CourseService;
-use App\Services\StudentsNotificationService;
 use App\Services\UserCoursesService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -22,15 +21,12 @@ class UserCoursesController extends Controller
     private UserCoursesService $userCoursesService;
     private CourseService $courseService;
     private UserService $userService;
-    private StudentsNotificationService $studentsNotificationService;
 
-    public function __construct(UserCoursesService $userCoursesService, CourseService $courseService, UserService $userService,
-                                StudentsNotificationService $studentsNotificationService)
+    public function __construct(UserCoursesService $userCoursesService, CourseService $courseService, UserService $userService)
     {
         $this->userCoursesService = $userCoursesService;
         $this->courseService = $courseService;
         $this->userService = $userService;
-        $this->studentsNotificationService = $studentsNotificationService;
 
         $this->middleware('permission:user_course.list')->only('index', 'showStudents');
         $this->middleware('permission:user_course.create')->only('store', 'store2');
@@ -64,9 +60,8 @@ class UserCoursesController extends Controller
         $this->userCoursesService->createUserCourse($user->id, $data['course_id']);
         $course = $this->courseService->getCourse($data['course_id']);
         // send email
-        // $notification = new StudentApprovedNotification($course->slug, $course->title);
-        // $this->studentsNotificationService->notify($notification, $user);
         event(new StudentApprovedAtCourseEvent([$user->id], ['courseSlug' => $course->slug, 'course_title' => $course->title]));
+
         Toastr::success(__('messages.user_course_added'), __('status.success'));
 
         return redirect()->back();
@@ -81,9 +76,8 @@ class UserCoursesController extends Controller
 
         $user = $this->userService->getUser($data['user_id']);
         // send email
-        // $notification = new StudentApprovedNotification($course->slug, $course->title);
-        // $this->studentsNotificationService->notify($notification, $user);
         event(new StudentApprovedAtCourseEvent([$data['user_id']], ['courseSlug' => $course->slug, 'course_title' => $course->title]));
+
         Toastr::success(__('messages.user_course_added'), __('status.success'));
 
         return redirect()->back();
@@ -100,8 +94,6 @@ class UserCoursesController extends Controller
 
         if ($data['status'] == 1) {
             // send email
-            // $notification = new StudentApprovedNotification($course->slug, $course->title);
-            // $this->studentsNotificationService->notify($notification, $user);
             event(new StudentApprovedAtCourseEvent([$user->id], ['courseSlug' => $course->slug, 'course_title' => $course->title]));
         }
 

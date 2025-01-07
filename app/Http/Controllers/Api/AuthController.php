@@ -10,8 +10,6 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Notifications\UserRegisteredNotification;
-use App\Services\AdminNotificationService;
 use App\Services\ReferralService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -26,13 +24,11 @@ class AuthController extends Controller
 {
     use ApiResponseTrait;
     protected $ReferralService;
-    private AdminNotificationService $adminNotificationService;
 
-    public function __construct(ReferralService $ReferralService, AdminNotificationService $adminNotificationService)
+    public function __construct(ReferralService $ReferralService)
     {
         $this->middleware('jwt.authenticate', ['except' => ['login', 'register']]);
         $this->ReferralService = $ReferralService;
-        $this->adminNotificationService = $adminNotificationService;
     }
 
     public function login(Request $request)
@@ -91,7 +87,7 @@ class AuthController extends Controller
 
             // notify admins
             event(new RegisterUserEvent([], ['userName' => $user->name]));
-            
+
             return $this->apiResponse(new UserResource($user), __('messages.registered'), 201);
         } catch (Exception $e) {
             DB::rollBack();

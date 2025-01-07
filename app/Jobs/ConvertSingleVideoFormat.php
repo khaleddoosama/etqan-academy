@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\ConvertedVideo;
 use App\Notifications\LectureStatusNotification;
-use App\Services\AdminNotificationService;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Filters\Video\VideoFilters;
 use Illuminate\Bus\Queueable;

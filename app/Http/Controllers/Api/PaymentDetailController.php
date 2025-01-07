@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Events\CreatePaymentDetailEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PaymentDetailRequest;
-use App\Notifications\PaymentDetailCreatedNotification;
-use App\Services\AdminNotificationService;
 use App\Services\PaymentDetailService;
 use Illuminate\Http\Request;
 
@@ -14,12 +12,10 @@ class PaymentDetailController extends Controller
 {
     use ApiResponseTrait;
     private PaymentDetailService $paymentDetailService;
-    private AdminNotificationService $adminNotificationService;
 
-    public function __construct(PaymentDetailService $paymentDetailService, AdminNotificationService $adminNotificationService)
+    public function __construct(PaymentDetailService $paymentDetailService)
     {
         $this->paymentDetailService = $paymentDetailService;
-        $this->adminNotificationService = $adminNotificationService;
     }
 
     public function store(PaymentDetailRequest $request)

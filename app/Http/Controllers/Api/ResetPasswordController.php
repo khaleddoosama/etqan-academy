@@ -6,18 +6,12 @@ use App\Events\ResetPasswordEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Services\AdminNotificationService;
 use Illuminate\Support\Facades\Validator;
 
 class ResetPasswordController extends Controller
 {
     use ApiResponseTrait;
-    private AdminNotificationService $adminNotificationService;
 
-    public function __construct(AdminNotificationService $adminNotificationService)
-    {
-        $this->adminNotificationService = $adminNotificationService;
-    }
     public function requestPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [

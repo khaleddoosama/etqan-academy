@@ -6,27 +6,21 @@ use App\Enums\Status;
 use App\Events\PaymentApprovedEvent;
 use App\Events\PaymentRejectedEvent;
 use App\Http\Controllers\Controller;
-use App\Mail\PaymentApprovedMail;
-use App\Notifications\PaymentRejectedNotification;
 use App\Services\PaymentDetailService;
-use App\Services\StudentsNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Yoeunes\Toastr\Facades\Toastr;
 
 class PaymentDetailController extends Controller
 {
     private $paymentDetailService;
-    private $studentsNotificationService;
 
 
-    public function __construct(PaymentDetailService $paymentDetailService, StudentsNotificationService $studentsNotificationService)
+    public function __construct(PaymentDetailService $paymentDetailService)
     {
         $this->paymentDetailService = $paymentDetailService;
-        $this->studentsNotificationService = $studentsNotificationService;
 
         $this->middleware('permission:payment_detail.list')->only('index');
         $this->middleware('permission:payment_detail.show')->only('show');

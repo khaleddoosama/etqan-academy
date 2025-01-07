@@ -6,8 +6,6 @@ use App\Events\NewCourseEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CourseRequest;
 use App\Models\Course;
-use App\Notifications\NewCourseNotification;
-use App\Services\StudentsNotificationService;
 use App\Services\CategoryService;
 use App\Services\CourseService;
 use App\Services\InstructorService;
@@ -24,20 +22,17 @@ class CourseController extends Controller
     protected CategoryService $categoryService;
     protected ProgramService $programService;
     protected InstructorService $instructorService;
-    protected $studentsNotificationService;
 
     public function __construct(
         CourseService $courseService,
         CategoryService $categoryService,
         ProgramService $programService,
         InstructorService $instructorService,
-        StudentsNotificationService $studentsNotificationService
     ) {
         $this->courseService = $courseService;
         $this->categoryService = $categoryService;
         $this->programService = $programService;
         $this->instructorService = $instructorService;
-        $this->studentsNotificationService = $studentsNotificationService;
 
         // course.list course.create course.edit course.delete
         $this->middleware('permission:course.list')->only('index');
@@ -68,8 +63,6 @@ class CourseController extends Controller
         $course = $this->courseService->createCourse($data);
 
         // send email
-        // $notification = new NewCourseNotification($course->slug, $course->title);
-        // $this->studentsNotificationService->notifyAll($notification);
         event(new NewCourseEvent([$course->id], ['courseSlug' => $course->slug, 'course_title' => $course->title]));
 
 

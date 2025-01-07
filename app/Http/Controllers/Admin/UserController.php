@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\VerifyMailEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
 use App\Http\Requests\PasswordRequest;
@@ -61,8 +62,7 @@ class UserController extends Controller
 
         $user = $this->userService->createUser($data);
 
-        $user->sendEmailVerificationNotification();
-
+        event(new VerifyMailEvent([$user->id]));
 
         Toastr::success(__('messages.user_created'), __('status.success'));
         return redirect()->route('admin.users.active');

@@ -8,15 +8,6 @@ use App\Models\UserCourse;
 
 class UserCoursesService
 {
-    protected CourseService $courseService;
-    protected UserService $userService;
-    // constructor for CourseService
-    public function __construct(CourseService $courseService, UserService $userService)
-    {
-        $this->courseService = $courseService;
-        $this->userService = $userService;
-    }
-
     //create user course
     public function createUserCourse($student_id, $course_id)
     {

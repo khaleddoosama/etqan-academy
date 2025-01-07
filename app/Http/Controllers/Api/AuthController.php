@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\VerifyMailEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ChangePasswordRequest;
 use App\Http\Resources\UserResource;
@@ -85,7 +86,7 @@ class AuthController extends Controller
 
             DB::commit();
 
-            $user->sendEmailVerificationNotification();
+            event(new VerifyMailEvent([$user->id]));
 
             // notify admins
             $notification = new UserRegisteredNotification($user->name);

@@ -58,10 +58,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         ];
     }
 
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new CustomVerifyEmail);
-    }
+    // public function sendEmailVerificationNotification()
+    // {
+    //     $this->notify(new CustomVerifyEmail);
+    // }
 
     public function sendPasswordResetNotification($token)
     {

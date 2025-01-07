@@ -2,35 +2,35 @@
 
 namespace App\Listeners;
 
-use App\Events\CourseRevokeSoonEvent;
+use App\Events\VerifyMailEvent;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use App\Models\User;
-use App\Notifications\CourseRevokeSoonNotification;
+use App\Notifications\CustomVerifyEmail;
 use App\Notifications\NotificationContext;
 use App\Notifications\Strategies\EmailStrategy;
 use Illuminate\Support\Facades\Log;
 
-class CourseRevokeSoonListener
+class VerifyMailListener
 {
 
-    public function handle(CourseRevokeSoonEvent $event): void
+    public function handle(VerifyMailEvent $event): void
     {
         Log::info("From" . self::class);
 
 
         $data = [
-            'course_title' => $event->data['course_title'] ?? '',
-            'course_slug' => $event->data['course_slug'] ?? '',
         ];
 
         Log::info("data: " . json_encode($data));
 
-        $users = User::whereIn('id', $event->users_ids)->get();
+        $users = User::whereIn('id', $event->getUsers())->get();
 
         Log::info("users: " . json_encode($users));
 
         Log::info("---------------------------------------------");
 
-        $notification = new CourseRevokeSoonNotification($data['course_slug'], $data['course_title']);
+        $notification = new CustomVerifyEmail();
         $emailStrategy = new EmailStrategy($notification);
         $notificationContext = new NotificationContext($emailStrategy);
         $notificationContext->executeStrategy($users);

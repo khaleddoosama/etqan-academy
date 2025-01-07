@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CourseRequestEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RequestCourseRequest;
 use App\Http\Resources\RequestCourseResource;
@@ -29,8 +30,13 @@ class RequestCourseController extends Controller
 
         $requestCourse = new RequestCourseResource($this->requestCourseService->createRequestCourse($data));
 
-        $notification = new CourseRequestNotification($requestCourse->student->name ?? 'Guest', $requestCourse->id);
-        $this->adminNotificationService->notifyAdmins($notification, permissions: ['request_course.list', 'request_course.show']);
+        event(new CourseRequestEvent([],
+        [
+            'student_name' => $requestCourse->student->name ?? 'Guest',
+            'course_request_id' => $requestCourse->id
+        ]));
+
+
 
         return $this->apiResponse($requestCourse, __('messages.requestCourse_sent'), 201);
     }

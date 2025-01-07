@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\SentInquiryEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\InquiryRequest;
 use App\Notifications\InquirySentNotification;
@@ -27,8 +28,7 @@ class InquiryController extends Controller
         $inquiry = $this->inquiryService->sendInquiry($data);
 
         if ($inquiry) {
-            $notification = new InquirySentNotification($inquiry->id);
-            $this->adminNotificationService->notifyAdmins($notification, ['inquiry.list', 'inquiry.show']);
+            event(new SentInquiryEvent([], ['inquiry_id' => $inquiry->id]));
 
             return $this->apiResponse($inquiry, __('messages.inquiry_sent'), 201);
         } else {

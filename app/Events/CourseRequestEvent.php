@@ -10,13 +10,13 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CourseRevokeSoonEvent
+class CourseRequestEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $users_ids;
     public $data;
-    public function __construct(array $users_ids, array $data = [])
+    public function __construct(array $users_ids, array $data)
     {
         $this->users_ids = $users_ids;
         $this->data = $data;

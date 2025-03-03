@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\HomeController;
@@ -89,6 +90,8 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
     Route::delete('/gallery/{id}', [GalleryController::class, 'destroy']);
 
     Route::post('/payment-details', [PaymentDetailController::class, 'store']);
+
+    Route::apiResource('comments', CommentController::class);
 });
 
 //

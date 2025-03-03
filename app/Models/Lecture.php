@@ -17,7 +17,7 @@ class Lecture extends Model
     use HasFactory, Sluggable, UploadTrait, LogsActivityForModels;
 
     protected $guarded = [];
-    
+
     protected static function boot()
     {
         parent::boot();
@@ -53,6 +53,11 @@ class Lecture extends Model
     {
         // lecture->section->course
         return $this->section->course();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     // get duration (sum hours and minutes and seconds)

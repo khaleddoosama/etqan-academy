@@ -13,6 +13,7 @@ use App\Services\InstructorService;
 use App\Services\LectureService;
 use App\Services\PermissionService;
 use App\Services\ProgramService;
+use App\Services\ProgressService;
 use App\Services\ReferralService;
 use App\Services\RequestCourseService;
 use App\Services\RolePermissionService;
@@ -77,7 +78,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(LectureService::class, function ($app) {
             return new LectureService(
-                $app->make(UserCoursesService::class),
+                $app->make(ProgressService::class),
                 $app->make(SectionService::class)
             );
         });

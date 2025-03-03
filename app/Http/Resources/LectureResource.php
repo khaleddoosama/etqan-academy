@@ -34,6 +34,7 @@ class LectureResource extends JsonResource
             $data['video'] = $this->video_url;
             $data['attachments'] = $this->attachments_url;
             $data['description'] = $this->description;
+            $data['comments'] = CommentResource::collection($this->comments);
         }
         return $data;
     }

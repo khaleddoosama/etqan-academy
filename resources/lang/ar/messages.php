@@ -116,4 +116,10 @@
     'student_works_order_updated' => 'تم تحديث ترتيب عمليات الطلاب بنجاح.',
     'student_work_deleted' => 'تم حذف عملية الطالب بنجاح.',
     'student_work_not_found' => 'عذرًا، لم نتمكن من العثور على عملية الطالب المطلوبة.',
+    'comment_created_successfully' => 'تم انشاء التعليق بنجاح.',
+    'comment_updated_successfully' => 'تم تحديث التعليق بنجاح.',
+    'comment_deleted_successfully' => 'تم حذف التعليق بنجاح.',
+    'comment_not_found' => 'عذرًا، لم نتمكن من العثور على التعليق المطلوب.',
+    'comment_retrieved_successfully' => 'تم استرجاع التعليق بنجاح.',
+
 );

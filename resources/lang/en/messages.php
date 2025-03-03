@@ -116,5 +116,9 @@
     'student_works_order_updated' => 'Student Works Order Updated Successfully',
     'student_work_deleted' => 'Student Work Deleted Successfully',
     'student_work_not_found' => 'Student Work Not Found',
-
+    'comment_created_successfully' => 'Comment created successfully.',
+    'comment_updated_successfully' => 'Comment updated successfully.',
+    'comment_deleted_successfully' => 'Comment deleted successfully.',
+    'comment_not_found' => 'Comment not found.',
+    'comment_retrieved_successfully' => 'Comment retrieved successfully.',
 );

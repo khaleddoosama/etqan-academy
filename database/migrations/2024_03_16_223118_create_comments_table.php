@@ -15,9 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('lecture_id')->constrained()->onDelete('cascade');
-            $table->string('comment');
-            $table->string('parent_id')->nullable();
-            $table->integer('status')->default(0);
+            $table->string('content');
+            $table->integer('status')->default(0)->comment('0 = pending, 1 = approved, 2 = rejected, 3 = removed');
+            $table->string('notes')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->timestamp('rejected_at')->nullable();
+            $table->timestamp('removed_at')->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('comments')->onDelete('set null');
             $table->timestamps();
         });
     }

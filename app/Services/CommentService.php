@@ -9,32 +9,44 @@ use Illuminate\Validation\ValidationException;
 
 class CommentService
 {
-    public function getCommentsByStatusAndRole($status, $role) : Collection
+    public function getAllComments(): Collection
     {
-        return Comment::whereHas($role)
-            ->whereIn('status', (array)$status)
-            ->get();
+        return Comment::with(['user', 'lecture', 'replies'])->latest()->get();
     }
 
-    public function updateCommentStatus(Comment $comment, $status, $role) : string
+    public function getCommentById(int $id): ?Comment
     {
-        if ($comment->user->role !== $role) {
-            throw ValidationException::withMessages([
-                'status' => 'هذا التعليق ليس ل' . __('main.' . $role),
-            ]);
-        }
+        return Comment::with(['user', 'lecture', 'replies'])->find($id);
+    }
 
+    public function createComment(array $data): Comment
+    {
+        $data['user_id'] = auth()->id();
+        return Comment::create($data);
+    }
+
+    public function updateComment(Comment $comment, array $data): Comment
+    {
+        $comment->update($data);
+        return $comment;
+    }
+
+    public function deleteComment(Comment $comment): bool
+    {
+        return $comment->delete();
+    }
+
+    public function changeStatus(Comment $comment, int $status, ?string $notes = null): Comment
+    {
         $comment->update([
             'status' => $status,
+            'notes' => $notes,
             $this->getStatusTimestampField($status) => now(),
         ]);
-
-        $statusName = $this->getStatusTimestampField($status);
-
-        return "تم " . ($statusName == 'approved_at' ? 'الموافقة' : ($statusName == 'rejected_at' ? 'رفض' : 'حذف')) . ' التعليق بنجاح';
+        return $comment;
     }
 
-    private function getStatusTimestampField($status) : ?string
+    private function getStatusTimestampField($status): ?string
     {
         $statusFields = [
             1 => 'approved_at',
@@ -44,5 +56,4 @@ class CommentService
 
         return $statusFields[$status] ?? null;
     }
-
 }

@@ -155,6 +155,12 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Referral::class, 'parent_user', 'id');
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+
     // get picture attribute
     public function getPictureUrlAttribute()
     {

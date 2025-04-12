@@ -20,6 +20,8 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'picture' => $this->picture_url,
             'age' => $this->age,
+            'gender' => $this->gender,
+            'category' => $this->whenLoaded('category', new CategoryResource($this->category)),
             'code' => $this->code,
             'last_login' => $this->last_login,
             'points' => $this->points,

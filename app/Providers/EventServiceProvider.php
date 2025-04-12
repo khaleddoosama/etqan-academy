@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\CourseRequestEvent;
 use App\Events\CourseRevokeSoonEvent;
 use App\Events\CreatePaymentDetailEvent;
+use App\Events\CreateStudentOpinionEventEvent;
 use App\Events\CreateWithdrawalRequestEvent;
 use App\Events\NewCourseEvent;
 use App\Events\PaymentApprovedEvent;
@@ -17,6 +18,7 @@ use App\Events\VerifyMailEvent;
 use App\Listeners\CourseRequestListener;
 use App\Listeners\CourseRevokeSoonListener;
 use App\Listeners\CreatePaymentDetailListener;
+use App\Listeners\CreateStudentOpinionEventListener;
 use App\Listeners\CreateWithdrawalRequestListener;
 use App\Listeners\NewCourseListener;
 use App\Listeners\PaymentApprovedListener;
@@ -26,6 +28,7 @@ use App\Listeners\ResetPasswordListener;
 use App\Listeners\SentInquiryListener;
 use App\Listeners\StudentApprovedAtCourseListener;
 use App\Listeners\VerifyMailListener;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -90,6 +93,10 @@ class EventServiceProvider extends ServiceProvider
         StudentApprovedAtCourseEvent::class => [
             StudentApprovedAtCourseListener::class
         ],
+
+        CreateStudentOpinionEventEvent::class => [
+            CreateStudentOpinionEventListener::class
+        ]
     ];
 
     /**

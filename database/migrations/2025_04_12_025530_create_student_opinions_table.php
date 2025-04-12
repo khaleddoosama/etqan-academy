@@ -20,6 +20,8 @@ return new class extends Migration
 
             $table->tinyInteger('status')->default(0); // pending, approved, rejected
 
+            $table->timestamp('approved_at')->nullable();
+            $table->timestamp('rejected_at')->nullable();
             $table->timestamps();
         });
     }

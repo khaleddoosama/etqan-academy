@@ -196,4 +196,8 @@ return [
     'jobs_management' => 'ادارة الوظائف',
     'separated' => 'منفصله',
     'comprehensive' => 'شامله',
+    'student_opinion' => 'رأي الطالب',
+    'student_opinions' => 'اراء الطلاب',
+    'course_name' => 'اسم الدورة',
+    'opinion' => 'راي',
 ];

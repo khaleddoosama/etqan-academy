@@ -15,6 +15,11 @@ class StudentOpinionService
         $this->slugResolver = $slugResolver;
     }
 
+    public function all()
+    {
+        return StudentOpinion::latest()->get();
+    }
+
     public function getForTheWholeSystem()
     {
         return StudentOpinion::theWholeSystem()->approved()->latest()->get();
@@ -28,5 +33,13 @@ class StudentOpinionService
             ]);
         }
         return StudentOpinion::create($data);
+    }
+
+    public function changeStatus($studentOpinionId, $status)
+    {
+        $studentOpinion = StudentOpinion::findOrFail($studentOpinionId);
+        $studentOpinion->status = $status;
+        $studentOpinion->save();
+        return $studentOpinion;
     }
 }

@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\RequestCourseController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\admin\StudentOpinionController;
 use App\Http\Controllers\Admin\StudentWorkController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserCoursesController;
@@ -206,6 +207,12 @@ Route::group(
                 Route::delete('/failed_jobs/delete/{id}', 'delete')->name('failed_jobs.delete');
                 Route::post('/failed_jobs/retry_all', 'retryAll')->name('failed_jobs.retry_all');
                 Route::delete('/failed_jobs/delete_all', 'deleteAll')->name('failed_jobs.delete_all');
+            });
+
+            // student opinions
+            Route::controller(StudentOpinionController::class)->group(function () {
+                Route::get('/student-opinions', 'index')->name('student-opinions.index');
+                Route::put('/student-opinions/{id}/status', 'status')->name('student-opinions.status');
             });
         });
     }

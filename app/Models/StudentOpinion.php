@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,22 @@ class StudentOpinion extends Model
         'status',
     ];
 
+    const STATUS_PENDING = 0;
+    const STATUS_APPROVED = 1;
+    const STATUS_REJECTED = 2;
+
+    // قائمة بالحالات المسموح بها
+    public static $statusTexts = [
+        self::STATUS_PENDING => 'Pending',
+        self::STATUS_APPROVED => 'Active',
+        self::STATUS_REJECTED => 'Rejected',
+    ];
+    public static $statusColors = [
+        self::STATUS_PENDING => 'warning',
+        self::STATUS_APPROVED => 'success',
+        self::STATUS_REJECTED => 'danger',
+    ];
+
     public function student()
     {
         return $this->belongsTo(User::class, 'student_id');
@@ -24,7 +41,9 @@ class StudentOpinion extends Model
 
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class)->withDefault([
+            'title' => 'TheWholeSystem'
+        ]);
     }
 
     public function scopePending($query)
@@ -47,5 +66,14 @@ class StudentOpinion extends Model
     {
         // TheWholeSystem means course_id = null
         return $query->where('course_id', null);
+    }
+
+    public function getStatusTextAttribute()
+    {
+        return self::$statusTexts[$this->status];
+    }
+    public function getStatusColorAttribute()
+    {
+        return self::$statusColors[$this->status];
     }
 }

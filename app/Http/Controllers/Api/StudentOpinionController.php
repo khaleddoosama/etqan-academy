@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CreateStudentOpinionEventEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StudentOpinionRequest;
 use App\Http\Resources\StudentOpinionResource;
@@ -28,6 +29,9 @@ class StudentOpinionController extends Controller
     public function store(StudentOpinionRequest $request)
     {
         $item = $this->studentOpinionService->store($request->validated());
-        return $this->apiResponse(new StudentOpinionResource($item), 'ok', 201);
+
+        event(new CreateStudentOpinionEventEvent([], ['userName' => $item->student->name]));
+
+        return $this->apiResponse(new StudentOpinionResource($item), __('messages.student_opinion_created_successfully'), 201);
     }
 }

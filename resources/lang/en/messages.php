@@ -121,4 +121,9 @@
     'comment_deleted_successfully' => 'Comment deleted successfully.',
     'comment_not_found' => 'Comment not found.',
     'comment_retrieved_successfully' => 'Comment retrieved successfully.',
+
+    'student_opinion_created_successfully' => 'Student Opinion Created Successfully',
+    'student_opinion_updated_successfully' => 'Student Opinion Updated Successfully',
+    'student_opinion_deleted_successfully' => 'Student Opinion Deleted Successfully',
+    'student_opinion_status_updated' => 'Student Opinion Status Updated Successfully',
 );

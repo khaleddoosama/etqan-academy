@@ -121,5 +121,8 @@
     'comment_deleted_successfully' => 'تم حذف التعليق بنجاح.',
     'comment_not_found' => 'عذرًا، لم نتمكن من العثور على التعليق المطلوب.',
     'comment_retrieved_successfully' => 'تم استرجاع التعليق بنجاح.',
-
+    'student_opinion_created_successfully' => 'تم انشاء راي الطالب بنجاح',
+    'student_opinion_updated_successfully' => 'تم تحديث راي الطالب بنجاح',
+    'student_opinion_deleted_successfully' => 'تم حذف راي الطالب بنجاح',
+    'student_opinion_status_updated' => 'تم تحديث حالة راي الطالب بنجاح',
 );

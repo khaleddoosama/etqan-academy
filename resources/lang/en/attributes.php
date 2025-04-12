@@ -196,4 +196,9 @@ return [
     'jobs_management' => 'Jobs Management',
     'separated' => 'Separated',
     'comprehensive' => 'Comprehensive',
+    'student_opinion' => 'Student Opinion',
+    'student_opinions' => 'Student Opinions',
+
+    'course_name' => 'Course Name',
+    'opinion' => 'Opinion',
 ];

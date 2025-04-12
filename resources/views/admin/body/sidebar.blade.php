@@ -92,6 +92,14 @@
                               'route' => 'admin.student_works.index',
                               'request_patterns' => ['*/admin/student_works', '*/admin/student_works/*'],
                           ],
+                          [
+                              'key' => 'student_opinions',
+                              'permission' => 'student_opinion.list',
+                              'label' => __('attributes.student_opinions'),
+                              'icon' => 'chatbox-ellipses-outline',
+                              'route' => 'admin.student-opinions.index',
+                              'request_patterns' => ['*/admin/student-opinions', '*/admin/student-opinions/*'],
+                          ],
                       ];
 
                       $isActive = function ($patterns) {

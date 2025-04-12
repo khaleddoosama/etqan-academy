@@ -13,7 +13,7 @@ class Comment extends Model
 
     protected $fillable = [
         'user_id',
-        'lecture_id',
+        'course_id',
         'parent_id',
         'content',
         'notes',
@@ -28,9 +28,9 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function lecture(): BelongsTo
+    public function course(): BelongsTo
     {
-        return $this->belongsTo(Lecture::class);
+        return $this->belongsTo(Course::class);
     }
 
     public function replies(): HasMany

@@ -11,12 +11,12 @@ class CommentService
 {
     public function getAllComments(): Collection
     {
-        return Comment::with(['user', 'lecture', 'replies'])->latest()->get();
+        return Comment::with(['user', 'course', 'replies'])->latest()->get();
     }
 
     public function getCommentById(int $id): ?Comment
     {
-        return Comment::with(['user', 'lecture', 'replies'])->find($id);
+        return Comment::with(['user', 'course', 'replies'])->find($id);
     }
 
     public function createComment(array $data): Comment

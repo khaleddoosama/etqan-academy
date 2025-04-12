@@ -22,7 +22,7 @@ class StoreCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'lecture_id' => 'required|exists:lectures,id',
+            'course_id' => 'required|exists:courses,id',
             'content' => 'required|string',
             'parent_id' => 'nullable|exists:comments,id',
         ];

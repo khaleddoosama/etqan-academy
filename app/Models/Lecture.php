@@ -60,6 +60,11 @@ class Lecture extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function views()
+    {
+        return $this->hasMany(LectureViews::class, 'lecture_id', 'id');
+    }
+
     // get duration (sum hours and minutes and seconds)
     public function duration()
     {

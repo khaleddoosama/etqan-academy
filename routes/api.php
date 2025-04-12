@@ -76,6 +76,9 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
     // show single lecture
     Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);
 
+    // view lecture
+    Route::put('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}/view', [LectureController::class, 'views']);
+
     // Withdrawal Request
     Route::post('withdrawal-request', [WithdrawalRequestController::class, 'store']);
 

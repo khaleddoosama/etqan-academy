@@ -112,13 +112,13 @@ class LectureService
     public function increaseViews(Lecture $lecture)
     {
         $lectureView = LectureViews::firstOrCreate(
-            ['user_id' => auth()->id(), 'lecture_id' => $lecture->id],
+            ['user_id' => auth('api')->id(), 'lecture_id' => $lecture->id],
             ['views' => 0]
         );
         $lectureView->increment('views');
         $count = $lectureView->lecture_views_count;
         $course = $lecture->course;
-        $this->progressService->updateProgress(auth()->id(), $course->id, $count, $course->countLectures());
+        $this->progressService->updateProgress(auth('api')->id(), $course->id, $count, $course->countLectures());
 
         return $lectureView;
     }

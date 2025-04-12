@@ -53,4 +53,14 @@ class LectureController extends Controller
             return $this->apiResponse(null, $e->getMessage(), 500);
         }
     }
+
+    //  view
+    public function views($course_slug, $section_slug, $lecture_slug)
+    {
+        $lecture = $this->lectureService->getLectureByCourseSlugAndSectionSlugAndSlug($course_slug, $section_slug, $lecture_slug);
+
+        $lecture_view = $this->lectureService->increaseViews($lecture);
+
+        return $this->apiResponse($lecture_view, 'ok', 200);
+    }
 }

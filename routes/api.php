@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\RequestCourseController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\StudentOpinionController;
 use App\Http\Controllers\Api\StudentWorkController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\WithdrawalRequestController;
@@ -92,6 +93,9 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
     Route::post('/payment-details', [PaymentDetailController::class, 'store']);
 
     Route::apiResource('comments', CommentController::class);
+
+    Route::post('/student-opinions', [StudentOpinionController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api']);
+    Route::get('/student-opinions', [StudentOpinionController::class, 'index'])->middleware(['log_user_activity:api']);
 });
 
 //

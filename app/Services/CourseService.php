@@ -24,7 +24,7 @@ class CourseService
     public function getCourses(): Collection
     {
         return Cache::remember('courses', 60, function () {
-            return Course::all();
+            return Course::orderBy('status', 'desc')->latest()->get();
         });
     }
     public function getActiveCourses(): Collection

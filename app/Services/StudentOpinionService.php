@@ -38,8 +38,19 @@ class StudentOpinionService
     public function changeStatus($studentOpinionId, $status)
     {
         $studentOpinion = StudentOpinion::findOrFail($studentOpinionId);
-        $studentOpinion->status = $status;
-        $studentOpinion->save();
+        if ($status == 1) {
+            $studentOpinion->status = 1;
+            $studentOpinion->approved_at = now();
+            $studentOpinion->save();
+        } elseif ($status == 2) {
+            $studentOpinion->status = 2;
+            $studentOpinion->rejected_at = now();
+            $studentOpinion->save();
+        } else {
+            $studentOpinion->status = 0;
+            $studentOpinion->save();
+        }
+
         return $studentOpinion;
     }
 }

@@ -97,4 +97,5 @@
     'print' => 'Print',
     'export_sheets' => 'Export Sheets',
     'import_sheets' => 'Import Sheets',
+    'show_students' => 'Show Students',
 );

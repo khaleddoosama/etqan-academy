@@ -194,4 +194,6 @@ return [
     'admin_management' => 'ادارة المشرفين',
     'logs_management' => 'ادارة السجلات',
     'jobs_management' => 'ادارة الوظائف',
+    'separated' => 'منفصله',
+    'comprehensive' => 'شامله',
 ];

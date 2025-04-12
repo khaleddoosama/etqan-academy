@@ -26,6 +26,7 @@
                                             <th>{{ __('attributes.title') }}</th>
                                             <th style="width: 20%">{{ __('attributes.description') }}</th>
                                             <th>{{ __('attributes.category') }}</th>
+                                            <th>{{ __('attributes.type') }}</th>
                                             <th>{{ __('attributes.sections') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
@@ -38,6 +39,7 @@
                                                 <td>{{ Str::limit(strip_tags($course->description), 100) }}</td>
 
                                                 <td>{{ $course->category->name }}</td>
+                                                <td>{{ $course->type }}</td>
                                                 <td>
                                                     @can('course.show')
                                                         @foreach ($course->sections as $section)
@@ -107,6 +109,7 @@
                                             <th>{{ __('attributes.title') }}</th>
                                             <th>{{ __('attributes.description') }}</th>
                                             <th>{{ __('attributes.category') }}</th>
+                                            <th>{{ __('attributes.type') }}</th>
                                             <th>{{ __('attributes.sections') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>

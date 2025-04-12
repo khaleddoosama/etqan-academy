@@ -23,6 +23,7 @@ class CourseRequest extends FormRequest
             'price' => 'required|numeric',
             'discount_price' => 'nullable|numeric',
             'number_of_levels' => 'required|integer',
+            'type' => 'required|in:separated,comprehensive',
             'instructor_id' => 'nullable|exists:instructors,id',
             'programs[]' => 'nullable|array',
             'programs.*' => 'nullable|exists:programs,id',

@@ -97,4 +97,5 @@
     'import' => 'استيراد',
     'export_sheets' => 'تصدير الشيتات',
     'import_sheets' => 'استيراد الشيتات',
+    'show_students' => 'عرض الطلاب',
 );

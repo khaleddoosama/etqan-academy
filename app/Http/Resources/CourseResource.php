@@ -25,6 +25,7 @@ class CourseResource extends JsonResource
             'price' => $this->price,
             'discount_price' => $this->discount_price,
             'num_of_levels' => $this->number_of_levels_text,
+            'type' => $this->type,
             'programs' => $this->programs ? ProgramResource::collection($this->programs()) : [],
             'lessons' => $this->countLectures(),
             'total_duration' => $this->totalDuration(),

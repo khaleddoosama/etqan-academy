@@ -194,4 +194,6 @@ return [
     'admin_management' => 'Admin Management',
     'logs_management' => 'Logs Management',
     'jobs_management' => 'Jobs Management',
+    'separated' => 'Separated',
+    'comprehensive' => 'Comprehensive',
 ];

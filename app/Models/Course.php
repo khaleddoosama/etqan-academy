@@ -42,20 +42,17 @@ class Course extends Model
         return $this->hasMany(Section::class);
     }
 
-    // programs
     public function programs()
     {
         $programIds = $this->programs ?? [];
         return Program::whereIn('id', $programIds)->get();
     }
 
-    // instructor
     public function instructor()
     {
         return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
     }
 
-    // offer
     public function offer()
     {
         return $this->hasOne(CourseOffer::class)
@@ -63,19 +60,22 @@ class Course extends Model
             ->where('end_date', '>=', now());
     }
 
-    // installments
     public function courseInstallments()
     {
         return $this->hasMany(CourseInstallment::class);
     }
 
-    // scope active
+    // StudentOpinion
+    public function studentOpinions()
+    {
+        return $this->hasMany(StudentOpinion::class);
+    }
+    // scopes
     public function scopeActive($query)
     {
         return $query->where('status', 1);
     }
 
-    // count number of lectures in course
     public function countLectures()
     {
         return $this->sections->map(function ($section) {
@@ -84,7 +84,6 @@ class Course extends Model
     }
 
 
-    // calculate total duration of lectures in course
     public function totalDuration()
     {
         // check if title == أدوبي اليستريتور
@@ -109,13 +108,11 @@ class Course extends Model
         }
     }
 
-    // get students
     public function students()
     {
         return $this->belongsToMany(User::class, 'user_courses', 'course_id', 'student_id')->withPivot('status', 'id', 'created_at');
     }
 
-    // get students count
     public function studentsCount()
     {
         // array
@@ -155,7 +152,6 @@ class Course extends Model
         return $this->students()->count() + $array[$this->id];
     }
 
-    // get rating
     public function getRatingAttribute()
     {
         // random number from 4 to 5
@@ -195,7 +191,6 @@ class Course extends Model
         return $this->students()->avg('rating') + $array[$this->id];
     }
 
-    // get number_of_levels attribute
     public function getNumberOfLevelsTextAttribute()
     {
         $levels = [
@@ -213,6 +208,7 @@ class Course extends Model
 
         return $levels[$this->attributes['number_of_levels']] ?? 'غير محدد';
     }
+
     /* methods */
     // get thumbnail url
     public function getThumbnailUrlAttribute()

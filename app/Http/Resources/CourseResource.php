@@ -40,6 +40,7 @@ class CourseResource extends JsonResource
             $data['description'] = $this->description;
             $data['sections'] = SectionResource::collection($this->sections);
             $data['installments'] = $this->courseInstallments ? CourseInstallmentResource::collection($this->courseInstallments) : [];
+            $data['comments'] = CommentResource::collection($this->comments);
         }
         return $data;
     }

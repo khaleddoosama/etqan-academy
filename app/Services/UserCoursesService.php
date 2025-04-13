@@ -26,4 +26,12 @@ class UserCoursesService
 
         return $course->pivot->update(['status' => $data['status']]);
     }
+
+    // check if user and course not found in user course table
+    public function checkUserAndCourse($course_id, $student_id): bool
+    {
+        $is_purchased = UserCourse::purchased($course_id, $student_id)->exists();
+
+        return $is_purchased;
+    }
 }

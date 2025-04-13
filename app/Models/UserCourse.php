@@ -43,4 +43,13 @@ class UserCourse extends Model
         return self::$statusColors[$this->status];
     }
 
+
+    // check if user purchased the course
+    public function scopePurchased($query, $course_id, $student_id)
+    {
+        return $query->where('course_id', $course_id)
+            ->where('student_id', $student_id)
+            ->where('status', self::STATUS_ACTIVE)
+        ;
+    }
 }

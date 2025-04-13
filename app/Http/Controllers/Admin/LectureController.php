@@ -133,7 +133,7 @@ class LectureController extends Controller
         [$lecture, $newLecture] = $this->lectureService->duplicateLecture($request->lecture_id, $request->section_id);
 
 
-        DuplicateLecture::dispatch($lecture, $newLecture)->onQueue('medium');;
+        // DuplicateLecture::dispatch($lecture, $newLecture)->onQueue('medium');;
 
         // convert video
         // ConvertVideoForStreaming::dispatch($lectures[1]);

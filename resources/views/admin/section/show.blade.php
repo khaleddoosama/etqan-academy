@@ -87,8 +87,8 @@
                                 <x-custom.form-submit text="{{ __('buttons.add_lecture') }}" class="mb-3 btn-primary"
                                     attr='data-toggle=modal data-target=#createVideoModal' />
 
-                                {{-- <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class="btn-secondary"
-                                    attr='data-toggle=modal data-target=#getVideoModal' /> --}}
+                                <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class="btn-secondary"
+                                    attr='data-toggle=modal data-target=#getVideoModal' />
                             </div>
                             <!-- form start -->
 
@@ -100,7 +100,7 @@
                 <!-- /.row -->
                 @include('admin.section.create-lecture-modal')
 
-                {{-- @include('admin.section.duplicate-lecture-modal') --}}
+                @include('admin.section.duplicate-lecture-modal')
             </div><!-- /.container-fluid -->
         </section>
         <!-- /.content -->
@@ -235,4 +235,71 @@
 
         });
     </script>
+
+<script>
+        $(document).ready(function() {
+            $('#getVideoModal').on('shown.bs.modal', function() {
+                $('#input-get-course').select2({
+                    dropdownParent: $('#getVideoModal')
+                });
+                $('#input-get-section').select2({
+                    dropdownParent: $('#getVideoModal')
+                });
+                $('#input-get-lecture').select2({
+                    dropdownParent: $('#getVideoModal')
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $('#input-get-course').change(function() {
+            var course_id = $(this).val();
+            if (course_id) {
+                $.ajax({
+
+                    url: '{{ route('admin.sections.get', ':course_id') }}'.replace(':course_id',
+                        course_id),
+                    type: 'Get',
+                    success: function(data) {
+                        $('#div-get-setion').show('blind');
+                        $options =
+                            '<option selected="selected" disabled>{{ __('buttons.choose') }}</option>';
+                        data.data.forEach(element => {
+                            $options +=
+                                `<option value="${element.id}">${element.title}</option>`;
+                        });
+                        $('#input-get-section').html($options);
+                    }
+                });
+            } else {
+                $('#div-get-setion').hide('blind');
+                $('#div-get-lecture').hide('blind');
+            }
+        });
+
+        $('#input-get-section').change(function() {
+            var section_id = $(this).val();
+            if (section_id) {
+                $.ajax({
+                    url: '{{ route('admin.lectures.get', ':section_id') }}'.replace(':section_id',
+                        section_id),
+                    type: 'Get',
+                    success: function(data) {
+                        $('#div-get-lecture').show('blind');
+                        $options =
+                            '<option selected="selected" disabled>{{ __('buttons.choose') }}</option>';
+                        data.data.forEach(element => {
+                            $options +=
+                                `<option value="${element.id}">${element.title}</option>`;
+                        });
+                        $('#input-get-lecture').html($options);
+                    }
+                });
+            } else {
+                $('#div-get-lecture').hide('blind');
+            }
+        });
+    </script>
 @endsection
+

@@ -134,7 +134,7 @@ Route::group(
             Route::resource('lectures', LectureController::class)->except(['show', 'create'])->missing(function () {
                 return redirect()->route('admin.courses.index');
             });
-            // Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
+            Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
             // Route::get('failed-lectures', [LectureController::class, 'failedLectures'])->name('lectures.failed.index');
             Route::post('/lectures/update-order', [LectureController::class, 'updateOrder'])->name('lectures.updateOrder');
             // Route::post('/upload-video', [LectureController::class, 'generatePresignedUrl']);

@@ -101,7 +101,7 @@ class LectureService
         $newLecture = $lecture->replicate();
         $newLecture->section_id = $sectionId;
         $newLecture->slug = SlugService::createSlug(Lecture::class, 'slug', $lecture->title);
-        $newLecture->processed = 0;
+        // $newLecture->processed = 0; 
         // Save the new lecture
         $newLecture->save();
 

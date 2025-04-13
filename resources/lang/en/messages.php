@@ -126,4 +126,10 @@
     'student_opinion_updated_successfully' => 'Student Opinion Updated Successfully',
     'student_opinion_deleted_successfully' => 'Student Opinion Deleted Successfully',
     'student_opinion_status_updated' => 'Student Opinion Status Updated Successfully',
+    'coupon_created_successfully' => 'Coupon created successfully.',
+    'coupon_updated_successfully' => 'Coupon updated successfully.',
+    'coupon_deleted_successfully' => 'Coupon deleted successfully.',
+    'coupon_not_found' => 'Coupon not found.',
+    'coupon_retrieved_successfully' => 'Coupon retrieved successfully.',
+    'coupon_status_updated' => 'Coupon status updated successfully.',
 );

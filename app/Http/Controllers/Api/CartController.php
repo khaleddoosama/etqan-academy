@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CartRequest;
+use App\Http\Requests\Api\CartRequest;
 use App\Http\Resources\CartResource;
 use App\Services\CartService;
 

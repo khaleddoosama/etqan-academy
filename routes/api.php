@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\HomeController;
@@ -97,8 +99,15 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
 
     Route::apiResource('comments', CommentController::class);
 
-    Route::post('/student-opinions', [StudentOpinionController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api']);
     Route::get('/student-opinions', [StudentOpinionController::class, 'index'])->middleware(['log_user_activity:api']);
+    Route::post('/student-opinions', [StudentOpinionController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api']);
+
+    Route::get('/carts', [CartController::class, 'getForUser'])->middleware(['log_user_activity:api']);
+    Route::post('/carts', [CartController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api']);
+    Route::delete('/carts/{cartId}', [CartController::class, 'destroy'])->middleware(['throttle:6,1', 'log_user_activity:api']);
+
+    Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware(['log_user_activity:api']);
+
 });
 
 //

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\CourseInstallmentController;
 use App\Http\Controllers\Admin\CourseOfferController;
@@ -214,6 +215,11 @@ Route::group(
                 Route::get('/student-opinions', 'index')->name('student-opinions.index');
                 Route::put('/student-opinions/{id}/status', 'status')->name('student-opinions.status');
             });
+
+            // coupons
+            Route::resource('coupons', CouponController::class)->except(['show']);
+            Route::put('/coupons/{id}/status', [CouponController::class, 'status'])->name('coupons.status');
+
         });
     }
 );

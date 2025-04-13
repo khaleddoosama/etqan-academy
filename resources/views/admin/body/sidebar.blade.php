@@ -200,8 +200,14 @@
                           ],
                           'course_offers' => [
                               'route' => 'admin.course_offers.index',
-                              'icon' => 'pricetag-outline',
+                              'icon' => 'pricetags-outline',
                               'label' => __('attributes.course_offers'),
+                              'permission' => 'course_offer.list',
+                          ],
+                          'coupons' => [
+                              'route' => 'admin.coupons.index',
+                              'icon' => 'pricetag-outline',
+                              'label' => __('attributes.coupons'),
                               'permission' => 'course_offer.list',
                           ],
                       ];

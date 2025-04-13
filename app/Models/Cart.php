@@ -35,9 +35,13 @@ class Cart extends Model
     }
 
     // get total price of cart for the user
-    public function getTotalPriceForUser($userId)
+    public static function getTotalPriceForUser($userId)
     {
-        return $this->where('user_id', $userId)->sum('total_price');
+        return Cart::where('user_id', $userId)
+            ->get()
+            ->sum(function ($cart) {
+                return $cart->total_price;
+            });
     }
 
     public function scopeUnique($query, $userId, $courseId)

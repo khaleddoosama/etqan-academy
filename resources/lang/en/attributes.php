@@ -201,4 +201,14 @@ return [
 
     'course_name' => 'Course Name',
     'opinion' => 'Opinion',
+    'coupons' => 'Coupons',
+    'coupon' => 'Coupon',
+    'code' => 'Code',
+    'discount' => 'Discount',
+    'usage_count' => 'Usage Count',
+    'usage_limit' => 'Usage Limit',
+    'expires_at' => 'Expires At',
+    'start_at' => 'Start At',
+    'percentage' => 'Percentage',
+    'fixed' => 'Fixed',
 ];

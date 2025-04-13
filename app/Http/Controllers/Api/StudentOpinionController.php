@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\CreateStudentOpinionEventEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StudentOpinionRequest;
+use App\Http\Requests\Api\StudentOpinionRequest;
 use App\Http\Resources\StudentOpinionResource;
 use App\Services\StudentOpinionService;
 

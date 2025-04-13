@@ -200,4 +200,15 @@ return [
     'student_opinions' => 'اراء الطلاب',
     'course_name' => 'اسم الدورة',
     'opinion' => 'راي',
+    'coupons' => 'كوبونات',
+    'coupon' => 'كوبون',
+    'code' => 'الكود',
+    'discount' => 'الخصم',
+    'usage_count' => 'عدد المستخدمين',
+    'usage_limit' => 'حد المستخدمين',
+    'expires_at' => 'تاريخ الانتهاء',
+    'start_at' => 'تاريخ البدء',
+    'percentage' => 'نسبة',
+    'fixed' => 'ثابت',
+
 ];

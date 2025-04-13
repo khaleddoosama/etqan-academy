@@ -76,7 +76,7 @@ class MakeApiModule extends Command
         $controllerPath = app_path("Http/Controllers/Api/{$name}Controller.php");
 
         $resource = "{$name}Resource";
-        $request = "{$name}Request";
+        $request = "Api\{$name}Request";
         $service = "{$name}Service";
         $modelVar = Str::camel($name);
         $serviceVar = Str::camel($service);

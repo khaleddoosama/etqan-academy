@@ -98,4 +98,7 @@
     'export_sheets' => 'Export Sheets',
     'import_sheets' => 'Import Sheets',
     'show_students' => 'Show Students',
+    'create_coupon' => 'Create Coupon',
+    'edit_coupon' => 'Edit Coupon',
+    'delete_coupon' => 'Delete Coupon',
 );

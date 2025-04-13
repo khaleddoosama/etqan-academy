@@ -52,6 +52,11 @@ class CartService
         return $this->userCoursesService->checkUserAndCourse($courseId, $userId);
     }
 
+    public function getTotalPriceForUser()
+    {
+        return Cart::getTotalPriceForUser(auth('api')->id());
+    }
+
     public function delete($cartId)
     {
         $cart = Cart::where('id', $cartId)->where('user_id', auth('api')->id())->first();

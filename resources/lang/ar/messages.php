@@ -125,4 +125,10 @@
     'student_opinion_updated_successfully' => 'تم تحديث راي الطالب بنجاح',
     'student_opinion_deleted_successfully' => 'تم حذف راي الطالب بنجاح',
     'student_opinion_status_updated' => 'تم تحديث حالة راي الطالب بنجاح',
+    'coupon_created_successfully' => 'تم انشاء كوبون بنجاح',
+    'coupon_updated_successfully' => 'تم تحديث كوبون بنجاح',
+    'coupon_deleted_successfully' => 'تم حذف كوبون بنجاح',
+    'coupon_not_found' => 'عذرًا، لم نتمكن من العثور على كوبون المطلوب.',
+    'coupon_retrieved_successfully' => 'تم استرجاع كوبون بنجاح',
+    'coupon_status_updated' => 'تم تحديث حالة كوبون بنجاح',
 );

@@ -98,4 +98,7 @@
     'export_sheets' => 'تصدير الشيتات',
     'import_sheets' => 'استيراد الشيتات',
     'show_students' => 'عرض الطلاب',
+    'create_coupon' => 'انشاء كوبون',
+    'edit_coupon' => 'تحديث كوبون',
+    'delete_coupon' => 'حذف كوبون',
 );

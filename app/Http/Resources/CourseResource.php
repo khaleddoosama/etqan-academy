@@ -44,6 +44,7 @@ class CourseResource extends JsonResource
             $data['student_opinions'] = StudentOpinionResource::collection($this->studentOpinions);
             $data['course_attachments_link'] = $this->course_attachments_link;
             $data['diploma_details_file'] = $this->diploma_details_file_url;
+            $data['progress'] = $this->getProgress(auth('api')->id());
         }
         return $data;
     }

@@ -65,6 +65,17 @@ class Course extends Model
         return $this->hasMany(CourseInstallment::class);
     }
 
+    public function userCourses()
+    {
+        return $this->hasMany(UserCourse::class);
+    }
+
+    // progress
+    public function getProgress($user_id)
+    {
+        return $this->userCourses()->where('student_id', $user_id)->first()->progress ?? 0;
+    }
+
     // StudentOpinion
     public function studentOpinions()
     {
@@ -241,5 +252,17 @@ class Course extends Model
         $folderName = str_replace(' ', '-', strtolower($this->slug)) . '/diploma_details_files';
         $this->deleteIfExists($this->diploma_details_file); // Delete the old diploma_details_file if it exists
         $this->attributes['diploma_details_file'] = $this->uploadFile($diploma_details_file, $folderName, 'public');
+    }
+
+    // when created
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($course) {
+            $course->courseInstallments()->createMany([
+                ['name' => 'cash', 'installment_amounts' => [$course->discount_price]],
+            ]);
+        });
     }
 }

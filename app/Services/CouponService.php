@@ -17,6 +17,11 @@ class CouponService
         return Coupon::find($id);
     }
 
+    public function findByCode($code)
+    {
+        return Coupon::where('code', $code)->first();
+    }
+
     public function getAll()
     {
         return Coupon::latest()->get();
@@ -36,31 +41,63 @@ class CouponService
         return $coupon->wasChanged();
     }
 
-    public function getTotal(array $data)
+    public function checkCoupon(array $data)
     {
         $totalCart =  $this->cartService->getTotalPriceForUser();
 
-        return $this->apply($data['code'], $totalCart);
+        $data= $this->apply($data['code'], $totalCart);
+        $data['total_before_coupon'] = $totalCart;
+
+        return $data;
     }
 
-    public function apply(string $code, float $total): float
+    public function apply(string $code, float $total): array
     {
-        $coupon = Coupon::where('code', $code)->first();
+        $coupon = $this->getValidCoupon($code);
+
+        if ($coupon->type === 'fixed') {
+            $discount = $coupon->discount;
+            $finalTotal = $this->applyFixedDiscount($total, $discount);
+        } elseif ($coupon->type === 'percentage') {
+            $discount = $total * ($coupon->discount / 100);
+            $finalTotal = $this->applyPercentageDiscount($total, $coupon->discount);
+        } else {
+            return [
+                'total_after_coupon' => $total,
+                'discount' => 0,
+                'type' => null
+            ];
+        }
+
+        return [
+            'total' => $finalTotal,
+            'discount' => $discount,
+            'type' => $coupon->type
+        ];
+    }
+
+
+    protected function getValidCoupon(string $code)
+    {
+        $coupon = $this->findByCode($code);
 
         if (!$coupon || !$coupon->isValid()) {
             throw new \Exception("Invalid or expired coupon.");
         }
 
-        if ($coupon->type === 'fixed') {
-            return max($total - $coupon->discount, 0);
-        }
-
-        if ($coupon->type === 'percentage') {
-            return $total - ($total * ($coupon->discount / 100));
-        }
-
-        return $total;
+        return $coupon;
     }
+
+    protected function applyFixedDiscount(float $total, float $discount): float
+    {
+        return max($total - $discount, 0);
+    }
+
+    protected function applyPercentageDiscount(float $total, float $percentage): float
+    {
+        return $total - ($total * ($percentage / 100));
+    }
+
 
     public function delete($id)
     {

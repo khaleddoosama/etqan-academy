@@ -24,7 +24,7 @@ class CouponController extends Controller
         try {
             $data = $request->validated();
 
-            $total = $this->couponService->getTotal($data);
+            $total = $this->couponService->checkCoupon($data);
 
             return $this->apiResponse($total, 'Coupon applied successfully', 200);
         } catch (\Exception $e) {

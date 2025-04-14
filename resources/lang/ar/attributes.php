@@ -210,5 +210,6 @@ return [
     'start_at' => 'تاريخ البدء',
     'percentage' => 'نسبة',
     'fixed' => 'ثابت',
-
+    'course_attachments_link' => 'رابط المرفقات',
+    'diploma_details_file' => 'ملف تفاصيل الدبلومة',
 ];

@@ -23,11 +23,13 @@ class CourseRequest extends FormRequest
             'price' => 'required|numeric',
             'discount_price' => 'nullable|numeric',
             'number_of_levels' => 'required|integer',
+            'course_attachments_link' => 'nullable|string',
             'type' => 'required|in:separated,comprehensive',
             'instructor_id' => 'nullable|exists:instructors,id',
             'programs[]' => 'nullable|array',
             'programs.*' => 'nullable|exists:programs,id',
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable|image|max:2048', // max 2mb
+            'diploma_details_file' => 'nullable|file|max:10024', // max 10mb
             'sections' => 'required|array',
             'sections.*.title' => 'required|string|max:255',
             'sections.*.description' => 'required|string',

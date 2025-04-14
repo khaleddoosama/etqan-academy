@@ -226,4 +226,20 @@ class Course extends Model
         $this->deleteIfExists($this->thumbnail); // Delete the old thumbnail if it exists
         $this->attributes['thumbnail'] = $this->uploadImage($thumbnail, $folderName, 960, 480, 'public');
     }
+
+    // get diploma_details_file url
+    public function getDiplomaDetailsFileUrlAttribute()
+    {
+        if ($this->diploma_details_file) {
+            return Storage::url($this->diploma_details_file);
+        }
+        return null;
+    }
+    // set diploma_details_file Attribute
+    public function setDiplomaDetailsFileAttribute(UploadedFile $diploma_details_file)
+    {
+        $folderName = str_replace(' ', '-', strtolower($this->slug)) . '/diploma_details_files';
+        $this->deleteIfExists($this->diploma_details_file); // Delete the old diploma_details_file if it exists
+        $this->attributes['diploma_details_file'] = $this->uploadFile($diploma_details_file, $folderName, 'public');
+    }
 }

@@ -64,6 +64,8 @@
                                 <x-custom.form-group class="col-md-4" type="number" name="number_of_levels"
                                     value="{{ $course->number_of_levels }}" />
 
+                                <x-custom.form-group class="col-md-6" type="text" name="course_attachments_link" value="{{ $course->course_attachments_link }}" />
+
                                 @php
                                 $types = [
                                 (object) [
@@ -91,6 +93,7 @@
 
 
                                 <x-custom.form-group class="col-md-6" type="file" name="thumbnail" />
+                                <x-custom.form-group class="col-md-6" type="file" name="diploma_details_file" />
 
                                 {{-- sections --}}
                                 <div class="col-md-12">

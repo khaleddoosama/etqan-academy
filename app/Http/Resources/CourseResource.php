@@ -42,6 +42,8 @@ class CourseResource extends JsonResource
             $data['sections'] = SectionResource::collection($this->sections);
             $data['installments'] = $this->courseInstallments ? CourseInstallmentResource::collection($this->courseInstallments) : [];
             $data['student_opinions'] = StudentOpinionResource::collection($this->studentOpinions);
+            $data['course_attachments_link'] = $this->course_attachments_link;
+            $data['diploma_details_file'] = $this->diploma_details_file_url;
         }
         return $data;
     }

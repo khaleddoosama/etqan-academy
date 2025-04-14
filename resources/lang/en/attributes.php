@@ -211,4 +211,6 @@ return [
     'start_at' => 'Start At',
     'percentage' => 'Percentage',
     'fixed' => 'Fixed',
+    'course_attachments_link' => 'Course Attachments Link',
+    'diploma_details_file' => 'Diploma Details File',
 ];

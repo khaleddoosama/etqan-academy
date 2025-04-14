@@ -20,10 +20,12 @@ class LectureService
     use DuplicatorTrait;
 
     protected $progressService;
+    protected $lectureViewService;
 
-    public function __construct(ProgressService $progressService)
+    public function __construct(ProgressService $progressService, LectureViewService $lectureViewService)
     {
         $this->progressService = $progressService;
+        $this->lectureViewService = $lectureViewService;
     }
 
     public function getLecture(string $id)
@@ -120,18 +122,33 @@ class LectureService
     // increase views
     public function increaseViews(Lecture $lecture)
     {
-        $lectureView = LectureViews::firstOrCreate(
-            ['user_id' => auth('api')->id(), 'lecture_id' => $lecture->id],
-            ['views' => 0]
-        );
-        $lectureView->increment('views');
-        $count = $lectureView->lecture_views_count;
-        $course = $lecture->course;
-        $this->progressService->updateProgress(auth('api')->id(), $course->id, $count, $course->countLectures());
+        $userId = auth('api')->id();
+
+        $lectureView = $this->lectureViewService->recordView($userId, $lecture->id);
+
+        if ($lectureView->views > 1) {
+            return $lectureView;
+        }
+
+        $course = $lecture->section->course;
+
+        $courseLectures = $this->getLecturesByCourseId($course->id);
+        $lectureIds = $courseLectures->pluck('id')->toArray();
+
+        $viewedLectures = $this->lectureViewService->getViews($userId, $lectureIds);
+
+        $this->progressService->updateProgress($userId, $course->id, $viewedLectures, $course->countLectures());
 
         return $lectureView;
     }
 
+    // get lectures by course id
+    public function getLecturesByCourseId(int $course_id)
+    {
+        return Lecture::whereHas('section', function ($query) use ($course_id) {
+            $query->where('course_id', $course_id);
+        })->get();
+    }
 
     // // get section by id
     // public function getSections($course_slug = '')

@@ -11,6 +11,7 @@ use App\Services\GalleryService;
 use App\Services\InquiryService;
 use App\Services\InstructorService;
 use App\Services\LectureService;
+use App\Services\LectureViewService;
 use App\Services\PermissionService;
 use App\Services\ProgramService;
 use App\Services\ProgressService;
@@ -79,6 +80,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LectureService::class, function ($app) {
             return new LectureService(
                 $app->make(ProgressService::class),
+                $app->make(LectureViewService::class)
             );
         });
 

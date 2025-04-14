@@ -62,7 +62,7 @@ class PaymentDetails extends Model
     // Apply a global scope to order by status desc.
     public function newQuery()
     {
-        return parent::newQuery()->orderBy('status', 'asc')->orderBy('created_at', 'desc');
+        return parent::newQuery()->orderBy('created_at', 'desc');
     }
 
     // get whatsapp number

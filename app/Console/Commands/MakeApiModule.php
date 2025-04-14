@@ -24,7 +24,7 @@ class MakeApiModule extends Command
         $commands = [
             ['make:model', ['name' => $name, '--migration' => true]],
             ['make:controller', ['name' => "Api/{$name}Controller", '--api' => true]],
-            ['make:request', ['name' => "{$name}Request"]],
+            ['make:request', ['name' => "Api/{$name}Request"]],
             ['make:resource', ['name' => "{$name}Resource"]],
         ];
 
@@ -76,7 +76,7 @@ class MakeApiModule extends Command
         $controllerPath = app_path("Http/Controllers/Api/{$name}Controller.php");
 
         $resource = "{$name}Resource";
-        $request = "Api\{$name}Request";
+        $request = "{$name}Request";
         $service = "{$name}Service";
         $modelVar = Str::camel($name);
         $serviceVar = Str::camel($service);
@@ -87,7 +87,7 @@ class MakeApiModule extends Command
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\\{$request};
+use App\Http\Requests\\Api\\{$request};
 use App\Http\Resources\\{$resource};
 use App\Services\\{$service};
 

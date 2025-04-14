@@ -94,7 +94,16 @@
 
                                 {{-- sections --}}
                                 <div class="col-md-12">
-                                    <h4>{{ __('attributes.sections') }}</h4>
+                                    <div class="row justify-content-between">
+                                        <h4 class="col-md-4">{{ __('attributes.sections') }}</h4>
+
+                                        <div class="mb-0 form-group row">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#getSectionModal">{{ __('buttons.get_section') }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="row" id="sections">
 
                                         @foreach ($course->sections as $key => $section)
@@ -148,7 +157,7 @@
                     </div>
                     <!-- /.card -->
                 </div>
-
+                @include('admin.course.duplicate-section-modal')
             </div>
             <!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -262,4 +271,67 @@
             );
         }
     </script> --}}
+
+    <script>
+        $(document).ready(function() {
+            $('#getVideoModal').on('shown.bs.modal', function() {
+                $('#input-get-course').select2({
+                    dropdownParent: $('#getVideoModal')
+                });
+                $('#input-get-section').select2({
+                    dropdownParent: $('#getVideoModal')
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $('#input-get-course').change(function() {
+            var course_id = $(this).val();
+            if (course_id) {
+                $.ajax({
+
+                    url: '{{ route('admin.sections.get', ':course_id') }}'.replace(':course_id',
+                        course_id),
+                    type: 'Get',
+                    success: function(data) {
+                        $('#div-get-setion').show('blind');
+                        $options =
+                            '<option selected="selected" disabled>{{ __('buttons.choose') }}</option>';
+                        data.data.forEach(element => {
+                            $options +=
+                                `<option value="${element.id}">${element.title}</option>`;
+                        });
+                        $('#input-get-section').html($options);
+                    }
+                });
+            } else {
+                $('#div-get-setion').hide('blind');
+                $('#div-get-lecture').hide('blind');
+            }
+        });
+
+        $('#input-get-section').change(function() {
+            var section_id = $(this).val();
+            if (section_id) {
+                $.ajax({
+                    url: '{{ route('admin.lectures.get', ':section_id') }}'.replace(':section_id',
+                        section_id),
+                    type: 'Get',
+                    success: function(data) {
+                        $('#div-get-lecture').show('blind');
+                        $options =
+                            '<option selected="selected" disabled>{{ __('buttons.choose') }}</option>';
+                        data.data.forEach(element => {
+                            $options +=
+                                `<option value="${element.id}">${element.title}</option>`;
+                        });
+
+                    }
+                });
+            } else {
+                $('#div-get-lecture').hide('blind');
+            }
+        });
+    </script>
 @endsection

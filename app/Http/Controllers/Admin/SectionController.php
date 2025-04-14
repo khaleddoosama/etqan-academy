@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Section;
 use App\Services\CourseService;
 use App\Services\SectionService;
+use Illuminate\Http\Request;
+use Yoeunes\Toastr\Facades\Toastr;
 
 class SectionController extends Controller
 {
@@ -38,5 +40,15 @@ class SectionController extends Controller
         $sections = $this->sectionService->getSectionsByCourseId($course_id);
 
         return $this->apiResponse($sections, 'ok', 200);
+    }
+
+    public function duplicate(Request $request)
+    {
+        [$section, $newSection] = $this->sectionService->duplicateSection($request->section_id, $request->course_id);
+
+
+        Toastr::success(__('messages.section_duplicated'), __('status.success'));
+
+        return redirect()->back();
     }
 }

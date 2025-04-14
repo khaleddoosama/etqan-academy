@@ -35,6 +35,7 @@
     'lecture_created' => 'Lecture created successfully.',
     'lecture_deleted' => 'Lecture deleted successfully.',
     'lecture_duplicated' => 'Lecture duplicated successfully.',
+    'section_duplicated' => 'Section duplicated successfully.',
     'lecture_not_found' => 'Lecture not found.',
     'lecture_updated' => 'Lecture updated successfully.',
     'lectures_not_found' => 'Lectures not found.',

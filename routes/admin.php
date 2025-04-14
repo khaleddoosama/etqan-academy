@@ -128,6 +128,8 @@ Route::group(
                 Route::get('/sections/{section}', 'show')->name('sections.show');
                 // get sections based on course
                 Route::get('/sections/{course_id}/get', 'getSections')->name('sections.get');
+
+                Route::post('/sections/duplicate', 'duplicate')->name('sections.duplicate');
             });
 
             // Lecture Controller

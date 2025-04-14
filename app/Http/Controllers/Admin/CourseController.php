@@ -78,7 +78,8 @@ class CourseController extends Controller
         $categories = $this->categoryService->getCategories();
         $programs = $this->programService->getPrograms();
         $instructors = $this->instructorService->getInstructors();
-        return view('admin.course.edit', compact('course', 'categories', 'programs', 'instructors'));
+        $courses = $this->courseService->getCourses();
+        return view('admin.course.edit', compact('course', 'categories', 'programs', 'instructors', 'courses'));
     }
 
     public function update(CourseRequest $request, Course $course)

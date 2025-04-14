@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\Lecture;
 use App\Models\LectureViews;
+use App\Traits\DuplicatorTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -16,13 +17,13 @@ use Illuminate\Support\Facades\DB;
 
 class LectureService
 {
-    protected $progressService;
-    protected $sectionService;
+    use DuplicatorTrait;
 
-    public function __construct(ProgressService $progressService, SectionService $sectionService)
+    protected $progressService;
+
+    public function __construct(ProgressService $progressService)
     {
         $this->progressService = $progressService;
-        $this->sectionService = $sectionService;
     }
 
     public function getLecture(string $id)
@@ -95,15 +96,23 @@ class LectureService
 
     public function duplicateLecture(int $lectureId, int $sectionId)
     {
-        $lecture = Lecture::find($lectureId);
+        $lecture = Lecture::findOrFail($lectureId);
 
-        // Create a new lecture instance and copy the properties from the original lecture
-        $newLecture = $lecture->replicate();
-        $newLecture->section_id = $sectionId;
-        $newLecture->slug = SlugService::createSlug(Lecture::class, 'slug', $lecture->title);
-        // $newLecture->processed = 0; 
-        // Save the new lecture
-        $newLecture->save();
+        // $newLecture = $lecture->replicate([
+        //     'slug',
+        //     'section_id',
+        // ]);
+
+        // $newLecture->section_id = $sectionId;
+        // $newLecture->slug = SlugService::createSlug(Lecture::class, 'slug', $lecture->title);
+        // // $newLecture->processed = 0;
+        // // Save the new lecture
+        // $newLecture->save();
+
+        // return [$lecture, $newLecture];
+        $newLecture = $this->duplicateModelWithSlug($lecture, 'slug', [
+            'section_id' => $sectionId,
+        ]);
 
         return [$lecture, $newLecture];
     }
@@ -123,17 +132,12 @@ class LectureService
         return $lectureView;
     }
 
-    // get section by id
-    public function getSection(int $id)
-    {
-        return $this->sectionService->getSection($id);
-    }
 
-    // get section by id
-    public function getSections($course_slug = '')
-    {
-        return $this->sectionService->getSectionsByCourseSlug($course_slug); // Get all sections for all courses
-    }
+    // // get section by id
+    // public function getSections($course_slug = '')
+    // {
+    //     return $this->sectionService->getSectionsByCourseSlug($course_slug); // Get all sections for all courses
+    // }
 
     // Update an attachment
     public function updateAttachment(Lecture $lecture, $attachment_path, $attachment_name)

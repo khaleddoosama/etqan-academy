@@ -13,6 +13,7 @@
                     <div class="w-50">
                         <h1> {{ __('buttons.show_section') }} </h1>
                     </div>
+
                     <div class="w-50">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">{{ __('main.dashboard') }}</a>
@@ -25,6 +26,7 @@
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
+
         </section>
 
         <!-- Main content -->
@@ -38,6 +40,13 @@
                             <div class="card-header">
                                 <h3 class="card-title"><small>
                                         {{ __('attributes.section') }}: {{ $section->title }}</small></h3>
+                            </div>
+                            <div class="d-flex justify-content-end mt-3 mx-3">
+                                <x-custom.form-submit text="{{ __('buttons.add_lecture') }}" class="mb-3 mx-3 btn-primary"
+                                    attr='data-toggle=modal data-target=#createVideoModal' />
+
+                                <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class="btn-secondary"
+                                    attr='data-toggle=modal data-target=#getVideoModal' />
                             </div>
                             <!-- /.card-header -->
                             {{--  --}}
@@ -83,13 +92,7 @@
 
 
 
-                            <div class="card-footer">
-                                <x-custom.form-submit text="{{ __('buttons.add_lecture') }}" class="mb-3 btn-primary"
-                                    attr='data-toggle=modal data-target=#createVideoModal' />
 
-                                <x-custom.form-submit text="{{ __('buttons.get_lecture') }}" class="btn-secondary"
-                                    attr='data-toggle=modal data-target=#getVideoModal' />
-                            </div>
                             <!-- form start -->
 
                         </div>
@@ -236,7 +239,7 @@
         });
     </script>
 
-<script>
+    <script>
         $(document).ready(function() {
             $('#getVideoModal').on('shown.bs.modal', function() {
                 $('#input-get-course').select2({

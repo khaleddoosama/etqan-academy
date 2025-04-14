@@ -32,6 +32,7 @@
     'instructor_updated' => 'تم تحديث بيانات المدرب بنجاح.',
     'instructors_not_found' => 'لم يتم العثور على مدربين.',
     'lecture_duplicated' => 'تم نسخ المحاضرة بنجاح.',
+    'section_duplicated' => 'تم نسخ المحاضرة بنجاح.',
     'lecture_not_found' => 'المحاضرة غير موجودة.',
     'lectures_not_found' => 'لم يتم العثور على أي محاضرات.',
     'lectures_order_updated' => 'تم تحديث ترتيب المحاضرات بنجاح.',

@@ -99,7 +99,6 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
 
     Route::apiResource('comments', CommentController::class);
 
-    Route::get('/student-opinions', [StudentOpinionController::class, 'index'])->middleware(['log_user_activity:api']);
     Route::post('/student-opinions', [StudentOpinionController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api']);
 
     Route::get('/carts', [CartController::class, 'getForUser'])->middleware(['log_user_activity:api']);
@@ -114,7 +113,7 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
 Route::middleware(['jwt.authenticate', 'throttle:6,1', 'log_user_activity:api'])->group(function () {
     // Send the email verification link
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
-        ->name('verification.send');
+    ->name('verification.send');
 });
 
 // Handle email verification
@@ -124,3 +123,4 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyE
 
 Route::post('password/request', [ResetPasswordController::class, 'requestPassword'])->middleware(['throttle:6,1', 'log_user_activity:api'])->name('password.request');
 Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->middleware(['throttle:6,1', 'log_user_activity:api'])->name('password.reset');
+Route::get('/student-opinions', [StudentOpinionController::class, 'index'])->middleware(['log_user_activity:api']);

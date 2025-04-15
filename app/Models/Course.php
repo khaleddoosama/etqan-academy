@@ -79,7 +79,7 @@ class Course extends Model
     // StudentOpinion
     public function studentOpinions()
     {
-        return $this->hasMany(StudentOpinion::class);
+        return $this->hasMany(StudentOpinion::class)->where('status', 1);
     }
     // scopes
     public function scopeActive($query)

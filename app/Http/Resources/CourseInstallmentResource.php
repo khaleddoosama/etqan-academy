@@ -16,10 +16,10 @@ class CourseInstallmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'number_of_installments' => $this->number_of_installments,
             'installment_amounts' => $this->installment_amounts,
             'installment_duration' => $this->installment_duration,
-            'status' => $this->status,
         ];
     }
 }

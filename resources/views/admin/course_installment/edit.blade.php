@@ -29,6 +29,10 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="card-body row">
+                                    <x-custom.form-group class="col-md-6" type="text" name="name"
+                                        placeholder="{{ __('buttons.enter') }} {{ __('attributes.name') }}"
+                                        value="{{ $courseInstallment->name }}" />
+
                                     <x-custom.form-group class="col-md-6" type="select" name="course_id" :options="$courses"
                                         selected="{{ $courseInstallment->course_id }}" />
                                     <x-custom.form-group class="col-md-6" type="number" name="number_of_installments"

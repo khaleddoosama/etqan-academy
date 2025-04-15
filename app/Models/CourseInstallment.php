@@ -10,6 +10,7 @@ class CourseInstallment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'course_id',
         'number_of_installments',
         'installment_amounts',

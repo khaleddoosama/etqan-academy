@@ -18,6 +18,7 @@ class CartResource extends JsonResource
                 'price' => $this->course->price,
                 'discount_price' => $this->course->discount_price,
                 'image' => $this->course->thumbnail_url,
+                'installments' => $this->course->courseInstallments ? CourseInstallmentResource::collection($this->course->courseInstallments) : [],
             ],
         ];
     }

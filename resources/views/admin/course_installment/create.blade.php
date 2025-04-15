@@ -28,7 +28,8 @@
                                 @csrf
                                 <div class="card-body row">
 
-
+                                    <x-custom.form-group class="col-md-6" type="text" name="name"
+                                        placeholder="{{ __('buttons.enter') }} {{ __('attributes.name') }}" />
                                     <x-custom.form-group class="col-md-6" type="select" name="course_id"
                                         :options="$courses" />
                                     <x-custom.form-group class="col-md-6" type="number" name="number_of_installments" />

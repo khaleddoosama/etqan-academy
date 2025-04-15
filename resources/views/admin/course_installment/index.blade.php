@@ -30,6 +30,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>{{ __('attributes.name') }}</th>
                                             <th>{{ __('attributes.course_title') }}</th>
                                             <th>{{ __('attributes.number_of_installments') }}</th>
                                             <th>{{ __('attributes.installment_amounts') }}</th>
@@ -42,6 +43,7 @@
                                         @foreach ($courseInstallments as $courseInstallment)
                                             <tr>
                                                 <td>{{ $courseInstallment->id }}</td>
+                                                <td>{{ $courseInstallment->name }}</td>
                                                 <td>{{ $courseInstallment->course->title }}</td>
                                                 <td>{{ $courseInstallment->number_of_installments }}</td>
                                                 <td>
@@ -67,6 +69,7 @@
                                     <tfoot>
                                         <tr>
                                             <th>#</th>
+                                            <th>{{ __('attributes.name') }}</th>
                                             <th>{{ __('attributes.course_title') }}</th>
                                             <th>{{ __('attributes.number_of_installments') }}</th>
                                             <th>{{ __('attributes.installment_amounts') }}</th>

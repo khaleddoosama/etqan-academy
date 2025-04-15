@@ -23,10 +23,11 @@ class CourseInstallmentRequest extends FormRequest
     {
         return [
             'course_id' => 'required|exists:courses,id',
+            'name' => 'nullable|string|max:255',
             'number_of_installments' => 'required|integer|min:1',
             'installment_amounts' => 'required|array',
             'installment_amounts.*' => 'required|numeric',
-            'installment_duration' => 'required|integer|min:1',
+            'installment_duration' => 'required|integer|min:0',
             'description' => 'nullable|string',
         ];
     }

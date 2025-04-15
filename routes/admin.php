@@ -20,7 +20,7 @@ use App\Http\Controllers\Admin\RequestCourseController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SectionController;
-use App\Http\Controllers\admin\StudentOpinionController;
+use App\Http\Controllers\Admin\StudentOpinionController;
 use App\Http\Controllers\Admin\StudentWorkController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserCoursesController;

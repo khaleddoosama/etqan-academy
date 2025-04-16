@@ -105,7 +105,7 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
     Route::post('/carts', [CartController::class, 'store'])->middleware(['throttle:6,1', 'log_user_activity:api']);
     Route::delete('/carts/{cartId}', [CartController::class, 'destroy'])->middleware(['throttle:6,1', 'log_user_activity:api']);
 
-    Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware(['throttle:6,1','log_user_activity:api']);
+    Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware(['log_user_activity:api']);
 
 });
 

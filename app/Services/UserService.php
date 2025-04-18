@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\UserCourse;
 use Illuminate\Validation\ValidationException;
 
 class UserService
@@ -68,5 +69,18 @@ class UserService
                 ->orWhere('phone', '0' . substr($phone, -10))
                 ->orWhere('phone', '+2' . substr($phone, -10));
         })->where('role', 'student')->first();
+    }
+
+    // get user courses
+    public function getActiveUserCourses($user_id)
+    {
+        $userCourses = UserCourse::where('student_id', $user_id)
+            ->where('status', UserCourse::STATUS_ACTIVE)
+            ->whereHas('course', function ($query) {
+                $query->where('status', 1);
+            })
+            ->get();
+
+        return $userCourses;
     }
 }

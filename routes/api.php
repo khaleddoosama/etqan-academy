@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\StudentOpinionController;
 use App\Http\Controllers\Api\StudentWorkController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\WithdrawalRequestController;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +76,9 @@ Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureContr
 
 // verified
 Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_user_activity:api'])->group(function () {
+    // get user courses
+    Route::get('/user-courses', [UserController::class, 'UserCourses']);
+
     // show single lecture
     Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);
 

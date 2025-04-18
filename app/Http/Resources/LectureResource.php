@@ -27,7 +27,7 @@ class LectureResource extends JsonResource
             'minutes' => $this->minutes >= 10 ? $this->minutes : '0' . $this->minutes,
             'seconds' => $this->seconds >= 10 ? $this->seconds : '0' . $this->seconds,
             'views' => $this->views->where('user_id', auth('api')->id())->first()->views ?? 0,
-
+            'is_free' => $this->is_free,
             // 'quality' => $this->quality,
         ];
 

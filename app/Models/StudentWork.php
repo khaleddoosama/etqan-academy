@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\UploadTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class StudentWork extends Model
 {
@@ -32,6 +33,11 @@ class StudentWork extends Model
         $this->attributes['path'] = $file['path'];
         $this->attributes['type'] = $file['type'];
         $this->attributes['title'] = $file['originalName'];
+    }
+
+    public function getPathUrlAttribute()
+    {
+        return $this->path ? Storage::disk($this->disk)->url($this->path) : null;
     }
 
 

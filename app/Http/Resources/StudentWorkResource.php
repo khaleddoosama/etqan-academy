@@ -15,7 +15,7 @@ class StudentWorkResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'path' => $this->path,
+            'path' => $this->path_url,
             'type' => $this->type,
             'category' => $this->studentWorkCategory->name,
         ];

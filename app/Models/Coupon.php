@@ -28,8 +28,8 @@ class Coupon extends Model
     public function isValid(): bool
     {
         return $this->status &&
-               ($this->starts_at === null || $this->starts_at <= now()) &&
-               ($this->expires_at === null || $this->expires_at >= now()) &&
+               ($this->starts_at === null || $this->starts_at <= now()->endOfDay()) &&
+               ($this->expires_at === null || $this->expires_at >= now()->startOfDay()) &&
                ($this->usage_limit === null || $this->used_count < $this->usage_limit);
     }
 }

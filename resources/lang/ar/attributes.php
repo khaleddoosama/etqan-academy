@@ -212,4 +212,9 @@ return [
     'fixed' => 'ثابت',
     'course_attachments_link' => 'رابط المرفقات',
     'diploma_details_file' => 'ملف تفاصيل الدبلومة',
+    'transfer_identifier' => 'معرف التحويل',
+    'amount_before_coupon' => 'المبلغ قبل الكوبون',
+    'amount_after_coupon' => 'المبلغ بعد الكوبون',
+    'amount_confirmed' => 'المبلغ المؤكد',
+
 ];

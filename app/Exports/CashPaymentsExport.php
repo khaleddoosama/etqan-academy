@@ -4,7 +4,7 @@ namespace App\Exports;
 
 use App\Enums\PaymentType;
 use App\Enums\Status;
-use App\Models\PaymentDetails;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -30,7 +30,7 @@ class CashPaymentsExport implements FromCollection, WithHeadings, WithStyles, Wi
     {
         Log::info('Cash Payments Exported ' . now()->toDateString());
 
-        return PaymentDetails::with(['user', 'courseInstallment.course'])
+        return Payment::with(['user', 'courseInstallment.course'])
             ->where('payment_type', PaymentType::CASH->value)
             ->whereBetween('approved_at', [$this->startOfWeek, $this->endOfWeek])
             ->where('status', Status::APPROVED->value)
@@ -39,12 +39,19 @@ class CashPaymentsExport implements FromCollection, WithHeadings, WithStyles, Wi
 
     public function map($payment): array
     {
+        $title = "";
+        foreach ($payment->paymentItems as $paymentItem) {
+            $courseInstallment = $paymentItem->courseInstallment;
+            $course = $courseInstallment->course;
+
+            $title .= $course->title . ', ';
+        };
         return [
             $payment->id,
             $payment->user->name ?? 'N/A',
             $payment->user->email ?? 'N/A',
             strval($payment->user->phone ?? 'N/A'),
-            $payment->courseInstallment->course->title ?? 'N/A',
+            $title,
             strval($payment->whatsapp_number ?? 'N/A'),
             $payment->payment_type->value ?? 'N/A',
             $payment->payment_method->value ?? 'N/A',

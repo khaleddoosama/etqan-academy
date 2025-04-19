@@ -41,11 +41,11 @@ class CouponService
         return $coupon->wasChanged();
     }
 
-    public function checkCoupon(array $data)
+    public function checkCoupon($code)
     {
         $totalCart =  $this->cartService->getTotalPriceForUser();
 
-        $data= $this->apply($data['code'], $totalCart);
+        $data= $this->apply($code, $totalCart);
         $data['total_before_coupon'] = $totalCart;
 
         return $data;

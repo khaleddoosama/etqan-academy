@@ -30,13 +30,13 @@ class PaymentDetailController extends Controller
     // index
     public function index()
     {
-        $paymentDetails = $this->paymentDetailService->getPaymentDetails();
+        $paymentDetails = $this->paymentDetailService->getPayments();
         return view('admin.payment_detail.index', compact('paymentDetails'));
     }
 
     public function show($id)
     {
-        $paymentDetail = $this->paymentDetailService->getPaymentDetail($id);
+        $paymentDetail = $this->paymentDetailService->getPayment($id);
         return view('admin.payment_detail.show', compact('paymentDetail'));
     }
 
@@ -46,7 +46,7 @@ class PaymentDetailController extends Controller
             'amount' => 'required|numeric',
         ]);
 
-        $this->paymentDetailService->update($data, $id);
+        $this->paymentDetailService->updateAmount($data['amount'], $id);
 
         Toastr::success(__('messages.amount_updated_successfully'), __('status.success'));
 

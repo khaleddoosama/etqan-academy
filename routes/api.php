@@ -93,7 +93,6 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
     Route::get('/students/{slug}', [StudentController::class, 'showProfile']);
 
 
-
     // create gallery
     Route::post('/gallery', [GalleryController::class, 'store']);
     // delete gallery

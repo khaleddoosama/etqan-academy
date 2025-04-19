@@ -28,15 +28,18 @@
                                         {{ $paymentDetail->user->phone }}
                                     </a></p>
                                 <p><strong>{{ __('attributes.course') }}:</strong>
-                                    {{ $paymentDetail->courseInstallment->course->title }}</p>
+                                    @foreach ($paymentDetail->paymentItems as $paymentItem)
+                                    {{ $paymentItem->courseInstallment->course->title }},
+                                    @endforeach
+                                </p>
 
-                                <p><strong>{{ __('attributes.whatsapp') }}:</strong> <a
+                                <!-- <p><strong>{{ __('attributes.whatsapp') }}:</strong> <a
                                         href="https://wa.me/{{ $paymentDetail->whatsapp_number }}" target="_blank">
                                         {{ $paymentDetail->whatsapp_number }}
-                                    </a></p>
+                                    </a></p> -->
 
 
-                                <p><strong>{{ __('attributes.transfer_phone') }}:</strong>{{ $paymentDetail->transfer_number }}
+                                <p><strong>{{ __('attributes.transfer_identifier') }}:</strong>{{ $paymentDetail->transfer_identifier }}
                                 </p>
                                 <p><strong>{{ __('attributes.transfer_image') }}:</strong>
                                     <a href="{{ Storage::url($paymentDetail->transfer_image) }}" target="_blank">

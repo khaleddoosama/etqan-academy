@@ -4,7 +4,7 @@ namespace App\Exports;
 
 use App\Enums\PaymentType;
 use App\Enums\Status;
-use App\Models\PaymentDetails;
+use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -37,19 +37,19 @@ class SummaryPaymentsExport implements FromCollection, WithHeadings, WithStyles
                 'day' => $day->format('l'),
                 'date' => $date,
 
-                'total_subscribers' => (string) (PaymentDetails::whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-                'total_income' => (string) (PaymentDetails::whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
+                'total_subscribers' => (string) (Payment::whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
+                'total_income' => (string) (Payment::whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
 
-                'cash_subscribers' => (string) (PaymentDetails::where('payment_type', PaymentType::CASH->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-                'cash_income' => (string) (PaymentDetails::where('payment_type', PaymentType::CASH->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
+                'cash_subscribers' => (string) (Payment::where('payment_type', PaymentType::CASH->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
+                'cash_income' => (string) (Payment::where('payment_type', PaymentType::CASH->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
 
-                'installment_subscribers' => (string) (PaymentDetails::where('payment_type', PaymentType::INSTALLMENT->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-                'installment_income' => (string) (PaymentDetails::where('payment_type', PaymentType::INSTALLMENT->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
+                'installment_subscribers' => (string) (Payment::where('payment_type', PaymentType::INSTALLMENT->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
+                'installment_income' => (string) (Payment::where('payment_type', PaymentType::INSTALLMENT->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
 
-                'super_graphic_subscribers' => (string) (PaymentDetails::whereHas('courseInstallment.course', function ($query) {
+                'super_graphic_subscribers' => (string) (Payment::whereHas('paymentItems.courseInstallment.course', function ($query) {
                     $query->where('title', 'LIKE', '%سوبر جرافيك%');
                 })->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-                'mini_graphic_subscribers' => (string) (PaymentDetails::whereHas('courseInstallment.course', function ($query) {
+                'mini_graphic_subscribers' => (string) (Payment::whereHas('paymentItems.courseInstallment.course', function ($query) {
                     $query->where('title', 'LIKE', '%ميني جرافيك%');
                 })->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
             ];

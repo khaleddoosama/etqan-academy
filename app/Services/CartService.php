@@ -17,9 +17,9 @@ class CartService
         $this->slugResolver = $slugResolver;
     }
 
-    public function getForUser()
+    public function getForUser($user_id, $columns = ['*'])
     {
-        return Cart::forUser(auth()->user()->id)->latest()->get();
+        return Cart::forUser($user_id)->latest()->get($columns);
     }
 
     public function store(array $data)

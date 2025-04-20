@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\PaymentDetailController;
+use App\Http\Controllers\Api\PaymentGateway\GatewayPaymentController;
 use App\Http\Controllers\Api\RequestCourseController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\SectionController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Api\StudentWorkController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\WithdrawalRequestController;
+use App\Http\Controllers\PaymentGateway\ِApi\FawaterakWebhookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,13 +112,19 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
 
     Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware(['log_user_activity:api']);
 
+    Route::prefix('payment/fawaterak')->group(function () {
+        Route::get('/payment-methods', [GatewayPaymentController::class, 'paymentMethods']);
+        Route::post('/pay', [GatewayPaymentController::class, 'pay']);
+        Route::post('/webhook/{status}', [FawaterakWebhookController::class, 'handle']);
+    });
+
 });
 
 //
 Route::middleware(['jwt.authenticate', 'throttle:6,1', 'log_user_activity:api'])->group(function () {
     // Send the email verification link
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
-    ->name('verification.send');
+        ->name('verification.send');
 });
 
 // Handle email verification

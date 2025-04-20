@@ -21,7 +21,7 @@ class CartController extends Controller
 
     public function getForUser()
     {
-        $items = $this->cartService->getForUser();
+        $items = $this->cartService->getForUser(auth('api')->id());
         return $this->apiResponse(CartResource::collection($items), 'ok', 200);
     }
 

@@ -34,6 +34,6 @@ class CartController extends Controller
     public function destroy($cartId)
     {
         $this->cartService->delete($cartId);
-        return $this->apiResponse(null, __('messages.cart_deleted_successfully'), 204);
+        return $this->apiResponse(null, __('messages.cart_deleted_successfully'), 200);
     }
 }

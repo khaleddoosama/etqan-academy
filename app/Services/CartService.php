@@ -3,14 +3,20 @@
 namespace App\Services;
 
 use App\Models\Cart;
+use App\Models\Course;
+use App\Services\Support\SlugResolverService;
 
 class CartService
 {
     protected StudentInstallmentService $studentInstallmentService;
+    protected SlugResolverService $slugResolver;
 
-    public function __construct(StudentInstallmentService $studentInstallmentService)
+    protected UserCoursesService $userCoursesService;
+    public function __construct(SlugResolverService $slugResolver, StudentInstallmentService $studentInstallmentService, UserCoursesService $userCoursesService)
     {
         $this->studentInstallmentService = $studentInstallmentService;
+        $this->slugResolver = $slugResolver;
+        $this->userCoursesService = $userCoursesService;
     }
 
     public function getForUser()
@@ -20,48 +26,67 @@ class CartService
 
     public function store(array $data)
     {
+        $data = $this->slugResolver->resolveSlugs($data, [
+            'course_slug' => Course::class,
+        ]);
 
         $userId = auth('api')->id();
-        $courseInstallmentId = $data['course_installment_id'];
+        $courseId = $data['course_id'];
+        $courseInstallmentId = $data['course_installment_id'] ?? null;
 
-        if ($this->isAlreadyInCart($userId, $courseInstallmentId)) {
-            throw new \Exception('You have already added this course to your cart');
-        }
+        $this->validateCartAddition($userId, $courseId, $courseInstallmentId);
 
-        if ($this->isAlreadyPurchased($userId, $courseInstallmentId)) {
-            throw new \Exception('You have already purchased this course');
-        }
+        $data['price'] = $this->calculateCartPrice($userId, $courseId, $courseInstallmentId);
 
         return Cart::create($data);
     }
-
-    protected function isAlreadyInCart(int $userId, int $courseInstallmentId): bool
+    protected function validateCartAddition(int $userId, int $courseId, $courseInstallmentId): void
     {
-        return Cart::unique($userId, $courseInstallmentId)->exists();
+        if ($this->isAlreadyInCart($userId, $courseId)) {
+            throw new \Exception('You have already added this course to your cart');
+        }
+
+        if ($this->isAlreadyPurchased($userId, $courseId, $courseInstallmentId)) {
+            throw new \Exception('You have already purchased this course');
+        }
     }
 
-    protected function isAlreadyPurchased(int $userId, int $courseInstallmentId): bool
+    protected function calculateCartPrice(int $userId, int $courseId, $courseInstallmentId): float
     {
-        return $this->studentInstallmentService->checkUserAndCourse($userId, $courseInstallmentId);
+        $course = Course::find($courseId);
+
+        if ($courseInstallmentId && !in_array($courseInstallmentId, $course->courseInstallments->pluck('id')->toArray())) {
+            throw new \Exception('This course installment does not belong to this course');
+        }
+
+        if ($courseInstallmentId) {
+            return $this->studentInstallmentService->getNextInstallmentPrice($userId, $courseInstallmentId);
+        }
+
+        return $course->total_price;
+    }
+    protected function isAlreadyInCart(int $userId, int $courseId): bool
+    {
+        return Cart::unique($userId, $courseId)->exists();
+    }
+
+    protected function isAlreadyPurchased(int $userId, int $courseId, $courseInstallmentId): bool
+    {
+        if ($courseInstallmentId) {
+            return $this->studentInstallmentService->checkUserAndCourse($userId, $courseInstallmentId);
+        } else {
+            return $this->userCoursesService->checkUserAndCourse($userId, $courseId);
+        }
     }
 
     public function getTotalPriceForUser()
     {
-        // return Cart::getTotalPriceForUser(auth('api')->id());
-        $carts = Cart::forUser(auth('api')->id())->get();
-        return $carts->sum(function ($cart) {
-            return $this->getTotalPriceForOneCart($cart);
-        });
-    }
-
-    public function getTotalPriceForOneCart($cart)
-    {
-        return $this->studentInstallmentService->getNextInstallmentPrice($cart->user_id, $cart->course_installment_id);
+        return Cart::getTotalPriceForUser(auth('api')->id());
     }
 
     public function delete($cartId): bool
     {
-        $cart = Cart::where('id', $cartId)->where('user_id', auth('api')->id())->first();
+        $cart = Cart::forUser(auth('api')->id())->find($cartId);
         $cart->delete();
         return true;
     }

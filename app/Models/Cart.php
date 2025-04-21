@@ -13,6 +13,8 @@ class Cart extends Model
     protected $fillable = [
         'user_id',
         'course_installment_id',
+        'course_id',
+        'price',
     ];
 
     public function user()
@@ -25,6 +27,11 @@ class Cart extends Model
         return $this->belongsTo(CourseInstallment::class);
     }
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
 
     public function scopeForUser($query, $userId)
     {
@@ -33,23 +40,21 @@ class Cart extends Model
 
     public function getTotalPriceAttribute()
     {
-        $studentInstallmentService = app(StudentInstallmentService::class);
-
-        return $studentInstallmentService->getNextInstallmentPrice($this->user_id, $this->course_installment_id);
+        return $this->price * ($this->quantity ?? 1);
     }
 
     // // get total price of cart for the user
-    // public static function getTotalPriceForUser($userId)
-    // {
-    //     return Cart::where('user_id', $userId)
-    //         ->get()
-    //         ->sum(function ($cart) {
-    //             return $cart->total_price;
-    //         });
-    // }
-
-    public function scopeUnique($query, $userId, $courseInstallmentId)
+    public static function getTotalPriceForUser($userId)
     {
-        return $query->where('user_id', $userId)->where('course_installment_id', $courseInstallmentId);
+        return Cart::where('user_id', $userId)
+            ->get()
+            ->sum(function ($cart) {
+                return $cart->total_price;
+            });
+    }
+
+    public function scopeUnique($query, $userId, $course_id)
+    {
+        return $query->where('user_id', $userId)->where('course_id', $course_id);
     }
 }

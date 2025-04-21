@@ -264,16 +264,4 @@ class Course extends Model
         $this->deleteIfExists($this->diploma_details_file); // Delete the old diploma_details_file if it exists
         $this->attributes['diploma_details_file'] = $this->uploadFile($diploma_details_file, $folderName, 'public');
     }
-
-    // when created
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($course) {
-            $course->courseInstallments()->createMany([
-                ['name' => 'cash', 'installment_amounts' => [$course->discount_price]],
-            ]);
-        });
-    }
 }

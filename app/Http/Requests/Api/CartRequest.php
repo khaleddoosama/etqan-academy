@@ -26,17 +26,4 @@ class CartRequest extends FormRequest
             'course_slug' => 'required|exists:courses,slug',
         ];
     }
-
-    // if course_installment_id is exist then must check its belongs to the course
-    // public function withValidator($validator)
-    // {
-    //     $validator->after(function ($validator) {
-    //         if ($this->course_installment_id) {
-    //             $courseInstallment = CourseInstallment::find($this->course_installment_id);
-    //             if ($courseInstallment->course_id != $this->course_id) {
-    //                 $validator->errors()->add('course_installment_id', 'The selected course installment is invalid.');
-    //             }
-    //         }
-    //     });
-    // }
 }

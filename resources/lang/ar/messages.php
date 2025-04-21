@@ -132,4 +132,10 @@
     'coupon_not_found' => 'عذرًا، لم نتمكن من العثور على كوبون المطلوب.',
     'coupon_retrieved_successfully' => 'تم استرجاع كوبون بنجاح',
     'coupon_status_updated' => 'تم تحديث حالة كوبون بنجاح',
+    'cart_added_successfully' => 'تم اضافة عربة التسوق بنجاح',
+    'cart_updated_successfully' => 'تم تحديث عربة التسوق بنجاح',
+    'cart_deleted_successfully' => 'تم حذف عربة التسوق بنجاح',
+    'cart_not_found' => 'عذرًا، لم نتمكن من العثور على عربة التسوق المطلوبة.',
+    'cart_retrieved_successfully' => 'تم استرجاع عربة التسوق بنجاح',
+    'cart_status_updated' => 'تم تحديث حالة عربة التسوق بنجاح',
 );

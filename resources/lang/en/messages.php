@@ -133,4 +133,9 @@
     'coupon_not_found' => 'Coupon not found.',
     'coupon_retrieved_successfully' => 'Coupon retrieved successfully.',
     'coupon_status_updated' => 'Coupon status updated successfully.',
+    'cart_added_successfully' => 'Cart added successfully.',
+    'cart_updated_successfully' => 'Cart updated successfully.',
+    'cart_deleted_successfully' => 'Cart deleted successfully.',
+    'cart_not_found' => 'Cart not found.',
+    'cart_retrieved_successfully' => 'Cart retrieved successfully.',
 );

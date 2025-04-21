@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\StudentInstallmentService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +12,9 @@ class Cart extends Model
 
     protected $fillable = [
         'user_id',
+        'course_installment_id',
         'course_id',
+        'price',
     ];
 
     public function user()
@@ -19,10 +22,16 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function courseInstallment()
+    {
+        return $this->belongsTo(CourseInstallment::class);
+    }
+
     public function course()
     {
         return $this->belongsTo(Course::class);
     }
+
 
     public function scopeForUser($query, $userId)
     {
@@ -31,10 +40,10 @@ class Cart extends Model
 
     public function getTotalPriceAttribute()
     {
-        return $this->course->discount_price * $this->quantity;
+        return $this->price * ($this->quantity ?? 1);
     }
 
-    // get total price of cart for the user
+    // // get total price of cart for the user
     public static function getTotalPriceForUser($userId)
     {
         return Cart::where('user_id', $userId)
@@ -44,8 +53,8 @@ class Cart extends Model
             });
     }
 
-    public function scopeUnique($query, $userId, $courseId)
+    public function scopeUnique($query, $userId, $course_id)
     {
-        return $query->where('user_id', $userId)->where('course_id', $courseId);
+        return $query->where('user_id', $userId)->where('course_id', $course_id);
     }
 }

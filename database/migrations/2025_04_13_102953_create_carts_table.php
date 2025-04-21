@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->integer('quantity')->default(1);
 
-            $table->decimal('price', 10, 2); // Price of the course installment
+            $table->decimal('price', 10, 2); // Price of the unit
 
             $table->unique(['user_id', 'course_id'], 'user_course_unique');
 

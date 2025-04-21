@@ -79,10 +79,6 @@ class StudentInstallmentService
             throw new \Exception('Course installment not found');
         }
 
-        if ($courseInstallment->number_of_installments == 1) {
-            return false;
-        }
-
         $num_installments_paid = $this->getNumberOfInstallmentsPaid($studentId, $courseInstallmentId);
 
         if ($num_installments_paid < $courseInstallment->number_of_installments) {

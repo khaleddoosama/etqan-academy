@@ -25,7 +25,7 @@ class GatewayPaymentController extends Controller
     {
         $data =  $request->validated();
 
-        
+        $payload = $this->paymentService->preparePayment($data);
 
         $payment = $this->paymentService->executePayment($payload);
         return response()->json($payment);

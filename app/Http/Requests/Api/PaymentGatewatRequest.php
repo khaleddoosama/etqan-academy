@@ -23,15 +23,8 @@ class PaymentGatewatRequest extends FormRequest
     {
         return [
             'payment_method_id' => 'required|integer',
-            'cartItems' => 'required|array|min:1',
-            'cartItems.*.name' => 'required|string',
-            'cartItems.*.price' => 'required|numeric',
-            'cartTotal' => 'required|numeric|min:1',
-            'customer.first_name' => 'required|string',
-            'customer.last_name' => 'required|string',
-            'customer.email' => 'nullable|email',
-            'customer.phone' => 'nullable|string',
-            'customer.address' => 'nullable|string',
+            'coupon_code' => 'nullable|exists:coupons,code',
+            "amount" => "required|numeric",
         ];
     }
 }

@@ -3,24 +3,23 @@
 namespace App\Http\Controllers\PaymentGateway\ِApi;
 
 use App\Http\Controllers\Controller;
-use App\Services\PaymentGateway\WebhookService;
+use App\Services\PaymentGateway\FawaterakWebhookService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class FawaterakWebhookController extends Controller
 {
     protected $webhookService;
 
-    public function __construct(WebhookService $webhookService)
+    public function __construct(FawaterakWebhookService $webhookService)
     {
         $this->webhookService = $webhookService;
     }
 
-    public function handle(Request $request, $status)
+    public function handleSuccess(Request $request)
     {
         $data = $request->all();
-        $data['status'] = $status;
-        $this->webhookService->processFawaterakWebhook($request->all());
+
+        $this->webhookService->processWebhookSuccess($request->all());
 
         return response()->json(['message' => 'Webhook processed']);
     }

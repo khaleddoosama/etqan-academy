@@ -115,7 +115,10 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
     Route::prefix('payment/fawaterak')->group(function () {
         Route::get('/payment-methods', [GatewayPaymentController::class, 'paymentMethods']);
         Route::post('/pay', [GatewayPaymentController::class, 'pay']);
-        Route::post('/webhook/{status}', [FawaterakWebhookController::class, 'handle']);
+        Route::post('/webhook/paid', [FawaterakWebhookController::class, 'handlePaid']);
+        Route::post('/webhook/cancelled', [FawaterakWebhookController::class, 'handleCancelled']);
+        Route::post('/webhook/failed', [FawaterakWebhookController::class, 'handleFailed']);
+        Route::post('/webhook/refund', [FawaterakWebhookController::class, 'handleRefund']);
     });
 
 });

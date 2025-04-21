@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('payment_gateways', function (Blueprint $table) {
             $table->id();
             $table->foreignId('payment_id')->constrained('payments')->onDelete('cascade');
-            $table->string('invoice_id')->nullable();     // ID بتاع الفاتورة عند فواتيرك
-            $table->string('invoice_key')->nullable();    // مفتاح الفاتورة
-            
+            $table->string('invoice_id')->nullable();
+            $table->string('invoice_key')->nullable();
+
             $table->decimal('amount', 10, 2);
             $table->string('currency')->default('EGP');
-            $table->string('status')->default('pending'); // pending, paid, failed
+            $table->string('status')->default('pending'); // pending, paid, failed, canceled, refunded, expired
             $table->string('gateway')->default('fawaterak');
 
             $table->string('customer_first_name');

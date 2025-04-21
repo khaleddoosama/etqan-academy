@@ -33,7 +33,7 @@ class CartController extends Controller
 
     public function destroy($cartId)
     {
-        $item = $this->cartService->delete($cartId);
-        return $this->apiResponse(new CartResource($item), 'ok', 200);
+        $this->cartService->delete($cartId);
+        return $this->apiResponse(null, __('messages.cart_deleted_successfully'), 204);
     }
 }

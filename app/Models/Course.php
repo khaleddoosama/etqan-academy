@@ -202,6 +202,17 @@ class Course extends Model
         return $this->students()->avg('rating') + $array[$this->id];
     }
 
+    public function getTotalPriceAttribute()
+    {
+        if ($this->offer) {
+            return $this->offer->price;
+        } elseif ($this->discount_price) {
+            return $this->discount_price;
+        } else {
+            return $this->price;
+        }
+    }
+
     public function getNumberOfLevelsTextAttribute()
     {
         $levels = [

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\StudentInstallmentService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +12,7 @@ class Cart extends Model
 
     protected $fillable = [
         'user_id',
-        'course_id',
+        'course_installment_id',
     ];
 
     public function user()
@@ -19,10 +20,11 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function course()
+    public function courseInstallment()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(CourseInstallment::class);
     }
+
 
     public function scopeForUser($query, $userId)
     {
@@ -31,21 +33,23 @@ class Cart extends Model
 
     public function getTotalPriceAttribute()
     {
-        return $this->course->discount_price * $this->quantity;
+        $studentInstallmentService = app(StudentInstallmentService::class);
+
+        return $studentInstallmentService->getNextInstallmentPrice($this->user_id, $this->course_installment_id);
     }
 
-    // get total price of cart for the user
-    public static function getTotalPriceForUser($userId)
-    {
-        return Cart::where('user_id', $userId)
-            ->get()
-            ->sum(function ($cart) {
-                return $cart->total_price;
-            });
-    }
+    // // get total price of cart for the user
+    // public static function getTotalPriceForUser($userId)
+    // {
+    //     return Cart::where('user_id', $userId)
+    //         ->get()
+    //         ->sum(function ($cart) {
+    //             return $cart->total_price;
+    //         });
+    // }
 
-    public function scopeUnique($query, $userId, $courseId)
+    public function scopeUnique($query, $userId, $courseInstallmentId)
     {
-        return $query->where('user_id', $userId)->where('course_id', $courseId);
+        return $query->where('user_id', $userId)->where('course_installment_id', $courseInstallmentId);
     }
 }

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->foreignId('course_installment_id')->constrained()->onDelete('cascade');
             $table->integer('quantity')->default(1);
 
-            $table->unique(['user_id', 'course_id'], 'user_course_unique');
+            $table->unique(['user_id', 'course_installment_id'], 'user_course_unique');
 
             $table->timestamps();
         });

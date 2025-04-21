@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class StudentInstallmentService
 {
+    private $courseInstallmentService;
+    public function __construct(CourseInstallmentService $courseInstallmentService)
+    {
+        $this->courseInstallmentService = $courseInstallmentService;
+    }
+
     public function getStudentInstallments(): Collection
     {
         return StudentInstallment::all();
@@ -61,5 +67,54 @@ class StudentInstallmentService
     public function getStudentInstallment(int $id): StudentInstallment
     {
         return StudentInstallment::findOrFail($id);
+    }
+
+    // check if user purchased the course
+    public function checkUserAndCourse(int $studentId, int $courseInstallmentId): bool
+    {
+
+        $courseInstallment = $this->courseInstallmentService->getCourseInstallment($courseInstallmentId);
+
+        if (!$courseInstallment) {
+            throw new \Exception('Course installment not found');
+        }
+
+        if ($courseInstallment->number_of_installments == 1) {
+            return false;
+        }
+
+        $num_installments_paid = $this->getNumberOfInstallmentsPaid($studentId, $courseInstallmentId);
+
+        if ($num_installments_paid < $courseInstallment->number_of_installments) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // get next installment price for student
+    public function getNextInstallmentPrice(int $studentId, int $courseInstallmentId): ?float
+    {
+        $courseInstallment = $this->courseInstallmentService->getCourseInstallment($courseInstallmentId);
+
+        if (!$courseInstallment) {
+            throw new \Exception('Course installment not found');
+        }
+
+        if ($courseInstallment->number_of_installments == 1) {
+            return $courseInstallment->course->total_price;
+        }
+
+        $num_installments_paid = $this->getNumberOfInstallmentsPaid($studentId, $courseInstallmentId);
+
+        if ($num_installments_paid == 0) {
+            return $courseInstallment->installment_amounts[0];
+        }
+
+        if ($num_installments_paid < $courseInstallment->number_of_installments) {
+            return $courseInstallment->installment_amounts[$num_installments_paid - 1];
+        }
+
+        return null;
     }
 }

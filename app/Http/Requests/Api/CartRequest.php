@@ -22,6 +22,7 @@ class CartRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
+            'course_installment_id' => 'nullable|exists:course_installments,id',
             'course_slug' => 'required|exists:courses,slug',
         ];
     }

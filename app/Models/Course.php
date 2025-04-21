@@ -202,6 +202,17 @@ class Course extends Model
         return $this->students()->avg('rating') + $array[$this->id];
     }
 
+    public function getTotalPriceAttribute()
+    {
+        if ($this->offer) {
+            return $this->offer->price;
+        } elseif ($this->discount_price) {
+            return $this->discount_price;
+        } else {
+            return $this->price;
+        }
+    }
+
     public function getNumberOfLevelsTextAttribute()
     {
         $levels = [
@@ -252,17 +263,5 @@ class Course extends Model
         $folderName = str_replace(' ', '-', strtolower($this->slug)) . '/diploma_details_files';
         $this->deleteIfExists($this->diploma_details_file); // Delete the old diploma_details_file if it exists
         $this->attributes['diploma_details_file'] = $this->uploadFile($diploma_details_file, $folderName, 'public');
-    }
-
-    // when created
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($course) {
-            $course->courseInstallments()->createMany([
-                ['name' => 'cash', 'installment_amounts' => [$course->discount_price]],
-            ]);
-        });
     }
 }

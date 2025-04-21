@@ -33,7 +33,7 @@
                                     <x-custom.form-group class="col-md-6" type="select" name="course_id"
                                         :options="$courses" />
                                     <x-custom.form-group class="col-md-6" type="number" name="number_of_installments" />
-                                    <x-custom.form-group class="col-md-6" type="number" name="installment_duration"
+                                    <x-custom.form-group class="col-md-6" type="number" name="installment_duration" value="0"
                                         placeholder="{{ __('main.duration_in_days') }}" />
 
                                     <div id="installment-values-container" class="col-md-12 mt-3 row"></div>
@@ -129,7 +129,7 @@
                         container.append(`
                         <div class="form-group col-md-6">
                             <label for="installment_amount_${i}">{{ __('attributes.installment_amount') }} #${i}</label>
-                            <input type="number" required min="0" name="installment_amounts[]" id="installment_amount_${i}" class="form-control" placeholder="{{ __('buttons.enter') }} {{ __('attributes.installment_amount') }}">
+                            <input type="number" required min="0" value="0" name="installment_amounts[]" id="installment_amount_${i}" class="form-control" placeholder="{{ __('buttons.enter') }} {{ __('attributes.installment_amount') }}">
                         </div>
                     `);
                     }

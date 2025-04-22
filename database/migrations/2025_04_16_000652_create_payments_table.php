@@ -19,30 +19,28 @@ return new class extends Migration
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            $table->string('whatsapp_number', 20)->nullable();
+            $table->string('invoice_id')->nullable();
+            $table->string('invoice_key')->nullable();
 
-            $table->string('payment_method')->nullable();
-
-            $table->string('transfer_identifier')->nullable(); // number or email
-            $table->string('transfer_image')->nullable();
+            $table->string('gateway')->default('fawaterak');
 
             $table->decimal('amount_before_coupon', 10, 2)->default(0.00);
             $table->decimal('amount_after_coupon', 10, 2)->default(0.00);
-            $table->decimal('amount_confirmed', 10, 2)->default(0.00);
 
             $table->foreignId('coupon_id')->nullable()->constrained('coupons')->onDelete('set null');
             $table->string('discount')->nullable();
             $table->string('type')->nullable();
 
-            $table->string('status')->default(Status::PENDING->value);
 
-            // approved by admin
-            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->timestamp('approved_at')->nullable();
+            $table->string('currency')->default('EGP');
 
-            // rejected by admin
-            $table->foreignId('rejected_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->timestamp('rejected_at')->nullable();
+            $table->string('payment_method')->nullable(); // مثل (Visa, Meeza, Fawry)
+
+            $table->json('response_payload')->nullable();
+            
+            $table->string('status')->default('pending'); // pending, paid, failed, canceled, refunded, expired
+
+            $table->timestamp('paid_at')->nullable();
 
             $table->timestamps();
         });

@@ -21,15 +21,15 @@ class GatewayPaymentController extends Controller
     public function paymentMethods()
     {
         $methods = $this->paymentService->getPaymentMethods();
-        return $this->apiResponse($methods, __('messages.payment_methods_success'), 200);
+        return $methods;
     }
 
     public function pay(PaymentGatewatRequest $request)
     {
         $data =  $request->validated();
 
-        $payment = $this->paymentService->executePayment($data);
+        $response = $this->paymentService->executePayment($data);
 
-        return $this->apiResponse($payment, __('messages.payment_success'), 200);
+        return $response;
     }
 }

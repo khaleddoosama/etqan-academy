@@ -40,20 +40,6 @@ class FawaterakPaymentGatewayService
 
     public function executePayment(array $data)
     {
-        $prepared = $this->preparePayment($data);
-
-        $this->paymentRepository->createWithItems(
-            $prepared['paymentData'],
-            $prepared['paymentData']['paymentItems']->toArray()
-        );
-
-        return $this->fawaterakRequest()
-            ->post("{$this->baseUrl}/invoiceInitPay", $prepared['payload'])
-            ->json();
-    }
-
-    protected function preparePayment(array $data): array
-    {
         $user = auth()->user();
 
         $carts = $this->cartService->getForUser(
@@ -77,10 +63,25 @@ class FawaterakPaymentGatewayService
             throw new Exception('Invalid amount');
         }
 
-        return [
-            'payload' => $this->buildPayload($data, $user, $carts, $finalPrice, $couponData),
-            'paymentData' => $this->buildPaymentData($user, $carts, $finalPrice, $totalPrice, $coupon)
-        ];
+        $preparedPayload = $this->buildPayload($data, $user, $carts, $totalPrice, $couponData);
+
+        $response = $this->fawaterakRequest()
+            ->post("{$this->baseUrl}/invoiceInitPay", $preparedPayload)
+            ->json();
+        if ($response['status'] != 'success') {
+            throw new Exception(json_encode($response['message']));
+        }
+        $uniqueKeys['invoice_id'] = $response['data']['invoice_id'];
+        $uniqueKeys['invoice_key'] = $response['data']['invoice_key'];
+
+        $paymentData = $this->buildPaymentData($uniqueKeys, $user, $carts, $finalPrice, $totalPrice, $coupon, $data['payment_method_id']);
+
+        $this->paymentRepository->createWithItems(
+            $paymentData,
+            $paymentData['paymentItems']->toArray()
+        );
+
+        return $response;
     }
 
     protected function buildPayload($data, $user, $carts, $finalPrice, $couponData)
@@ -126,15 +127,18 @@ class FawaterakPaymentGatewayService
         return $payload;
     }
 
-    protected function buildPaymentData($user, $carts, $finalPrice, $totalPrice, $coupon)
+    protected function buildPaymentData($uniqueKeys, $user, $carts, $finalPrice, $totalPrice, $coupon, $payment_method_id)
     {
         return [
             'user_id' => $user->id,
+            'invoice_id' => $uniqueKeys['invoice_id'],
+            'invoice_key' => $uniqueKeys['invoice_key'],
             'coupon_id' => $coupon?->id,
-            'amount_before_coupon' => $totalPrice,
-            'amount_after_coupon' => $finalPrice,
             'discount' => $coupon?->discount,
             'type' => $coupon?->type,
+            'amount_before_coupon' => $totalPrice,
+            'amount_after_coupon' => $finalPrice,
+            'payment_method' => $payment_method_id,
             'paymentItems' => $carts->map(fn($cart) => [
                 'course_installment_id' => $cart->course_installment_id,
                 'course_id' => $cart->course_id,

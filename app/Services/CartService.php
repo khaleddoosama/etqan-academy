@@ -19,9 +19,9 @@ class CartService
         $this->userCoursesService = $userCoursesService;
     }
 
-    public function getForUser($user_id, $columns = ['*'])
+    public function getForUser($user_id, $columns = ['*'], $with = [])
     {
-        return Cart::forUser($user_id)->latest()->get($columns);
+        return Cart::forUser($user_id)->latest()->with($with)->get($columns);
     }
 
     public function store(array $data)
@@ -79,9 +79,9 @@ class CartService
         }
     }
 
-    public function getTotalPriceForUser()
+    public function getTotalPriceForUser($userId)
     {
-        return Cart::getTotalPriceForUser(auth('api')->id());
+        return Cart::getTotalPriceForUser($userId);
     }
 
     public function delete($cartId): bool

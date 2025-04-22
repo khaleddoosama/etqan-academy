@@ -138,4 +138,6 @@
     'cart_not_found' => 'عذرًا، لم نتمكن من العثور على عربة التسوق المطلوبة.',
     'cart_retrieved_successfully' => 'تم استرجاع عربة التسوق بنجاح',
     'cart_status_updated' => 'تم تحديث حالة عربة التسوق بنجاح',
+    'payment_methods_success' => 'تم استرجاع طرق الدفع بنجاح',
+    'payment_success' => 'تم تأكيد الطلب بنجاح',
 );

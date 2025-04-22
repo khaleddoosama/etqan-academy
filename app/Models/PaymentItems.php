@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\PaymentType;
 
 class PaymentItems extends Model
 {
@@ -13,8 +14,13 @@ class PaymentItems extends Model
 
     protected $fillable = [
         'course_installment_id',
+        'course_id',
         'payment_id',
+        'payment_type',
         'amount',
+    ];
+    protected $casts = [
+        'payment_type' => PaymentType::class,
     ];
 
     public function payment()
@@ -25,5 +31,10 @@ class PaymentItems extends Model
     public function courseInstallment()
     {
         return $this->belongsTo(CourseInstallment::class);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 }

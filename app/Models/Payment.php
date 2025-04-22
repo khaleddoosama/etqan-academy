@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\PaymentMethod;
-use App\Enums\PaymentType;
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +16,6 @@ class Payment extends Model
 
     protected $fillable = [
         'user_id',
-        'payment_type',
         'payment_method',
         'transfer_identifier',
         'transfer_image',
@@ -35,7 +33,6 @@ class Payment extends Model
     ];
 
     protected $casts = [
-        'payment_type' => PaymentType::class,
         'payment_method' => PaymentMethod::class,
         'status' => Status::class,
         'approved_at' => 'datetime',

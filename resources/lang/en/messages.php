@@ -138,4 +138,6 @@
     'cart_deleted_successfully' => 'Cart deleted successfully.',
     'cart_not_found' => 'Cart not found.',
     'cart_retrieved_successfully' => 'Cart retrieved successfully.',
+    'payment_methods_success' => 'Payment methods retrieved successfully.',
+    'payment_success' => 'Payment success.',
 );

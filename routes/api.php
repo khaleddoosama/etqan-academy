@@ -112,13 +112,13 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
 
     Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware(['log_user_activity:api']);
 
-    Route::prefix('payment/fawaterak')->group(function () {
+    Route::prefix('/payment/fawaterak')->group(function () {
         Route::get('/payment-methods', [GatewayPaymentController::class, 'paymentMethods']);
         Route::post('/pay', [GatewayPaymentController::class, 'pay']);
-        Route::post('/webhook/paid', [FawaterakWebhookController::class, 'handlePaid']);
-        Route::post('/webhook/cancelled', [FawaterakWebhookController::class, 'handleCancelled']);
-        Route::post('/webhook/failed', [FawaterakWebhookController::class, 'handleFailed']);
-        Route::post('/webhook/refund', [FawaterakWebhookController::class, 'handleRefund']);
+        Route::post('/webhook/paid_json', [FawaterakWebhookController::class, 'handlePaid']);
+        Route::post('/webhook/cancelled_json', [FawaterakWebhookController::class, 'handleCancelled']);
+        Route::post('/webhook/failed_json', [FawaterakWebhookController::class, 'handleFailed']);
+        Route::post('/webhook/refund_json', [FawaterakWebhookController::class, 'handleRefund']);
     });
 
 });

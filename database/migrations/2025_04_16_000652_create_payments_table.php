@@ -21,7 +21,6 @@ return new class extends Migration
 
             $table->string('whatsapp_number', 20)->nullable();
 
-            $table->string('payment_type')->default(PaymentType::CASH->value);
             $table->string('payment_method')->nullable();
 
             $table->string('transfer_identifier')->nullable(); // number or email

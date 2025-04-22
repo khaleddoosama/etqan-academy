@@ -43,7 +43,7 @@ class CouponService
 
     public function checkCoupon($code)
     {
-        $totalCart =  $this->cartService->getTotalPriceForUser();
+        $totalCart =  $this->cartService->getTotalPriceForUser(auth('api')->id());
 
         $data= $this->apply($code, $totalCart);
         $data['total_before_coupon'] = $totalCart;
@@ -64,6 +64,7 @@ class CouponService
         } else {
             return [
                 'total_after_coupon' => $total,
+                'discount_amount' => 0,
                 'discount' => 0,
                 'type' => null
             ];
@@ -71,7 +72,8 @@ class CouponService
 
         return [
             'total' => $finalTotal,
-            'discount' => $discount,
+            'discount_amount' => $discount,
+            'discount' => $coupon->discount,
             'type' => $coupon->type
         ];
     }

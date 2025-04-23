@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PaymentType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +14,13 @@ return new class extends Migration
     {
         Schema::create('payment_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_installment_id')->constrained('course_installments')->onDelete('cascade');
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+            $table->foreignId('course_installment_id')->nullable()->constrained('course_installments')->onDelete('cascade');
             $table->foreignId('payment_id')->constrained('payments')->onDelete('cascade');
+            $table->string('payment_type')->default(PaymentType::CASH->value);
 
             $table->decimal('amount', 10, 2)->default(0.00);
-            
+
             $table->timestamps();
         });
     }

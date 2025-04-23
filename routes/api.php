@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
 use App\Http\Controllers\Api\PaymentDetailController;
+use App\Http\Controllers\Api\PaymentGateway\GatewayPaymentController;
+use App\Http\Controllers\Api\PaymentGateway\GatewayWebhookController;
 use App\Http\Controllers\Api\RequestCourseController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\SectionController;
@@ -110,13 +112,18 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:60,1', 'log_use
 
     Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware(['log_user_activity:api']);
 
+    Route::prefix('/payment/fawaterak')->group(function () {
+        Route::get('/payment-methods', [GatewayPaymentController::class, 'paymentMethods']);
+        Route::post('/pay', [GatewayPaymentController::class, 'pay']);
+    });
+
 });
 
 //
 Route::middleware(['jwt.authenticate', 'throttle:6,1', 'log_user_activity:api'])->group(function () {
     // Send the email verification link
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
-    ->name('verification.send');
+        ->name('verification.send');
 });
 
 // Handle email verification
@@ -127,3 +134,10 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyE
 Route::post('password/request', [ResetPasswordController::class, 'requestPassword'])->middleware(['throttle:6,1', 'log_user_activity:api'])->name('password.request');
 Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->middleware(['throttle:6,1', 'log_user_activity:api'])->name('password.reset');
 Route::get('/student-opinions', [StudentOpinionController::class, 'index'])->middleware(['log_user_activity:api']);
+
+Route::prefix('/payment/fawaterak')->group(function () {
+    Route::post('/webhook/paid_json', [GatewayWebhookController::class, 'handlePaid']);
+    Route::post('/webhook/cancelled_json', [GatewayWebhookController::class, 'handleCancelled']);
+    Route::post('/webhook/failed_json', [GatewayWebhookController::class, 'handleFailed']);
+    Route::post('/webhook/refund_json', [GatewayWebhookController::class, 'handleRefund']);
+});

@@ -35,12 +35,12 @@ class CourseResource extends JsonResource
             // check if the user is enrolled in the course
             'is_enrolled' => auth('api')->check() && auth('api')->user()->isEnrolledInCourse($this->id),
             'offer' => $this->offer ? new OfferResource($this->offer) : null,
+            'installments' => $this->courseInstallments ? CourseInstallmentResource::collection($this->courseInstallments) : [];
         ];
 
         if ($this->is_collection) {
             $data['description'] = $this->description;
             $data['sections'] = SectionResource::collection($this->sections);
-            $data['installments'] = $this->courseInstallments ? CourseInstallmentResource::collection($this->courseInstallments) : [];
             $data['student_opinions'] = StudentOpinionResource::collection($this->studentOpinions);
             $data['course_attachments_link'] = $this->course_attachments_link;
             $data['diploma_details_file'] = $this->diploma_details_file_url;

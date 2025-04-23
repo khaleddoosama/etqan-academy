@@ -56,8 +56,9 @@ class FawaterakPayloadBuilderService
     {
         return [
             'user_id' => $dto->user->id,
-            'invoice_id' => $dto->uniqueKeys['invoice_id'],
-            'invoice_key' => $dto->uniqueKeys['invoice_key'],
+            'invoice_id' => $dto->responseKeys['invoice_id'],
+            'invoice_key' => $dto->responseKeys['invoice_key'],
+            'payment_data' => $dto->responseKeys['payment_data'],
             'coupon_id' => $dto->coupon?->id,
             'discount' => $dto->coupon?->discount,
             'type' => $dto->coupon?->type,

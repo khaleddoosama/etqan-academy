@@ -37,6 +37,7 @@ return new class extends Migration
             $table->string('payment_method_id')->nullable();
             $table->string('payment_method')->nullable(); // مثل (Visa, Meeza, Fawry)
 
+            $table->json('payment_data')->nullable();
             $table->json('response_payload')->nullable();
 
             $table->string('status')->default('pending'); // pending, paid, failed, canceled, refunded, expired

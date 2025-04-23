@@ -73,20 +73,21 @@ class FawaterakPaymentGatewayService
         if ($response['status'] != 'success') {
             throw new Exception(json_encode($response['message']));
         }
-        $uniqueKeys = [
+        $responseKeys = [
             'invoice_id' => $response['data']['invoice_id'],
             'invoice_key' => $response['data']['invoice_key'],
+            'payment_data' => $response['data']['payment_data'],
         ];
 
         $paymentDto = new PaymentRecordDTO(
-            $uniqueKeys,
+            $responseKeys,
             $user,
             $carts,
             $finalPriceAfterCoupon,
             $totalPriceBeforeCoupon,
             $coupon,
             $data['payment_method_id'],
-            $data['payment_method'] ?? null
+            $data['payment_method']
         );
 
         $paymentData = $this->payloadBuilder->buildPaymentData($paymentDto);

@@ -29,12 +29,14 @@ class Payment extends Model
         'payment_method_id',
         'status',
         'response_payload',
+        'payment_data',
         'paid_at',
     ];
 
     protected $casts = [
         'paid_at' => 'datetime',
         'response_payload' => 'array',
+        'payment_data' => 'array',
         'status' => PaymentStatusEnum::class,
     ];
 

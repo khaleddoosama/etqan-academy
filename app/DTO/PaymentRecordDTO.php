@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 class PaymentRecordDTO
 {
     public function __construct(
-        public array $uniqueKeys,
+        public array $responseKeys,
         public object $user,
         public Collection $carts,
         public float $finalPriceAfterCoupon,

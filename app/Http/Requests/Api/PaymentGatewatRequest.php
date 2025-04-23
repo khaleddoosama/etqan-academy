@@ -22,7 +22,8 @@ class PaymentGatewatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method_id' => 'required|integer',
+            'payment_method_id' => 'required|string',
+            'payment_method' => 'required|string',
             'coupon_code' => 'nullable|exists:coupons,code',
             "amount" => "required|numeric",
         ];

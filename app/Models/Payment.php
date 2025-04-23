@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\UploadTrait;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
 
 class Payment extends Model
 {
@@ -24,6 +26,7 @@ class Payment extends Model
         'amount_before_coupon',
         'amount_after_coupon',
         'payment_method',
+        'payment_method_id',
         'status',
         'response_payload',
         'paid_at',
@@ -32,6 +35,7 @@ class Payment extends Model
     protected $casts = [
         'paid_at' => 'datetime',
         'response_payload' => 'array',
+        'status' => PaymentStatusEnum::class,
     ];
 
     public function coupon()

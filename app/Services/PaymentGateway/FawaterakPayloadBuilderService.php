@@ -10,8 +10,6 @@ class FawaterakPayloadBuilderService
 {
     public function buildApiPayload(FawaterakPayloadDTO $dto): array
     {
-        $frontendUrl = 'https://test.etqanacademy.com/fawaterak/payment/';
-
         $payload = [
             'payment_method_id' => $dto->inputData['payment_method_id'],
             'cartTotal' => $dto->totalPriceBeforeCoupon,
@@ -28,11 +26,6 @@ class FawaterakPayloadBuilderService
                 'price' => $cart->price,
                 'quantity' => $cart->quantity,
             ]),
-            'redirectionUrls' => [
-                'successUrl' => "{$frontendUrl}success",
-                'failUrl' => "{$frontendUrl}fail",
-                'pendingUrl' => "{$frontendUrl}pending",
-            ],
             'payLoad' => [
                 'user_id' => $dto->user->id,
                 'course_installment_id' => $dto->carts->pluck('course_installment_id'),

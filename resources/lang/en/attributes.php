@@ -217,4 +217,5 @@ return [
     'amount_before_coupon' => 'Amount Before Coupon',
     'amount_after_coupon' => 'Amount After Coupon',
     'amount_confirmed' => 'Amount Confirmed',
+    'paid_at' => 'Paid At',
 ];

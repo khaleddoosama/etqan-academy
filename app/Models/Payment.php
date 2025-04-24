@@ -2,14 +2,9 @@
 
 namespace App\Models;
 
-use App\Enums\PaymentMethod;
-use App\Enums\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\UploadTrait;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use App\Enums\PaymentStatus;
 use App\Enums\PaymentStatusEnum;
 
 class Payment extends Model
@@ -53,16 +48,5 @@ class Payment extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-
-
-
-    // on update
-    public static function boot()
-    {
-        parent::boot();
-
-        static::updated(function ($payment) {});
     }
 }

@@ -28,5 +28,7 @@
     'user' => 'المستخدم',
     'clear_cache' => 'مسح التخزين المؤقت',
     'duration_in_days' => 'المدة بالأيام',
-    'yesterday' => 'امس'
+    'yesterday' => 'امس',
+    'all_users' => 'كل المستخدمين',
+    'all_statuses' => 'كل الحالات',
 );

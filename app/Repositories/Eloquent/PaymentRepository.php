@@ -24,4 +24,13 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
             return $payment->load('paymentItems');
         });
     }
+
+    protected function filterable(): array
+    {
+        return [
+            'user_id'   => 'exact',
+            'status'    => 'like',
+            'created_at' => 'date',
+        ];
+    }
 }

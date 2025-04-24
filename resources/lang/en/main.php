@@ -28,4 +28,6 @@
     'clear_cache' => 'Clear Cache',
     'duration_in_days' => 'Duration in days',
     'yesterday' => 'Yesterday',
+    'all_users' => 'All Users',
+    'all_statuses' => 'All Statuses',
 );

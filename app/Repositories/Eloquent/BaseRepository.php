@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @template TModel of Model
@@ -123,19 +124,46 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->query->count();
     }
 
-    public function filterByRequest(Request $request): array
+    public function filterByRequest(Request $request, array $columns = ['*'], array $with = []): Collection
     {
-        $filters = $request->query(); // all URL parameters
+        $filters = $request->query();
 
-        $query = clone $this->query; // Important: don't mutate the original query
+        $query = clone $this->query;
 
+        $filterable = $this->filterable();
         foreach ($filters as $field => $value) {
-            if (in_array($field, $this->filterable())) {
-                $query->where($field, 'like', "%$value%");
+
+            if (!array_key_exists($field, $filterable) || !$value) {
+                continue;
             }
+
+            $type = $filterable[$field];
+
+            // Date/time range filters with from_ / to_
+            Log::info($field);
+            Log::info(preg_match('/^(from|to)_(.+)$/', $field, $matches));
+            if (preg_match('/^(from|to)_(.+)$/', $field, $matches)) {
+                [$_, $dir, $column] = $matches;
+                Log::info($column);
+                if (!array_key_exists($column, $filterable) || $filterable[$column] !== 'date') {
+                    continue;
+                }
+
+                $operator = $dir === 'from' ? '>=' : '<=';
+                $query->whereDate($column, $operator, $value);
+                continue;
+            }
+
+            // Filtering logic by type
+            match ($type) {
+                'exact' => $query->where($field, '=', $value),
+                'like'  => $query->where($field, 'like', "%$value%"),
+                'date'  => $query->whereDate($field, '=', $value),
+                default => null,
+            };
         }
 
-        return $query->get()->toArray();
+        return $query->with($with)->select($columns)->get();
     }
 
     /**
@@ -144,5 +172,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
     protected function filterable(): array
     {
         return [];
+        /*example:
+        return [
+            'user_id'   => 'exact',
+            'name'      => 'like',
+            'created_at' => 'date',
+        ];*/
     }
 }

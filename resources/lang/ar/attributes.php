@@ -216,5 +216,5 @@ return [
     'amount_before_coupon' => 'المبلغ قبل الكوبون',
     'amount_after_coupon' => 'المبلغ بعد الكوبون',
     'amount_confirmed' => 'المبلغ المؤكد',
-
+    'paid_at' => 'تاريخ الدفع',
 ];

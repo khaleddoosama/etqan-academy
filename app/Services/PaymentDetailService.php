@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Models\Payment;
+use App\Repositories\Contracts\PaymentRepositoryInterface;
 use App\Services\PaymentStrategy\CashPayment;
 use App\Services\PaymentStrategy\InstallmentPayment;
 use App\Services\PaymentStrategy\PaymentContext;
@@ -14,15 +15,13 @@ use Illuminate\Validation\ValidationException;
 
 class PaymentDetailService
 {
-    protected $paymentContext;
-    protected $studentInstallmentService;
-    protected $couponService;
-    public function __construct(PaymentContext $paymentContext, StudentInstallmentService $studentInstallmentService, CouponService $couponService)
-    {
-        $this->paymentContext = $paymentContext;
-        $this->studentInstallmentService = $studentInstallmentService;
-        $this->couponService = $couponService;
-    }
+
+    public function __construct(
+        protected PaymentContext $paymentContext,
+        protected StudentInstallmentService $studentInstallmentService,
+        protected CouponService $couponService,
+        protected PaymentRepositoryInterface $paymentRepository
+    ) {}
 
     public function store(array $data): Payment
     {
@@ -40,8 +39,8 @@ class PaymentDetailService
                 throw ValidationException::withMessages(['coupon_code' => 'Invalid coupon code.']);
             }
         } else {
-            $data['total_before_coupon'] = 
-            $data['total_after_coupon'] = $check['total'];
+            $data['total_before_coupon'] =
+                $data['total_after_coupon'] = $check['total'];
         }
 
         $payment = Payment::create($data);
@@ -59,7 +58,7 @@ class PaymentDetailService
 
     public function getPayments()
     {
-        return Payment::all();
+        return $this->paymentRepository->filterByRequest(request(), ['*'], ['user']);
     }
 
     public function getPayment($id): Payment
@@ -139,4 +138,5 @@ class PaymentDetailService
 
         $this->paymentContext->setPaymentStrategy($strategy);
     }
+
 }

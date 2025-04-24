@@ -6,21 +6,24 @@ use App\Enums\Status;
 use App\Events\PaymentApprovedEvent;
 use App\Events\PaymentRejectedEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use App\Services\PaymentDetailService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Yoeunes\Toastr\Facades\Toastr;
+use DataTables;
 
 class PaymentDetailController extends Controller
 {
-    private $paymentDetailService;
 
 
-    public function __construct(PaymentDetailService $paymentDetailService)
-    {
-        $this->paymentDetailService = $paymentDetailService;
+    public function __construct(
+        protected PaymentDetailService $paymentDetailService,
+        protected UserService $userService
+    ) {
 
         $this->middleware('permission:payment_detail.list')->only('index');
         $this->middleware('permission:payment_detail.show')->only('show');
@@ -28,10 +31,31 @@ class PaymentDetailController extends Controller
     }
 
     // index
-    public function index()
+    public function index(Request $request)
     {
-        $paymentDetails = $this->paymentDetailService->getPayments();
-        return view('admin.payment_detail.index', compact('paymentDetails'));
+        return view('admin.payment_detail.index');
+    }
+
+    public function data(Request $request)
+    {
+
+        $payments = $this->paymentDetailService->getPayments();
+        
+        return DataTables::of($payments)
+            ->addIndexColumn()
+            ->addColumn('user_name', fn($row) => optional($row->user)->name)
+            ->addColumn('user_email', fn($row) => optional($row->user)->email)
+            ->addColumn('user_phone', fn($row) => optional($row->user)->phone)
+            ->addColumn('coupon_code', fn($row) => optional($row->coupon)->code)
+            ->editColumn('status', fn($row) => $row->status->badge())
+            ->editColumn('created_at', fn($row) => $row->created_at->format('Y-m-d H:i'))
+            ->addColumn('action', fn($row) => '
+            <a href="' . route('admin.payment_details.show', $row->id) . '" target="_blank" class="btn btn-sm btn-success ml-2">
+                <i class="fas fa-eye"></i>
+            </a>
+        ')
+            ->rawColumns(['action', 'status'])
+            ->make(true);
     }
 
     public function show($id)

@@ -10,7 +10,7 @@ class FawaterakPayloadBuilderService
 {
     public function buildApiPayload(FawaterakPayloadDTO $dto): array
     {
-        $frontendUrl = rtrim(env('FRONTEND_URL'), '/') . '/fawaterak/payment/';
+        $frontendUrl = 'https://test.etqanacademy.com/fawaterak/payment/';
 
         $payload = [
             'payment_method_id' => $dto->inputData['payment_method_id'],

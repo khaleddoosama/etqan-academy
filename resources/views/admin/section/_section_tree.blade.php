@@ -35,7 +35,7 @@
 
         {{-- Lectures --}}
         @if ($section->lectures->isNotEmpty())
-        <ul class="lecture-list list-group list-group-flush" data-section-id="{{ $section->id }}">
+        <ul class="lecture-list list-group list-group-flush" style="min-height: 30px;" data-section-id="{{ $section->id }}">
             @foreach ($section->lectures as $lecture)
             <li class="list-group-item d-flex align-items-center col-12" data-id="{{ $lecture->id }}">
                 <div>

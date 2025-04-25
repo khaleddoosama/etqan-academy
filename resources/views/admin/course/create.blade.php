@@ -150,14 +150,7 @@
                 category_id: {
                     required: true,
                 },
-                price: {
-                    required: true,
-                    number: true
-                },
-                discount_price: {
-                    required: true,
-                    number: true,
-                },
+
                 number_of_levels: {
                     required: true,
                     number: true
@@ -176,14 +169,7 @@
                 category_id: {
                     required: "{{ __('validation.required', ['attribute' => __('attributes.category')]) }}"
                 },
-                price: {
-                    required: "{{ __('validation.required', ['attribute' => __('attributes.price')]) }}",
-                    number: "{{ __('validation.numeric', ['attribute' => __('attributes.price')]) }}"
-                },
-                discount_price: {
-                    required: "{{ __('validation.required', ['attribute' => __('attributes.discount_price')]) }}",
-                    number: "{{ __('validation.numeric', ['attribute' => __('attributes.discount_price')]) }}",
-                },
+                
                 number_of_levels: {
                     required: "{{ __('validation.required', ['attribute' => __('attributes.number_of_levels')]) }}",
                     number: "{{ __('validation.numeric', ['attribute' => __('attributes.number_of_levels')]) }}"

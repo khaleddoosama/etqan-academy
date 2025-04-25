@@ -20,7 +20,7 @@ class CourseRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'discount_price' => 'nullable|numeric',
             'number_of_levels' => 'required|integer',
             'course_attachments_link' => 'nullable|string',

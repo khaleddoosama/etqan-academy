@@ -41,7 +41,7 @@ class CourseService
             $courseData = Arr::except($data, ['sections']); // Remove 'sections' from the data array
             $course = Course::create($courseData); // Create the course without the 'sections' data
 
-            if (isset($data['sections'])) {
+            if (isset($data['sections']) && is_array($data['sections']) && !empty($data['sections'][0]['title'])) {
                 foreach ($data['sections'] as $section) {
                     $course->sections()->create($section);
                 }

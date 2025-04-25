@@ -30,7 +30,7 @@
     </div>
 
     <div id="collapse-{{ $section->id }}"
-        class="collapse"
+        class="collapse" style="visibility: visible;"
         aria-labelledby="heading-{{ $section->id }}">
 
         {{-- Lectures --}}

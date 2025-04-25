@@ -51,7 +51,7 @@ return [
     'email' => 'حقل :attribute يجب أن يكون عنوان بريد إلكتروني صالح.',
     'ends_with' => 'حقل :attribute يجب أن ينتهي بأحد القيم التالية: :values.',
     'enum' => 'القيمة المحددة لـ :attribute غير صالحة.',
-    'exists' => 'القيمة المحددة لـ :attribute غير صالحة.',
+    'exists' => 'لم يتم العثور على :attribute المطلوب.',
     'file' => 'حقل :attribute يجب أن يكون ملفًا.',
     'filled' => 'حقل :attribute يجب أن يحتوي على قيمة.',
     'gt' => [

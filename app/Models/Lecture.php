@@ -26,6 +26,18 @@ class Lecture extends Model
         static::addGlobalScope('orderByPosition', function ($query) {
             $query->orderBy('position');
         });
+
+        static::deleting(function (Lecture $lecture) {
+            if ($convertedVideo = $lecture->convertedVideo) {
+                $convertedVideo->delete();
+            }
+
+            if ($lecture->attachments) {
+                foreach ($lecture->attachments as $attachment) {
+                    Storage::disk($lecture->disk)->delete($attachment['path']);
+                }
+            }
+        });
     }
 
     public function sluggable(): array

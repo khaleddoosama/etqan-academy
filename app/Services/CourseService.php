@@ -78,7 +78,7 @@ class CourseService
                 if ($section) {
                     // If section exists, update it if necessary
                     $section->update($sectionData);
-                } else {
+                } elseif(!empty($sectionData['title'])) {
                     // If section does not exist, create it
                     $course->sections()->create($sectionData);
                 }

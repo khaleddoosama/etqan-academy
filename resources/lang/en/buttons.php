@@ -103,4 +103,5 @@
     'create_coupon' => 'Create Coupon',
     'edit_coupon' => 'Edit Coupon',
     'delete_coupon' => 'Delete Coupon',
+    'add_section' => 'Add Section',
 );

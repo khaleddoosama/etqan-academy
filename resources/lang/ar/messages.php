@@ -140,4 +140,8 @@
     'cart_status_updated' => 'تم تحديث حالة عربة التسوق بنجاح',
     'payment_methods_success' => 'تم استرجاع طرق الدفع بنجاح',
     'payment_success' => 'تم تأكيد الطلب بنجاح',
+    'section_created_successfully' => 'تم انشاء قسم بنجاح',
+    'section_updated_successfully' => 'تم تحديث قسم بنجاح',
+    'section_deleted_successfully' => 'تم حذف قسم بنجاح',
+    'reset_link_sent' => 'تم ارسال رابط إعادة تعيين كلمة المرور بنجاح',
 );

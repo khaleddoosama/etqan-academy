@@ -140,4 +140,8 @@
     'cart_retrieved_successfully' => 'Cart retrieved successfully.',
     'payment_methods_success' => 'Payment methods retrieved successfully.',
     'payment_success' => 'Payment success.',
+    'section_created_successfully' => 'Section created successfully.',
+    'section_updated_successfully' => 'Section updated successfully.',
+    'section_deleted_successfully' => 'Section deleted successfully.',
+    'reset_link_sent' => 'Reset link sent successfully.',
 );

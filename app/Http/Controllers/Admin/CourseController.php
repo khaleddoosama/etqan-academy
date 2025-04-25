@@ -84,6 +84,7 @@ class CourseController extends Controller
 
     public function update(CourseRequest $request, Course $course)
     {
+        
         DB::beginTransaction();
         try {
             $data = $request->validated();

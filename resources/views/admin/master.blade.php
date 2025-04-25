@@ -75,6 +75,20 @@
             display: list-item;
             /* تأكد من أن العناصر تظهر كعناصر قائمة */
         }
+
+        #global-ajax-loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 
     @yield('styles')
@@ -88,6 +102,17 @@
         <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="{{ asset('asset/logo.jpg') }}" alt="EtqanLogo" height="60"
                 width="60" style="border-radius: 50%">
+        </div>
+
+        <!-- Global AJAX Loader -->
+        <!-- Global AJAX Loader -->
+        <div id="global-ajax-loader" style="display: none; position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%; background: rgba(255, 255, 255, 0.6);
+    z-index: 9999; display: flex; align-items: center; justify-content: center;">
+            <div class="text-center">
+                <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>
+                <p style="margin-top: 10px;">{{ __('main.loading') }}</p>
+            </div>
         </div>
 
 
@@ -438,6 +463,24 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function() {
+            // Hide global loader on page load (just in case)
+            $("#global-ajax-loader").hide();
+
+            // Show loader when any AJAX starts
+            $(document).ajaxStart(function() {
+                console.log("ajax start");
+                $("#global-ajax-loader").fadeIn(200);
+            });
+
+            // Hide loader when all AJAX calls complete
+            $(document).ajaxStop(function() {
+                console.log("ajax stop");
+                $("#global-ajax-loader").fadeOut(200);
+            });
+        });
+    </script>
     @yield('scripts')
 </body>
 

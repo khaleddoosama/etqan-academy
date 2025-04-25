@@ -15,7 +15,7 @@
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="deleteModal-{{ $id }}" tabindex="-1" role="dialog"
+<div class="modal fade text-dark font-weight-bold h4" id="deleteModal-{{ $id }}" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

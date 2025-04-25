@@ -17,6 +17,7 @@ use Yoeunes\Toastr\Facades\Toastr;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Support\Facades\DB;
 
 class LectureController extends Controller
 {
@@ -204,11 +205,31 @@ class LectureController extends Controller
 
         return $this->apiResponse($result, 'Video Pathes Updated Successfully', 200);
     }
+    public function reassignAndSort(Request $request)
+    {
+        $lectureId = $request->input('lecture_id');
+        $newSectionId = $request->input('new_section_id');
+        $newOrder = $request->input('new_order');
 
-    // failedLectures
-    // public function failedLectures()
-    // {
-    //     $lectures = $this->lectureService->getFailedLectures();
-    //     return view('admin.lecture.failed', compact('lectures'));
-    // }
+        DB::transaction(function () use ($lectureId, $newSectionId, $newOrder) {
+            Lecture::where('id', $lectureId)->update(['section_id' => $newSectionId]);
+
+            foreach ($newOrder as $index => $id) {
+                Lecture::where('id', $id)->update(['position' => $index + 1]);
+            }
+        });
+
+        return  $this->apiResponse(null, 'Lecture moved and reordered', 200);
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids ?? [];
+
+        foreach ($ids as $id) {
+            $this->lectureService->deleteLecture(Lecture::find($id));
+        }
+
+        return $this->apiResponse(null, 'ok', 200);
+    }
 }

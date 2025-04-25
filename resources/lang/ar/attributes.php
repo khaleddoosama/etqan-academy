@@ -216,5 +216,6 @@ return [
     'amount_before_coupon' => 'المبلغ قبل الكوبون',
     'amount_after_coupon' => 'المبلغ بعد الكوبون',
     'amount_confirmed' => 'المبلغ المؤكد',
-
+    'parent_section_id' => 'القسم الرئيسي',
+    'no_parent_section' => 'لا قسم رئيسي',
 ];

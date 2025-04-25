@@ -28,4 +28,6 @@
     'clear_cache' => 'Clear Cache',
     'duration_in_days' => 'Duration in days',
     'yesterday' => 'Yesterday',
+    'duplicate_section' => 'Duplicate Section',
+    'loading' => 'Loading',
 );

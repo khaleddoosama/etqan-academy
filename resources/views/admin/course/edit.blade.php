@@ -139,12 +139,12 @@
                                             <div class="align-items-end row position-relative">
 
                                                 <x-custom.form-group class="col-md-6" type="text"
-                                                    name="sections[{{ $key + 1 }}][title]"
+                                                    name="sections[{{ ($key ?? -1) + 1 }}][title]"
                                                      />
 
 
                                                 <x-custom.form-group class="col-md-6" type="text"
-                                                    name="sections[{{ $key + 1 }}][description]"
+                                                    name="sections[{{ ($key ?? -1) + 1 }}][description]"
                                                      />
 
                                                  <!-- plus button -->

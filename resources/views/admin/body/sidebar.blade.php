@@ -177,6 +177,18 @@
                           </a>
                       </li>
                   @endcan
+                  {{--  packages  --}}
+                  @can('package.list')
+                      <li class="nav-item">
+                          <a href="{{ route('admin.packages.index') }}"
+                              class="nav-link @if (Request::is('*/admin/packages') || Request::is('*/admin/packages/*')) active @endif">
+                              <i class="nav-icon fas fa-box"></i>
+                              <p>
+                                  {{ __('attributes.packages') }}
+                              </p>
+                          </a>
+                      </li>
+                  @endcan
 
                   @php
                       $courseMenuItems = [

@@ -2,7 +2,7 @@
 
 namespace App\Services\PaymentStrategy;
 
-use App\Models\Payment;
+use App\Models\PaymentItems;
 use App\Services\UserCoursesService;
 use App\Services\UserService;
 
@@ -17,25 +17,21 @@ class CashPayment implements PaymentStrategyInterface
         $this->userCoursesService = $userCoursesService;
     }
 
-    public function handlePayment(Payment $payment, $user_id): bool
+    public function handlePayment(PaymentItems $paymentItem, $user_id): bool
     {
-        foreach ($payment->paymentItems as $paymentItem) {
-            $this->userCoursesService->createUserCourse($user_id, $paymentItem->courseInstallment->course_id);
-        }
+        $this->userCoursesService->createUserCourse($user_id, $paymentItem->course_id);
         return true;
     }
 
-    public function handleRejectPayment(Payment $payment, $user_id): bool
+    public function handleRejectPayment(PaymentItems $paymentItem, $user_id): bool
     {
         $student = $this->userService->getUser($user_id);
 
-        foreach ($payment->paymentItems as $paymentItem) {
-            $this->userCoursesService->changeUserCourseStatus(
-                ['status' => 0],
-                $student,
-                $paymentItem->courseInstallment->course
-            );
-        }
+        $this->userCoursesService->changeUserCourseStatus(
+            ['status' => 0],
+            $student,
+            $paymentItem->course
+        );
         return true;
     }
 }

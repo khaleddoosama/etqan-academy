@@ -16,7 +16,11 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('slug')->nullable();
             $table->text('description')->nullable();
+            $table->string('meaning_description')->nullable();
+            $table->json('features')->nullable();
             $table->json('programs')->nullable();
+            $table->string('logo')->nullable();
+
             $table->timestamps();
         });
     }

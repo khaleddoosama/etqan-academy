@@ -14,12 +14,16 @@ return new class extends Migration
         Schema::create('package_plans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('package_id')->constrained()->onDelete('cascade');
+            $table->string('title')->nullable();
             $table->string('from')->nullable();
             $table->string('logo')->nullable();
-            $table->string('price')->nullable();
+            $table->decimal('price', 8, 2)->nullable();
             $table->string('duration')->nullable();
             $table->string('device_limit')->nullable();
+            $table->string('number_of_downloads')->nullable();
             $table->text('description')->nullable();
+            $table->boolean ('has_ai_access')->nullable();
+            $table->boolean ('has_flaticon_access')->nullable();
             $table->json('programs')->nullable();
             $table->string('status')->default('approved');
             $table->timestamps();

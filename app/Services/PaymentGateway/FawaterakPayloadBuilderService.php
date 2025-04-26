@@ -22,7 +22,7 @@ class FawaterakPayloadBuilderService
                 'address' => $dto->user->address,
             ],
             'cartItems' => $dto->carts->map(fn($cart) => [
-                'name' => $cart->course->title,
+                'name' => $cart->course ? $cart->course->title : $cart->packagePlan->title,
                 'price' => $cart->price,
                 'quantity' => $cart->quantity,
             ]),
@@ -31,6 +31,7 @@ class FawaterakPayloadBuilderService
                 'course_installment_id' => $dto->carts->pluck('course_installment_id'),
                 'course_id' => $dto->carts->pluck('course_id'),
                 'coupon_code' => $dto->inputData['coupon_code'] ?? null,
+                'package_plan_id' => $dto->carts->pluck('package_plan_id'),
             ],
         ];
 
@@ -62,6 +63,7 @@ class FawaterakPayloadBuilderService
             'paymentItems' => $dto->carts->map(fn($cart) => [
                 'course_installment_id' => $cart->course_installment_id,
                 'course_id' => $cart->course_id,
+                'package_plan_id' => $cart->package_plan_id,
                 'amount' => $cart->price * $cart->quantity,
                 'payment_type' => $cart->course_installment_id ? PaymentType::INSTALLMENT : PaymentType::CASH,
             ]),

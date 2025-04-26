@@ -15,6 +15,7 @@ class PaymentItems extends Model
     protected $fillable = [
         'course_installment_id',
         'course_id',
+        'package_plan_id',
         'payment_id',
         'payment_type',
         'amount',
@@ -33,8 +34,23 @@ class PaymentItems extends Model
         return $this->belongsTo(CourseInstallment::class);
     }
 
+    public function packagePlan()
+    {
+        return $this->belongsTo(PackagePlans::class);
+    }
+
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    //get serviceTitle
+    public function getServiceTitleAttribute()
+    {
+        if ($this->course) {
+            return $this->course->title;
+        } else {
+            return $this->packagePlan->title;
+        }
     }
 }

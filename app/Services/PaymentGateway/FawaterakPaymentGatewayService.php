@@ -46,8 +46,8 @@ class FawaterakPaymentGatewayService
 
         $carts = $this->cartService->getForUser(
             $user->id,
-            ['price', 'quantity', 'course_id', 'course_installment_id'],
-            ['course', 'courseInstallment']
+            ['price', 'quantity', 'course_id', 'course_installment_id', 'package_plan_id'],
+            ['course', 'courseInstallment', 'packagePlan']
         );
 
         $totalPriceBeforeCoupon = $this->cartService->getTotalPriceForUser($user->id);

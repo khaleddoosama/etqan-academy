@@ -52,7 +52,7 @@ class SectionService
         return Cache::remember($cacheKey, 60, function () use ($courseSlug) {
             return Section::whereHas('course', function ($query) use ($courseSlug) {
                 $query->where('slug', $courseSlug);
-            })->with('course')->get();
+            })->where('parent_section_id', null)->with('course')->get();
         });
     }
 

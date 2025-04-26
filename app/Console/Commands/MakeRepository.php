@@ -65,7 +65,7 @@ use App\Repositories\Contracts\\{$interfaceName};
 
 class {$repositoryName} extends BaseRepository implements {$interfaceName}
 {
-    protected function model()
+    protected function model(): {$modelName}
     {
         return new {$modelName}();
     }

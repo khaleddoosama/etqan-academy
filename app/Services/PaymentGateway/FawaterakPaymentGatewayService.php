@@ -93,6 +93,7 @@ class FawaterakPaymentGatewayService
         $paymentData = $this->payloadBuilder->buildPaymentData($paymentDto);
         $this->paymentRepository->createWithItems(
             $paymentData,
+            'paymentItems',
             $paymentData['paymentItems']->toArray()
         );
 

@@ -51,7 +51,7 @@ class CourseController extends Controller
     public function create()
     {
         $categories = $this->categoryService->getCategories();
-        $programs = $this->programService->getPrograms();
+        $programs = $this->programService->getAll();
         $instructors = $this->instructorService->getInstructors();
         return view('admin.course.create', compact('categories', 'programs', 'instructors'));
     }
@@ -76,7 +76,7 @@ class CourseController extends Controller
     {
         $course->load('sections');
         $categories = $this->categoryService->getCategories();
-        $programs = $this->programService->getPrograms();
+        $programs = $this->programService->getAll();
         $instructors = $this->instructorService->getInstructors();
         $courses = $this->courseService->getCourses();
         return view('admin.course.edit', compact('course', 'categories', 'programs', 'instructors', 'courses'));
@@ -84,7 +84,7 @@ class CourseController extends Controller
 
     public function update(CourseRequest $request, Course $course)
     {
-        
+
         DB::beginTransaction();
         try {
             $data = $request->validated();

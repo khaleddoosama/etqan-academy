@@ -10,7 +10,7 @@ class MakeApiModule extends Command
 {
 
     protected $signature = 'make:module {name}';
-    protected $description = 'Generate full API module (model, migration, controller, request, resource, service, route)';
+    protected $description = 'Generate full API module (model, migration, controller, request, resource, service, repository, route)';
 
     public function handle()
     {
@@ -31,6 +31,7 @@ class MakeApiModule extends Command
         foreach ($commands as [$command, $params]) {
             $this->callSilent($command, $params);
         }
+        $this->call('make:repository', ['name' => $name]);
 
         $this->generateService($name);
         $this->generateController($name);
@@ -53,19 +54,25 @@ class MakeApiModule extends Command
     namespace App\Services;
 
     use App\Models\\{$model};
+    use App\Repositories\Contracts\\{$name}RepositoryInterface;
 
     class {$name}Service
     {
+        public function __construct(protected {$name}RepositoryInterface \$repository)
+        {
+
+        }
+
         public function getAll()
         {
-            return {$model}::latest()->get();
+            return \$this->repository->all();
         }
 
         public function store(array \$data)
         {
-            return {$model}::create(\$data);
+            return \$this->repository->create(\$data);
         }
-    }
+        }
     PHP);
             $this->info("🛠️ Service created: Services/{$name}Service.php");
         }

@@ -218,4 +218,12 @@ return [
     'amount_confirmed' => 'المبلغ المؤكد',
     'parent_section_id' => 'القسم الرئيسي',
     'no_parent_section' => 'لا قسم رئيسي',
+    'plans' => 'الخطط',
+    'plans_from' => 'الخطط من',
+    'plans_price' => 'سعر الخطط',
+    'plans_duration' => 'مدة الخطط',
+    'plans_device_limit' => 'حد الجهاز',
+    'plans_description' => 'وصف الخطط',
+    'plans_programs' => 'برامج الخطط',
+    'plans_logo' => 'شعار الخطط',
 ];

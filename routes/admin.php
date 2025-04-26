@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\LectureController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PaymentDetailController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
@@ -235,6 +236,10 @@ Route::group(
             // coupons
             Route::resource('coupons', CouponController::class)->except(['show']);
             Route::put('/coupons/{id}/status', [CouponController::class, 'status'])->name('coupons.status');
+
+            Route::resource('packages', PackageController::class)->except(['show'])->missing(function () {
+                return redirect()->route('admin.packages.index');
+            });
         });
     }
 );

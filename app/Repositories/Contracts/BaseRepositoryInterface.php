@@ -90,4 +90,8 @@ interface BaseRepositoryInterface
      * @return array<string, mixed>
      */
     public function filterByRequest(Request $request): array;
+
+    public function createWithItems(array $mainData, string $relationMethod, array $relatedDataArray): Model;
+
+    public function updateWithItems(Model $model, array $mainData, string $relationMethod, array $relatedDataArray): Model;
 }

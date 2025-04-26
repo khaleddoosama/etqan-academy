@@ -17,7 +17,7 @@ class ProgramResource extends JsonResource
         return [
             'name' => $this->name,
             'slug' => $this->slug,
-            'description' => $this->description,
+            // 'description' => $this->description,
             'icon' => $this->icon_url,
         ];
     }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @template TModel of Model
@@ -144,5 +145,56 @@ abstract class BaseRepository implements BaseRepositoryInterface
     protected function filterable(): array
     {
         return [];
+    }
+
+    public function createWithItems(array $mainData, string $relationMethod, array $relatedDataArray): Model
+    {
+        return DB::transaction(function () use ($mainData, $relationMethod, $relatedDataArray) {
+            $model = $this->model->create($mainData);
+
+            // Make sure the relation method exists and is callable
+            if (!method_exists($model, $relationMethod)) {
+                throw new \InvalidArgumentException("Relation method [$relationMethod] does not exist.");
+            }
+
+            $model->{$relationMethod}()->createMany($relatedDataArray);
+
+            return $model->load($relationMethod);
+        });
+    }
+
+    public function updateWithItems(Model $model, array $mainData, string $relationMethod, array $relatedDataArray): Model
+    {
+        return DB::transaction(function () use ($model, $mainData, $relationMethod, $relatedDataArray) {
+            // Update main model
+            $model->update($mainData);
+
+            if (!method_exists($model, $relationMethod)) {
+                throw new \InvalidArgumentException("Relation method [$relationMethod] does not exist.");
+            }
+
+            $relation = $model->{$relationMethod}();
+
+            $existingIds = $relation->pluck('id')->toArray();
+
+            $incomingIds = collect($relatedDataArray)->pluck('id')->filter()->toArray();
+
+            $idsToDelete = array_diff($existingIds, $incomingIds);
+            if (!empty($idsToDelete)) {
+                $relation->whereIn('id', $idsToDelete)->get()->each(function ($item) {
+                    $item->delete();
+                });
+            }
+
+            foreach ($relatedDataArray as $itemData) {
+                if (isset($itemData['id']) && in_array($itemData['id'], $existingIds)) {
+                    $relation->where('id', $itemData['id'])->update($itemData);
+                } elseif($itemData['from']) {
+                    $relation->create($itemData);
+                }
+            }
+
+            return $model->load($relationMethod);
+        });
     }
 }

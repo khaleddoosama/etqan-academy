@@ -13,15 +13,4 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
     {
         return new Payment();
     }
-
-    public function createWithItems(array $paymentData, array $paymentItemsData): Model
-    {
-        return DB::transaction(function () use ($paymentData, $paymentItemsData) {
-            $payment = $this->model->create($paymentData);
-
-            $payment->paymentItems()->createMany($paymentItemsData);
-
-            return $payment->load('paymentItems');
-        });
-    }
 }

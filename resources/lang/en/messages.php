@@ -144,4 +144,7 @@
     'section_updated_successfully' => 'Section updated successfully.',
     'section_deleted_successfully' => 'Section deleted successfully.',
     'reset_link_sent' => 'Reset link sent successfully.',
+    'package_created' => 'Package created successfully.',
+    'package_updated' => 'Package updated successfully.',
+    'package_deleted' => 'Package deleted successfully.',
 );

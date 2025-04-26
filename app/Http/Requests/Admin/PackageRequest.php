@@ -18,13 +18,20 @@ class PackageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'duration' => 'required|numeric',
-            // 'discount' => 'required|numeric',
-            'features' => 'required|array',
-            'features.*' => 'required|string',
-            'image' => 'image|max:2048' .  optional($this->package)->exists ? '' : '|required',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'programs' => 'nullable|array',
+            'programs.*' => 'nullable|exists:programs,id',
+            'plans' => 'required|array',
+            'plans.*.id' => 'nullable|exists:package_plans,id',
+            'plans.*.from' => 'nullable|string',
+            'plans.*.price' => 'nullable|numeric',
+            'plans.*.duration' => 'nullable|numeric',
+            'plans.*.device_limit' => 'nullable|numeric',
+            'plans.*.description' => 'nullable|string',
+            'plans.*.programs' => 'nullable|array',
+            'plans.*.programs.*' => 'nullable|exists:programs,id',
+            'plans.*.logo' => 'nullable|image|max:4096',
         ];
     }
 }

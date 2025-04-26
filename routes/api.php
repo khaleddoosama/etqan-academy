@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\LectureController;
+use App\Http\Controllers\Api\PackageController;
 use App\Http\Controllers\Api\PaymentDetailController;
 use App\Http\Controllers\Api\PaymentGateway\GatewayPaymentController;
 use App\Http\Controllers\Api\PaymentGateway\GatewayWebhookController;
@@ -116,7 +117,10 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:10,1', 'log_use
         Route::get('/payment-methods', [GatewayPaymentController::class, 'paymentMethods']);
         Route::post('/pay', [GatewayPaymentController::class, 'pay']);
     });
-
+    Route::prefix('/packages')->group(function () {
+        Route::get('/', [PackageController::class, 'index']);
+        Route::get('/{id}', [PackageController::class, 'show']);
+    });
 });
 
 //

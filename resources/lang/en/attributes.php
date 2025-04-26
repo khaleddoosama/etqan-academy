@@ -219,4 +219,12 @@ return [
     'amount_confirmed' => 'Amount Confirmed',
     'parent_section_id' => 'Parent Section',
     'no_parent_section' => 'No Parent Section',
+    'plans' => 'Plans',
+    'plans_from' => 'Plans From',
+    'plans_price' => 'Plans Price',
+    'plans_duration' => 'Plans Duration',
+    'plans_device_limit' => 'Plans Device Limit',
+    'plans_description' => 'Plans Description',
+    'plans_programs' => 'Plans Programs',
+    'plans_logo' => 'Plans Logo',
 ];

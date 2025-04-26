@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             // SectionSeeder::class,
             // ProgramSeeder::class,
             InstructorSeeder::class,
-            StudentWorkCategorySeeder::class
+            StudentWorkCategorySeeder::class,
+            CouponSeeder::class,
         ]);
     }
 }

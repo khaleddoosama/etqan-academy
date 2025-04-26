@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('course_installment_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->foreignId('course_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('package_plan_id')->constrained('package_plans')->onDelete('cascade');
             $table->integer('quantity')->default(1);
 
             $table->decimal('price', 10, 2); // Price of the unit

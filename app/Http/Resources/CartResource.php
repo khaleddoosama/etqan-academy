@@ -14,13 +14,14 @@ class CartResource extends JsonResource
             'id' => $this->id,
             'total_price' => $this->total_price,
             'course_installment' => new CourseInstallmentResource($this->courseInstallment),
-            'course' => [
-                'slug' => $this->course->slug,
-                'title' => $this->course->title,
-                'price' => $this->course->price,
-                'discount_price' => $this->course->discount_price,
-                'image' => $this->course->thumbnail_url,
-            ],
+            'course' => $this->course ? [
+                'slug' => $this->course?->slug,
+                'title' => $this->course?->title,
+                'price' => $this->course?->price,
+                'discount_price' => $this->course?->discount_price,
+                'image' => $this->course?->thumbnail_url,
+            ] : null,
+            'package_plan' => new PackagePlanResource($this->packagePlan),
         ];
     }
 }

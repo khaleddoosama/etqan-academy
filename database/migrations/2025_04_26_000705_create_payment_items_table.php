@@ -14,9 +14,10 @@ return new class extends Migration
     {
         Schema::create('payment_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
-            $table->foreignId('course_installment_id')->nullable()->constrained('course_installments')->onDelete('cascade');
-            $table->foreignId('payment_id')->constrained('payments')->onDelete('cascade');
+            $table->foreignId('course_id')->nullable()->constrained('courses')->onDelete('restrict');
+            $table->foreignId('course_installment_id')->nullable()->constrained('course_installments')->onDelete('restrict');
+            $table->foreignId('package_plan_id')->nullable()->constrained('package_plans')->onDelete('restrict');
+            $table->foreignId('payment_id')->constrained('payments')->onDelete('restrict');
             $table->string('payment_type')->default(PaymentType::CASH->value);
 
             $table->decimal('amount', 10, 2)->default(0.00);

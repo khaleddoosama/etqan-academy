@@ -81,6 +81,7 @@ class PackageController extends Controller
         $this->packageService->update($data, $id);
 
         Toastr::success(__('messages.package_updated'), __('status.success'));
+        return redirect()->route('admin.packages.edit', $id);
 
         return redirect()->route('admin.packages.index');
     }

@@ -16,12 +16,16 @@ class PackagePlans extends Model
 
     protected $fillable = [
         'package_id',
+        'title',
         'from',
-        'logo',
         'price',
         'duration',
         'device_limit',
+        'number_of_downloads',
+        'has_ai_access',
+        'has_flaticon_access',
         'description',
+        'logo',
         'programs',
         'status',
     ];
@@ -64,7 +68,6 @@ class PackagePlans extends Model
     {
         parent::boot();
         static::deleting(function ($packagePlan) {
-            dd($packagePlan);
             $packagePlan->deleteIfExists($packagePlan->logo);
         });
     }

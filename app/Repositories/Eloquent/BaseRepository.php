@@ -165,6 +165,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function updateWithItems(Model $model, array $mainData, string $relationMethod, array $relatedDataArray): Model
     {
+        // dd($model, $mainData, $relationMethod, $relatedDataArray);
         return DB::transaction(function () use ($model, $mainData, $relationMethod, $relatedDataArray) {
             // Update main model
             $model->update($mainData);
@@ -173,24 +174,28 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 throw new \InvalidArgumentException("Relation method [$relationMethod] does not exist.");
             }
 
-            $relation = $model->{$relationMethod}();
-
+            $relation = $model->{$relationMethod};
             $existingIds = $relation->pluck('id')->toArray();
 
             $incomingIds = collect($relatedDataArray)->pluck('id')->filter()->toArray();
 
             $idsToDelete = array_diff($existingIds, $incomingIds);
             if (!empty($idsToDelete)) {
-                $relation->whereIn('id', $idsToDelete)->get()->each(function ($item) {
-                    $item->delete();
-                });
+                // $relation->whereIn('id', $idsToDelete)->get()->each(function ($item) {
+                //     $item->delete();
+                // });
+                foreach ($idsToDelete as $id) {
+                    $relation->find($id)->delete();
+                }
             }
 
             foreach ($relatedDataArray as $itemData) {
                 if (isset($itemData['id']) && in_array($itemData['id'], $existingIds)) {
-                    $relation->where('id', $itemData['id'])->update($itemData);
-                } elseif($itemData['from']) {
-                    $relation->create($itemData);
+                    // $relation->where('id', $itemData['id'])->update($itemData);
+                    $relation->find($itemData['id'])->update($itemData);
+                } else {
+                    // $relation->create($itemData);
+                    $model->{$relationMethod}()->create($itemData);
                 }
             }
 

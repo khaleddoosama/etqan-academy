@@ -227,4 +227,9 @@ return [
     'plans_description' => 'Plans Description',
     'plans_programs' => 'Plans Programs',
     'plans_logo' => 'Plans Logo',
+    'has_ai_access' => 'Has AI Access',
+    'has_flaticon_access' => 'Has Flaticon Access',
+    'meaning_description' => 'Meaning Description',
+    'plans_number_of_downloads' => 'Plans Number Of Downloads',
+    'plans_title' => 'Plans Title',
 ];

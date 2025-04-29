@@ -226,4 +226,9 @@ return [
     'plans_description' => 'وصف الخطط',
     'plans_programs' => 'برامج الخطط',
     'plans_logo' => 'شعار الخطط',
+    'has_ai_access' => 'لديه وصول للذكاء الاصطناعي',
+    'has_flaticon_access' => 'لديه وصول للفلاتيكون',
+    'meaning_description' => 'وصف المعنى',
+    'plans_number_of_downloads' => 'عدد التحميلات',
+    'plans_title' => 'عنوان الخطط',
 ];

@@ -27,7 +27,7 @@ class PackageController extends Controller
 
     public function show($slug)
     {
-        $package = $this->packageService->findBy($slug);
+        $package = $this->packageService->findBySlug($slug);
         return $this->apiResponse(new PackageResource($package), 'ok', 200);
     }
 }

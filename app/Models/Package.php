@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use App\Traits\UploadTrait;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Package extends Model
 {
-    use HasFactory, UploadTrait;
+    use HasFactory, UploadTrait, Sluggable;
 
     protected $fillable = [
         'title',

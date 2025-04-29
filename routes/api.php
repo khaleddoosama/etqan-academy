@@ -119,7 +119,7 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:12,1', 'log_use
     });
     Route::prefix('/packages')->group(function () {
         Route::get('/', [PackageController::class, 'index']);
-        Route::get('/{id}', [PackageController::class, 'show']);
+        Route::get('/{slug}', [PackageController::class, 'show']);
     });
 });
 

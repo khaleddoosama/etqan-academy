@@ -65,7 +65,7 @@ class PackageController extends Controller
      */
     public function edit(string $id)
     {
-        $package = $this->packageService->get($id);
+        $package = $this->packageService->find($id);
         $programs = $this->programService->getAll();
 
         return view('admin.package.edit', compact('package', 'programs'));

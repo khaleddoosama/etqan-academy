@@ -16,6 +16,7 @@ class PackageResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'slug' => $this->slug,
             'name' => $this->title,
             'description' => $this->description,
             'programs' => $this->programs ? ProgramResource::collection($this->programs()) : [],

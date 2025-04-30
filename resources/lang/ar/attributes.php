@@ -232,4 +232,8 @@ return [
     'meaning_description' => 'وصف المعنى',
     'plans_number_of_downloads' => 'عدد التحميلات',
     'plans_title' => 'عنوان الخطط',
+    'payment_items' => 'عناصر الدفع',
+    'package_plans' => 'خطط الباقات',
+    'payment_info' => 'معلومات الدفع',
+    'package_plan' => 'خطة الباقة',
 ];

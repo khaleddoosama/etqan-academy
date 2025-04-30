@@ -132,20 +132,20 @@ abstract class BaseRepository implements BaseRepositoryInterface
         $query = clone $this->query;
 
         $filterable = $this->filterable();
+
         foreach ($filters as $field => $value) {
 
-            if (!array_key_exists($field, $filterable) || !$value) {
+            if ((!array_key_exists($field, $filterable) && !preg_match('/^(from|to)_(.+)$/', $field)) || !$value) {
                 continue;
             }
 
-            $type = $filterable[$field];
+            $type = $filterable[$field] ?? 'exact';
 
             // Date/time range filters with from_ / to_
-            Log::info($field);
-            Log::info(preg_match('/^(from|to)_(.+)$/', $field, $matches));
             if (preg_match('/^(from|to)_(.+)$/', $field, $matches)) {
                 [$_, $dir, $column] = $matches;
-                Log::info($column);
+                $type = $filterable[$column] ?? 'date';
+
                 if (!array_key_exists($column, $filterable) || $filterable[$column] !== 'date') {
                     continue;
                 }

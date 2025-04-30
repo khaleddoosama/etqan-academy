@@ -13,4 +13,14 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
     {
         return new Payment();
     }
+
+
+    protected function filterable(): array
+    {
+        return [
+            'user_id'   => 'exact',
+            'status'    => 'like',
+            'created_at' => 'date',
+        ];
+    }
 }

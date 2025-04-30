@@ -106,8 +106,8 @@
                 data: function(d) {
                     d.user_id = $('#filter-user').val();
                     d.status = $('#filter-status').val();
-                    d.from = $('#filter-from').val();
-                    d.to = $('#filter-to').val();
+                    d.from_created_at = $('#filter-from').val();
+                    d.to_created_at = $('#filter-to').val();
                 }
             },
             columns: [{

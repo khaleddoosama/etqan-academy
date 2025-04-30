@@ -61,9 +61,9 @@ class PaymentDetailService
         return $this->paymentRepository->filterByRequest(request(), ['*'], ['user']);
     }
 
-    public function getPayment($id): Payment
+    public function getPayment($id, $columns = ['*'], $with = []): Payment
     {
-        return Payment::findOrFail($id);
+        return $this->paymentRepository->find($id, $columns, $with);
     }
 
     public function updateAmount($amount, $id): Payment
@@ -138,5 +138,4 @@ class PaymentDetailService
 
         $this->paymentContext->setPaymentStrategy($strategy);
     }
-
 }

@@ -22,7 +22,7 @@ class FawaterakPayloadBuilderService
                 'address' => $dto->user->address,
             ],
             'cartItems' => $dto->carts->map(fn($cart) => [
-                'name' => $cart->course ? $cart->course->title : $cart->packagePlan->title,
+                'name' => $cart->course ? $cart->course->title : ($cart->packagePlan->title ?? $cart->packagePlan->package->title),
                 'price' => $cart->price,
                 'quantity' => $cart->quantity,
             ]),

@@ -233,4 +233,8 @@ return [
     'meaning_description' => 'Meaning Description',
     'plans_number_of_downloads' => 'Plans Number Of Downloads',
     'plans_title' => 'Plans Title',
+    'payment_items' => 'Payment Items',
+    'package_plans' => 'Package Plans',
+    'payment_info' => 'Payment Info',
+    'package_plan' => 'Package Plan',
 ];

@@ -6,9 +6,7 @@ use App\Enums\Status;
 use App\Events\PaymentApprovedEvent;
 use App\Events\PaymentRejectedEvent;
 use App\Http\Controllers\Controller;
-use App\Models\Payment;
 use App\Services\PaymentDetailService;
-use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -21,8 +19,7 @@ class PaymentDetailController extends Controller
 
 
     public function __construct(
-        protected PaymentDetailService $paymentDetailService,
-        protected UserService $userService
+        protected PaymentDetailService $paymentDetailService
     ) {
 
         $this->middleware('permission:payment_detail.list')->only('index');
@@ -38,30 +35,38 @@ class PaymentDetailController extends Controller
 
     public function data(Request $request)
     {
+        if ($request->ajax()) {
 
-        $payments = $this->paymentDetailService->getPayments();
-        
-        return DataTables::of($payments)
-            ->addIndexColumn()
-            ->addColumn('user_name', fn($row) => optional($row->user)->name)
-            ->addColumn('user_email', fn($row) => optional($row->user)->email)
-            ->addColumn('user_phone', fn($row) => optional($row->user)->phone)
-            ->addColumn('coupon_code', fn($row) => optional($row->coupon)->code)
-            ->editColumn('status', fn($row) => $row->status->badge())
-            ->editColumn('created_at', fn($row) => $row->created_at->format('Y-m-d H:i'))
-            ->addColumn('action', fn($row) => '
+            $payments = $this->paymentDetailService->getPayments();
+
+            return DataTables::of($payments)
+                ->addIndexColumn()
+                ->addColumn('user_name', fn($row) => optional($row->user)->name)
+                ->addColumn('user_email', fn($row) => optional($row->user)->email)
+                ->addColumn('user_phone', fn($row) => optional($row->user)->phone)
+                ->addColumn('coupon_code', fn($row) => optional($row->coupon)->code)
+                ->editColumn('status', fn($row) => $row->status->badge())
+                ->editColumn('created_at', fn($row) => $row->created_at->format('Y-m-d H:i'))
+                ->addColumn('action', fn($row) => '
             <a href="' . route('admin.payment_details.show', $row->id) . '" target="_blank" class="btn btn-sm btn-success ml-2">
                 <i class="fas fa-eye"></i>
             </a>
         ')
-            ->rawColumns(['action', 'status'])
-            ->make(true);
+                ->rawColumns(['action', 'status'])
+                ->make(true);
+        }
+        abort(403, 'Unauthorized access.');
     }
 
     public function show($id)
     {
-        $paymentDetail = $this->paymentDetailService->getPayment($id);
-        return view('admin.payment_detail.show', compact('paymentDetail'));
+        $payment = $this->paymentDetailService->getPayment($id, ['*'], [
+            'user',
+            'paymentItems.courseInstallment.course',
+            'paymentItems.packagePlan',
+            'paymentItems.courseInstallment',
+        ]);
+        return view('admin.payment_detail.show', compact('payment'));
     }
 
     public function updateAmount(Request $request, $id)

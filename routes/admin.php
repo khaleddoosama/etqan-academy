@@ -185,10 +185,10 @@ Route::group(
             // Payment Detail Controller
             Route::controller(PaymentDetailController::class)->group(function () {
                 Route::get('/payment-details', 'index')->name('payment_details.index');
+                Route::get('payment-details/data',  'data')->name('payment_details.data');
+
                 Route::get('/payment-details/export', 'export')->name('payment_details.export');
                 Route::get('/payment-details/{id}', 'show')->name('payment_details.show');
-                Route::put('/payment-details/{id}/status', 'status')->name('payment_details.status');
-                Route::put('/payment-details/{id}/update', 'updateAmount')->name('payment_details.update');
             });
 
             // Permission controller (resource)

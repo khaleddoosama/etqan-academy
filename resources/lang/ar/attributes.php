@@ -216,6 +216,7 @@ return [
     'amount_before_coupon' => 'المبلغ قبل الكوبون',
     'amount_after_coupon' => 'المبلغ بعد الكوبون',
     'amount_confirmed' => 'المبلغ المؤكد',
+    'paid_at' => 'تاريخ الدفع',
     'parent_section_id' => 'القسم الرئيسي',
     'no_parent_section' => 'لا قسم رئيسي',
     'plans' => 'الخطط',
@@ -231,4 +232,8 @@ return [
     'meaning_description' => 'وصف المعنى',
     'plans_number_of_downloads' => 'عدد التحميلات',
     'plans_title' => 'عنوان الخطط',
+    'payment_items' => 'عناصر الدفع',
+    'package_plans' => 'خطط الباقات',
+    'payment_info' => 'معلومات الدفع',
+    'package_plan' => 'خطة الباقة',
 ];

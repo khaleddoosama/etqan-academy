@@ -217,6 +217,7 @@ return [
     'amount_before_coupon' => 'Amount Before Coupon',
     'amount_after_coupon' => 'Amount After Coupon',
     'amount_confirmed' => 'Amount Confirmed',
+    'paid_at' => 'Paid At',
     'parent_section_id' => 'Parent Section',
     'no_parent_section' => 'No Parent Section',
     'plans' => 'Plans',
@@ -232,4 +233,8 @@ return [
     'meaning_description' => 'Meaning Description',
     'plans_number_of_downloads' => 'Plans Number Of Downloads',
     'plans_title' => 'Plans Title',
+    'payment_items' => 'Payment Items',
+    'package_plans' => 'Package Plans',
+    'payment_info' => 'Payment Info',
+    'package_plan' => 'Package Plan',
 ];

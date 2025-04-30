@@ -32,14 +32,14 @@ class LogUserActivity
 
         $ip = $request->ip();
 
-        $locationData = Location::get($ip);
-        $geoLocation = $locationData ? [
-            'country' => $locationData->countryName,
-            'region' => $locationData->regionName,
-            'city' => $locationData->cityName,
-            'latitude' => $locationData->latitude,
-            'longitude' => $locationData->longitude,
-        ] : null;
+        // $locationData = Location::get($ip);
+        // $geoLocation = $locationData ? [
+        //     'country' => $locationData?->countryName,
+        //     'region' => $locationData?->regionName,
+        //     'city' => $locationData?->cityName,
+        //     'latitude' => $locationData?->latitude,
+        //     'longitude' => $locationData?->longitude,
+        // ] : null;
 
         $url = $request->url();
         $parsedUrl = parse_url($url, PHP_URL_PATH);
@@ -60,7 +60,7 @@ class LogUserActivity
                     'duration' => microtime(true) - LARAVEL_START . ' Seconds',
                     'route_name' => $request->route()->getName(),
                     'action' => $request->route()->getActionName(),
-                    'geo_location' => $geoLocation,
+                    'geo_location' => $geoLocation ?? null,
                     'referrer_domain' => parse_url($request->server('HTTP_REFERER'), PHP_URL_HOST) ?? 'Direct Access',
                     'via' => $via,
                     'error_message' => $error_message,

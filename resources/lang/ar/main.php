@@ -29,6 +29,8 @@
     'clear_cache' => 'مسح التخزين المؤقت',
     'duration_in_days' => 'المدة بالأيام',
     'yesterday' => 'امس',
+    'all_users' => 'كل المستخدمين',
+    'all_statuses' => 'كل الحالات',
     'duplicate_section' => 'تكرار القسم',
     'loading' => 'جار التحميل',
 );

@@ -20,7 +20,7 @@ class CourseRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'discount_price' => 'nullable|numeric',
             'number_of_levels' => 'required|integer',
             'course_attachments_link' => 'nullable|string',
@@ -31,8 +31,8 @@ class CourseRequest extends FormRequest
             'thumbnail' => 'nullable|image|max:2048', // max 2mb
             'diploma_details_file' => 'nullable|file|max:10024', // max 10mb
             'sections' => 'required|array',
-            'sections.*.title' => 'required|string|max:255',
-            'sections.*.description' => 'required|string',
+            'sections.*.title' => 'nullable|string|max:255',
+            'sections.*.description' => 'nullable|string',
             'sections.*.id' => 'nullable|exists:sections,id',
         ];
     }

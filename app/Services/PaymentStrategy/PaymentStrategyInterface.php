@@ -2,12 +2,11 @@
 
 namespace App\Services\PaymentStrategy;
 
-use App\Models\Payment;
-use App\Services\UserCoursesService;
+use App\Models\PaymentItems;
 
 interface PaymentStrategyInterface
 {
-    public function handlePayment(Payment $paymentDetail, $user_id): bool;
+    public function handlePayment(PaymentItems $paymentItem, $user_id): bool;
 
-    public function handleRejectPayment(Payment $paymentDetail, $user_id): bool;
+    public function handleRejectPayment(PaymentItems $paymentItem, $user_id): bool;
 }

@@ -31,4 +31,6 @@
     'yesterday' => 'امس',
     'all_users' => 'كل المستخدمين',
     'all_statuses' => 'كل الحالات',
+    'duplicate_section' => 'تكرار القسم',
+    'loading' => 'جار التحميل',
 );

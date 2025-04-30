@@ -70,8 +70,9 @@ return [
     | ahead and set this to a sensible default for you out of the box.
     |
     */
-    // +02
-    'timezone' => 'Africa/Cairo',
+    // +03
+    'timezone' => 'Asia/Riyadh',
+    // 'timezone' => 'Africa/Cairo',
 
     /*
     |--------------------------------------------------------------------------

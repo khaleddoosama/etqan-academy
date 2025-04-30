@@ -125,26 +125,38 @@
                                                     name="sections[{{ $key }}][description]"
                                                     value="{{ $section->description }}" />
 
-                                                {{-- if first iteration --}}
-                                                @if ($loop->first)
-                                                <!-- plus button -->
-                                                <div class="mb-3 position-absolute end-0"
-                                                    style="margin-right: -5px">
-                                                    <button type="button" class="btn btn-primary "
-                                                        onclick="addSection()">+</button>
-                                                </div>
-                                                @else
+
                                                 <!-- minus button -->
                                                 <div class="mb-3 position-absolute end-0"
                                                     style="margin-right: -5px">
                                                     <button type="button" class="btn btn-danger "
                                                         onclick="removeSection(this)">-</button>
                                                 </div>
-                                                @endif
                                             </div>
                                         </div>
                                         @endforeach
+                                        <div class="col-md-12">
+                                            <div class="align-items-end row position-relative">
+
+                                                <x-custom.form-group class="col-md-6" type="text"
+                                                    name="sections[{{ ($key ?? -1) + 1 }}][title]"
+                                                     />
+
+
+                                                <x-custom.form-group class="col-md-6" type="text"
+                                                    name="sections[{{ ($key ?? -1) + 1 }}][description]"
+                                                     />
+
+                                                 <!-- plus button -->
+                                                <div class="mb-3 position-absolute end-0"
+                                                    style="margin-right: -5px">
+                                                    <button type="button" class="btn btn-primary "
+                                                        onclick="addSection()">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
 
                                 </div>
 

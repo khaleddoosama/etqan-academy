@@ -9,7 +9,7 @@ use Yoeunes\Toastr\Facades\Toastr;
 
 class ProgramService
 {
-    public function getPrograms(): Collection
+    public function getAll(): Collection
     {
         return Program::all();
     }

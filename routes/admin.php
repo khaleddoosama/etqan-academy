@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\LectureController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PaymentDetailController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
@@ -123,28 +124,42 @@ Route::group(
             });
 
 
-            Route::controller(SectionController::class)->group(function () {
-                // show section
-                Route::get('/sections/{section}', 'show')->name('sections.show');
-                // get sections based on course
-                Route::get('/sections/{course_id}/get', 'getSections')->name('sections.get');
 
-                Route::post('/sections/duplicate', 'duplicate')->name('sections.duplicate');
+            Route::prefix('sections')->name('sections.')->controller(SectionController::class)->group(function () {
+                Route::get('/{section}', 'show')->name('show');
+                Route::get('/course/{course}', 'getSections')->name('get');
+                Route::post('/duplicate', 'duplicate')->name('duplicate');
+                Route::post('/', 'store')->name('store');
+                Route::delete('/{section}', 'destroy')->name('destroy');
+                Route::post('/reassign-and-sort', [SectionController::class, 'reassignAndSort'])
+                    ->name('reassignAndSort');
+                Route::put('/{section}', 'update')->name('update');
+                Route::post('/bulk-delete', [SectionController::class, 'bulkDelete'])->name('bulkDelete');
             });
+
+
 
             // Lecture Controller
             Route::resource('lectures', LectureController::class)->except(['show', 'create'])->missing(function () {
                 return redirect()->route('admin.courses.index');
             });
-            Route::post('lectures/duplicate', [LectureController::class, 'duplicate'])->name('lectures.duplicate');
-            // Route::get('failed-lectures', [LectureController::class, 'failedLectures'])->name('lectures.failed.index');
-            Route::post('/lectures/update-order', [LectureController::class, 'updateOrder'])->name('lectures.updateOrder');
-            // Route::post('/upload-video', [LectureController::class, 'generatePresignedUrl']);
-            Route::put('/update-attachment/{lecture}', [LectureController::class, 'updateAttachment'])->name('lectures.updateAttachment');
-            Route::put('/delete-attachment/{lecture}', [LectureController::class, 'deleteAttachment'])->name('lectures.deleteAttachment');
-            Route::put('lectures/is-free/{lecture}', [LectureController::class, 'changeIsFree'])->name('lectures.changeIsFree');
-            Route::get('/lectures/{section_id}/get', [LectureController::class, 'getLectures'])->name('lectures.get');
-            // Route::put('/update-video-path/{lecture}', [LectureController::class, 'updateVideoPath'])->name('lectures.updateVideoPath');
+            Route::prefix('lectures')->name('lectures.')->group(function () {
+                Route::post('duplicate', [LectureController::class, 'duplicate'])->name('duplicate');
+                Route::post('reassign-and-sort', [LectureController::class, 'reassignAndSort'])->name('reassignAndSort');
+                Route::post('bulk-delete', [LectureController::class, 'bulkDelete'])->name('bulkDelete');
+                Route::post('update-order', [LectureController::class, 'updateOrder'])->name('updateOrder');
+
+                Route::put('is-free/{lecture}', [LectureController::class, 'changeIsFree'])->name('changeIsFree');
+                Route::put('update-attachment/{lecture}', [LectureController::class, 'updateAttachment'])->name('updateAttachment');
+                Route::put('delete-attachment/{lecture}', [LectureController::class, 'deleteAttachment'])->name('deleteAttachment');
+
+                Route::get('{section_id}/get', [LectureController::class, 'getLectures'])->name('get');
+
+                // Uncomment as needed:
+                // Route::get('failed', [LectureController::class, 'failedLectures'])->name('failed.index');
+                // Route::post('upload-video', [LectureController::class, 'generatePresignedUrl']);
+                // Route::put('update-video-path/{lecture}', [LectureController::class, 'updateVideoPath'])->name('updateVideoPath');
+            });
 
             // Inquiry Controller
             Route::controller(InquiryController::class)->group(function () {
@@ -221,6 +236,10 @@ Route::group(
             // coupons
             Route::resource('coupons', CouponController::class)->except(['show']);
             Route::put('/coupons/{id}/status', [CouponController::class, 'status'])->name('coupons.status');
+
+            Route::resource('packages', PackageController::class)->except(['show'])->missing(function () {
+                return redirect()->route('admin.packages.index');
+            });
         });
     }
 );

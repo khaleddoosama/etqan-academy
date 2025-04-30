@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
 
             $table->string('invoice_id')->nullable();
             $table->string('invoice_key')->nullable();
@@ -26,11 +26,14 @@ return new class extends Migration
 
             $table->decimal('amount_before_coupon', 10, 2)->default(0.00);
             $table->decimal('amount_after_coupon', 10, 2)->default(0.00);
+            $table->decimal('amount_confirmed', 10, 2)->default(0.00);
 
-            $table->foreignId('coupon_id')->nullable()->constrained('coupons')->onDelete('set null');
+            $table->foreignId('coupon_id')->nullable()->constrained('coupons')->onDelete('restrict');
             $table->string('discount')->nullable();
             $table->string('type')->nullable();
 
+            $table->string('transfer_number')->nullable();
+            $table->string('transfer_image')->nullable();
 
             $table->string('currency')->default('EGP');
 

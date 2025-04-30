@@ -21,8 +21,8 @@ return new class extends Migration
             $table->integer('number_of_levels')->default(1);
             $table->enum('language', ['ar', 'en'])->default('ar');
             $table->string('thumbnail')->nullable();
-            $table->float('price')->default(0);
-            $table->float('discount_price')->default(0);
+            $table->float('price')->nullable();
+            $table->float('discount_price')->nullable();
             $table->integer('status')->default(1);
 
             // array of programs

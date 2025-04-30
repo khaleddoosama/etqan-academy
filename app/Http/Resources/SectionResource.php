@@ -18,6 +18,7 @@ class SectionResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,
+            'sections' => $this->whenLoaded ('childrenSections', SectionResource::collection($this->childrenSections)),
             'lectures' => LectureResource::collection($this->lectures),
         ];
     }

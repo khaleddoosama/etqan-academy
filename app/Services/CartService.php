@@ -4,20 +4,16 @@ namespace App\Services;
 
 use App\Models\Cart;
 use App\Models\Course;
+use App\Models\PackagePlans;
 use App\Services\Support\SlugResolverService;
 
 class CartService
 {
-    protected StudentInstallmentService $studentInstallmentService;
-    protected SlugResolverService $slugResolver;
-
-    protected UserCoursesService $userCoursesService;
-    public function __construct(SlugResolverService $slugResolver, StudentInstallmentService $studentInstallmentService, UserCoursesService $userCoursesService)
-    {
-        $this->studentInstallmentService = $studentInstallmentService;
-        $this->slugResolver = $slugResolver;
-        $this->userCoursesService = $userCoursesService;
-    }
+    public function __construct(
+        private SlugResolverService $slugResolver,
+        private StudentInstallmentService $studentInstallmentService,
+        private UserCoursesService $userCoursesService
+    ) {}
 
     public function getForUser($user_id, $columns = ['*'], $with = [])
     {
@@ -31,46 +27,71 @@ class CartService
         ]);
 
         $userId = auth('api')->id();
-        $courseId = $data['course_id'];
+        $courseId = $data['course_id'] ?? null;
+        $packagePlanId = $data['package_plan_id'] ?? null;
         $courseInstallmentId = $data['course_installment_id'] ?? null;
 
-        $this->validateCartAddition($userId, $courseId, $courseInstallmentId);
+        $this->validateCartAddition($userId, $courseId, $packagePlanId, $courseInstallmentId);
 
-        $data['price'] = $this->calculateCartPrice($userId, $courseId, $courseInstallmentId);
+        $data['price'] = $this->calculateCartPrice($userId, $courseId, $packagePlanId, $courseInstallmentId);
 
         return Cart::create($data);
     }
-    protected function validateCartAddition(int $userId, int $courseId, $courseInstallmentId): void
+    protected function validateCartAddition(int $userId, ?int $courseId, ?int $packagePlanId, $courseInstallmentId): void
     {
-        if ($this->isAlreadyInCart($userId, $courseId)) {
+        if ($courseId && $this->isAlreadyInCartCourse($userId, $courseId)) {
             throw new \Exception('You have already added this course to your cart');
         }
 
-        if ($this->isAlreadyPurchased($userId, $courseId, $courseInstallmentId)) {
+        if ($packagePlanId && $this->isAlreadyInCartPackage($userId, $packagePlanId)) {
+            throw new \Exception('You have already added this package to your cart');
+        }
+
+        if ($courseId && $this->isAlreadyPurchasedCourse($userId, $courseId, $courseInstallmentId)) {
             throw new \Exception('You have already purchased this course');
         }
     }
 
-    protected function calculateCartPrice(int $userId, int $courseId, $courseInstallmentId): float
-    {
-        $course = Course::find($courseId);
 
-        if ($courseInstallmentId && !in_array($courseInstallmentId, $course->courseInstallments->pluck('id')->toArray())) {
-            throw new \Exception('This course installment does not belong to this course');
+    protected function calculateCartPrice(int $userId, ?int $courseId, ?int $packagePlanId, $courseInstallmentId): float
+    {
+        if ($courseId) {
+            $course = Course::find($courseId);
+
+            if ($courseInstallmentId && !in_array($courseInstallmentId, $course->courseInstallments->pluck('id')->toArray())) {
+                throw new \Exception('This course installment does not belong to this course');
+            }
+
+            if ($courseInstallmentId) {
+                return $this->studentInstallmentService->getNextInstallmentPrice($userId, $courseInstallmentId);
+            }
+
+            return $course->total_price;
         }
 
-        if ($courseInstallmentId) {
-            return $this->studentInstallmentService->getNextInstallmentPrice($userId, $courseInstallmentId);
+        if ($packagePlanId) {
+            $packagePlan = PackagePlans::findOrFail($packagePlanId);
+            return $packagePlan->price;
         }
 
-        return $course->total_price;
-    }
-    protected function isAlreadyInCart(int $userId, int $courseId): bool
-    {
-        return Cart::unique($userId, $courseId)->exists();
+        throw new \Exception('Neither course nor package selected');
     }
 
-    protected function isAlreadyPurchased(int $userId, int $courseId, $courseInstallmentId): bool
+    protected function isAlreadyInCartCourse(int $userId, int $courseId): bool
+    {
+        return Cart::where('user_id', $userId)
+            ->where('course_id', $courseId)
+            ->exists();
+    }
+
+    protected function isAlreadyInCartPackage(int $userId, int $packagePlanId): bool
+    {
+        return Cart::where('user_id', $userId)
+            ->where('package_plan_id', $packagePlanId)
+            ->exists();
+    }
+
+    protected function isAlreadyPurchasedCourse(int $userId, int $courseId, $courseInstallmentId): bool
     {
         if ($courseInstallmentId) {
             return $this->studentInstallmentService->checkUserAndCourse($userId, $courseInstallmentId);

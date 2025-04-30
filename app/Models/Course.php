@@ -39,7 +39,7 @@ class Course extends Model
 
     public function sections()
     {
-        return $this->hasMany(Section::class);
+        return $this->hasMany(Section::class)->where('parent_section_id', null);
     }
 
     public function programs()

@@ -14,6 +14,7 @@ class Cart extends Model
         'user_id',
         'course_installment_id',
         'course_id',
+        'package_plan_id',
         'price',
     ];
 
@@ -30,6 +31,11 @@ class Cart extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function packagePlan()
+    {
+        return $this->belongsTo(PackagePlans::class);
     }
 
 

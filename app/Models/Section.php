@@ -13,6 +13,15 @@ class Section extends Model
 
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Apply global scope to order by 'position'
+        static::addGlobalScope('orderByPosition', function ($query) {
+            $query->orderBy('position');
+        });
+    }
 
     public function sluggable(): array
     {
@@ -32,6 +41,23 @@ class Section extends Model
     public function lectures()
     {
         return $this->hasMany(Lecture::class)->orderBy('position');
+    }
+
+    // section
+    public function parentSection()
+    {
+        return $this->belongsTo(Section::class, 'parent_section_id');
+    }
+
+    public function childrenSections()
+    {
+        return $this->hasMany(Section::class, 'parent_section_id')->with('childrenSections', 'lectures');
+    }
+
+    // get children
+    public function childrens()
+    {
+        return $this->childrenSections()->with('lectures');
     }
 
     // calculate total duration of lectures in section

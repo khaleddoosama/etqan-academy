@@ -3,7 +3,7 @@
 namespace App\Services\PaymentStrategy;
 
 use App\Models\Payment;
-
+use App\Models\PaymentItems;
 
 class PaymentContext
 {
@@ -14,13 +14,13 @@ class PaymentContext
         $this->strategy = $strategy;
     }
 
-    public function handlePayment(Payment $payment, $user_id): bool
+    public function handlePayment(PaymentItems $paymentItem, $user_id): bool
     {
-        return $this->strategy->handlePayment($payment, $user_id);
+        return $this->strategy->handlePayment($paymentItem, $user_id);
     }
 
-    public function handleRejectPayment(Payment $payment, $user_id): bool
+    public function handleRejectPayment(PaymentItems $paymentItem, $user_id): bool
     {
-        return $this->strategy->handleRejectPayment($payment, $user_id);
+        return $this->strategy->handleRejectPayment($paymentItem, $user_id);
     }
 }

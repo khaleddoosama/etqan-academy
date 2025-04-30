@@ -103,4 +103,5 @@
     'create_coupon' => 'انشاء كوبون',
     'edit_coupon' => 'تحديث كوبون',
     'delete_coupon' => 'حذف كوبون',
+    'add_section' => 'اضافة قسم',
 );

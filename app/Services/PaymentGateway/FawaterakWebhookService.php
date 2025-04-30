@@ -3,7 +3,17 @@
 namespace App\Services\PaymentGateway;
 
 use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentType;
+use App\Events\PaymentApprovedEvent;
+use App\Models\Cart;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
+use App\Services\PaymentStrategy\CashPayment;
+use App\Services\PaymentStrategy\InstallmentPayment;
+use App\Services\PaymentStrategy\PaymentContext;
+use App\Services\StudentInstallmentService;
+use App\Services\UserCoursesService;
+use App\Services\UserService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 class FawaterakWebhookService
@@ -11,7 +21,9 @@ class FawaterakWebhookService
     protected string $secretKey;
 
     public function __construct(
-        protected PaymentRepositoryInterface $paymentRepository
+        protected PaymentRepositoryInterface $paymentRepository,
+        protected PaymentContext $paymentContext,
+        protected StudentInstallmentService $studentInstallmentService
     ) {
         $this->secretKey = config('fawaterak.api_key');
     }
@@ -32,13 +44,13 @@ class FawaterakWebhookService
         return $generatedHash === ($data['hashKey'] ?? '');
     }
 
-    protected function handleWebhook(array $data, PaymentStatusEnum $status, bool $requireValidHash = true): void
+    protected function handleWebhook(array $data, PaymentStatusEnum $status, bool $requireValidHash = true): ?Model
     {
         $this->logWebhookData($status->value, $data);
 
         if ($requireValidHash && !$this->isValidHash($data)) {
             Log::warning("Invalid Fawaterak Webhook Hash for status: {$status->value}");
-            return;
+            return null;
         }
 
         $payment = $this->paymentRepository->where([
@@ -48,7 +60,7 @@ class FawaterakWebhookService
 
         if (!$payment) {
             Log::error("Payment not found for invoice: {$data['invoice_id']}");
-            return;
+            return null;
         }
 
         $updatePayload = [
@@ -61,6 +73,8 @@ class FawaterakWebhookService
         }
 
         $payment->update($updatePayload);
+
+        return $payment;
     }
 
     protected function logWebhookData(string $status, array $data): void
@@ -71,9 +85,50 @@ class FawaterakWebhookService
 
     public function processWebhookPaid(array $data): void
     {
-        $this->handleWebhook($data, PaymentStatusEnum::Paid);
-    }
+        $payment = $this->handleWebhook($data, PaymentStatusEnum::Paid);
 
+        if (!$payment) {
+            return;
+        }
+
+        $payment->load('paymentItems', 'coupon');
+
+        foreach ($payment->paymentItems as $item) {
+            Log::info("Payment Item: " . json_encode($item));
+            if ($item->course_id) {
+                Log::info("inside if condition");
+                $this->setPaymentStrategy($item->payment_type);
+                Log::info("payment type: " . $item->payment_type->value);
+                $this->paymentContext->handlePayment($item, $payment->user_id);
+
+                // event(new PaymentApprovedEvent([$payment->user_id], [
+                    //     'payment_item' => $item
+                // ]));
+            } else{
+                Log::info("inside else condition");
+            }
+        }
+
+        $coupon = $payment->coupon;
+        if ($coupon) {
+            $coupon->update([
+                'usage_count' => $coupon->usage_count + 1
+            ]);
+        }
+
+        // empty cart for user
+        Cart::forUser($payment->user_id)->delete();
+    }
+    private function setPaymentStrategy(PaymentType $paymentType): void
+    {
+        $strategy = match ($paymentType) {
+            PaymentType::CASH => new CashPayment(new UserService(), new UserCoursesService()),
+            PaymentType::INSTALLMENT => new InstallmentPayment($this->studentInstallmentService, new UserService(), new UserCoursesService()),
+            default => throw new \InvalidArgumentException('Invalid payment type.'),
+        };
+
+        $this->paymentContext->setPaymentStrategy($strategy);
+    }
     public function processWebhookFailed(array $data): void
     {
         $this->handleWebhook($data, PaymentStatusEnum::Failed, false);

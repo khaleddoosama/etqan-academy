@@ -30,4 +30,6 @@
     'yesterday' => 'Yesterday',
     'all_users' => 'All Users',
     'all_statuses' => 'All Statuses',
+    'duplicate_section' => 'Duplicate Section',
+    'loading' => 'Loading',
 );

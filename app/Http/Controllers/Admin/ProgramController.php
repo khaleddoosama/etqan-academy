@@ -29,7 +29,7 @@ class ProgramController extends Controller
 
     public function index(): View
     {
-        $programs = $this->programService->getPrograms();
+        $programs = $this->programService->getAll();
         return view('admin.program.index', compact('programs'));
     }
 

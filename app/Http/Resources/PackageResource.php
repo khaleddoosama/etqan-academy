@@ -19,6 +19,9 @@ class PackageResource extends JsonResource
             'slug' => $this->slug,
             'name' => $this->title,
             'description' => $this->description,
+            'meaning_description' => $this->meaning_description,
+            'features' => $this->features,
+            'logo' => $this->logo_url,
             'programs' => $this->programs ? ProgramResource::collection($this->programs()) : [],
             'plans' => $this->packagePlans ? PackagePlanResource::collection($this->packagePlans) : [],
         ];

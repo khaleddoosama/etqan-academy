@@ -18,15 +18,15 @@ class PackageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'meaning_description' => 'required|string',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'meaning_description' => 'nullable|string',
             'logo' => 'nullable|image|max:4096',
-            'features' => 'required',
+            'features' => 'nullable',
             'programs' => 'nullable|array',
             'programs.*' => 'nullable|exists:programs,id',
 
-            'plans' => 'required|array',
+            'plans' => 'nullable|array',
             'plans.*.id' => 'nullable|exists:package_plans,id',
             'plans.*.title' => 'nullable|string',
             'plans.*.from' => 'nullable|string',

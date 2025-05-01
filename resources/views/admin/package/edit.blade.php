@@ -47,7 +47,7 @@
                                         class="col-sm-12 col-form-label">{{ __('attributes.features') }}</x-input-label>
                                     <div class="col-sm-12" id="inputWrapper">
                                         <x-text-input type="text" id="input-features" name="features" data-role="tagsinput"
-                                            value="{{ implode(',', $package->features) }}" class="form-control" />
+                                            value="{{ implode(',', $package->features ?? []) }}" class="form-control" />
                                     </div>
                                     <x-input-error :messages="$errors->get('features')" style="padding: 0 7.5px;margin: 0;" />
                                 </div>

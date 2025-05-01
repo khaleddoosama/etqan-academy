@@ -10,6 +10,7 @@ class PaymentItems extends Model
 {
     use HasFactory;
 
+    public mixed $course;
     protected $table = 'payment_items';
 
     protected $fillable = [
@@ -39,7 +40,7 @@ class PaymentItems extends Model
         return $this->belongsTo(PackagePlans::class);
     }
 
-    public function course()
+    public function course(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Course::class);
     }
@@ -47,10 +48,11 @@ class PaymentItems extends Model
     //get serviceTitle
     public function getServiceTitleAttribute()
     {
-        if ($this->course) {
-            return $this->course->title;
-        } else {
-            return $this->packagePlan->title;
+        $course = $this->course()->first();
+        if ($course) {
+            return $course->title;
         }
+
+        return optional($this->packagePlan)->title;
     }
 }

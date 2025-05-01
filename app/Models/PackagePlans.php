@@ -54,6 +54,58 @@ class PackagePlans extends Model
         return null;
     }
 
+    // get duration text
+    public function getDurationTextAttribute()
+    {
+        $days = $this->duration;
+
+        if (empty($days)) {
+            return null;
+        }
+
+        if ($days < 30) {
+            return $days . ' يوم';
+        }
+
+        if ($days == 30) {
+            return 'شهر';
+        }
+
+        if ($days == 365) {
+            return 'سنة';
+        }
+
+        // Calculate months and remaining days
+        $months = floor($days / 30);
+        $remainingDays = $days % 30;
+
+        $text = '';
+
+        if ($months > 0) {
+            $text .= $this->getArabicMonthText($months);
+        }
+
+        if ($remainingDays > 0) {
+            if ($text) {
+                $text .= ' و';
+            }
+            $text .= $this->getArabicDayText($remainingDays);
+        }
+
+        return $text;
+    }
+
+    private function getArabicMonthText($months)
+    {
+        return $months == 1 ? 'شهر' : $months . ' شهور';
+    }
+
+    private function getArabicDayText($days)
+    {
+        return $days == 1 ? 'يوم' : $days . ' أيام';
+    }
+
+
     // set Image Attribute
     public function setLogoAttribute(UploadedFile $logo)
     {

@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'middleware' => ['api', 'throttle:12,1', 'log_user_activity:api'],
+    'middleware' => ['api', 'throttle:10,1', 'log_user_activity:api'],
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);
@@ -51,14 +51,14 @@ Route::group([
 });
 
 // send Inquiry
-Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry'])->middleware(['throttle:12,1', 'log_user_activity:api']);
+Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry'])->middleware(['throttle:20,1', 'log_user_activity:api']);
 
 // show categories
 Route::get('/categories', [CategoryController::class, 'index'])->middleware(['log_user_activity:api']);
 Route::get('/student-works', [StudentWorkController::class, 'index'])->middleware(['log_user_activity:api']);
 
 // send Request Course
-Route::post('/request-course', [RequestCourseController::class, 'store'])->middleware(['throttle:12,1', 'log_user_activity:api']);
+Route::post('/request-course', [RequestCourseController::class, 'store'])->middleware(['throttle:20,1', 'log_user_activity:api']);
 
 Route::get('/home', [HomeController::class, 'home'])->middleware(['log_user_activity:api']);
 
@@ -78,53 +78,55 @@ Route::get('course/{course_slug}/section/{section_slug}', [SectionController::cl
 Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index'])->middleware(['log_user_activity:api']);
 
 // verified
-Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:12,1', 'log_user_activity:api'])->group(function () {
-    // get user courses
+Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:20,1', 'log_user_activity:api'])->group(function () {
+
     Route::get('/user-courses', [UserController::class, 'UserCourses']);
 
     // show single lecture
-    Route::get('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}', [LectureController::class, 'show']);
-
-    // view lecture
-    Route::put('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}/view', [LectureController::class, 'views']);
+    Route::prefix('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}')->group(function () {
+        Route::get('/', [LectureController::class, 'show']);
+        Route::put('/view', [LectureController::class, 'views']);
+    });
 
     // Withdrawal Request
     Route::post('withdrawal-request', [WithdrawalRequestController::class, 'store']);
 
     // search students
-    Route::get('/students/search', [StudentController::class, 'search']);
-    Route::get('/students/{slug}', [StudentController::class, 'showProfile']);
+    Route::prefix('students')->group(function () {
+        Route::get('/search', [StudentController::class, 'search']);
+        Route::get('/{slug}', [StudentController::class, 'showProfile']);
+    });
 
 
     // create gallery
-    Route::post('/gallery', [GalleryController::class, 'store']);
-    // delete gallery
-    Route::delete('/gallery/{id}', [GalleryController::class, 'destroy']);
+    Route::prefix('gallery')->group(function () {
+        Route::post('/', [GalleryController::class, 'store']);
+        Route::delete('/{id}', [GalleryController::class, 'destroy']);
+    });
 
     Route::post('/payment-details', [PaymentDetailController::class, 'store']);
 
     Route::apiResource('comments', CommentController::class);
 
-    Route::post('/student-opinions', [StudentOpinionController::class, 'store'])->middleware(['log_user_activity:api']);
+    Route::post('/student-opinions', [StudentOpinionController::class, 'store']);
 
-    Route::get('/carts', [CartController::class, 'getForUser'])->middleware(['log_user_activity:api']);
-    Route::post('/carts', [CartController::class, 'store'])->middleware(['log_user_activity:api']);
-    Route::delete('/carts/{cartId}', [CartController::class, 'destroy'])->middleware(['log_user_activity:api']);
+    Route::prefix('carts')->group(function () {
+        Route::get('/', [CartController::class, 'getForUser']);
+        Route::post('/', [CartController::class, 'store'])->middleware('throttle:10,1');
+        Route::delete('/{cartId}', [CartController::class, 'destroy']);
+    });
 
-    Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware(['log_user_activity:api']);
 
-    Route::prefix('/payment/fawaterak')->group(function () {
+    Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware('throttle:10,1');
+
+    Route::prefix('payment/fawaterak')->middleware('throttle:10,1')->group(function () {
         Route::get('/payment-methods', [GatewayPaymentController::class, 'paymentMethods']);
         Route::post('/pay', [GatewayPaymentController::class, 'pay']);
-    });
-    Route::prefix('/packages')->group(function () {
-        Route::get('/', [PackageController::class, 'index']);
-        Route::get('/{slug}', [PackageController::class, 'show']);
     });
 });
 
 //
-Route::middleware(['jwt.authenticate', 'throttle:12,1', 'log_user_activity:api'])->group(function () {
+Route::middleware(['jwt.authenticate', 'throttle:10,1', 'log_user_activity:api'])->group(function () {
     // Send the email verification link
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
         ->name('verification.send');
@@ -132,11 +134,11 @@ Route::middleware(['jwt.authenticate', 'throttle:12,1', 'log_user_activity:api']
 
 // Handle email verification
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyEmail'])
-    ->name('jwt.verification.verify')->middleware(['signed', 'throttle:12,1', 'log_user_activity:api']);
+    ->name('jwt.verification.verify')->middleware(['signed', 'throttle:10,1', 'log_user_activity:api']);
 
 
-Route::post('password/request', [ResetPasswordController::class, 'requestPassword'])->middleware(['throttle:12,1', 'log_user_activity:api'])->name('password.request');
-Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->middleware(['throttle:12,1', 'log_user_activity:api'])->name('password.reset');
+Route::post('password/request', [ResetPasswordController::class, 'requestPassword'])->middleware(['throttle:10,1', 'log_user_activity:api'])->name('password.request');
+Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->middleware(['throttle:10,1', 'log_user_activity:api'])->name('password.reset');
 Route::get('/student-opinions', [StudentOpinionController::class, 'index'])->middleware(['log_user_activity:api']);
 
 Route::prefix('/payment/fawaterak')->group(function () {
@@ -144,4 +146,9 @@ Route::prefix('/payment/fawaterak')->group(function () {
     Route::post('/webhook/cancelled_json', [GatewayWebhookController::class, 'handleCancelled']);
     Route::post('/webhook/failed_json', [GatewayWebhookController::class, 'handleFailed']);
     Route::post('/webhook/refund_json', [GatewayWebhookController::class, 'handleRefund']);
+});
+
+Route::prefix('/packages')->group(function () {
+    Route::get('/', [PackageController::class, 'index']);
+    Route::get('/{slug}', [PackageController::class, 'show']);
 });

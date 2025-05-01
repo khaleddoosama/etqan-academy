@@ -20,6 +20,7 @@ class PackagePlanResource extends JsonResource
             'from' => $this->from,
             'price' => $this->price,
             'duration' => $this->duration,
+            'duration_text' => $this->duration_text,
             'device_limit' => $this->device_limit,
             'number_of_downloads' => $this->number_of_downloads,
             'has_ai_access' => $this->has_ai_access,

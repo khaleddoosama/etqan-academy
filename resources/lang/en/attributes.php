@@ -237,4 +237,6 @@ return [
     'package_plans' => 'Package Plans',
     'payment_info' => 'Payment Info',
     'package_plan' => 'Package Plan',
+    'Visa-Mastercard' => 'Visa-Mastercard',
+
 ];

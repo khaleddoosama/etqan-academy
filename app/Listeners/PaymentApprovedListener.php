@@ -18,8 +18,8 @@ class PaymentApprovedListener
 
 
         $data = [
-            'courseSlug' => $event->getData()['courseSlug'] ?? '',
-            'courseTitle' => $event->getData()['courseTitle'] ?? '',
+//            'courseSlug' => $event->getData()['courseSlug'] ?? '',
+//            'courseTitle' => $event->getData()['courseTitle'] ?? '',
             'payment' => $event->getData()['payment'] ?? '',
         ];
 
@@ -32,7 +32,7 @@ class PaymentApprovedListener
 
         Log::info("---------------------------------------------");
 
-        $notification = new PaymentApprovedNotification($data['courseSlug'], $data['courseTitle'], $data['payment']);
+        $notification = new PaymentApprovedNotification($data['payment']);
         $emailStrategy = new EmailStrategy($notification);
         $notificationContext = new NotificationContext($emailStrategy);
         $notificationContext->executeStrategy($users);

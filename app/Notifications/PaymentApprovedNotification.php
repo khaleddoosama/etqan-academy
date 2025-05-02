@@ -3,114 +3,115 @@
 namespace App\Notifications;
 
 use App\Enums\PaymentType;
+use App\Models\Payment;
+use App\Models\PaymentItems;
+use App\Services\CourseInstallmentService;
 use App\Services\StudentInstallmentService;
 use App\Traits\NotificationToArray;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Mail\Mailables\Attachment;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf;
 
-class PaymentApprovedNotification extends Notification implements ShouldQueue
+class PaymentApprovedNotification extends Notification
 {
     use Queueable, NotificationToArray;
+    private Payment $payment;
+    private Collection $payment_items;
 
-    private $courseSlug;
-    private $courseTitle;
-    private $payment;
-    private $courseInstallment;
-
-    public function __construct(string $courseSlug, string $courseTitle, $payment)
+    public function __construct($payment)
     {
-        $this->courseSlug = $courseSlug;
-        $this->courseTitle = $courseTitle;
         $this->payment = $payment;
-        $this->courseInstallment = $payment->courseInstallment;
-        $this->queue = 'high';
+        $this->payment_items = $payment->paymentItems;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
         $formatterDecimal = new \NumberFormatter('ar', \NumberFormatter::DECIMAL);
+        $mailMessage = (new MailMessage)
+            ->subject('Access Approved')
+            ->line('Congratulations! Your payment has been approved.');
 
-        // Calculate the remaining amount
-        $remaining = 0;
-        if ($this->payment->payment_type == PaymentType::INSTALLMENT) {
-            // Get the number of paid installments
-            $studentInstallmentService = new StudentInstallmentService();
-            $installmentPaidCount = $studentInstallmentService->getNumberOfInstallmentsPaid($this->payment->user_id, $this->payment->course_installment_id);
+        Log::info("From Notificatioin: " . $this->payment->amount);
 
-            // Calculate remaining installments
-            $remaining_installments = $this->courseInstallment->number_of_installments - $installmentPaidCount;
-            $installmentsAmount = $this->courseInstallment->installment_amounts;
+        foreach ($this->payment_items as $payment_item) {
+            Log::info("payment_item: " . $payment_item);
+            $remaining = 0;
 
+            // Check and calculate remaining installments
+            if ($payment_item->payment_type == PaymentType::INSTALLMENT) {
+                $studentInstallmentService = new StudentInstallmentService(new CourseInstallmentService());
+                $installmentPaidCount = $studentInstallmentService->getNumberOfInstallmentsPaid(
+                    $this->payment->user_id,
+                    $payment_item->course_installment_id
+                );
 
-            for ($i = 0; $i < $remaining_installments; $i++) {
-                $remaining += $installmentsAmount[$this->courseInstallment->number_of_installments - $i - 1];
+                $courseInstallment = $payment_item->courseInstallment;
+                $remaining_installments = $courseInstallment->number_of_installments - $installmentPaidCount;
+                $installmentsAmount = $courseInstallment->installment_amounts;
+
+                for ($i = 0; $i < $remaining_installments; $i++) {
+                    $remaining += $installmentsAmount[$courseInstallment->number_of_installments - $i - 1];
+                }
             }
+
+            $date = Carbon::parse(now())->locale('ar')->translatedFormat('d F Y');
+            $day = Carbon::parse(now())->locale('ar')->translatedFormat('l');
+
+            $include = '';
+            $value = '';
+            $course = $payment_item->course()->first();
+
+            if ($course && $course->title == "السوبر جرافيك") {
+                $include = "كورس الجرافيك ديزاين - كورس المونتاج - كورس الموشن جرافيك - كورس العمل الحر - كورس التسويق - مكتبة إتقان للجرافيك";
+                $value = "الأشتراك فـي دبلومة السوبر جرافيك";
+            } elseif ($course && $course->title == "الميني جرافيك") {
+                $include = "كورس الجرافيك ديزاين - كورس العمل الحر - مكتبة اتقان للجرافيك";
+                $value = "الأشتراك فـي دبلومة الميني جرافيك";
+            } elseif ($payment_item->package_plan_id) {
+                $include = "البرامج المذكورة على الموقع";
+                $value = "تفعيل حساب " . $payment_item->packagePlan->title . " لمدة " . $payment_item->packagePlan->duration_text;
+            }
+
+            $data = [
+                'date' => $date,
+                'day' => $day,
+                'branch' => '٦ اكتوبر',
+                'name' => $this->payment->user->name,
+                'phone' => $this->payment->user->phone,
+                'amount' => $formatterDecimal->format($payment_item->amount),
+                'remaining' => $formatterDecimal->format($remaining),
+                'value' => $value,
+                'include' => $include,
+                'method' => trans('attributes.' . $this->payment->payment_method, [], 'ar'),
+                'type' => trans('attributes.' . $payment_item->payment_type->value, [], 'ar'),
+                'admin_name' => 'دينا موسى القاضي',
+            ];
+
+            $pdf = LaravelMpdf::loadView('invoice.payment_approved', $data);
+            $mailMessage->attachData($pdf->output(), 'invoice_' . $payment_item->id . '.pdf');
+
+            if ($course) {
+                $mailMessage->line("Course: {$course->title}")
+                    ->action('View Course', env('FRONTEND_URL') . 'courses/' . $course->slug);
+            }
+
+            $mailMessage->line("Included: " . $value);
         }
 
+        $mailMessage->line('We hope you enjoy the learning experience!')
+            ->line('Your invoices are attached.');
 
-        $date = Carbon::parse($this->payment->approved_at)->locale('ar')->translatedFormat('d F Y');
-        // $date = Carbon::parse($this->payment->approved_at)->locale('ar')->translatedFormat('Y-m-d');
-        $day = Carbon::parse($this->payment->approved_at)->locale('ar')->translatedFormat('l');
-
-        $include = '';
-        $value = '';
-        if ($this->courseInstallment->course->title == "السوبر جرافيك") {
-            $include = "كورس الجرافيك ديزاين - كورس المونتاج - كورس الموشن جرافيك - كورس العمل الحر - كورس التسويق - مكتبة إتقان للجرافيك";
-            $value = "الأشتراك فـي دبلومة السوبر جرافيك ( الدبلومة الشاملة للتصميم )";
-        } elseif ($this->courseInstallment->course->title == "الميني جرافيك") {
-            $include = "كورس الجرافيك ديزاين - كورس العمل الحر - مكتبة اتقان للجرافيك";
-            $value = "الأشتراك فـي دبلومة الميني جرافيك ( الدبلومة المصغرة للتصميم )";
-        }
-
-        $data = [
-            'date' => $date,
-            'day' => $day,
-            'branch' => '٦ اكتوبر',
-
-            'name' => $this->payment->user->name,
-            'phone' => $this->payment->user->phone,
-
-            'amount' => $formatterDecimal->format($this->payment->amount),
-
-            'remaining' => $formatterDecimal->format($remaining),
-
-            'value' => $value,
-
-            'include' => $include,
-
-            'method' => trans('attributes.' . $this->payment->payment_method->value, [], 'ar'),
-            'type' => trans('attributes.' . $this->payment->payment_type->value, [], 'ar'),
-
-            'admin_name' => 'دينا موسى القاضي',
-        ];
-        $pdf = LaravelMpdf::loadView('invoice.payment_approved', $data);
-
-        return (new MailMessage)
-            ->subject('Access Approved: ' . $this->courseTitle)
-            ->line('Congratulations! You have been approved to access the course: ' . $this->courseTitle)
-            ->action('View Course', env('FRONTEND_URL') . 'courses/' . $this->courseSlug)
-            ->line('We hope you enjoy the learning experience!')
-            ->line('Your invoice is attached below.')
-            ->attachData($pdf->output(), 'invoice.pdf');
+        return $mailMessage;
     }
 
     /**

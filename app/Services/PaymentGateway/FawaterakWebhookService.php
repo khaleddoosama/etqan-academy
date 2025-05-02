@@ -94,19 +94,20 @@ class FawaterakWebhookService
         $payment->load('paymentItems', 'coupon');
 
         foreach ($payment->paymentItems as $item) {
-            Log::info("Payment Item: " . json_encode($item));
             if ($item->course_id) {
-                Log::info("inside if condition");
+                $item->load(['course', 'courseInstallment', 'packagePlan']);
                 $this->setPaymentStrategy($item->payment_type);
-                Log::info("payment type: " . $item->payment_type->value);
-                $this->paymentContext->handlePayment($item, $payment->user_id);
 
-                // event(new PaymentApprovedEvent([$payment->user_id], [
-                    //     'payment_item' => $item
-                // ]));
-            } else{
-                Log::info("inside else condition");
+                $this->paymentContext->handlePayment($item, $payment->user_id);
             }
+        }
+        try {
+            event(new PaymentApprovedEvent([$payment->user_id], [
+                'payment' => $payment
+            ]));
+        } catch (\Exception $e) {
+            Log::error("Error in PaymentApprovedEvent");
+            Log::error($e->getMessage());
         }
 
         $coupon = $payment->coupon;
@@ -117,7 +118,7 @@ class FawaterakWebhookService
         }
 
         // empty cart for user
-        Cart::forUser($payment->user_id)->delete();
+        // Cart::forUser($payment->user_id)->delete();
     }
     private function setPaymentStrategy(PaymentType $paymentType): void
     {

@@ -236,4 +236,5 @@ return [
     'package_plans' => 'خطط الباقات',
     'payment_info' => 'معلومات الدفع',
     'package_plan' => 'خطة الباقة',
+    'Visa-Mastercard' => 'Visa-Mastercard',
 ];

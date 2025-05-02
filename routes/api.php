@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'middleware' => ['api', 'throttle:10,1', 'log_user_activity:api'],
+    'middleware' => ['api', 'throttle:60,1', 'log_user_activity:api'],
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);

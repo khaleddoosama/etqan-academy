@@ -118,7 +118,7 @@ class FawaterakWebhookService
         }
 
         // empty cart for user
-        // Cart::forUser($payment->user_id)->delete();
+        Cart::forUser($payment->user_id)->delete();
     }
     private function setPaymentStrategy(PaymentType $paymentType): void
     {

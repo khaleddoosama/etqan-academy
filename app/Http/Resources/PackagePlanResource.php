@@ -16,6 +16,7 @@ class PackagePlanResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'package' => $this->package->title,
             'title' => $this->title,
             'from' => $this->from,
             'price' => $this->price,

@@ -10,7 +10,6 @@ class PaymentItems extends Model
 {
     use HasFactory;
 
-    public mixed $course;
     protected $table = 'payment_items';
 
     protected $fillable = [

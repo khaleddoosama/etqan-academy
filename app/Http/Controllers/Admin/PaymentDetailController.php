@@ -64,6 +64,7 @@ class PaymentDetailController extends Controller
             'user',
             'paymentItems.courseInstallment.course',
             'paymentItems.packagePlan',
+            'paymentItems.course',
             'paymentItems.courseInstallment',
         ]);
         return view('admin.payment_detail.show', compact('payment'));

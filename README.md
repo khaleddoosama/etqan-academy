@@ -1,1 +1,1 @@
-# etqan-academy
+# aura-academy

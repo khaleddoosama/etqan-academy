@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-DB_NAME="etqan"
+DB_NAME="aura"
 BACKUP_DIR="/var/www/laravel/storage/backups"
 DATE=$(date +\%F)
 

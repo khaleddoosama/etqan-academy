@@ -24,7 +24,7 @@ class UserController extends Controller
         $this->userService = $userService;
         $this->categoryService = $categoryService;
         $this->middleware('permission:user.list')->only('active', 'inactive');
-        $this->middleware('permission:user.show')->only('show');
+        $this->middleware('permission:user.show')->only('show', 'logs');
         $this->middleware('permission:user.edit')->only('edit', 'update', 'updatePassword');
         $this->middleware('permission:user.status')->only('status');
     }
@@ -126,5 +126,69 @@ class UserController extends Controller
         $user = $this->userService->getUser($id);
         $user->update(['email_verified_at' => now()]);
         return redirect()->back();
+    }    // logs
+    public function logs($id, Request $request)
+    {
+        $user = $this->userService->getUser($id);
+
+        // Start building the query
+        $query = \Spatie\Activitylog\Models\Activity::where(function($query) use ($id) {
+            $query->where(function($q) use ($id) {
+                $q->where('causer_id', $id)
+                  ->where('causer_type', 'App\Models\User');
+            })->orWhere(function($q) use ($id) {
+                $q->where('subject_id', $id)
+                  ->where('subject_type', 'App\Models\User');
+            });
+        });
+
+        // Apply filters
+        if ($request->filled('log_name')) {
+            $query->where('log_name', $request->log_name);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // Get per page value from request or default to 25
+        $perPage = $request->get('per_page', 25);
+
+        // Validate per_page value to prevent abuse
+        $allowedPerPage = [10, 25, 50, 100, 500];
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 25;
+        }
+
+        // Get paginated results
+        $logs = $query->with(['causer', 'subject']) // Eager load relationships to avoid N+1 queries
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage); // Dynamic logs per page
+
+        // Preserve query parameters in pagination
+        $logs->appends($request->query());
+
+        // Get unique log names for filter dropdown
+        $logNames = \Spatie\Activitylog\Models\Activity::where(function($query) use ($id) {
+            $query->where(function($q) use ($id) {
+                $q->where('causer_id', $id)
+                  ->where('causer_type', 'App\Models\User');
+            })->orWhere(function($q) use ($id) {
+                $q->where('subject_id', $id)
+                  ->where('subject_type', 'App\Models\User');
+            });
+        })->distinct()->pluck('log_name');
+
+        // Check if this is an AJAX request
+        if ($request->ajax()) {
+            return view('admin.user.logs-table', compact('logs', 'user'))->render();
+        }
+
+        return view('admin.user.logs', compact('user', 'logs', 'logNames'));
     }
+
 }

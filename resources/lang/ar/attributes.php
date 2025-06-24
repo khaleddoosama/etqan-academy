@@ -2,6 +2,7 @@
 
 return [
     'action' => 'الإجراء',
+    'id' => 'المعرف',
     'add_attachments' => 'إضافة مرفقات',
     'admin' => 'المسؤول',
     'admin_manage' => 'إدارة المسؤول',
@@ -237,4 +238,20 @@ return [
     'payment_info' => 'معلومات الدفع',
     'package_plan' => 'خطة الباقة',
     'Visa-Mastercard' => 'Visa-Mastercard',
+
+    // User logs related translations
+    'user_logs' => 'سجلات المستخدم',
+    'activity_logs' => 'سجلات الأنشطة',
+    'user_information' => 'معلومات المستخدم',
+    'log_details' => 'تفاصيل السجل',
+    'log_name' => 'اسم السجل',
+    'performed_by_user' => 'نفذه المستخدم',
+    'performed_on_user' => 'نُفذ على المستخدم',
+    'causer' => 'المُحدث',
+    'properties' => 'الخصائص',
+    'system' => 'النظام',
+    'date' => 'التاريخ',
+    'date_from' => 'التاريخ من',
+    'date_to' => 'التاريخ إلى',
+    'per_page' => 'عدد العناصر في الصفحة',
 ];

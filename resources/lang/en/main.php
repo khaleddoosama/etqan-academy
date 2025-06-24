@@ -32,4 +32,10 @@
     'all_statuses' => 'All Statuses',
     'duplicate_section' => 'Duplicate Section',
     'loading' => 'Loading',
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'results' => 'results',
+    'all' => 'All',
+    'per_page_help' => 'Select how many logs to display per page',
 );

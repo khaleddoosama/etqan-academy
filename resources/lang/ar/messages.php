@@ -143,5 +143,6 @@
     'section_created_successfully' => 'تم انشاء قسم بنجاح',
     'section_updated_successfully' => 'تم تحديث قسم بنجاح',
     'section_deleted_successfully' => 'تم حذف قسم بنجاح',
-    'reset_link_sent' => 'تم ارسال رابط إعادة تعيين كلمة المرور بنجاح',
+    'reset_link_sent' => 'تم ارسال رابط إعادة تعيين كلمة المرور بنجاح',
+    'no_logs_found' => 'لم يتم العثور على سجلات أنشطة لهذا المستخدم.',
 );

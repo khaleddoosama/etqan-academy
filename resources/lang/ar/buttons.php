@@ -104,4 +104,8 @@
     'edit_coupon' => 'تحديث كوبون',
     'delete_coupon' => 'حذف كوبون',
     'add_section' => 'اضافة قسم',
+    'view_logs' => 'عرض السجلات',
+    'back' => 'رجوع',
+    'filter' => 'تصفية',
+    'clear' => 'مسح',
 );

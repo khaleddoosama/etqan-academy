@@ -73,6 +73,7 @@ Route::group(
                 Route::put('/users/{user}/status', 'status')->name('users.status');
 
                 Route::put('/{user}/password', 'updatePassword')->name('users.update.password');
+                Route::get('/{user}/logs', 'logs')->name('users.logs');
             });
 
             // Instructor Controller

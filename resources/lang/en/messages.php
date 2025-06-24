@@ -147,4 +147,5 @@
     'package_created' => 'Package created successfully.',
     'package_updated' => 'Package updated successfully.',
     'package_deleted' => 'Package deleted successfully.',
+    'no_logs_found' => 'No activity logs found for this user.',
 );

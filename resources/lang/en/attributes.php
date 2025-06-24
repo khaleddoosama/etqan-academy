@@ -2,6 +2,7 @@
 
 return [
     'action' => 'Action',
+    'id' => 'ID',
     'add_attachments' => 'Add Attachments',
     'admin' => 'Admin',
     'admin_manage' => 'Admin Management',
@@ -235,8 +236,23 @@ return [
     'plans_title' => 'Plans Title',
     'payment_items' => 'Payment Items',
     'package_plans' => 'Package Plans',
-    'payment_info' => 'Payment Info',
-    'package_plan' => 'Package Plan',
+    'payment_info' => 'Payment Info',    'package_plan' => 'Package Plan',
     'Visa-Mastercard' => 'Visa-Mastercard',
+
+    // User logs related translations
+    'user_logs' => 'User Logs',
+    'activity_logs' => 'Activity Logs',
+    'user_information' => 'User Information',
+    'log_details' => 'Log Details',
+    'log_name' => 'Log Name',
+    'performed_by_user' => 'Performed by User',
+    'performed_on_user' => 'Performed on User',
+    'causer' => 'Causer',
+    'properties' => 'Properties',
+    'system' => 'System',
+    'date' => 'Date',
+    'date_from' => 'Date From',
+    'date_to' => 'Date To',
+    'per_page' => 'Per Page',
 
 ];

@@ -104,4 +104,8 @@
     'edit_coupon' => 'Edit Coupon',
     'delete_coupon' => 'Delete Coupon',
     'add_section' => 'Add Section',
+    'view_logs' => 'View Logs',
+    'back' => 'Back',
+    'filter' => 'Filter',
+    'clear' => 'Clear',
 );

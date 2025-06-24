@@ -24,107 +24,60 @@
                             </a>
                         </div>
                         @endcan
+
+                        <!-- Filter Form -->
+                        <div class="card-body border-bottom">
+                            <form id="filter-form" method="GET" action="{{ url()->current() }}">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="search">{{ __('main.search') }}</label>
+                                        <input type="text" name="search" id="search" class="form-control"
+                                               placeholder="{{ __('main.search_users_placeholder') }}"
+                                               value="{{ request('search') }}">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="per_page">
+                                            {{ __('attributes.per_page') }}
+                                            <i class="fas fa-info-circle text-info"
+                                               title="{{ __('main.per_page_help') }}"
+                                               data-toggle="tooltip"
+                                               data-placement="top"></i>
+                                        </label>
+                                        <select name="per_page" id="per_page" class="form-control">
+                                            <option value="10" {{ request('per_page', 25) == 10 ? 'selected' : '' }}>10</option>
+                                            <option value="25" {{ request('per_page', 25) == 25 ? 'selected' : '' }}>25</option>
+                                            <option value="50" {{ request('per_page', 25) == 50 ? 'selected' : '' }}>50</option>
+                                            <option value="100" {{ request('per_page', 25) == 100 ? 'selected' : '' }}>100</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>&nbsp;</label>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-search"></i> {{ __('buttons.search') }}
+                                            </button>
+                                            <a href="{{ url()->current() }}" class="btn btn-secondary btn-sm">
+                                                <i class="fas fa-times"></i> {{ __('buttons.clear') }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
                         <!-- /.card-header -->
-                        <div class="card-body table-responsive">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>{{ __('attributes.image') }}</th>
-                                        <th>{{ __('attributes.first_name') }}</th>
-                                        <th>{{ __('attributes.last_name') }}</th>
-                                        <th>{{ __('attributes.email') }}</th>
-                                        <th>{{ __('attributes.phone') }}</th>
-                                        <th>{{ __('attributes.status') }}</th>
-                                        <th>{{ __('attributes.email_verified_at') }}</th>
-                                        <th>{{ __('main.actions') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($users as $user)
-                                    <tr>
-                                        <td
-                                            title="{{ $user->UserOnline() ? 'Online' : Carbon\Carbon::parse($user->last_login)->diffForHumans() }}">
-                                            {!! $user->UserOnline()
-                                            ? "<i class='fas fa-circle text-success'></i>"
-                                            : "<i class='fas fa-circle text-danger'></i>" !!}
+                        <div class="card-body">
+                            <!-- Loading spinner -->
+                            <div id="users-loading" class="text-center" style="display: none;">
+                                <i class="fas fa-spinner fa-spin fa-2x"></i>
+                                <p class="mt-2">{{ __('main.loading') }}...</p>
+                            </div>
 
-                                            {{ $user->id }}
-                                        </td>
-                                        <td>
-                                            <x-custom.profile-picture :user="$user" size="50" />
-                                        </td>
-                                        <td>{{ $user->first_name }}</td>
-                                        <td>{{ $user->last_name }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->phone }}</td>
-                                        <td>
-                                            <x-custom.status-span :status="$user->status" />
-                                        </td>
-                                        <td>
-                                            @if ($user->email_verified_at)
-                                            {{ $user->email_verified_at }}
-                                            @else
-                                            N/A
-                                            @can('user.verify')
-                                            @if ($user->email_verified_at == null)
-                                            <form action="{{ route('admin.users.verify', $user->id) }}"
-                                                method="POST" style="display: inline-block;" class="mx-3">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="btn btn-success"
-                                                    title="{{ __('buttons.verify_email') }}"
-                                                    style="color: white; text-decoration: none;">
-                                                    <i class="fas fa-toggle-on"></i>
-                                                </button>
-                                            </form>
-                                            @endif
-                                            @endcan
-                                            @endif
-                                        </td>
-
-                                        <td> @can('user_course.list')
-                                            <a href="{{ route('admin.users.courses.index', $user) }}"
-                                                class="btn btn-warning" title="{{ __('buttons.add_course') }}"
-                                                style="color: white; text-decoration: none;">
-                                                <i class="fas fa-plus"></i>
-                                            </a>
-                                            @endcan
-
-                                            @can('user.show')
-                                            <a href="{{ route('admin.users.logs', parameters: $user->id) }}"
-                                                class="btn btn-info" title="{{ __('buttons.view_logs') }}"
-                                                style="color: white; text-decoration: none;">
-                                                <i class="fas fa-history"></i>
-                                            </a>
-                                            @endcan
-
-                                            @can('user.edit')
-                                            <x-custom.edit-button route="admin.users.edit" :id="$user->id" />
-                                            @endcan
-
-                                            @can('user.status')
-                                            <x-custom.change-status-button :status="$user->status"
-                                                route="admin.users.status" :id="$user->id" />
-                                            @endcan
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>{{ __('attributes.image') }}</th>
-                                        <th>{{ __('attributes.first_name') }}</th>
-                                        <th>{{ __('attributes.last_name') }}</th>
-                                        <th>{{ __('attributes.email') }}</th>
-                                        <th>{{ __('attributes.phone') }}</th>
-                                        <th>{{ __('attributes.status') }}</th>
-                                        <th>{{ __('attributes.email_verified_at') }}</th>
-                                        <th>{{ __('main.actions') }}</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                            <!-- Users table container -->
+                            <div id="users-container">
+                                @include('admin.user.users-table', ['users' => $users])
+                            </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -138,4 +91,82 @@
     </section>
     <!-- /.content -->
 </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            // Initialize tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // AJAX Pagination
+            $(document).on('click', '.ajax-pagination', function(e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                loadUsersPage(url);
+            });
+
+            // AJAX Filter Form
+            $('#filter-form').on('submit', function(e) {
+                e.preventDefault();
+                var url = $(this).attr('action');
+                var formData = $(this).serialize();
+                loadUsersPage(url + '?' + formData);
+            });
+
+            // Auto-submit on per_page change
+            $('#per_page').on('change', function() {
+                $('#filter-form').trigger('submit');
+            });
+
+            // Search with debounce
+            let searchTimeout;
+            $('#search').on('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    $('#filter-form').trigger('submit');
+                }, 500); // 500ms delay
+            });
+
+            function loadUsersPage(url) {
+                // Show loading spinner
+                $('#users-loading').show();
+                $('#users-container').hide();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        $('#users-container').html(response).show();
+                        $('#users-loading').hide();
+
+                        // Update browser URL without page reload
+                        if (history.pushState) {
+                            history.pushState(null, null, url);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#users-loading').hide();
+                        $('#users-container').show();
+                        console.error('Error loading users:', error);
+
+                        // Show error message if toastr is available
+                        if (typeof toastr !== 'undefined') {
+                            toastr.error('Error loading users. Please try again.');
+                        } else {
+                            alert('Error loading users. Please try again.');
+                        }
+                    }
+                });
+            }
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function(e) {
+                loadUsersPage(window.location.href);
+            });
+        });
+    </script>
 @endsection

@@ -30,20 +30,62 @@ class UserController extends Controller
     }
 
     //active
-    public function active()
+    public function active(Request $request)
     {
-        $users = $this->userService->getActiveUsers();
+        // Get per page value from request or default to 25
+        $perPage = $request->get('per_page', 25);
+
+        // Validate per_page value to prevent abuse
+        $allowedPerPage = [10, 25, 50, 100];
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 25;
+        }
+
+        // Get search parameter
+        $search = $request->get('search');
+
+        $users = $this->userService->getActiveUsers($perPage, $search);
+
+        // Preserve query parameters in pagination
+        $users->appends($request->query());
 
         $title = __('attributes.users_active');
+
+        // Check if this is an AJAX request
+        if ($request->ajax()) {
+            return view('admin.user.users-table', compact('users'))->render();
+        }
 
         return view('admin.user.index', compact('users', 'title'));
     }
 
     //inactive
-    public function inactive()
+    public function inactive(Request $request)
     {
-        $users = $this->userService->getInactiveUsers();
+        // Get per page value from request or default to 25
+        $perPage = $request->get('per_page', 25);
+
+        // Validate per_page value to prevent abuse
+        $allowedPerPage = [10, 25, 50, 100];
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 25;
+        }
+
+        // Get search parameter
+        $search = $request->get('search');
+
+        $users = $this->userService->getInactiveUsers($perPage, $search);
+
+        // Preserve query parameters in pagination
+        $users->appends($request->query());
+
         $title = __('attributes.users_inactive');
+
+        // Check if this is an AJAX request
+        if ($request->ajax()) {
+            return view('admin.user.users-table', compact('users'))->render();
+        }
+
         return view('admin.user.index', compact('users', 'title'));
     }
 

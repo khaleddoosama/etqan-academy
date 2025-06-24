@@ -38,4 +38,6 @@
     'results' => 'results',
     'all' => 'All',
     'per_page_help' => 'Select how many logs to display per page',
+    'search' => 'Search',
+    'search_users_placeholder' => 'Search by name, email, or phone...',
 );

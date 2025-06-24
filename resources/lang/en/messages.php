@@ -148,4 +148,5 @@
     'package_updated' => 'Package updated successfully.',
     'package_deleted' => 'Package deleted successfully.',
     'no_logs_found' => 'No activity logs found for this user.',
+    'no_users_found' => 'No users found matching your criteria.',
 );

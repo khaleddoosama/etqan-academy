@@ -15,15 +15,39 @@ class UserService
     // }
 
     // get active users
-    public function getActiveUsers()
+    public function getActiveUsers($perPage = 25, $search = null)
     {
-        return User::studentActive()->orderBy('last_login', 'desc')->get();
+        $query = User::studentActive()->orderBy('last_login', 'desc');
+
+        // Apply search filter if provided
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->paginate($perPage);
     }
 
     // get inactive users
-    public function getInactiveUsers()
+    public function getInactiveUsers($perPage = 25, $search = null)
     {
-        return User::studentInactive()->orderBy('last_login', 'desc')->get();
+        $query = User::studentInactive()->orderBy('last_login', 'desc');
+
+        // Apply search filter if provided
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->paginate($perPage);
     }
 
     // get students

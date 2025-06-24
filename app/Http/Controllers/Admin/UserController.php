@@ -174,15 +174,20 @@ class UserController extends Controller
         $user = $this->userService->getUser($id);
 
         // Start building the query
-        $query = \Spatie\Activitylog\Models\Activity::where(function($query) use ($id) {
+        $query = \Spatie\Activitylog\Models\Activity::query();
+
+        // Base filter: either user is causer or subject (unless filtered by causer_type)
+        if (!$request->filled('causer_type') || $request->causer_type === 'all') {
             $query->where(function($q) use ($id) {
-                $q->where('causer_id', $id)
-                  ->where('causer_type', 'App\Models\User');
-            })->orWhere(function($q) use ($id) {
-                $q->where('subject_id', $id)
-                  ->where('subject_type', 'App\Models\User');
+                $q->where(function($subQ) use ($id) {
+                    $subQ->where('causer_id', $id)
+                         ->where('causer_type', 'App\Models\User');
+                })->orWhere(function($subQ) use ($id) {
+                    $subQ->where('subject_id', $id)
+                         ->where('subject_type', 'App\Models\User');
+                });
             });
-        });
+        }
 
         // Apply filters
         if ($request->filled('log_name')) {
@@ -195,6 +200,20 @@ class UserController extends Controller
 
         if ($request->filled('date_to')) {
             $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // Filter by causer/performer type
+        if ($request->filled('causer_type')) {
+            if ($request->causer_type === 'performed_by_user') {
+                // Only logs where the user performed the action
+                $query->where('causer_id', $id)
+                      ->where('causer_type', 'App\Models\User');
+            } elseif ($request->causer_type === 'performed_on_user') {
+                // Only logs where actions were performed on the user
+                $query->where('subject_id', $id)
+                      ->where('subject_type', 'App\Models\User');
+            }
+            // If 'all' is selected, no additional filter is applied (default behavior)
         }
 
         // Get per page value from request or default to 25
@@ -214,16 +233,34 @@ class UserController extends Controller
         // Preserve query parameters in pagination
         $logs->appends($request->query());
 
-        // Get unique log names for filter dropdown
-        $logNames = \Spatie\Activitylog\Models\Activity::where(function($query) use ($id) {
-            $query->where(function($q) use ($id) {
-                $q->where('causer_id', $id)
-                  ->where('causer_type', 'App\Models\User');
-            })->orWhere(function($q) use ($id) {
-                $q->where('subject_id', $id)
-                  ->where('subject_type', 'App\Models\User');
+        // Get unique log names for filter dropdown (using same base query logic)
+        $logNamesQuery = \Spatie\Activitylog\Models\Activity::query();
+
+        // Apply same base filter as main query
+        if (!$request->filled('causer_type') || $request->causer_type === 'all') {
+            $logNamesQuery->where(function($q) use ($id) {
+                $q->where(function($subQ) use ($id) {
+                    $subQ->where('causer_id', $id)
+                         ->where('causer_type', 'App\Models\User');
+                })->orWhere(function($subQ) use ($id) {
+                    $subQ->where('subject_id', $id)
+                         ->where('subject_type', 'App\Models\User');
+                });
             });
-        })->distinct()->pluck('log_name');
+        }
+
+        // Apply causer_type filter to log names query as well
+        if ($request->filled('causer_type')) {
+            if ($request->causer_type === 'performed_by_user') {
+                $logNamesQuery->where('causer_id', $id)
+                              ->where('causer_type', 'App\Models\User');
+            } elseif ($request->causer_type === 'performed_on_user') {
+                $logNamesQuery->where('subject_id', $id)
+                              ->where('subject_type', 'App\Models\User');
+            }
+        }
+
+        $logNames = $logNamesQuery->distinct()->pluck('log_name');
 
         // Check if this is an AJAX request
         if ($request->ajax()) {

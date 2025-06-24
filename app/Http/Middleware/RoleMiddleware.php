@@ -22,7 +22,7 @@ class RoleMiddleware
             return redirect('dashboard');
         }
 
-        $expireTime = Carbon::now()->addSeconds(30);
+        $expireTime = Carbon::now()->addSeconds(60);
         Cache::put('user-is-online' . $user->id, true, $expireTime);
         $user->update(['last_login' => Carbon::now()]);
 

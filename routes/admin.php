@@ -55,6 +55,7 @@ Route::group(
                 Route::put('/profile', 'updateProfile')->name('profile.update');
 
                 Route::put('/change-password', 'changePassword')->name('change.password');
+                Route::get('/{admin}/logs', 'logs')->name('admins.logs');
             });
 
             // User Controller

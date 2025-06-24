@@ -254,5 +254,6 @@ return [
     'date_from' => 'Date From',
     'date_to' => 'Date To',
     'per_page' => 'Per Page',
+    'action_type' => 'Action Type',
 
 ];

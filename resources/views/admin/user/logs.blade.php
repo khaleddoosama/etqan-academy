@@ -73,6 +73,20 @@
                                         </select>
                                     </div>
                                     <div class="col-md-3">
+                                        <label for="causer_type">
+                                            {{ __('attributes.action_type') }}
+                                            <i class="fas fa-info-circle text-info"
+                                               title="{{ __('main.action_type_help') }}"
+                                               data-toggle="tooltip"
+                                               data-placement="top"></i>
+                                        </label>
+                                        <select name="causer_type" id="causer_type" class="form-control">
+                                            <option value="all" {{ request('causer_type', 'all') == 'all' ? 'selected' : '' }}>{{ __('main.all') }}</option>
+                                            <option value="performed_by_user" {{ request('causer_type') == 'performed_by_user' ? 'selected' : '' }}>🔹 {{ __('attributes.performed_by_user') }}</option>
+                                            <option value="performed_on_user" {{ request('causer_type') == 'performed_on_user' ? 'selected' : '' }}>🔸 {{ __('attributes.performed_on_user') }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label for="date_from">{{ __('attributes.date_from') }}</label>
                                         <input type="date" name="date_from" id="date_from" class="form-control"
                                             value="{{ request('date_from') }}">
@@ -82,6 +96,8 @@
                                         <input type="date" name="date_to" id="date_to" class="form-control"
                                             value="{{ request('date_to') }}">
                                     </div>
+                                </div>
+                                <div class="row mt-3">
                                     <div class="col-md-3">
                                         <label for="per_page">
                                             {{ __('attributes.per_page') }}
@@ -98,15 +114,16 @@
                                             <option value="500" {{ request('per_page', 25) == 500 ? 'selected' : '' }}>500</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fas fa-search"></i> {{ __('buttons.filter') }}
-                                        </button>
-                                        <a href="{{ route('admin.users.logs', $user->id) }}" class="btn btn-secondary btn-sm">
-                                            <i class="fas fa-times"></i> {{ __('buttons.clear') }}
-                                        </a>
+                                    <div class="col-md-9">
+                                        <label>&nbsp;</label>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-search"></i> {{ __('buttons.filter') }}
+                                            </button>
+                                            <a href="{{ route('admin.users.logs', $user->id) }}" class="btn btn-secondary btn-sm">
+                                                <i class="fas fa-times"></i> {{ __('buttons.clear') }}
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -214,10 +231,12 @@
             var url = $(this).attr('action');
             var formData = $(this).serialize();
             loadLogsPage(url + '?' + formData);
-        });            // Auto-submit on filter change
-            $('#log_name, #date_from, #date_to, #per_page').on('change', function() {
-                $('#filter-form').trigger('submit');
-            });
+        });
+
+        // Auto-submit on filter change
+        $('#log_name, #date_from, #date_to, #per_page, #causer_type').on('change', function() {
+            $('#filter-form').trigger('submit');
+        });
 
         function loadLogsPage(url) {
             // Show loading spinner

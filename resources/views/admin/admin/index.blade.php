@@ -64,6 +64,12 @@
                                                         <x-custom.delete-button route="admin.all_admin.destroy"
                                                             id="{{ $admin->id }}" />
                                                     @endcan
+                                                    <a href="{{ route('admin.admins.logs', $admin->id) }}"
+                                                       class="btn btn-info btn-md"
+                                                       title="{{ __('main.view_logs') }}"
+                                                       data-toggle="tooltip">
+                                                        <i class="fas fa-history"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -92,4 +98,13 @@
         </section>
         <!-- /.content -->
     </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    // Initialize tooltips
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 @endsection

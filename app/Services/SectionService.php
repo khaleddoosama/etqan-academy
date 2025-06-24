@@ -77,6 +77,8 @@ class SectionService
             $overrides = ['course_id' => $courseId];
             if ($newParentId) {
                 $overrides['parent_section_id'] = $newParentId;
+            } else {
+                $newParentId = 0;
             }
 
             $overrides['position'] = $this->getMaxPosition($newParentId) + 1;

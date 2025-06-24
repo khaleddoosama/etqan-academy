@@ -19,7 +19,7 @@
                 </td>
                 <td style="text-align: left; padding-left: 20px; width: 10%;">
                     <img src="{{ base_path('public/asset/invoice/images/academy.png') }}" alt="شعار الأكاديمية"
-                        style="width: 20%;">
+                        style="width: 70px; height: auto;">
                 </td>
             </tr>
         </table>
@@ -80,7 +80,7 @@
         <p style="font-size: 1.1rem;font-weight: bold;">سياسة الشركة وشروط حجز دورة تدريبية</p>
         <p style="font-size: 1.1rem;font-weight: bold;">على العميل قراءة ورقة الشروط جيدًا - قراءة سياسة الشركة هي
             مسؤولية العميل</p>
-        <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" alt="شعار أورا">
+        <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" style="width: 100px; height: auto; margin-top: 10px;" alt="شعار أورا">
     </div>
 </body>
 

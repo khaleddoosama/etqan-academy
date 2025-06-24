@@ -69,4 +69,6 @@
     'log_properties' => 'Log Properties',
     'no_properties' => 'No Properties',
     'no_logs_found' => 'No logs found',
+    'search_logs_tooltip' => 'Search in log descriptions, types, subjects, properties, and causer names',
+    'search_logs_placeholder' => 'Search logs...',
 );

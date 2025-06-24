@@ -36,119 +36,108 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([
-    'middleware' => ['api', 'throttle:60,1', 'log_user_activity:api'],
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/refresh', [AuthController::class, 'refresh']);
-    Route::get('/user-profile', [AuthController::class, 'userProfile']);
-    Route::put('/update-profile', [AuthController::class, 'updateProfile']);
-    Route::put('/change-password', [AuthController::class, 'changePassword']);
-    Route::post('/update-picture', [AuthController::class, 'updatePicture']);
+// Public routes with user activity logging
+Route::middleware(['log_user_activity:api'])->group(function () {
+
+    // Authentication routes
+    Route::group([
+        'middleware' => ['throttle:60,1'],
+        'prefix' => 'auth'
+    ], function ($router) {
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/refresh', [AuthController::class, 'refresh']);
+        Route::get('/user-profile', [AuthController::class, 'userProfile']);
+        Route::put('/update-profile', [AuthController::class, 'updateProfile']);
+        Route::put('/change-password', [AuthController::class, 'changePassword']);
+        Route::post('/update-picture', [AuthController::class, 'updatePicture']);
+    });
+
+    // Public content routes
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/student-works', [StudentWorkController::class, 'index']);
+    Route::get('/home', [HomeController::class, 'home']);
+    Route::get('/courses', [CourseController::class, 'index']);
+    Route::get('/course/{course_slug}', [CourseController::class, 'show']);
+    Route::get('/course/{course_slug}/sections', [SectionController::class, 'index']);
+    Route::get('course/{course_slug}/section/{section_slug}', [SectionController::class, 'show']);
+    Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index']);
+    Route::get('/student-opinions', [StudentOpinionController::class, 'index']);
+
+    // Package routes
+    Route::prefix('/packages')->group(function () {
+        Route::get('/', [PackageController::class, 'index']);
+        Route::get('/{slug}', [PackageController::class, 'show']);
+    });
+
+    // Public form submissions with throttling
+    Route::middleware(['throttle:20,1'])->group(function () {
+        Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry']);
+        Route::post('/request-course', [RequestCourseController::class, 'store']);
+        Route::post('password/request', [ResetPasswordController::class, 'requestPassword'])->name('password.request');
+        Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
+    });
+
+    // Email verification (signed route)
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyEmail'])
+        ->name('jwt.verification.verify')->middleware(['signed', 'throttle:20,1']);
 });
 
-// send Inquiry
-Route::post('/send-inquiry', [InquiryController::class, 'sendInquiry'])->middleware(['throttle:20,1', 'log_user_activity:api']);
-
-// show categories
-Route::get('/categories', [CategoryController::class, 'index'])->middleware(['log_user_activity:api']);
-Route::get('/student-works', [StudentWorkController::class, 'index'])->middleware(['log_user_activity:api']);
-
-// send Request Course
-Route::post('/request-course', [RequestCourseController::class, 'store'])->middleware(['throttle:20,1', 'log_user_activity:api']);
-
-Route::get('/home', [HomeController::class, 'home'])->middleware(['log_user_activity:api']);
-
-
-// show courses
-Route::get('/courses', [CourseController::class, 'index'])->middleware(['log_user_activity:api']);
-
-// show single course
-Route::get('/course/{course_slug}', [CourseController::class, 'show'])->middleware(['log_user_activity:api']);
-// show sections
-Route::get('/course/{course_slug}/sections', [SectionController::class, 'index'])->middleware(['log_user_activity:api']);
-
-// show single section
-Route::get('course/{course_slug}/section/{section_slug}', [SectionController::class, 'show'])->middleware(['log_user_activity:api']);
-
-// show lectures
-Route::get('course/{course_slug}/section/{section_slug}/lectures', [LectureController::class, 'index'])->middleware(['log_user_activity:api']);
-
-// verified
+// Authenticated routes with user activity logging
 Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:20,1', 'log_user_activity:api'])->group(function () {
 
     Route::get('/user-courses', [UserController::class, 'UserCourses']);
 
-    // show single lecture
+    // Course content access (protected)
     Route::prefix('course/{course_slug}/section/{section_slug}/lecture/{lecture_slug}')->group(function () {
         Route::get('/', [LectureController::class, 'show']);
         Route::put('/view', [LectureController::class, 'views']);
     });
 
-    // Withdrawal Request
-    Route::post('withdrawal-request', [WithdrawalRequestController::class, 'store']);
-
-    // search students
+    // Student features
     Route::prefix('students')->group(function () {
         Route::get('/search', [StudentController::class, 'search']);
         Route::get('/{slug}', [StudentController::class, 'showProfile']);
     });
 
-
-    // create gallery
+    // User content management
     Route::prefix('gallery')->group(function () {
         Route::post('/', [GalleryController::class, 'store']);
         Route::delete('/{id}', [GalleryController::class, 'destroy']);
     });
 
+    // User interactions
     Route::post('/payment-details', [PaymentDetailController::class, 'store']);
-
+    Route::post('withdrawal-request', [WithdrawalRequestController::class, 'store']);
+    Route::post('/student-opinions', [StudentOpinionController::class, 'store']);
     Route::apiResource('comments', CommentController::class);
 
-    Route::post('/student-opinions', [StudentOpinionController::class, 'store']);
-
+    // Shopping cart
     Route::prefix('carts')->group(function () {
         Route::get('/', [CartController::class, 'getForUser']);
-        Route::post('/', [CartController::class, 'store'])->middleware('throttle:10,1');
+        Route::post('/', [CartController::class, 'store'])->middleware('throttle:20,1');
         Route::delete('/{cartId}', [CartController::class, 'destroy']);
     });
 
-
-    Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware('throttle:10,1');
-
-    Route::prefix('payment/fawaterak')->middleware('throttle:10,1')->group(function () {
+    // Coupons and payments
+    Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware('throttle:20,1');
+    Route::prefix('payment/fawaterak')->middleware(['throttle:20,1'])->group(function () {
         Route::get('/payment-methods', [GatewayPaymentController::class, 'paymentMethods']);
         Route::post('/pay', [GatewayPaymentController::class, 'pay']);
     });
 });
 
-//
-Route::middleware(['jwt.authenticate', 'throttle:10,1', 'log_user_activity:api'])->group(function () {
-    // Send the email verification link
+// Authenticated routes for email verification (with user activity logging)
+Route::middleware(['jwt.authenticate', 'throttle:20,1', 'log_user_activity:api'])->group(function () {
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
         ->name('verification.send');
 });
 
-// Handle email verification
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyEmail'])
-    ->name('jwt.verification.verify')->middleware(['signed', 'throttle:10,1', 'log_user_activity:api']);
-
-
-Route::post('password/request', [ResetPasswordController::class, 'requestPassword'])->middleware(['throttle:10,1', 'log_user_activity:api'])->name('password.request');
-Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->middleware(['throttle:10,1', 'log_user_activity:api'])->name('password.reset');
-Route::get('/student-opinions', [StudentOpinionController::class, 'index'])->middleware(['log_user_activity:api']);
-
+// Webhook routes (no user activity logging needed)
 Route::prefix('/payment/fawaterak')->group(function () {
     Route::post('/webhook/paid_json', [GatewayWebhookController::class, 'handlePaid']);
     Route::post('/webhook/cancelled_json', [GatewayWebhookController::class, 'handleCancelled']);
     Route::post('/webhook/failed_json', [GatewayWebhookController::class, 'handleFailed']);
     Route::post('/webhook/refund_json', [GatewayWebhookController::class, 'handleRefund']);
-});
-
-Route::prefix('/packages')->group(function () {
-    Route::get('/', [PackageController::class, 'index']);
-    Route::get('/{slug}', [PackageController::class, 'show']);
 });

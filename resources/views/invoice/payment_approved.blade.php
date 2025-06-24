@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ base_path('public/asset/invoice/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="./bootstrap.min.css">
     <title>bill</title>
 </head>
 
@@ -17,9 +17,13 @@
                 <td style="text-align: right; font-size: 1.5rem; padding-right: 20px;">
                     <h2 style="margin: 0; color: white; font-weight: 500;">إيصال استلام نقدية</h2>
                 </td>
-                <td style="text-align: left; padding-left: 20px; width: 10%;">
-                    <img src="{{ base_path('public/asset/invoice/images/academy.png') }}" alt="شعار الأكاديمية"
-                        style="width: 70px; height: auto;">
+                <td style="text-align: left; padding-left: 20px; width: 10%; position:relative">
+                    <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" alt="شعار الأكاديمية"
+                        style="width: 220px;
+                        height: auto;
+                        position: absolute;
+                        left: 0;
+                        top: -90px;">
                 </td>
             </tr>
         </table>
@@ -80,7 +84,16 @@
         <p style="font-size: 1.1rem;font-weight: bold;">سياسة الشركة وشروط حجز دورة تدريبية</p>
         <p style="font-size: 1.1rem;font-weight: bold;">على العميل قراءة ورقة الشروط جيدًا - قراءة سياسة الشركة هي
             مسؤولية العميل</p>
-        <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" style="width: 100px; height: auto; margin-top: 10px;" alt="شعار أورا">
+        <img src="{{ base_path('public/asset/invoice/images/academy.png') }}" style="position: fixed;
+                               top: 50%;
+                               left: 50%;
+                               transform: translate(-50%, -50%);
+                               width: 400px;
+                               height: auto;
+                               opacity: 0.3;
+                               z-index: -1;
+                               pointer-events: none;" alt="شعار أورا">
+
     </div>
 </body>
 

@@ -30,11 +30,8 @@
         }
 
         .header {
-            background-color: #2e004c;
             color: white;
             padding: 10px;
-            border-bottom-left-radius: 50px;
-            border-bottom-right-radius: 50px;
         }
 
         .contact-box {
@@ -67,7 +64,7 @@
 </head>
 
 <body>
-    <div style="background-color: #2e004c; color: white; padding: 10px; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px;">
+    <div style="background-color: #2e004c; color: white; padding: 10px; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px;overflow:hidden">
         <table class="header">
             <tr>
                 <td style="width: 70%; text-align: right;">
@@ -138,7 +135,7 @@
             على العميل قراءة ورقة الشروط جيدًا - قراءة سياسة الشركة هي مسؤولية العميل
         </p>
         <img src="{{ base_path('public/asset/invoice/images/academy.png') }}"
-            style="width: 300px; height: auto; opacity: 0.3; margin: 20px auto; display: block;"
+            style="width: 300px; height: auto; opacity: 0.3; margin: 20px auto; display: block;margin-top: -40px;"
             alt="شعار أورا">
     </div>
 

@@ -32,6 +32,7 @@
         .header {
             color: white;
             padding: 10px;
+            overflow:hidden;
         }
 
         .contact-box {
@@ -135,7 +136,7 @@
             على العميل قراءة ورقة الشروط جيدًا - قراءة سياسة الشركة هي مسؤولية العميل
         </p>
         <img src="{{ base_path('public/asset/invoice/images/academy.png') }}"
-            style="width: 300px; height: auto; opacity: 0.3; margin: 20px auto; display: block;margin-top: -40px;"
+            style="width: 300px; height: auto; opacity: 0.3; margin: 20px auto; display: block;margin-top: -80px;"
             alt="شعار أورا">
     </div>
 

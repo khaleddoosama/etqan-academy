@@ -71,10 +71,10 @@ class PaymentApprovedNotification extends Notification
             $value = '';
             $course = $payment_item->course()->first();
 
-            if ($course && $course->title == "السوبر جرافيك") {
+            if ($course && $course->title == "الماستر جرافيك | MASTER GRAPHICS") {
                 $include = "كورس الجرافيك ديزاين - كورس المونتاج - كورس الموشن جرافيك - كورس العمل الحر - كورس التسويق - مكتبة أورا للجرافيك";
                 $value = "الأشتراك فـي دبلومة السوبر جرافيك";
-            } elseif ($course && $course->title == "الميني جرافيك") {
+            } elseif ($course && $course->title == "الميني جرافيك | MINI GRAPHICS") {
                 $include = "كورس الجرافيك ديزاين - كورس العمل الحر - مكتبة أورا للجرافيك";
                 $value = "الأشتراك فـي دبلومة الميني جرافيك";
             } elseif ($payment_item->package_plan_id) {

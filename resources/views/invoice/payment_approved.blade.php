@@ -4,30 +4,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Arabic', Arial, sans-serif;
+            direction: rtl;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 5px;
+        }
+
+        h2,
+        h5,
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #2e004c;
+            color: white;
+            padding: 10px;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+        }
+
+        .contact-box {
+            border: 1px solid black;
+            padding: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: black;
+            width: 35%;
+            margin: 20px auto;
+        }
+
+        .watermark {
+            position: relative;
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .watermark img {
+            width: 300px;
+            opacity: 0.2;
+        }
+    </style>
     <title>bill</title>
 </head>
 
-<body
-    style="font-family: 'IBM Plex Sans Arabic', Arial, sans-serif !important; direction: rtl; margin: 0; padding: 20px; box-sizing: border-box;">
-    <div
-        style="background-color: #2e004c; color: white; padding: 10px; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px;">
-        <table style="width: 100%;">
-            <tr>
-                <td style="text-align: right; font-size: 1.5rem; padding-right: 20px;">
-                    <h2 style="margin: 0; color: white; font-weight: 500;">إيصال استلام نقدية</h2>
-                </td>
-                <td style="text-align: left; padding-left: 20px; width: 10%; position:relative">
-                    <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" alt="شعار الأكاديمية"
-                        style="width: 220px;
-                        height: auto;
-                        position: absolute;
-                        left: 0;
-                        top: -90px;">
-                </td>
-            </tr>
-        </table>
-    </div>
+<body>
+    <table class="header">
+        <tr>
+            <td style="width: 70%; text-align: right;">
+                <h2 style="font-weight: 500; margin-right: 30px; font-size: 1.75rem;">إيصال استلام نقدية</h2>
+            </td>
+            <td style="width: 30%; text-align: left;">
+                <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" class="aura.png" alt="شعار الأكاديمية"
+                    style="width: 220px; height: auto; margin-top: -85px; margin-bottom: -85px;">
+            </td>
+        </tr>
+    </table>
 
     <table
         style="width: 100%; border-collapse: collapse; text-align: right; font-size: 1.2rem; font-weight: bold; line-height: 2;">
@@ -80,21 +130,16 @@
 
     <div style="height: 1px; background-color: black; width: 35%; margin: 20px auto;"></div>
 
-    <div style="font-family: 'IBM Plex Sans Arabic'; text-align: center; margin-top: 20px;">
+    <div style="font-family: 'IBM Plex Sans Arabic'; text-align: center; margin-top: 20px; position: relative;">
         <p style="font-size: 1.1rem;font-weight: bold;">سياسة الشركة وشروط حجز دورة تدريبية</p>
-        <p style="font-size: 1.1rem;font-weight: bold;">على العميل قراءة ورقة الشروط جيدًا - قراءة سياسة الشركة هي
-            مسؤولية العميل</p>
-        <img src="{{ base_path('public/asset/invoice/images/academy.png') }}" style="position: fixed;
-                               top: 50%;
-                               left: 50%;
-                               transform: translate(-50%, -50%);
-                               width: 400px;
-                               height: auto;
-                               opacity: 0.3;
-                               z-index: -1;
-                               pointer-events: none;" alt="شعار أورا">
-
+        <p style="font-size: 1.1rem;font-weight: bold;">
+            على العميل قراءة ورقة الشروط جيدًا - قراءة سياسة الشركة هي مسؤولية العميل
+        </p>
+        <img src="{{ base_path('public/asset/invoice/images/academy.png') }}"
+            style="width: 300px; height: auto; opacity: 0.3; margin: 20px auto; display: block;"
+            alt="شعار أورا">
     </div>
+
 </body>
 
 

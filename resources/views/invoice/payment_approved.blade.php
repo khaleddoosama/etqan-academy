@@ -67,17 +67,19 @@
 </head>
 
 <body>
-    <table class="header">
-        <tr>
-            <td style="width: 70%; text-align: right;">
-                <h2 style="font-weight: 500; margin-right: 30px; font-size: 1.75rem;">إيصال استلام نقدية</h2>
-            </td>
-            <td style="width: 30%; text-align: left;">
-                <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" class="aura.png" alt="شعار الأكاديمية"
-                    style="width: 220px; height: auto; margin-top: -85px; margin-bottom: -85px;">
-            </td>
-        </tr>
-    </table>
+    <div style="background-color: #2e004c; color: white; padding: 10px; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px;">
+        <table class="header">
+            <tr>
+                <td style="width: 70%; text-align: right;">
+                    <h2 style="font-weight: 500; margin-right: 30px; font-size: 1.75rem;">إيصال استلام نقدية</h2>
+                </td>
+                <td style="width: 30%; text-align: left;">
+                    <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" class="aura.png" alt="شعار الأكاديمية"
+                        style="width: 220px; height: auto; margin-top: -85px; margin-bottom: -85px;">
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <table
         style="width: 100%; border-collapse: collapse; text-align: right; font-size: 1.2rem; font-weight: bold; line-height: 2;">

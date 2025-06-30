@@ -32,7 +32,7 @@
         .header {
             color: white;
             padding: 10px;
-            overflow:hidden;
+            overflow: hidden;
         }
 
         .contact-box {
@@ -65,7 +65,7 @@
 </head>
 
 <body>
-    <div style="background-color: #2e004c; color: white; padding: 10px; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px;overflow:hidden">
+    <div style="background-color: black; color: white; padding: 10px;overflow:hidden">
         <table class="header">
             <tr>
                 <td style="width: 70%; text-align: right;">
@@ -73,7 +73,7 @@
                 </td>
                 <td style="width: 30%; text-align: left;">
                     <img src="{{ base_path('public/asset/invoice/images/aura.png') }}" class="aura.png" alt="شعار الأكاديمية"
-                        style="width: 220px; height: auto; margin-top: -85px; margin-bottom: -85px;">
+                        style="width: 220px; height: auto; margin-top: -85px; margin-bottom: -85px;margin-left: -40px;">
                 </td>
             </tr>
         </table>

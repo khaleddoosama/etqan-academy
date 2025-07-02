@@ -3,13 +3,16 @@
 namespace App\Services;
 
 use App\Enums\PaymentType;
-use App\Enums\Status;
+use App\Enums\PaymentStatusEnum;
+use App\Events\PaymentApprovedEvent;
+use App\Models\Cart;
 use App\Models\Payment;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 use App\Services\PaymentStrategy\CashPayment;
 use App\Services\PaymentStrategy\InstallmentPayment;
 use App\Services\PaymentStrategy\PaymentContext;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -20,45 +23,69 @@ class PaymentDetailService
         protected PaymentContext $paymentContext,
         protected StudentInstallmentService $studentInstallmentService,
         protected CouponService $couponService,
-        protected PaymentRepositoryInterface $paymentRepository
+        protected PaymentRepositoryInterface $paymentRepository,
+        protected CartService $cartService
     ) {}
 
-    public function store(array $data): Payment
-    {
+    // public function store(array $data): Payment
+    // {
 
-        if (isset($data['coupon_code'])) {
-            $coupon = $this->couponService->findByCode($data['coupon_code']);
-            if ($coupon) {
-                $data['coupon_id'] = $coupon->id;
-                $data['discount'] = $coupon->discount;
-                $data['type'] = $coupon->type;
-                $check = $this->couponService->checkCoupon($data['coupon_code']);
-                $data['total_before_coupon'] = $check['total_before_coupon'];
-                $data['total_after_coupon'] = $check['total'];
-            } else {
-                throw ValidationException::withMessages(['coupon_code' => 'Invalid coupon code.']);
-            }
-        } else {
-            $data['total_before_coupon'] =
-                $data['total_after_coupon'] = $check['total'];
-        }
+    //     if (isset($data['coupon_code'])) {
+    //         $coupon = $this->couponService->findByCode($data['coupon_code']);
+    //         if ($coupon) {
+    //             $data['coupon_id'] = $coupon->id;
+    //             $data['discount'] = $coupon->discount;
+    //             $data['type'] = $coupon->type;
+    //             $check = $this->couponService->checkCoupon($data['coupon_code']);
+    //             $data['total_before_coupon'] = $check['total_before_coupon'];
+    //             $data['total_after_coupon'] = $check['total'];
+    //         } else {
+    //             throw ValidationException::withMessages(['coupon_code' => 'Invalid coupon code.']);
+    //         }
+    //     } else {
+    //         $data['total_before_coupon'] =
+    //             $data['total_after_coupon'] = $check['total'];
+    //     }
 
-        $payment = Payment::create($data);
+    //     $payment = Payment::create($data);
 
-        foreach ($data['course_installment_ids'] as $item) {
-            $payment->paymentItems()->create([
-                'course_installment_id' => $item,
-            ]);
-        }
+    //     foreach ($data['course_installment_ids'] as $item) {
+    //         $payment->paymentItems()->create([
+    //             'course_installment_id' => $item,
+    //         ]);
+    //     }
 
 
 
-        return $payment;
-    }
+    //     return $payment;
+    // }
 
     public function getPayments()
     {
-        return $this->paymentRepository->filterByRequest(request(), ['*'], ['user']);
+        $query = Payment::with(['user']);
+
+        // Apply filters based on request parameters
+        if (request('user_id')) {
+            $query->where('user_id', request('user_id'));
+        }
+
+        if (request('gateway')) {
+            $query->where('gateway', request('gateway'));
+        }
+
+        if (request('status')) {
+            $query->where('status', request('status'));
+        }
+
+        if (request('from_created_at')) {
+            $query->whereDate('created_at', '>=', request('from_created_at'));
+        }
+
+        if (request('to_created_at')) {
+            $query->whereDate('created_at', '<=', request('to_created_at'));
+        }
+
+        return $query;
     }
 
     public function getPayment($id, $columns = ['*'], $with = []): Payment
@@ -66,10 +93,68 @@ class PaymentDetailService
         return $this->paymentRepository->find($id, $columns, $with);
     }
 
-    public function updateAmount($amount, $id): Payment
+    public function getWeeklyPaidCashPayments(string $startOfWeek, string $endOfWeek): Collection
+    {
+        return $this->paymentRepository->getWeeklyPaidCashPayments($startOfWeek, $endOfWeek);
+    }
+
+    public function getWeeklyPaidInstallmetPayments(string $startOfWeek, string $endOfWeek): Collection
+    {
+        return $this->paymentRepository->getWeeklyPaidInstallmetPayments($startOfWeek, $endOfWeek);
+    }
+
+    public function getWeeklySummary(Carbon $startOfWeek, Carbon $endOfWeek): array
+    {
+        $summaryData = [];
+
+        for ($day = $startOfWeek->copy(); $day->lt($endOfWeek); $day->addDay()) {
+            $date = $day->toDateString();
+
+            $summaryData[] = [
+                'day' => $day->format('l'),
+                'date' => $date,
+
+                'total_subscribers' => (string) $this->paymentRepository->getDailyPaidSubscriberCount($date),
+                'total_income' => (string) $this->paymentRepository->getDailyPaidIncome($date),
+
+                'cash_subscribers' => (string) $this->paymentRepository->getDailySubscriberCountByType($date, PaymentType::CASH->value),
+                'cash_income' => (string) $this->paymentRepository->getDailyIncomeByType($date, PaymentType::CASH->value),
+
+                'installment_subscribers' => (string) $this->paymentRepository->getDailySubscriberCountByType($date, PaymentType::INSTALLMENT->value),
+                'installment_income' => (string) $this->paymentRepository->getDailyIncomeByType($date, PaymentType::INSTALLMENT->value),
+
+                // 'super_graphic_subscribers' => (string) (Payment::whereHas('paymentItems.courseInstallment.course', function ($query) {
+                //     $query->where('title', 'LIKE', '%سوبر جرافيك%');
+                // })->whereDate('paid_at', $date)->where('status', 'paid')->count() ?: 0),
+                // 'mini_graphic_subscribers' => (string) (Payment::whereHas('paymentItems.courseInstallment.course', function ($query) {
+                //     $query->where('title', 'LIKE', '%ميني جرافيك%');
+                // })->whereDate('paid_at', $date)->where('status', 'paid')->count() ?: 0),
+            ];
+        }
+
+        // Weekly total row
+        $summaryData[] = [
+            'day' => 'إجمالي الأسبوع',
+            'date' => '',
+            'total_subscribers' => (string) array_sum(array_column($summaryData, 'total_subscribers')),
+            'total_income' => (string) array_sum(array_column($summaryData, 'total_income')),
+            'cash_subscribers' => (string) array_sum(array_column($summaryData, 'cash_subscribers')),
+            'cash_income' => (string) array_sum(array_column($summaryData, 'cash_income')),
+            'installment_subscribers' => (string) array_sum(array_column($summaryData, 'installment_subscribers')),
+            'installment_income' => (string) array_sum(array_column($summaryData, 'installment_income')),
+            // 'super_graphic_subscribers' => (string) (array_sum(array_column($summaryData, 'super_graphic_subscribers')) ?: 0),
+            // 'mini_graphic_subscribers' => (string) (array_sum(array_column($summaryData, 'mini_graphic_subscribers')) ?: 0),
+        ];
+
+        return $summaryData;
+    }
+
+    public function updateAmountConfirmed($amount, $id): Payment
     {
         $payment = $this->getPayment($id);
-        $payment->amount = $amount;
+
+        $payment->amount_confirmed = $amount;
+
         $payment->save();
         return $payment;
     }
@@ -77,9 +162,10 @@ class PaymentDetailService
     public function changeStatus($status, $id)
     {
         $payment = $this->getPayment($id);
-        if ($status == Status::APPROVED->value) {
+        if ($status == PaymentStatusEnum::Paid->value) {
+            $payment->paid_at = now();
             $this->handleApproval($payment);
-        } elseif ($status == Status::REJECTED->value) {
+        } elseif ($status == PaymentStatusEnum::Cancelled->value) {
             $this->handleRejection($payment);
         }
 
@@ -93,23 +179,67 @@ class PaymentDetailService
     {
         $this->validateApproval($payment);
 
+        // Handle different payment gateways
+        if ($payment->gateway === 'instapay') {
+            $this->handleInstapayApproval($payment);
+        } else {
+            // Original logic for other payment types
+            foreach ($payment->paymentItems as $item) {
+                $this->setPaymentStrategy($item->payment_type);
+                $this->paymentContext->handlePayment($item, $payment->user_id);
+            }
+        }
+    }
 
-        $this->setPaymentStrategy($payment->payment_type);
-        $this->paymentContext->handlePayment($payment, $payment->user_id);
+    private function handleInstapayApproval(Payment $payment): void
+    {
+        if (!$payment) {
+            return;
+        }
+
+        $payment->load('paymentItems', 'coupon');
+
+        foreach ($payment->paymentItems as $item) {
+            if ($item->course_id) {
+                $item->load(['course', 'courseInstallment', 'packagePlan']);
+                $this->setPaymentStrategy($item->payment_type);
+
+                $this->paymentContext->handlePayment($item, $payment->user_id);
+            }
+        }
+        try {
+            event(new PaymentApprovedEvent([$payment->user_id], [
+                'payment' => $payment
+            ]));
+        } catch (\Exception $e) {
+            Log::error("Error in PaymentApprovedEvent");
+            Log::error($e->getMessage());
+        }
+
+        $coupon = $payment->coupon;
+        if ($coupon) {
+            $coupon->update([
+                'usage_count' => $coupon->usage_count + 1
+            ]);
+        }
+
+        // empty cart for user
+        Cart::forUser($payment->user_id)->delete();
     }
 
     private function handleRejection(Payment $payment): void
     {
         $this->validateRejection($payment);
 
-
-        $this->setPaymentStrategy($payment->payment_type);
-        $this->paymentContext->handleRejectPayment($payment, $payment->user_id);
+        foreach ($payment->paymentItems as $item) {
+            $this->setPaymentStrategy($item->payment_type);
+            $this->paymentContext->handleRejectPayment($item, $payment->user_id);
+        }
     }
 
     private function validateApproval(Payment $payment): void
     {
-        if ($payment->amount == 0) {
+        if ($payment->amount_confirmed == 0) {
             throw ValidationException::withMessages(['amount' => 'Please enter an amount first.']);
         }
     }
@@ -122,7 +252,7 @@ class PaymentDetailService
         $payment_status = $payment->status;
 
         if (
-            $payment_status == Status::APPROVED->value &&  $nextFriday->between($approvedAt, $today)
+            $payment_status == PaymentStatusEnum::Paid->value &&  $nextFriday->between($approvedAt, $today)
         ) {
             throw ValidationException::withMessages(['status' => 'You cannot reject a payment approved in a previous week after Friday']);
         }

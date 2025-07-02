@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Models\Payment;
+use App\Services\PaymentDetailService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -20,7 +21,7 @@ class CashPaymentsExport implements FromCollection, WithHeadings, WithStyles, Wi
     protected $startOfWeek;
     protected $endOfWeek;
 
-    public function __construct()
+    public function __construct(protected PaymentDetailService $paymentDetailService)
     {
         $this->startOfWeek = now()->previous('friday')->startOfDay();
         $this->endOfWeek = now()->next('friday')->startOfDay();
@@ -30,21 +31,15 @@ class CashPaymentsExport implements FromCollection, WithHeadings, WithStyles, Wi
     {
         Log::info('Cash Payments Exported ' . now()->toDateString());
 
-        return Payment::with(['user', 'courseInstallment.course'])
-            ->where('payment_type', PaymentType::CASH->value)
-            ->whereBetween('approved_at', [$this->startOfWeek, $this->endOfWeek])
-            ->where('status', Status::APPROVED->value)
-            ->get();
+
+        return $this->paymentDetailService->getWeeklyPaidCashPayments($this->startOfWeek, $this->endOfWeek);
     }
 
     public function map($payment): array
     {
         $title = "";
         foreach ($payment->paymentItems as $paymentItem) {
-            $courseInstallment = $paymentItem->courseInstallment;
-            $course = $courseInstallment->course;
-
-            $title .= $course->title . ', ';
+            $title .= $paymentItem->service_title . ', ';
         };
         return [
             $payment->id,
@@ -53,13 +48,13 @@ class CashPaymentsExport implements FromCollection, WithHeadings, WithStyles, Wi
             strval($payment->user->phone ?? 'N/A'),
             $title,
             strval($payment->whatsapp_number ?? 'N/A'),
-            $payment->payment_type->value ?? 'N/A',
-            $payment->payment_method->value ?? 'N/A',
-            strval($payment->transfer_number ?? 'N/A'), // Explicitly cast as string
-            Storage::url($payment->transfer_image) ?? 'N/A',
-            $payment->amount ?? 0,
+            $paymentItem->payment_type->value ?? 'N/A',
+            $payment->payment_method ?? 'N/A',
+            // strval($payment->transfer_number ?? 'N/A'), // Explicitly cast as string
+            // Storage::url($payment->transfer_image) ?? 'N/A',
+            $payment->amount_after_coupon ?? 0,
             $payment->created_at->toDateTimeString(),
-            $payment->approved_at->toDateTimeString(),
+            $payment->paid_at->toDateTimeString(),
         ];
     }
 
@@ -75,8 +70,8 @@ class CashPaymentsExport implements FromCollection, WithHeadings, WithStyles, Wi
             'WhatsApp Number',
             'Payment Type',
             'Payment Method',
-            'Transfer Number',
-            'Transfer Image',
+            // 'Transfer Number',
+            // 'Transfer Image',
             'Amount',
             'Created At',
             'Approved At',

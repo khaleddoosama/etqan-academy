@@ -6,6 +6,7 @@ use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Models\Payment;
 use App\Models\StudentInstallment;
+use App\Services\PaymentDetailService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -21,7 +22,7 @@ class InstallmentPaymentsExport implements FromCollection, WithHeadings, WithSty
     protected $startOfWeek;
     protected $endOfWeek;
 
-    public function __construct()
+    public function __construct(protected PaymentDetailService $paymentDetailService)
     {
         $this->startOfWeek = now()->previous('friday')->startOfDay();
         $this->endOfWeek = now()->next('friday')->startOfDay();
@@ -31,11 +32,12 @@ class InstallmentPaymentsExport implements FromCollection, WithHeadings, WithSty
     {
         Log::info('Installment Payments Exported: ' . now()->toDateString());
 
-        return Payment::with(['user', 'paymentItems.courseInstallment.course'])
-            ->where('payment_type', PaymentType::INSTALLMENT->value)
-            ->whereBetween('approved_at', [$this->startOfWeek, $this->endOfWeek])
-            ->where('status', Status::APPROVED->value)
-            ->get();
+        return $this->paymentDetailService->getWeeklyPaidInstallmetPayments($this->startOfWeek, $this->endOfWeek);
+        // return Payment::with(['user', 'paymentItems.courseInstallment.course'])
+        //     ->where('payment_type', PaymentType::INSTALLMENT->value)
+        //     ->whereBetween('approved_at', [$this->startOfWeek, $this->endOfWeek])
+        //     ->where('status', Status::APPROVED->value)
+        //     ->get();
     }
 
     public function map($payment): array
@@ -46,10 +48,10 @@ class InstallmentPaymentsExport implements FromCollection, WithHeadings, WithSty
         // Loop through each payment item associated with the payment
         foreach ($payment->paymentItems as $paymentItem) {
             $courseInstallment = $paymentItem->courseInstallment;
-            $course = $courseInstallment->course;
+            $course = $paymentItem->course;
 
             // Retrieve the installments for this payment
-            $studentsInstallments = StudentInstallment::with(['student', 'courseInstallment.course'])
+            $studentsInstallments = StudentInstallment::with(['student', 'courseInstallment'])
                 ->where('student_id', $payment->user_id)
                 ->where('course_installment_id', $courseInstallment->id)
                 ->orderBy('id', 'desc')
@@ -72,13 +74,13 @@ class InstallmentPaymentsExport implements FromCollection, WithHeadings, WithSty
                 strval($payment->user->phone ?? 'N/A'),
                 $course->title ?? 'N/A',
                 strval($payment->whatsapp_number ?? 'N/A'),
-                $payment->payment_type ?? 'N/A', // The payment type is a string, no need to access `value`
+                $paymentItem->payment_type->value ?? 'N/A', // The payment type is a string, no need to access `value`
                 $payment->payment_method ?? 'N/A', // Same for payment method
-                strval($payment->transfer_number ?? 'N/A'),
-                Storage::url($payment->transfer_image) ?? 'N/A',
-                $payment->amount ?? 0,
+                // strval($payment->transfer_number ?? 'N/A'),
+                // Storage::url($payment->transfer_image) ?? 'N/A',
+                $payment->amount_after_coupon ?? 0,
                 $payment->created_at->toDateTimeString(),
-                $payment->approved_at->toDateTimeString(),
+                $payment->paid_at->toDateTimeString(),
                 $due_date, // Add due_date to the mapped data
                 (string) $remaining_installments, // Explicitly cast to string to ensure inclusion
             ];
@@ -98,8 +100,8 @@ class InstallmentPaymentsExport implements FromCollection, WithHeadings, WithSty
             'WhatsApp Number',
             'Payment Type',
             'Payment Method',
-            'Transfer Number',
-            'Transfer Image',
+            // 'Transfer Number',
+            // 'Transfer Image',
             'Amount',
             'Created At',
             'Approved At',

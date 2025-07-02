@@ -98,6 +98,7 @@ class PermissionSeeder extends Seeder
                 'payment_detail.list',
                 'payment_detail.show',
                 'payment_detail.status',
+                'payment_detail.update',
             ],
             'course_installment' => [
                 'course_installment.list',

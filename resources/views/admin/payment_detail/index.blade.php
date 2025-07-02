@@ -15,11 +15,71 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+            {{-- Instapay Statistics --}}
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ \App\Models\Payment::where('gateway', 'instapay')->where('status', 'pending')->count() }}</h3>
+                            <p>Pending Instapay</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <a href="#" onclick="$('#filter-gateway').val('instapay'); $('#filter-status').val('pending'); $('#table').DataTable().draw();" class="small-box-footer">
+                            View All <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>{{ \App\Models\Payment::where('gateway', 'instapay')->where('status', 'paid')->count() }}</h3>
+                            <p>Approved Instapay</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <a href="#" onclick="$('#filter-gateway').val('instapay'); $('#filter-status').val('paid'); $('#table').DataTable().draw();" class="small-box-footer">
+                            View All <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ \App\Models\Payment::where('gateway', 'instapay')->count() }}</h3>
+                            <p>Total Instapay</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <a href="#" onclick="$('#filter-gateway').val('instapay'); $('#filter-status').val(''); $('#table').DataTable().draw();" class="small-box-footer">
+                            View All <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="small-box bg-secondary">
+                        <div class="inner">
+                            <h3>{{ \App\Models\Payment::where('gateway', 'fawaterak')->count() }}</h3>
+                            <p>Fawaterak Payments</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <a href="#" onclick="$('#filter-gateway').val('fawaterak'); $('#filter-status').val(''); $('#table').DataTable().draw();" class="small-box-footer">
+                            View All <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-12">
                     {{-- Filters --}}
                     <div class="row mb-3">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <select id="filter-user" class="form-control">
                                 <option value="">{{ __('main.all_users') }}</option>
                                 @foreach(\App\Models\User::select('id', 'first_name', 'last_name', 'email')->get() as $user)
@@ -28,7 +88,15 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <select id="filter-gateway" class="form-control">
+                                <option value="">All Gateways</option>
+                                <option value="fawaterak">Fawaterak</option>
+                                <option value="instapay">Instapay</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
                             <select id="filter-status" class="form-control">
                                 <option value="">{{ __('main.all_statuses') }}</option>
                                 @foreach(\App\Enums\PaymentStatusEnum::cases() as $status)
@@ -60,6 +128,7 @@
                                         <th>{{ __('attributes.name') }}</th>
                                         <th>{{ __('attributes.email') }}</th>
                                         <th>{{ __('attributes.phone') }}</th>
+                                        <th>Gateway</th>
                                         <th>invoice_id</th>
                                         <th>invoice_key</th>
                                         <th>{{ __('attributes.coupon') }}</th>
@@ -105,6 +174,7 @@
                 url: "{{ route('admin.payment_details.data') }}",
                 data: function(d) {
                     d.user_id = $('#filter-user').val();
+                    d.gateway = $('#filter-gateway').val();
                     d.status = $('#filter-status').val();
                     d.from_created_at = $('#filter-from').val();
                     d.to_created_at = $('#filter-to').val();
@@ -127,6 +197,10 @@
                 {
                     data: 'user_phone',
                     name: 'user.phone'
+                },
+                {
+                    data: 'gateway',
+                    name: 'gateway'
                 },
                 {
                     data: 'invoice_id',
@@ -185,8 +259,81 @@
 
         });
 
-        $('#filter-user, #filter-status, #filter-from, #filter-to').on('change', function() {
+        $('#filter-user, #filter-gateway, #filter-status, #filter-from, #filter-to').on('change', function() {
             table.draw();
+        });
+
+        // Quick Action SweetAlert2 handlers
+        $(document).on('click', '.quick-approve-btn', function(e) {
+            e.preventDefault();
+            const form = $(this).closest('form');
+            const paymentId = form.data('payment-id');
+
+            Swal.fire({
+                title: '<i class="fas fa-check-circle text-success"></i> Quick Approve',
+                html: `
+                    <p><strong>Approve Instapay Payment #${paymentId}?</strong></p>
+                    <p class="text-muted">This will instantly approve the payment and grant course access.</p>
+                `,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-check"></i> Approve',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Approving payment...',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    form.submit();
+                }
+            });
+        });
+
+        $(document).on('click', '.quick-reject-btn', function(e) {
+            e.preventDefault();
+            const form = $(this).closest('form');
+            const paymentId = form.data('payment-id');
+
+            Swal.fire({
+                title: '<i class="fas fa-times-circle text-danger"></i> Quick Reject',
+                html: `
+                    <p><strong>Reject Instapay Payment #${paymentId}?</strong></p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> This action cannot be undone!
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-times"></i> Reject',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Rejecting payment...',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    form.submit();
+                }
+            });
         });
     });
 </script>

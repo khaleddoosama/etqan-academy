@@ -218,6 +218,7 @@ return [
     'amount_before_coupon' => 'Amount Before Coupon',
     'amount_after_coupon' => 'Amount After Coupon',
     'amount_confirmed' => 'Amount Confirmed',
+    'transfer_image' => 'Transfer Image',
     'paid_at' => 'Paid At',
     'parent_section_id' => 'Parent Section',
     'no_parent_section' => 'No Parent Section',

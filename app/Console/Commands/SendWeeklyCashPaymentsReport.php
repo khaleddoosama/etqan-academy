@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Exports\CashPaymentsExport;
 use App\Exports\InstallmentPaymentsExport;
 use App\Exports\SummaryPaymentsExport;
+use App\Services\PaymentDetailService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -15,6 +16,12 @@ class SendWeeklyCashPaymentsReport extends Command
     protected $signature = 'report:weekly-payments';
     protected $description = 'Export weekly cash payments and send via email';
 
+
+    // constructor
+    public function __construct(protected PaymentDetailService $paymentDetailService)
+    {
+        parent::__construct();
+    }
     /**
      * Execute the console command.
      */
@@ -32,9 +39,9 @@ class SendWeeklyCashPaymentsReport extends Command
 
         try {
             // Generate the Excel file
-            Excel::store(new CashPaymentsExport, 'reports/weekly_cash_payments.xlsx');
-            Excel::store(new InstallmentPaymentsExport, 'reports/weekly_installment_payments.xlsx');
-            Excel::store(new SummaryPaymentsExport, 'reports/weekly_summary_payments.xlsx');
+            Excel::store(new CashPaymentsExport($this->paymentDetailService), 'reports/weekly_cash_payments.xlsx');
+            Excel::store(new InstallmentPaymentsExport($this->paymentDetailService), 'reports/weekly_installment_payments.xlsx');
+            Excel::store(new SummaryPaymentsExport($this->paymentDetailService), 'reports/weekly_summary_payments.xlsx');
 
             // Send the email
             Mail::send([], [], function ($message) use ($cashFilePath, $installmentFilePath, $summaryFilePath) {
@@ -57,8 +64,8 @@ class SendWeeklyCashPaymentsReport extends Command
             $this->info('Weekly cash payments report sent successfully.');
         } catch (\Exception $e) {
             // Log the exception and show an error message
-            Log::error('Error sending weekly cash payments report: ' . $e->getMessage());
-            $this->error('Failed to send weekly cash payments report.');
+            Log::error('Error sending weekly payments report: ' . $e->getMessage() . ' File: ' . $e->getFile() . ' Line: ' . $e->getLine());
+            $this->error('Failed to send weekly payments report.');
         }
     }
 }

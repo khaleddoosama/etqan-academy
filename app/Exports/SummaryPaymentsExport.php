@@ -5,6 +5,8 @@ namespace App\Exports;
 use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Models\Payment;
+use App\Models\PaymentItems;
+use App\Services\PaymentDetailService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -17,7 +19,7 @@ class SummaryPaymentsExport implements FromCollection, WithHeadings, WithStyles
     protected $startOfWeek;
     protected $endOfWeek;
 
-    public function __construct()
+    public function __construct(protected PaymentDetailService $paymentDetailService)
     {
         $this->startOfWeek = now()->previous('friday')->startOfDay();
         $this->endOfWeek = now()->next('friday')->startOfDay();
@@ -29,34 +31,64 @@ class SummaryPaymentsExport implements FromCollection, WithHeadings, WithStyles
 
         $summaryData = [];
 
-        // Loop through each day of the current week
-        for ($day = $this->startOfWeek; $day->lt($this->endOfWeek); $day->addDay()) {
-            $date = $day->toDateString();
+        // // Loop through each day of the current week
+        // for ($day = $this->startOfWeek; $day->lt($this->endOfWeek); $day->addDay()) {
+        //     $date = $day->toDateString();
 
-            $dailyData = [
-                'day' => $day->format('l'),
-                'date' => $date,
+        //     $dailyData = [
+        //         'day' => $day->format('l'),
+        //         'date' => $date,
 
-                'total_subscribers' => (string) (Payment::whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-                'total_income' => (string) (Payment::whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
+        //         'total_subscribers' => (string) (Payment::whereDate('paid_at', $date)->where('status', 'paid')->count() ?: 0),
+        //         'total_income' => (string) (Payment::whereDate('paid_at', $date)->where('status', 'paid')->sum('amount_after_coupon') ?: 0),
 
-                'cash_subscribers' => (string) (Payment::where('payment_type', PaymentType::CASH->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-                'cash_income' => (string) (Payment::where('payment_type', PaymentType::CASH->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
+        //         'cash_subscribers' => (string) (
+        //             PaymentItems::where('payment_type', PaymentType::CASH->value)
+        //             ->whereHas('payment', function ($q) use ($date) {
+        //                 $q->whereDate('paid_at', $date)->where('status', 'paid');
+        //             })
+        //             ->distinct('payment_id')
+        //             ->count('payment_id')
+        //         ),
 
-                'installment_subscribers' => (string) (Payment::where('payment_type', PaymentType::INSTALLMENT->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-                'installment_income' => (string) (Payment::where('payment_type', PaymentType::INSTALLMENT->value)->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->sum('amount') ?: 0),
+        //         'cash_income' => (string) (
+        //             PaymentItems::where('payment_type', PaymentType::CASH->value)
+        //             ->whereHas('payment', function ($q) use ($date) {
+        //                 $q->whereDate('paid_at', $date)->where('status', 'paid');
+        //             })
+        //             ->sum('amount_after_coupon')
+        //         ),
 
-                'super_graphic_subscribers' => (string) (Payment::whereHas('paymentItems.courseInstallment.course', function ($query) {
-                    $query->where('title', 'LIKE', '%سوبر جرافيك%');
-                })->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-                'mini_graphic_subscribers' => (string) (Payment::whereHas('paymentItems.courseInstallment.course', function ($query) {
-                    $query->where('title', 'LIKE', '%ميني جرافيك%');
-                })->whereDate('approved_at', $date)->where('status', Status::APPROVED->value)->count() ?: 0),
-            ];
+        //         'installment_subscribers' => (string) (
+        //             PaymentItems::where('payment_type', PaymentType::INSTALLMENT->value)
+        //             ->whereHas('payment', function ($q) use ($date) {
+        //                 $q->whereDate('paid_at', $date)->where('status', 'paid');
+        //             })
+        //             ->distinct('payment_id')
+        //             ->count('payment_id')
+        //         ),
+
+        //         'installment_income' => (string) (
+        //             PaymentItems::where('payment_type', PaymentType::INSTALLMENT->value)
+        //             ->whereHas('payment', function ($q) use ($date) {
+        //                 $q->whereDate('paid_at', $date)->where('status', 'paid');
+        //             })
+        //             ->sum('amount_after_coupon')
+        //         ),
+
+        //         // 'super_graphic_subscribers' => (string) (Payment::whereHas('paymentItems.courseInstallment.course', function ($query) {
+        //         //     $query->where('title', 'LIKE', '%سوبر جرافيك%');
+        //         // })->whereDate('paid_at', $date)->where('status', 'paid')->count() ?: 0),
+        //         // 'mini_graphic_subscribers' => (string) (Payment::whereHas('paymentItems.courseInstallment.course', function ($query) {
+        //         //     $query->where('title', 'LIKE', '%ميني جرافيك%');
+        //         // })->whereDate('paid_at', $date)->where('status', 'paid')->count() ?: 0),
+        //     ];
 
 
-            $summaryData[] = $dailyData;
-        }
+        //     $summaryData[] = $dailyData;
+        // }
+
+        $summaryData[] = $this->paymentDetailService->getWeeklySummary($this->startOfWeek, $this->endOfWeek);
 
         // حساب الإجمالي الأسبوعي
         $weeklySummary = [
@@ -68,8 +100,8 @@ class SummaryPaymentsExport implements FromCollection, WithHeadings, WithStyles
             'cash_income' => (string) (array_sum(array_column($summaryData, 'cash_income')) ?: 0),
             'installment_subscribers' => (string) (array_sum(array_column($summaryData, 'installment_subscribers')) ?: 0),
             'installment_income' => (string) (array_sum(array_column($summaryData, 'installment_income')) ?: 0),
-            'super_graphic_subscribers' => (string) (array_sum(array_column($summaryData, 'super_graphic_subscribers')) ?: 0),
-            'mini_graphic_subscribers' => (string) (array_sum(array_column($summaryData, 'mini_graphic_subscribers')) ?: 0),
+            // 'super_graphic_subscribers' => (string) (array_sum(array_column($summaryData, 'super_graphic_subscribers')) ?: 0),
+            // 'mini_graphic_subscribers' => (string) (array_sum(array_column($summaryData, 'mini_graphic_subscribers')) ?: 0),
         ];
 
 
@@ -89,8 +121,8 @@ class SummaryPaymentsExport implements FromCollection, WithHeadings, WithStyles
             'إجمالي الكاش',
             'عدد المشتركين تقسيط',
             'إجمالي التقسيط',
-            'عدد مشتركين السوبر جرافيك',
-            'عدد مشتركين الميني جرافيك',
+            // 'عدد مشتركين السوبر جرافيك',
+            // 'عدد مشتركين الميني جرافيك',
         ];
     }
 

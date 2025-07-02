@@ -126,6 +126,9 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:20,1', 'log_use
         Route::get('/payment-methods', [GatewayPaymentController::class, 'paymentMethods']);
         Route::post('/pay', [GatewayPaymentController::class, 'pay']);
     });
+
+    // Instapay payment
+    Route::post('/payment/instapay', [GatewayPaymentController::class, 'payInstapay'])->middleware('throttle:20,1');
 });
 
 // Authenticated routes for email verification (with user activity logging)

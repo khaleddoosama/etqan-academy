@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\PaymentGateway;
 use App\Http\Controllers\Api\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PaymentGatewatRequest;
+use App\Http\Requests\Api\InstapayPaymentRequest;
 use App\Services\PaymentGateway\FawaterakPaymentGatewayService;
 
 class GatewayPaymentController extends Controller
@@ -31,5 +32,14 @@ class GatewayPaymentController extends Controller
         $response = $this->paymentService->executePayment($data);
 
         return $response;
+    }
+
+    public function payInstapay(InstapayPaymentRequest $request)
+    {
+        $data = $request->validated();
+
+        $response = $this->paymentService->executeInstapayPayment($data);
+
+        return $this->apiResponse($response['data'], $response['message'], 201);
     }
 }

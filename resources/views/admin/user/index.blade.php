@@ -29,13 +29,13 @@
                         <div class="card-body border-bottom">
                             <form id="filter-form" method="GET" action="{{ url()->current() }}">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="search">{{ __('main.search') }}</label>
                                         <input type="text" name="search" id="search" class="form-control"
                                                placeholder="{{ __('main.search_users_placeholder') }}"
                                                value="{{ request('search') }}">
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <label for="per_page">
                                             {{ __('attributes.per_page') }}
                                             <i class="fas fa-info-circle text-info"
@@ -50,7 +50,27 @@
                                             <option value="100" {{ request('per_page', 25) == 100 ? 'selected' : '' }}>100</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
+                                        <label for="sort_by">{{ __('main.sort_by') }}</label>
+                                        <select name="sort_by" id="sort_by" class="form-control">
+                                            <option value="id" {{ request('sort_by', 'id') == 'id' ? 'selected' : '' }}>{{ __('attributes.last_login') }}</option>
+                                            <option value="first_name" {{ request('sort_by') == 'first_name' ? 'selected' : '' }}>{{ __('attributes.first_name') }}</option>
+                                            <option value="last_name" {{ request('sort_by') == 'last_name' ? 'selected' : '' }}>{{ __('attributes.last_name') }}</option>
+                                            <option value="email" {{ request('sort_by') == 'email' ? 'selected' : '' }}>{{ __('attributes.email') }}</option>
+                                            <option value="phone" {{ request('sort_by') == 'phone' ? 'selected' : '' }}>{{ __('attributes.phone') }}</option>
+                                            <option value="status" {{ request('sort_by') == 'status' ? 'selected' : '' }}>{{ __('attributes.status') }}</option>
+                                            <option value="email_verified_at" {{ request('sort_by') == 'email_verified_at' ? 'selected' : '' }}>{{ __('attributes.email_verified_at') }}</option>
+                                            <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>{{ __('attributes.created_at') }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="sort_direction">{{ __('main.sort_direction') }}</label>
+                                        <select name="sort_direction" id="sort_direction" class="form-control">
+                                            <option value="desc" {{ request('sort_direction', 'desc') == 'desc' ? 'selected' : '' }}>{{ __('main.descending') }}</option>
+                                            <option value="asc" {{ request('sort_direction') == 'asc' ? 'selected' : '' }}>{{ __('main.ascending') }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
                                         <label>&nbsp;</label>
                                         <div>
                                             <button type="submit" class="btn btn-primary btn-sm">
@@ -119,6 +139,16 @@
                 $('#filter-form').trigger('submit');
             });
 
+            // Auto-submit on sort_by change
+            $('#sort_by').on('change', function() {
+                $('#filter-form').trigger('submit');
+            });
+
+            // Auto-submit on sort_direction change
+            $('#sort_direction').on('change', function() {
+                $('#filter-form').trigger('submit');
+            });
+
             // Search with debounce
             let searchTimeout;
             $('#search').on('input', function() {
@@ -166,6 +196,26 @@
             // Handle browser back/forward buttons
             window.addEventListener('popstate', function(e) {
                 loadUsersPage(window.location.href);
+            });
+
+            // Handle column sorting
+            $(document).on('click', '.sort-link', function(e) {
+                e.preventDefault();
+                var sortBy = $(this).data('sort');
+                var currentSortBy = $('#sort_by').val();
+                var currentSortDirection = $('#sort_direction').val();
+
+                // If clicking the same column, toggle direction
+                if (sortBy === currentSortBy) {
+                    $('#sort_direction').val(currentSortDirection === 'asc' ? 'desc' : 'asc');
+                } else {
+                    // If clicking a different column, set it and default to asc
+                    $('#sort_by').val(sortBy);
+                    $('#sort_direction').val('asc');
+                }
+
+                // Submit the form
+                $('#filter-form').trigger('submit');
             });
         });
     </script>

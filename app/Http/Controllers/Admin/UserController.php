@@ -44,7 +44,16 @@ class UserController extends Controller
         // Get search parameter
         $search = $request->get('search');
 
-        $users = $this->userService->getActiveUsers($perPage, $search);
+        // Get sorting parameters
+        $sortBy = $request->get('sort_by', 'last_login');
+        $sortDirection = $request->get('sort_direction', 'desc');
+
+        // Validate sort direction
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
+        $users = $this->userService->getActiveUsers($perPage, $search, $sortBy, $sortDirection);
 
         // Preserve query parameters in pagination
         $users->appends($request->query());
@@ -74,7 +83,16 @@ class UserController extends Controller
         // Get search parameter
         $search = $request->get('search');
 
-        $users = $this->userService->getInactiveUsers($perPage, $search);
+        // Get sorting parameters
+        $sortBy = $request->get('sort_by', 'last_login');
+        $sortDirection = $request->get('sort_direction', 'desc');
+
+        // Validate sort direction
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
+        $users = $this->userService->getInactiveUsers($perPage, $search, $sortBy, $sortDirection);
 
         // Preserve query parameters in pagination
         $users->appends($request->query());

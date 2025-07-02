@@ -71,4 +71,9 @@
     'no_logs_found' => 'No logs found',
     'search_logs_tooltip' => 'Search in log descriptions, types, subjects, properties, and causer names',
     'search_logs_placeholder' => 'Search logs...',
+    'sort_by' => 'Sort By',
+    'sort_direction' => 'Order',
+    'ascending' => 'Ascending',
+    'descending' => 'Descending',
+    'last_login' => 'Last Login',
 );

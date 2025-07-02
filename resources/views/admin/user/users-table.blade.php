@@ -3,14 +3,105 @@
         <table id="users-table" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="id">
+                            #
+                            @if(request('sort_by') == 'id')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
                     <th>{{ __('attributes.image') }}</th>
-                    <th>{{ __('attributes.first_name') }}</th>
-                    <th>{{ __('attributes.last_name') }}</th>
-                    <th>{{ __('attributes.email') }}</th>
-                    <th>{{ __('attributes.phone') }}</th>
-                    <th>{{ __('attributes.status') }}</th>
-                    <th>{{ __('attributes.email_verified_at') }}</th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="first_name">
+                            {{ __('attributes.first_name') }}
+                            @if(request('sort_by') == 'first_name')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="last_name">
+                            {{ __('attributes.last_name') }}
+                            @if(request('sort_by') == 'last_name')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="email">
+                            {{ __('attributes.email') }}
+                            @if(request('sort_by') == 'email')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="phone">
+                            {{ __('attributes.phone') }}
+                            @if(request('sort_by') == 'phone')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="status">
+                            {{ __('attributes.status') }}
+                            @if(request('sort_by') == 'status')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="email_verified_at">
+                            {{ __('attributes.email_verified_at') }}
+                            @if(request('sort_by') == 'email_verified_at')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
                     <th>{{ __('main.actions') }}</th>
                 </tr>
             </thead>
@@ -85,14 +176,105 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th>#</th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="id">
+                            #
+                            @if(request('sort_by') == 'id')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
                     <th>{{ __('attributes.image') }}</th>
-                    <th>{{ __('attributes.first_name') }}</th>
-                    <th>{{ __('attributes.last_name') }}</th>
-                    <th>{{ __('attributes.email') }}</th>
-                    <th>{{ __('attributes.phone') }}</th>
-                    <th>{{ __('attributes.status') }}</th>
-                    <th>{{ __('attributes.email_verified_at') }}</th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="first_name">
+                            {{ __('attributes.first_name') }}
+                            @if(request('sort_by') == 'first_name')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="last_name">
+                            {{ __('attributes.last_name') }}
+                            @if(request('sort_by') == 'last_name')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="email">
+                            {{ __('attributes.email') }}
+                            @if(request('sort_by') == 'email')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="phone">
+                            {{ __('attributes.phone') }}
+                            @if(request('sort_by') == 'phone')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="status">
+                            {{ __('attributes.status') }}
+                            @if(request('sort_by') == 'status')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0)" class="sort-link text-dark text-decoration-none" data-sort="email_verified_at">
+                            {{ __('attributes.email_verified_at') }}
+                            @if(request('sort_by') == 'email_verified_at')
+                                @if(request('sort_direction', 'desc') == 'asc')
+                                    <i class="fas fa-sort-up"></i>
+                                @else
+                                    <i class="fas fa-sort-down"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort text-muted"></i>
+                            @endif
+                        </a>
+                    </th>
                     <th>{{ __('main.actions') }}</th>
                 </tr>
             </tfoot>

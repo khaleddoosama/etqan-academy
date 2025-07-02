@@ -72,4 +72,9 @@
     'no_logs_found' => 'لم يتم العثور على سجلات',
     'search_logs_tooltip' => 'البحث في أوصاف السجلات والأنواع والموضوعات والخصائص وأسماء المنفذين',
     'search_logs_placeholder' => 'البحث في السجلات...',
+    'sort_by' => 'ترتيب حسب',
+    'sort_direction' => 'الاتجاه',
+    'ascending' => 'تصاعدي',
+    'descending' => 'تنازلي',
+    'last_login' => 'آخر تسجيل دخول',
 );

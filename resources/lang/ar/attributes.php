@@ -26,6 +26,7 @@ return [
     'course_title' => 'عنوان الدورة',
     'courses' => 'الدورات',
     'created_at' => 'تاريخ الإنشاء',
+    'last_login' => 'آخر تسجيل دخول',
     'description' => 'الوصف',
     'duration' => 'المدة',
     'email' => 'البريد الإلكتروني',

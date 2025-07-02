@@ -15,9 +15,9 @@ class UserService
     // }
 
     // get active users
-    public function getActiveUsers($perPage = 25, $search = null)
+    public function getActiveUsers($perPage = 25, $search = null, $sortBy = 'last_login', $sortDirection = 'desc')
     {
-        $query = User::studentActive()->orderBy('last_login', 'desc');
+        $query = User::studentActive();
 
         // Apply search filter if provided
         if ($search) {
@@ -25,17 +25,26 @@ class UserService
                 $q->where('first_name', 'like', "%{$search}%")
                   ->orWhere('last_name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
             });
+        }
+
+        // Apply sorting
+        $allowedSortColumns = ['id', 'first_name', 'last_name', 'email', 'phone', 'status', 'email_verified_at', 'created_at', 'last_login'];
+        if (in_array($sortBy, $allowedSortColumns)) {
+            $query->orderBy($sortBy, $sortDirection);
+        } else {
+            $query->orderBy('last_login', 'desc');
         }
 
         return $query->paginate($perPage);
     }
 
     // get inactive users
-    public function getInactiveUsers($perPage = 25, $search = null)
+    public function getInactiveUsers($perPage = 25, $search = null, $sortBy = 'last_login', $sortDirection = 'desc')
     {
-        $query = User::studentInactive()->orderBy('last_login', 'desc');
+        $query = User::studentInactive();
 
         // Apply search filter if provided
         if ($search) {
@@ -43,8 +52,17 @@ class UserService
                 $q->where('first_name', 'like', "%{$search}%")
                   ->orWhere('last_name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
             });
+        }
+
+        // Apply sorting
+        $allowedSortColumns = ['id', 'first_name', 'last_name', 'email', 'phone', 'status', 'email_verified_at', 'created_at', 'last_login'];
+        if (in_array($sortBy, $allowedSortColumns)) {
+            $query->orderBy($sortBy, $sortDirection);
+        } else {
+            $query->orderBy('last_login', 'desc');
         }
 
         return $query->paginate($perPage);

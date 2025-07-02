@@ -26,6 +26,7 @@ return [
     'course_title' => 'Course Title',
     'courses' => 'Courses',
     'created_at' => 'Created At',
+    'last_login' => 'Last Login',
     'description' => 'Description',
     'duration' => 'Duration',
     'email' => 'Email',

@@ -22,7 +22,7 @@ class StudentOpinionService
 
     public function getForTheWholeSystem()
     {
-        return StudentOpinion::theWholeSystem()->approved()->latest()->get();
+        return StudentOpinion::approved()->latest()->get();
     }
 
     public function store(array $data)

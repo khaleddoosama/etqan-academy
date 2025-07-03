@@ -29,9 +29,9 @@
                             <p><strong>Invoice Key:</strong> {{ $payment->invoice_key ?? '-' }}</p>
                             <p><strong>{{ __('attributes.amount_before_coupon') }}:</strong> {{ $payment->amount_before_coupon }}</p>
                             <p><strong>{{ __('attributes.amount_after_coupon') }}:</strong> {{ $payment->amount_after_coupon }}</p>
-                            @if($payment->gateway === 'instapay')
+                            <!-- @if($payment->gateway === 'instapay')
                             <p><strong>{{ __('attributes.amount_confirmed') }}:</strong> {{ $payment->amount_confirmed }}</p>
-                            @endif
+                            @endif -->
                             <p><strong>{{ __('attributes.discount') }}:</strong> {{ $payment->discount }}%</p>
                             <p><strong>{{ __('attributes.payment_method') }}:</strong> {{ $payment->payment_method }}</p>
                             <p><strong>{{ __('attributes.status') }}:</strong>
@@ -52,14 +52,13 @@
                             @endif
 
                             {{-- Instapay Admin Controls --}}
-                            @if($payment->gateway === 'instapay')
+                             {{--@if($payment->gateway === 'instapay')
                             <hr>
                             <div class="alert alert-info">
                                 <h5><strong><i class="fas fa-info-circle"></i> Instapay Payment Management</strong></h5>
                                 <p>This is an Instapay payment that requires manual review. You can update the confirmed amount and approve or reject the payment.</p>
                             </div>
 
-                            {{-- Update Amount Form --}}
                             @can('payment_detail.update')
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -96,7 +95,6 @@
                                     </div>
                                 </div>
 
-                                {{-- Quick Status Actions --}}
                                 <div class="col-md-6">
                                     <div class="card">
                                         <div class="card-header">
@@ -143,7 +141,7 @@
                                 <i class="fas fa-lock"></i> You don't have permission to modify payments.
                             </div>
                             @endcan
-                            @endif
+                            @endif--}}
 
 
 
@@ -256,8 +254,6 @@
 
 @section('scripts')
 <script>
-
-
     // Wait for DOM and SweetAlert2
     function initializeHandlers() {
         console.log('Initializing handlers...');

@@ -149,15 +149,15 @@ class PaymentDetailService
         return $summaryData;
     }
 
-    public function updateAmountConfirmed($amount, $id): Payment
-    {
-        $payment = $this->getPayment($id);
+    // public function updateAmountConfirmed($amount, $id): Payment
+    // {
+    //     $payment = $this->getPayment($id);
 
-        $payment->amount_confirmed = $amount;
+    //     $payment->amount_confirmed = $amount;
 
-        $payment->save();
-        return $payment;
-    }
+    //     $payment->save();
+    //     return $payment;
+    // }
 
     public function changeStatus($status, $id)
     {
@@ -237,12 +237,12 @@ class PaymentDetailService
         }
     }
 
-    private function validateApproval(Payment $payment): void
-    {
-        if ($payment->amount_confirmed == 0) {
-            throw ValidationException::withMessages(['amount' => 'Please enter an amount first.']);
-        }
-    }
+    // private function validateApproval(Payment $payment): void
+    // {
+    //     if ($payment->amount_confirmed == 0) {
+    //         throw ValidationException::withMessages(['amount' => 'Please enter an amount first.']);
+    //     }
+    // }
 
     private function validateRejection(Payment $payment): void
     {

@@ -70,18 +70,18 @@ class PaymentDetailController extends Controller
         return view('admin.payment_detail.show', compact('payment'));
     }
 
-    public function updateAmountConfirmed(Request $request, $id)
-    {
-        $data = $request->validate([
-            'amount' => 'required|numeric',
-        ]);
+    // public function updateAmountConfirmed(Request $request, $id)
+    // {
+    //     $data = $request->validate([
+    //         'amount' => 'required|numeric',
+    //     ]);
 
-        $this->paymentDetailService->updateAmountConfirmed($data['amount'], $id);
+    //     $this->paymentDetailService->updateAmountConfirmed($data['amount'], $id);
 
-        Toastr::success(__('messages.amount_updated_successfully'), __('status.success'));
+    //     Toastr::success(__('messages.amount_updated_successfully'), __('status.success'));
 
-        return redirect()->back();
-    }
+    //     return redirect()->back();
+    // }
 
     public function status(Request $request, $id)
     {

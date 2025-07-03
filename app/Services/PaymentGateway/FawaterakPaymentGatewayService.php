@@ -127,7 +127,7 @@ class FawaterakPaymentGatewayService
             'gateway' => 'instapay',
             'amount_before_coupon' => $totalPriceBeforeCoupon,
             'amount_after_coupon' => $finalPriceAfterCoupon,
-            'amount_confirmed' => $data['amount_confirmed'],
+            // 'amount_confirmed' => $data['amount_confirmed'],
             'coupon_id' => $coupon?->id,
             'discount' => $coupon?->discount,
             'type' => $coupon?->type,

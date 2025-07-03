@@ -22,7 +22,7 @@ class InstapayPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount_confirmed' => 'required|numeric|min:0.01',
+            // 'amount_confirmed' => 'required|numeric|min:0.01',
             'transfer_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'coupon_code' => 'nullable|exists:coupons,code',
         ];
@@ -36,9 +36,9 @@ class InstapayPaymentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'amount_confirmed.required' => 'The confirmed amount is required.',
-            'amount_confirmed.numeric' => 'The confirmed amount must be a number.',
-            'amount_confirmed.min' => 'The confirmed amount must be greater than 0.',
+            // 'amount_confirmed.required' => 'The confirmed amount is required.',
+            // 'amount_confirmed.numeric' => 'The confirmed amount must be a number.',
+            // 'amount_confirmed.min' => 'The confirmed amount must be greater than 0.',
             'transfer_image.required' => 'The transfer image is required.',
             'transfer_image.image' => 'The transfer file must be an image.',
             'transfer_image.mimes' => 'The transfer image must be a file of type: jpeg, png, jpg, gif.',

@@ -22,7 +22,7 @@ class Payment extends Model
         'type',
         'amount_before_coupon',
         'amount_after_coupon',
-        'amount_confirmed',
+        // 'amount_confirmed',
         'payment_method',
         'payment_method_id',
         'status',

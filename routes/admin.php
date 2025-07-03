@@ -192,7 +192,7 @@ Route::group(
                 Route::get('/payment-details/export', 'export')->name('payment_details.export');
                 Route::get('/payment-details/{id}', 'show')->name('payment_details.show');
                 Route::put('/payment-details/{id}/status', 'status')->name('payment_details.status');
-                Route::put('/payment-details/{id}/update-amount', 'updateAmountConfirmed')->name('payment_details.update_amount');
+                // Route::put('/payment-details/{id}/update-amount', 'updateAmountConfirmed')->name('payment_details.update_amount');
             });
 
             // Permission controller (resource)

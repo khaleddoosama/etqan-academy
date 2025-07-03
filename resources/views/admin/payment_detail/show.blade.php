@@ -52,7 +52,7 @@
                             @endif
 
                             {{-- Instapay Admin Controls --}}
-                             {{--@if($payment->gateway === 'instapay')
+                            @if($payment->gateway === 'instapay')
                             <hr>
                             <div class="alert alert-info">
                                 <h5><strong><i class="fas fa-info-circle"></i> Instapay Payment Management</strong></h5>
@@ -61,7 +61,7 @@
 
                             @can('payment_detail.update')
                             <div class="row mb-3">
-                                <div class="col-md-6">
+                                {{--<div class="col-md-6">
                                     <div class="card">
                                         <div class="card-header">
                                             <h6 class="mb-0"><i class="fas fa-edit"></i> Update Confirmed Amount</h6>
@@ -93,7 +93,7 @@
                                             </form>
                                         </div>
                                     </div>
-                                </div>
+                                </div>--}}
 
                                 <div class="col-md-6">
                                     <div class="card">
@@ -141,7 +141,7 @@
                                 <i class="fas fa-lock"></i> You don't have permission to modify payments.
                             </div>
                             @endcan
-                            @endif--}}
+                            @endif
 
 
 

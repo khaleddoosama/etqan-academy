@@ -177,7 +177,7 @@ class PaymentDetailService
 
     private function handleApproval(Payment $payment): void
     {
-        $this->validateApproval($payment);
+        // $this->validateApproval($payment);
 
         // Handle different payment gateways
         if ($payment->gateway === 'instapay') {

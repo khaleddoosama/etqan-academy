@@ -71,15 +71,18 @@ class PaymentApprovedNotification extends Notification
             $value = '';
             $course = $payment_item->course()->first();
 
-            if ($course && $course->title == "الماستر جرافيك | MASTER GRAPHICS") {
+            if ($course && $course->id == 10) {
                 $include = "كورس الجرافيك ديزاين - كورس المونتاج - كورس الموشن جرافيك - كورس العمل الحر - كورس التسويق - مكتبة أورا للجرافيك";
                 $value = "الأشتراك فـي دبلومة السوبر جرافيك";
-            } elseif ($course && $course->title == "الميني جرافيك | MINI GRAPHICS") {
+            } elseif ($course && $course->id == 9) {
                 $include = "كورس الجرافيك ديزاين - كورس العمل الحر - مكتبة أورا للجرافيك";
                 $value = "الأشتراك فـي دبلومة الميني جرافيك";
             } elseif ($payment_item->package_plan_id) {
                 $include = "البرامج المذكورة على الموقع";
                 $value = "تفعيل حساب " . $payment_item->packagePlan->title . " لمدة " . $payment_item->packagePlan->duration_text;
+            } else {
+                $include = "البرامج المذكورة على الموقع";
+                $value = "تفعيل حساب " . $payment_item->service_title;
             }
 
             $data = [

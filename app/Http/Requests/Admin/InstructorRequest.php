@@ -18,6 +18,7 @@ class InstructorRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:instructors,name,' . optional($this->instructor)->id,
+            'description' => 'nullable|string|max:1000',
         ];
     }
 }

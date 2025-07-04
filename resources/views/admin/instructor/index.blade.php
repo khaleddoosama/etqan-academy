@@ -25,6 +25,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>{{ __('attributes.name') }}</th>
+                                            <th>{{ __('attributes.description') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </thead>
@@ -33,6 +34,7 @@
                                             <tr>
                                                 <td>{{ $instructor->id }}</td>
                                                 <td>{{ $instructor->name }}</td>
+                                                <td>{{ Str::limit($instructor->description, 50) ?? '-' }}</td>
                                                 <td>
                                                     @can('instructor.edit')
                                                         <x-custom.edit-button route="admin.instructors.edit"
@@ -52,6 +54,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>{{ __('attributes.name') }}</th>
+                                            <th>{{ __('attributes.description') }}</th>
                                             <th>{{ __('main.actions') }}</th>
                                         </tr>
                                     </tfoot>

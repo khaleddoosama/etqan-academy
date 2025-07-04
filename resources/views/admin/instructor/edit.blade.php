@@ -31,6 +31,8 @@
                                 <div class="card-body row">
                                     <x-custom.form-group class="col-md-6" type="text" name="name"
                                         value="{{ $instructor->name }}" />
+                                    <x-custom.form-group class="col-md-12" type="textarea" name="description"
+                                        value="{{ $instructor->description }}" />
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
@@ -60,10 +62,16 @@
                     name: {
                         required: true,
                     },
+                    description: {
+                        maxlength: 1000,
+                    },
                 },
                 messages: {
                     name: {
                         required: "{{ __('validation.required', ['attribute' => __('attributes.name')]) }}"
+                    },
+                    description: {
+                        maxlength: "{{ __('validation.max.string', ['attribute' => __('attributes.description'), 'max' => 1000]) }}"
                     },
                 },
                 errorElement: 'span',

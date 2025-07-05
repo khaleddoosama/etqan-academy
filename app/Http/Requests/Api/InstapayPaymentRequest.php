@@ -23,7 +23,7 @@ class InstapayPaymentRequest extends FormRequest
     {
         return [
             // 'amount_confirmed' => 'required|numeric|min:0.01',
-            'transfer_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'transfer_image' => 'required|image|mimes:jpeg,png,jpg,gif,pdf|max:10024', // 10MB max size
             'coupon_code' => 'nullable|exists:coupons,code',
         ];
     }

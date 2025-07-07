@@ -113,12 +113,7 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:20,1', 'log_use
     Route::post('/student-opinions', [StudentOpinionController::class, 'store']);
     Route::apiResource('comments', CommentController::class);
 
-    // Shopping cart
-    Route::prefix('carts')->group(function () {
-        Route::get('/', [CartController::class, 'getForUser']);
-        Route::post('/', [CartController::class, 'store'])->middleware('throttle:20,1');
-        Route::delete('/{cartId}', [CartController::class, 'destroy']);
-    });
+
 
     // Coupons and payments
     Route::get('/coupon-apply', [CouponController::class, 'applyCoupon'])->middleware('throttle:20,1');
@@ -135,6 +130,13 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:20,1', 'log_use
 Route::middleware(['jwt.authenticate', 'throttle:20,1', 'log_user_activity:api'])->group(function () {
     Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
         ->name('verification.send');
+
+    // Shopping cart
+    Route::prefix('carts')->group(function () {
+        Route::get('/', [CartController::class, 'getForUser']);
+        Route::post('/', [CartController::class, 'store'])->middleware('throttle:20,1');
+        Route::delete('/{cartId}', [CartController::class, 'destroy']);
+    });
 });
 
 // Webhook routes (no user activity logging needed)

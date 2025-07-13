@@ -31,8 +31,8 @@ class FawaterakWebhookService
     protected function isValidHash(array $data): bool
     {
         $queryParam = match (true) {
-            isset($data['invoice_id']) => "InvoiceId={$data['invoice_id']}&InvoiceKey={$data['invoice_key']}&PaymentMethod={$data['payment_method']}", // Paid WebHook
-            isset($data['referenceId']) => "referenceId={$data['referenceId']}&PaymentMethod={$data['paymentMethod']}", // Expired WebHook
+            isset($data['invoice_id'], $data['invoice_key'], $data['payment_method']) => "InvoiceId={$data['invoice_id']}&InvoiceKey={$data['invoice_key']}&PaymentMethod={$data['payment_method']}", // Paid WebHook
+            isset($data['referenceId'], $data['paymentMethod']) => "referenceId={$data['referenceId']}&PaymentMethod={$data['paymentMethod']}", // Expired WebHook
             default => null,
         };
 
@@ -53,13 +53,30 @@ class FawaterakWebhookService
             return null;
         }
 
-        $payment = $this->paymentRepository->where([
-            'invoice_id' => $data['invoice_id'],
-            'invoice_key' => $data['invoice_key']
-        ])->first();
-
-        if (!$payment) {
-            Log::error("Payment not found for invoice: {$data['invoice_id']}");
+        // Handle different webhook data structures
+        $payment = null;
+        
+        if (isset($data['invoice_id']) && isset($data['invoice_key'])) {
+            // Standard webhook with invoice_id and invoice_key
+            $payment = $this->paymentRepository->where([
+                'invoice_id' => $data['invoice_id'],
+                'invoice_key' => $data['invoice_key']
+            ])->first();
+            
+            if (!$payment) {
+                Log::error("Payment not found for invoice: {$data['invoice_id']}");
+                return null;
+            }
+        } elseif (isset($data['referenceId'])) {
+            // Expired webhook with referenceId - try to find payment by invoice_id
+            $payment = $this->paymentRepository->where(['invoice_id' => $data['referenceId']])->first();
+            
+            if (!$payment) {
+                Log::error("Payment not found for reference: {$data['referenceId']}");
+                return null;
+            }
+        } else {
+            Log::error("Missing required payment identification fields in webhook data", $data);
             return null;
         }
 
@@ -143,5 +160,10 @@ class FawaterakWebhookService
     public function processWebhookRefund(array $data): void
     {
         $this->handleWebhook($data, PaymentStatusEnum::Refunded);
+    }
+
+    public function processWebhookExpired(array $data): void
+    {
+        $this->handleWebhook($data, PaymentStatusEnum::Expired);
     }
 }

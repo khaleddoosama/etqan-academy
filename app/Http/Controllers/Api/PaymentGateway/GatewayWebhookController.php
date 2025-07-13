@@ -54,4 +54,13 @@ class GatewayWebhookController extends Controller
 
         return $this->apiResponse(null, 'Webhook processed', 200);
     }
+
+    public function handleExpired(Request $request)
+    {
+        $data = $request->all();
+
+        $this->webhookService->processWebhookExpired($request->all());
+
+        return $this->apiResponse(null, 'Webhook processed', 200);
+    }
 }

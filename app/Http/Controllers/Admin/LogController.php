@@ -35,13 +35,21 @@ class LogController extends Controller
             });
         }
 
-        // Apply date range filter
+        // Apply datetime range filter
         if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
+            try {
+                $query->where('created_at', '>=', $request->date_from);
+            } catch (\Exception $e) {
+                // Handle invalid datetime format gracefully
+            }
         }
 
         if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
+            try {
+                $query->where('created_at', '<=', $request->date_to);
+            } catch (\Exception $e) {
+                // Handle invalid datetime format gracefully
+            }
         }
 
         // Get per page value from request or default to 25

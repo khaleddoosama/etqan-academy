@@ -28,7 +28,7 @@ class CustomVerifyEmail extends Notification
     {
         $frontendUrl = config('app.frontend_url'); // Make sure to set your frontend URL in config/app.php
         $temporarySignedUrl = URL::temporarySignedRoute(
-            'jwt.verification.verify',
+            'verification.verify',
             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60 * 12)),
             [
                 'id' => $notifiable->getKey(),

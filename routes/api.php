@@ -81,7 +81,7 @@ Route::middleware(['log_user_activity:api'])->group(function () {
 
     // Email verification (signed route)
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verifyEmail'])
-        ->name('jwt.verification.verify')->middleware(['signed', 'throttle:20,1']);
+        ->name('verification.verify')->middleware(['signed', 'throttle:20,1']);
 });
 
 // Authenticated routes with user activity logging

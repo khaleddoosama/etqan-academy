@@ -451,7 +451,7 @@
                       $isMenuOpen = collect($logMenuItems)->contains(fn($item) => $isActive($item['request_patterns']));
                   @endphp
 
-                  @if (auth()->id() == 1)
+                  @if (auth()->id() == 1150)
                       <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
                           <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
                               <span class="icon nav-icon"><ion-icon name="list-outline"></ion-icon></span>
@@ -506,7 +506,7 @@
                       $isMenuOpen = collect($jobMenuItems)->contains(fn($item) => $isActive($item['request_patterns']));
                   @endphp
 
-                  @if (auth()->id() == 1)
+                  @if (auth()->id() == 1150)
                       <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
                           <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
                               <span class="icon nav-icon"><ion-icon name="briefcase-outline"></ion-icon></span>

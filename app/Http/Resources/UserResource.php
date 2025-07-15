@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'picture' => $this->picture_url,
             'age' => $this->age,
             'gender' => $this->gender,
+            'email_verified_at' => $this->email_verified_at,
             'category' => $this->whenLoaded('category', new CategoryResource($this->category)),
             'code' => $this->code,
             'last_login' => $this->last_login,

@@ -60,10 +60,15 @@ class CustomVerifyEmail extends Notification
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Verify Email Address')
-            ->line('Please click the button below to verify your email address.')
-            ->action('Verify Email Address', $verificationUrl)
-            ->line('If you did not create an account, no further action is required.');
+            ->subject(__('auth.verify_email_title'))
+            ->view('emails.verify-email', [
+                'user' => $notifiable,
+                'verificationUrl' => $verificationUrl
+            ])
+            ->text('emails.verify-email-text', [
+                'user' => $notifiable,
+                'verificationUrl' => $verificationUrl
+            ]);
     }
 
     /**

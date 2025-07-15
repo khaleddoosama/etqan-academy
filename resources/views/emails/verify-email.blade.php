@@ -186,7 +186,7 @@
                 <h3 style="color: #2d3748; margin-bottom: 15px;">{{ __('auth.verify_email_title') }}</h3>
                 <p style="margin-bottom: 25px; color: #718096;">{{ __('auth.verify_email_action') }}</p>
 
-                <a href="{{ $verificationUrl }}" class="verification-button text-white">
+                <a href="{{ $verificationUrl }}" class="verification-button text-white" style="color: white !important;">
                     {{ __('auth.verify_email_button') }}
                 </a>
             </div>

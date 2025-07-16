@@ -27,10 +27,7 @@ class PaymentDataTable extends DataTable
             ->rawColumns(['action', 'status', 'gateway']);
     }
 
-    protected function formatGateway($row)
-    {
-        return ucfirst($row->gateway);
-    }
+
 
     public function query(Payment $model): Builder
     {

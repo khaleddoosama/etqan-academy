@@ -248,6 +248,9 @@ class PaymentDetailService
     {
         $today = now();
         $approvedAt = $payment->approved_at;
+        if (!$approvedAt) {
+            return;
+        }
         $nextFriday = $approvedAt->copy()->next(Carbon::FRIDAY);
         $payment_status = $payment->status;
 

@@ -151,9 +151,6 @@ $(function () {
             title: '<i class="fas fa-times-circle text-danger"></i> Quick Reject',
             html: `
                 <p><strong>Reject Instapay Payment #${paymentId}?</strong></p>
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i> This action cannot be undone!
-                </div>
             `,
             icon: 'warning',
             showCancelButton: true,

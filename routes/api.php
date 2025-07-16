@@ -123,7 +123,7 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:20,1', 'log_use
     });
 
     // Instapay payment - restricted to 1 request per hour per user
-    Route::post('/payment/instapay', [GatewayPaymentController::class, 'payInstapay'])->middleware('throttle:1,60');
+    Route::post('/payment/instapay', [GatewayPaymentController::class, 'payInstapay'])->middleware('throttle:2,60');
 });
 
 // Authenticated routes for email verification (with user activity logging)
@@ -146,3 +146,20 @@ Route::prefix('/payment/fawaterak')->group(function () {
     Route::post('/webhook/failed_json', [GatewayWebhookController::class, 'handleFailed']);
     Route::post('/webhook/refund_json', [GatewayWebhookController::class, 'handleRefund']);
 });
+
+// Email Preview Route (for development/testing only)
+Route::get('/preview-email-verification', function () {
+    $user = new \App\Models\User([
+        'name' => 'John Doe',
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'john.doe@example.com'
+    ]);
+
+    $verificationUrl = 'https://example.com/verify-email?token=sample-token';
+
+    return view('emails.verify-email', [
+        'user' => $user,
+        'verificationUrl' => $verificationUrl
+    ]);
+})->name('preview.email.verification');

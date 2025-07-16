@@ -53,7 +53,8 @@
                                     <div class="col-md-2">
                                         <label for="sort_by">{{ __('main.sort_by') }}</label>
                                         <select name="sort_by" id="sort_by" class="form-control">
-                                            <option value="id" {{ request('sort_by', 'id') == 'id' ? 'selected' : '' }}>{{ __('attributes.last_login') }}</option>
+                                            <option value="id" {{ request('sort_by', 'id') == 'id' ? 'selected' : '' }}>{{ __('attributes.id') }}</option>
+                                            <option value="last_login" {{ request('sort_by', 'last_login') == 'last_login' ? 'selected' : '' }}>{{ __('attributes.last_login') }}</option>
                                             <option value="first_name" {{ request('sort_by') == 'first_name' ? 'selected' : '' }}>{{ __('attributes.first_name') }}</option>
                                             <option value="last_name" {{ request('sort_by') == 'last_name' ? 'selected' : '' }}>{{ __('attributes.last_name') }}</option>
                                             <option value="email" {{ request('sort_by') == 'email' ? 'selected' : '' }}>{{ __('attributes.email') }}</option>

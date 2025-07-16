@@ -115,7 +115,7 @@
                             } elseif ($user->last_login) {
                                 $userOnilneTitle = Carbon\Carbon::parse($user->last_login)->diffForHumans();
                             } else {
-                                $userOnilneTitle = 'Offline';
+                                $userOnilneTitle = 'N/A';
                             }
                         @endphp
                         <td title="{{ $userOnilneTitle }}">

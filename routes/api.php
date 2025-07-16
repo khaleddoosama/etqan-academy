@@ -122,8 +122,8 @@ Route::middleware(['jwt.authenticate', 'jwt.verified', 'throttle:20,1', 'log_use
         Route::post('/pay', [GatewayPaymentController::class, 'pay']);
     });
 
-    // Instapay payment
-    Route::post('/payment/instapay', [GatewayPaymentController::class, 'payInstapay'])->middleware('throttle:20,1');
+    // Instapay payment - restricted to 1 request per hour per user
+    Route::post('/payment/instapay', [GatewayPaymentController::class, 'payInstapay'])->middleware('throttle:1,60');
 });
 
 // Authenticated routes for email verification (with user activity logging)

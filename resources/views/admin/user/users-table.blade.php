@@ -108,7 +108,17 @@
             <tbody>
                 @foreach ($users as $user)
                     <tr>
-                        <td title="{{ $user->UserOnline() ? 'Online' : Carbon\Carbon::parse($user->last_login)->diffForHumans() }}">
+                        @php
+                            $userOnilneTitle = $user->UserOnline();
+                            if ($userOnilneTitle) {
+                                $userOnilneTitle = 'Online';
+                            } elseif ($user->last_login) {
+                                $userOnilneTitle = Carbon\Carbon::parse($user->last_login)->diffForHumans();
+                            } else {
+                                $userOnilneTitle = 'Offline';
+                            }
+                        @endphp
+                        <td title="{{ $userOnilneTitle }}">
                             {!! $user->UserOnline()
                                 ? "<i class='fas fa-circle text-success'></i>"
                                 : "<i class='fas fa-circle text-danger'></i>" !!}

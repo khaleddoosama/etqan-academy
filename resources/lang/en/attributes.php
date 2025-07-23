@@ -238,7 +238,8 @@ return [
     'plans_title' => 'Plans Title',
     'payment_items' => 'Payment Items',
     'package_plans' => 'Package Plans',
-    'payment_info' => 'Payment Info',    'package_plan' => 'Package Plan',
+    'payment_info' => 'Payment Info',
+    'package_plan' => 'Package Plan',
     'Visa-Mastercard' => 'Visa-Mastercard',
 
     // User logs related translations
@@ -257,5 +258,18 @@ return [
     'date_to' => 'Date To',
     'per_page' => 'Per Page',
     'action_type' => 'Action Type',
+    'Master Card Or Visa' => 'Master Card Or Visa',
+    'Visa' => 'Visa',
+    'MasterCard' => 'MasterCard',
+    'Fawry' => 'Fawry',
+    'aman' => 'Aman',
+    'Basata' => 'Basata',
+    'PayPal' => 'PayPal',
+    'Stripe' => 'Stripe',
+    'mobile wallet' => 'Mobile Wallet',
+    'Paystack' => 'Paystack',
+    'Flutterwave' => 'Flutterwave',
+    'Paytm' => 'Paytm',
+    'Instamojo' => 'Instamojo',
 
 ];

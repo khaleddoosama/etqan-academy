@@ -271,5 +271,5 @@ return [
     'Flutterwave' => 'Flutterwave',
     'Paytm' => 'Paytm',
     'Instamojo' => 'Instamojo',
-
+    'timestamps' => 'Timestamps',
 ];

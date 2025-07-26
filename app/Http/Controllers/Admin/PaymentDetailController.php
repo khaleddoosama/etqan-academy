@@ -24,7 +24,7 @@ class PaymentDetailController extends Controller
     ) {
         $this->middleware('permission:payment_detail.list')->only('index');
         $this->middleware('permission:payment_detail.show')->only('show');
-        $this->middleware('permission:payment_detail.status')->only('reply');
+        $this->middleware('permission:payment_detail.status')->only('status');
     }
 
     // index
@@ -78,6 +78,9 @@ class PaymentDetailController extends Controller
 
     public function status(Request $request, $id)
     {
+        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '512M');
+        
         DB::beginTransaction();
         try {
             $this->paymentDetailService->changeStatus($request->status, $id);

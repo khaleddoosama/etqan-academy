@@ -1,7 +1,7 @@
 {{-- Filters --}}
 <div class="row mb-3">
     <div class="col-md-2">
-        <select id="filter-user" class="form-control">
+        <select id="filter-user" class="form-control select2">
             <option value="">{{ __('main.all_users') }}</option>
             @foreach($users as $user)
             <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
@@ -35,17 +35,17 @@
 
     <div class="col-md-2">
         <input type="date"
-               id="filter-from"
-               class="form-control"
-               placeholder="From date"
-               value="{{ request('from_created_at', now()->format('Y-m-d')) }}">
+            id="filter-from"
+            class="form-control"
+            placeholder="From date"
+            value="{{ request('from_created_at', now()->format('Y-m-d')) }}">
     </div>
     <div class="col-md-2">
         <input type="date"
-               id="filter-to"
-               class="form-control"
-               placeholder="To date"
-               value="{{ request('to_created_at') }}">
+            id="filter-to"
+            class="form-control"
+            placeholder="To date"
+            value="{{ request('to_created_at') }}">
     </div>
     <div class="col-md-2">
         <button id="reset-filters" class="btn btn-secondary">

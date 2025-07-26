@@ -78,17 +78,14 @@ class PaymentDetailController extends Controller
 
     public function status(Request $request, $id)
     {
-        set_time_limit(300); // 5 minutes
-        ini_set('memory_limit', '512M');
-        
         DB::beginTransaction();
         try {
             $this->paymentDetailService->changeStatus($request->status, $id);
-
+            Log::info('Payment detail status changed to ' . $request->status);
             DB::commit();
-
+            Log::info('Payment detail status changed successfully for ID: ' . $id);
             Toastr::success(__('messages.payment_detail_changed'), __('status.success'));
-
+            Log::info('Payment detail status changed successfully for ID2: ' . $id);
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollBack();

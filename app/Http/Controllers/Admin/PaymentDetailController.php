@@ -63,29 +63,29 @@ class PaymentDetailController extends Controller
         return view('admin.payment_detail.show', compact('payment'));
     }
 
-    // public function updateAmountConfirmed(Request $request, $id)
-    // {
-    //     $data = $request->validate([
-    //         'amount' => 'required|numeric',
-    //     ]);
+    public function updateAmountConfirmed(Request $request, $id)
+    {
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:1',
+        ]);
 
-    //     $this->paymentDetailService->updateAmountConfirmed($data['amount'], $id);
+        $this->paymentDetailService->updateAmountConfirmed($data['amount'], $id);
 
-    //     Toastr::success(__('messages.amount_updated_successfully'), __('status.success'));
+        Toastr::success(__('messages.amount_updated_successfully'), __('status.success'));
 
-    //     return redirect()->back();
-    // }
+        return redirect()->back();
+    }
 
     public function status(Request $request, $id)
     {
         DB::beginTransaction();
         try {
             $this->paymentDetailService->changeStatus($request->status, $id);
-            Log::info('Payment detail status changed to ' . $request->status);
+
             DB::commit();
-            Log::info('Payment detail status changed successfully for ID: ' . $id);
+
             Toastr::success(__('messages.payment_detail_changed'), __('status.success'));
-            Log::info('Payment detail status changed successfully for ID2: ' . $id);
+
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollBack();

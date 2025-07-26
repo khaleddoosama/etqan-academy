@@ -106,8 +106,8 @@ $(function () {
                 name: 'payment_method'
             },
             {
-                data: 'amount_after_coupon',
-                name: 'amount_after_coupon'
+                data: 'amount_confirmed',
+                name: 'amount_confirmed',
             },
             {
                 data: 'status',

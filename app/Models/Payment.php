@@ -23,7 +23,7 @@ class Payment extends Model
         'type',
         'amount_before_coupon',
         'amount_after_coupon',
-        // 'amount_confirmed',
+        'amount_confirmed',
         'payment_method',
         'payment_method_id',
         'status',
@@ -83,6 +83,7 @@ class Payment extends Model
                     ->orWhere('payment_method', 'like', $like)
                     ->orWhere('gateway', 'like', $like)
                     ->orWhere('amount_after_coupon', 'like', $like)
+                    ->orWhere('amount_confirmed', 'like', $like)
                     ->orWhere('status', 'like', $like);
 
                 // Search in related user fields
@@ -158,5 +159,12 @@ class Payment extends Model
     public function scopeFawaterakTotal($query)
     {
         return $query->where('gateway', 'fawaterak');
+    }
+
+    public function scopeFilterByAmountConfirmed($query, $amountConfirmed)
+    {
+        return $query->when($amountConfirmed, function ($query, $amountConfirmed) {
+            return $query->where('amount_confirmed', $amountConfirmed);
+        });
     }
 }

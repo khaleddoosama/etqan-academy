@@ -29,9 +29,9 @@
                             <p><strong>Invoice Key:</strong> {{ $payment->invoice_key ?? '-' }}</p>
                             <p><strong>{{ __('attributes.amount_before_coupon') }}:</strong> {{ $payment->amount_before_coupon }}</p>
                             <p><strong>{{ __('attributes.amount_after_coupon') }}:</strong> {{ $payment->amount_after_coupon }}</p>
-                            <!-- @if($payment->gateway === 'instapay')
+                            @if($payment->gateway === 'instapay')
                             <p><strong>{{ __('attributes.amount_confirmed') }}:</strong> {{ $payment->amount_confirmed }}</p>
-                            @endif -->
+                            @endif
                             <p><strong>{{ __('attributes.discount') }}:</strong> {{ $payment->discount }}%</p>
                             <p><strong>{{ __('attributes.payment_method') }}:</strong> {{ $payment->payment_method }}</p>
                             <p><strong>{{ __('attributes.status') }}:</strong>
@@ -61,7 +61,7 @@
 
                             @can('payment_detail.update')
                             <div class="row mb-3">
-                                {{--<div class="col-md-6">
+                                <div class="col-md-6">
                                     <div class="card">
                                         <div class="card-header">
                                             <h6 class="mb-0"><i class="fas fa-edit"></i> Update Confirmed Amount</h6>
@@ -93,7 +93,7 @@
                                             </form>
                                         </div>
                                     </div>
-                                </div>--}}
+                                </div>
 
                                 <div class="col-md-6">
                                     <div class="card">
@@ -197,12 +197,12 @@
 
                             @php
                             function deepDecode($data) {
-                            if (is_string($data)) {
-                            $decoded = json_decode($data, true);
-                            if (json_last_error() === JSON_ERROR_NONE) {
-                            return deepDecode($decoded);
-                            }
-                            return $data;
+                                if (is_string($data)) {
+                                    $decoded = json_decode($data, true);
+                                if (json_last_error() === JSON_ERROR_NONE) {
+                                    return deepDecode($decoded);
+                                }
+                                return $data;
                             }
 
                             if (is_array($data)) {

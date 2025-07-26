@@ -90,4 +90,13 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
             })
             ->sum('amount');
     }
+
+    public function canUserPay($userId): bool
+    {
+        $lastPayment = Payment::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return !$lastPayment || $lastPayment->created_at->diffInMinutes(now()) >= 5;
+    }
 }

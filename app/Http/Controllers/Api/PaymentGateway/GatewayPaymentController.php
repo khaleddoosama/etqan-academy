@@ -37,7 +37,10 @@ class GatewayPaymentController extends Controller
     public function payInstapay(InstapayPaymentRequest $request)
     {
         $data = $request->validated();
-
+        $canPay = $this->paymentService->canUserPay(auth()->id());
+        if (!$canPay) {
+            return $this->apiResponse([], 'You have already paid', 403);
+        }
         $response = $this->paymentService->executeInstapayPayment($data);
 
         return $this->apiResponse($response['data'], $response['message'], 201);

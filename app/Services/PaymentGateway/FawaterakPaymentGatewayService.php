@@ -163,4 +163,9 @@ class FawaterakPaymentGatewayService
             ]
         ];
     }
+
+    public function canUserPay($userId): bool
+    {
+        return $this->paymentRepository->canUserPay($userId);
+    }
 }

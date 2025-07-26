@@ -13,4 +13,5 @@ interface PaymentRepositoryInterface extends BaseRepositoryInterface
     public function getDailyPaidIncome(string $date): float;
     public function getDailySubscriberCountByType(string $date, string $type): int;
     public function getDailyIncomeByType(string $date, string $type): float;
+    public function canUserPay($userId): bool;
 }

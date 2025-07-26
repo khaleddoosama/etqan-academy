@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DataTables\PaymentDataTable;
+use App\Exports\FilteredPaymentsExport;
 use App\Http\Controllers\Controller;
 use App\Services\PaymentDetailService;
 use App\Services\PaymentStatisticsService;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Yoeunes\Toastr\Facades\Toastr;
 
 class PaymentDetailController extends Controller
@@ -25,6 +27,7 @@ class PaymentDetailController extends Controller
         $this->middleware('permission:payment_detail.list')->only('index');
         $this->middleware('permission:payment_detail.show')->only('show');
         $this->middleware('permission:payment_detail.status')->only('status');
+        $this->middleware('permission:payment_detail.list')->only('download');
     }
 
     // index
@@ -102,5 +105,28 @@ class PaymentDetailController extends Controller
         Artisan::call('report:weekly-payments');
 
         return redirect()->back();
+    }
+
+    // download filtered payments
+    public function download(Request $request)
+    {
+        try {
+            $filters = $request->only([
+                'search',
+                'user_id',
+                'gateway',
+                'status',
+                'from_created_at',
+                'to_created_at'
+            ]);
+
+            $filename = 'payments_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
+
+            return Excel::download(new FilteredPaymentsExport($filters), $filename);
+        } catch (\Exception $e) {
+            Log::error('Payment download error: ' . $e->getMessage());
+            Toastr::error(__('messages.download_failed'));
+            return redirect()->back();
+        }
     }
 }

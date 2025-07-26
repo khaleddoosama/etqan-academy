@@ -110,4 +110,7 @@
     'clear' => 'Clear',
     'apply_filters' => 'Apply Filters',
     'clear_filters' => 'Clear Filters',
+    'download_sheets' => 'Download Sheets',
+    'view_details' => 'View Details',
+    'downloading' => 'Downloading',
 );

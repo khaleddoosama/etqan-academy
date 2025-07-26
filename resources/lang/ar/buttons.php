@@ -110,4 +110,7 @@
     'clear' => 'مسح',
     'apply_filters' => 'تطبيق المرشحات',
     'clear_filters' => 'مسح المرشحات',
+    'download_sheets' => 'تحميل الشيتات',
+    'view_details' => 'عرض التفاصيل',
+    'downloading' => 'جاري التحميل',
 );

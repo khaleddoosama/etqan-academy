@@ -70,9 +70,9 @@
                             <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <div class="d-flex gap-2 flex-wrap">
-                                        <a href="{{ route('admin.payment_details.export') }}" class="btn btn-primary btn-sm">
+                                        <a href="#" id="download-filtered" class="btn btn-primary btn-sm">
                                             <i class="fas fa-download mr-1"></i>
-                                            {{ __('buttons.export_sheets') }}
+                                            {{ __('buttons.download_sheets') }}
                                         </a>
                                     </div>
                                 </div>
@@ -148,6 +148,7 @@
 <script>
     // Set global variables for the payment datatable script
     window.paymentDataUrl = "{{ route('admin.payment_details.data') }}";
+    window.paymentDownloadUrl = "{{ route('admin.payment_details.download') }}";
     window.datatableLanguage = {
         emptyTable: "{{ __('datatable.no_data_available_in_table') }}",
         lengthMenu: "{{ __('datatable.show') }} _MENU_ {{ __('datatable.entries') }}",
@@ -164,6 +165,54 @@
         loadingRecords: "{{ __('datatable.loading...') }}",
         processing: "{{ __('datatable.processing...') }}",
     };
+
+    // Handle download with current filters
+    $(document).ready(function() {
+        $('#download-filtered').on('click', function(e) {
+            e.preventDefault();
+
+            const $btn = $(this);
+            const originalText = $btn.html();
+
+            // Show loading state
+            $btn.html('<i class="fas fa-spinner fa-spin mr-1"></i>{{ __("buttons.downloading") }}...')
+                .prop('disabled', true);
+
+            // Get current filter values
+            const filters = {
+                search: $('#search').val(),
+                user_id: $('#filter-user').val(),
+                gateway: $('#filter-gateway').val(),
+                status: $('#filter-status').val(),
+                from_created_at: $('#filter-from').val(),
+                to_created_at: $('#filter-to').val()
+            };
+
+            // Build query string
+            const queryParams = new URLSearchParams();
+            Object.keys(filters).forEach(key => {
+                if (filters[key] && filters[key].trim() !== '') {
+                    queryParams.set(key, filters[key]);
+                }
+            });
+
+            // Create download URL with filters
+            const downloadUrl = window.paymentDownloadUrl + (queryParams.toString() ? '?' + queryParams.toString() : '');
+
+            // Create a temporary link and trigger download
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = '';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Reset button state after a short delay
+            setTimeout(function() {
+                $btn.html(originalText).prop('disabled', false);
+            }, 2000);
+        });
+    });
 </script>
 <script src="{{ asset('js/payment-datatable-script.js') }}"></script>
 @endsection

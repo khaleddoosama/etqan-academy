@@ -190,6 +190,7 @@ Route::group(
                 Route::get('payment-details/data',  'data')->name('payment_details.data');
 
                 Route::get('/payment-details/export', 'export')->name('payment_details.export');
+                Route::get('/payment-details/download', 'download')->name('payment_details.download');
                 Route::get('/payment-details/{id}', 'show')->name('payment_details.show');
                 Route::put('/payment-details/{id}/status', 'status')->name('payment_details.status');
                 Route::put('/payment-details/{id}/update-amount', 'updateAmountConfirmed')->name('payment_details.update_amount');

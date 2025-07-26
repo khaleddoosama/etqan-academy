@@ -35,4 +35,9 @@ class PaymentStatisticsService
             'instapay' => 'Instapay',
         ];
     }
+
+    public function getCouponsForFilter()
+    {
+        return \App\Models\Coupon::select('id', 'code')->orderBy('code')->get();
+    }
 }

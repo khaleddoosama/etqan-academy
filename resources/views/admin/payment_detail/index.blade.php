@@ -184,6 +184,7 @@
                 user_id: $('#filter-user').val(),
                 gateway: $('#filter-gateway').val(),
                 status: $('#filter-status').val(),
+                coupon_id: $('#filter-coupon').val(),
                 from_created_at: $('#filter-from').val(),
                 to_created_at: $('#filter-to').val()
             };

@@ -37,12 +37,14 @@ class PaymentDetailController extends Controller
         $users = $this->paymentStatisticsService->getUsersForFilter();
         $paymentStatuses = $this->paymentStatisticsService->getPaymentStatuses();
         $gateways = $this->paymentStatisticsService->getGateways();
+        $coupons = $this->paymentStatisticsService->getCouponsForFilter();
 
         return view('admin.payment_detail.index', compact(
             'statistics',
             'users',
             'paymentStatuses',
-            'gateways'
+            'gateways',
+            'coupons'
         ));
     }
 
@@ -116,6 +118,7 @@ class PaymentDetailController extends Controller
                 'user_id',
                 'gateway',
                 'status',
+                'coupon_id',
                 'from_created_at',
                 'to_created_at'
             ]);

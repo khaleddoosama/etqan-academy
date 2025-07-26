@@ -7,6 +7,7 @@ $(function () {
             user_id: urlParams.get('user_id') || '',
             gateway: urlParams.get('gateway') || '',
             status: urlParams.get('status') || '',
+            coupon_id: urlParams.get('coupon_id') || '',
             from_created_at: urlParams.get('from_created_at') || '',
             to_created_at: urlParams.get('to_created_at') || ''
         };
@@ -33,6 +34,7 @@ $(function () {
         $('#filter-user').val(params.user_id);
         $('#filter-gateway').val(params.gateway);
         $('#filter-status').val(params.status);
+        $('#filter-coupon').val(params.coupon_id);
         $('#filter-from').val(params.from_created_at);
         $('#filter-to').val(params.to_created_at);
     }
@@ -60,6 +62,7 @@ $(function () {
                 d.user_id = $('#filter-user').val();
                 d.gateway = $('#filter-gateway').val();
                 d.status = $('#filter-status').val();
+                d.coupon_id = $('#filter-coupon').val();
                 d.from_created_at = $('#filter-from').val();
                 d.to_created_at = $('#filter-to').val();
             }
@@ -133,7 +136,7 @@ $(function () {
     });
 
     // Filter change handlers
-    $('#filter-user, #filter-gateway, #filter-status, #filter-from, #filter-to').on('change', function () {
+    $('#filter-user, #filter-gateway, #filter-status, #filter-coupon, #filter-from, #filter-to').on('change', function () {
         updateUrlAndRedraw();
     });
 
@@ -153,6 +156,7 @@ $(function () {
             user_id: $('#filter-user').val(),
             gateway: $('#filter-gateway').val(),
             status: $('#filter-status').val(),
+            coupon_id: $('#filter-coupon').val(),
             from_created_at: $('#filter-from').val(),
             to_created_at: $('#filter-to').val()
         };
@@ -245,6 +249,7 @@ $(function () {
         $('#filter-user').val('');
         $('#filter-gateway').val('');
         $('#filter-status').val('');
+        $('#filter-coupon').val('');
         $('#filter-from').val('');
         $('#filter-to').val('');
 

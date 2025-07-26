@@ -77,4 +77,5 @@
     'ascending' => 'تصاعدي',
     'descending' => 'تنازلي',
     'last_login' => 'آخر تسجيل دخول',
+    'all_coupons' => 'جميع الكوبونات',
 );

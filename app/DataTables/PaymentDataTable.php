@@ -37,6 +37,7 @@ class PaymentDataTable extends DataTable
             ->filterByUser(request('user_id'))
             ->filterByGateway(request('gateway'))
             ->filterByStatus(request('status'))
+            ->filterByCoupon(request('coupon_id'))
             ->filterByDateRange(request('from_created_at'), request('to_created_at'));
     }
 

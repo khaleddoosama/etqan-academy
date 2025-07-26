@@ -136,6 +136,13 @@ class Payment extends Model
         });
     }
 
+    public function scopeFilterByCoupon($query, $couponId)
+    {
+        return $query->when($couponId, function ($query, $couponId) {
+            return $query->where('coupon_id', $couponId);
+        });
+    }
+
     public function scopeWithRelations($query)
     {
         return $query->with(['user', 'coupon']);

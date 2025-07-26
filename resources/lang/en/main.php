@@ -76,4 +76,5 @@
     'ascending' => 'Ascending',
     'descending' => 'Descending',
     'last_login' => 'Last Login',
+    'all_coupons' => 'All Coupons',
 );

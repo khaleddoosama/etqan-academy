@@ -151,7 +151,7 @@
                                       </li>
                                   @else
                                       <li class="nav-item">
-                                          <a href="{{ route($item['route']) }}"
+                                          <a href="{{ route($item['route'], $item['route_params'] ?? []) }}"
                                               class="nav-link {{ $isActive($item['request_patterns']) ? 'active' : '' }}">
                                               <span class="icon nav-icon"><ion-icon
                                                       name="{{ $item['icon'] }}"></ion-icon></span>
@@ -244,7 +244,7 @@
                           @foreach ($courseMenuItems as $key => $item)
                               @can($item['permission'])
                                   <li class="nav-item">
-                                      <a href="{{ route($item['route']) }}"
+                                      <a href="{{ route($item['route'], $item['route_params'] ?? []) }}"
                                           class="nav-link {{ $isActive($key) ? 'active' : '' }}">
                                           <span class="icon nav-icon"><ion-icon
                                                   name="{{ $item['icon'] }}"></ion-icon></span>
@@ -285,6 +285,7 @@
                           ],
                           'payment_details' => [
                               'route' => 'admin.payment_details.index',
+                              'route_params' => ['from_created_at' => now()->format('Y-m-d')],
                               'icon' => 'cash-outline',
                               'label' => __('attributes.payment_details'),
                               'permission' => 'payment_detail.list',
@@ -324,7 +325,7 @@
                               @foreach ($requestMenuItems as $key => $item)
                                   @can($item['permission'])
                                       <li class="nav-item">
-                                          <a href="{{ route($item['route']) }}"
+                                          <a href="{{ route($item['route'], $item['route_params'] ?? []) }}"
                                               class="nav-link {{ $isActive($key) ? 'active' : '' }}">
                                               <span class="icon nav-icon"><ion-icon
                                                       name="{{ $item['icon'] }}"></ion-icon></span>
@@ -399,7 +400,7 @@
                               @foreach ($adminMenuItems as $key => $item)
                                   @can($item['permission'])
                                       <li class="nav-item">
-                                          <a href="{{ route($item['route']) }}"
+                                          <a href="{{ route($item['route'], $item['route_params'] ?? []) }}"
                                               class="nav-link {{ $isActive($key) ? 'active' : '' }}">
                                               <span class="icon nav-icon"><ion-icon
                                                       name="{{ $item['icon'] }}"></ion-icon></span>
@@ -464,7 +465,7 @@
                               style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
                               @foreach ($logMenuItems as $key => $item)
                                   <li class="nav-item">
-                                      <a href="{{ route($item['route']) }}"
+                                      <a href="{{ route($item['route'], $item['route_params'] ?? []) }}"
                                           class="nav-link {{ $isActive($item['request_patterns']) ? 'active' : '' }}">
                                           <span class="icon nav-icon"><ion-icon
                                                   name="{{ $item['icon'] }}"></ion-icon></span>
@@ -519,7 +520,7 @@
                               style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
                               @foreach ($jobMenuItems as $key => $item)
                                   <li class="nav-item">
-                                      <a href="{{ route($item['route']) }}"
+                                      <a href="{{ route($item['route'], $item['route_params'] ?? []) }}"
                                           class="nav-link {{ $isActive($item['request_patterns']) ? 'active' : '' }}">
                                           <span class="icon nav-icon"><ion-icon
                                                   name="{{ $item['icon'] }}"></ion-icon></span>

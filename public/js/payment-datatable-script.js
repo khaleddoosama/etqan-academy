@@ -1,4 +1,51 @@
 $(function () {
+    // URL parameter handling functions
+    function getUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return {
+            search: urlParams.get('search') || '',
+            user_id: urlParams.get('user_id') || '',
+            gateway: urlParams.get('gateway') || '',
+            status: urlParams.get('status') || '',
+            from_created_at: urlParams.get('from_created_at') || '',
+            to_created_at: urlParams.get('to_created_at') || ''
+        };
+    }
+
+    function updateUrl(params) {
+        const urlParams = new URLSearchParams();
+
+        // Only add non-empty parameters to URL
+        Object.keys(params).forEach(key => {
+            if (params[key] && params[key].trim() !== '') {
+                urlParams.set(key, params[key]);
+            }
+        });
+
+        const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+        window.history.replaceState({}, '', newUrl);
+    }
+
+    function initializeFiltersFromUrl() {
+        const params = getUrlParams();
+
+        $('#search').val(params.search);
+        $('#filter-user').val(params.user_id);
+        $('#filter-gateway').val(params.gateway);
+        $('#filter-status').val(params.status);
+        $('#filter-from').val(params.from_created_at);
+        $('#filter-to').val(params.to_created_at);
+    }
+
+    // Initialize filters from URL parameters
+    initializeFiltersFromUrl();
+
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', function(event) {
+        initializeFiltersFromUrl();
+        table.draw();
+    });
+
     if ($.fn.DataTable.isDataTable("#table")) {
         $('#table').DataTable().clear().destroy();
     }
@@ -87,7 +134,7 @@ $(function () {
 
     // Filter change handlers
     $('#filter-user, #filter-gateway, #filter-status, #filter-from, #filter-to').on('change', function () {
-        table.draw();
+        updateUrlAndRedraw();
     });
 
     // Custom search handlers with debounce
@@ -95,15 +142,30 @@ $(function () {
     $('#search').on('keyup input', function () {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(function() {
-            table.draw();
+            updateUrlAndRedraw();
         }, 500); // 500ms delay
     });
+
+    // Function to update URL and redraw table
+    function updateUrlAndRedraw() {
+        const params = {
+            search: $('#search').val(),
+            user_id: $('#filter-user').val(),
+            gateway: $('#filter-gateway').val(),
+            status: $('#filter-status').val(),
+            from_created_at: $('#filter-from').val(),
+            to_created_at: $('#filter-to').val()
+        };
+
+        updateUrl(params);
+        table.draw();
+    }
 
     // Clear search button handler
     $('#clear-search').on('click', function () {
         $('#search').val('');
         clearTimeout(searchTimeout);
-        table.draw();
+        updateUrlAndRedraw();
     });
 
     // Quick Action SweetAlert2 handlers
@@ -180,16 +242,17 @@ $(function () {
         e.preventDefault();
 
         // Clear all filters
-        $('#filter-user').val('').trigger('change');
-        $('#filter-gateway').val('').trigger('change');
-        $('#filter-status').val('').trigger('change');
+        $('#filter-user').val('');
+        $('#filter-gateway').val('');
+        $('#filter-status').val('');
         $('#filter-from').val('');
         $('#filter-to').val('');
 
         // Clear search input
         $('#search').val('');
 
-        // Redraw table
+        // Clear URL parameters and redraw table
+        window.history.replaceState({}, '', window.location.pathname);
         table.draw();
     });
 });

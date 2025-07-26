@@ -4,7 +4,9 @@
         <select id="filter-user" class="form-control">
             <option value="">{{ __('main.all_users') }}</option>
             @foreach($users as $user)
-            <option value="{{ $user->id }}">{{ $user->id }}- {{ $user->name }} - {{ $user->email }}</option>
+            <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                {{ $user->id }}- {{ $user->name }} - {{ $user->email }}
+            </option>
             @endforeach
         </select>
     </div>
@@ -13,7 +15,9 @@
         <select id="filter-gateway" class="form-control">
             <option value="">All Gateways</option>
             @foreach($gateways as $key => $gateway)
-            <option value="{{ $key }}">{{ $gateway }}</option>
+            <option value="{{ $key }}" {{ request('gateway') == $key ? 'selected' : '' }}>
+                {{ $gateway }}
+            </option>
             @endforeach
         </select>
     </div>
@@ -22,7 +26,7 @@
         <select id="filter-status" class="form-control">
             <option value="">{{ __('main.all_statuses') }}</option>
             @foreach($paymentStatuses as $status)
-            <option value="{{ $status->value }}">
+            <option value="{{ $status->value }}" {{ request('status') == $status->value ? 'selected' : '' }}>
                 {{ ucfirst($status->value) }}
             </option>
             @endforeach
@@ -30,10 +34,18 @@
     </div>
 
     <div class="col-md-2">
-        <input type="date" id="filter-from" class="form-control" placeholder="From date" value="{{ now()->format('Y-m-d') }}">
+        <input type="date"
+               id="filter-from"
+               class="form-control"
+               placeholder="From date"
+               value="{{ request('from_created_at', now()->format('Y-m-d')) }}">
     </div>
     <div class="col-md-2">
-        <input type="date" id="filter-to" class="form-control" placeholder="To date" >
+        <input type="date"
+               id="filter-to"
+               class="form-control"
+               placeholder="To date"
+               value="{{ request('to_created_at') }}">
     </div>
     <div class="col-md-2">
         <button id="reset-filters" class="btn btn-secondary">

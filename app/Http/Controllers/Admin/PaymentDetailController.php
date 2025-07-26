@@ -43,9 +43,9 @@ class PaymentDetailController extends Controller
         ));
     }
 
-    public function data(PaymentDataTable $dataTable)
+    public function data(PaymentDataTable $dataTable, Request $request)
     {
-        if (request()->ajax()) {
+        if ($request->ajax()) {
             return $dataTable->dataTable($dataTable->query(new \App\Models\Payment))->make(true);
         }
         abort(403, 'Unauthorized access.');

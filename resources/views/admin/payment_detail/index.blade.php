@@ -92,8 +92,13 @@
                                                 placeholder="{{ __('datatable.search') }} {{ strtolower(__('attributes.payment_details')) }}..."
                                                 aria-label="{{ __('datatable.search') }}"
                                                 autocomplete="off"
+                                                value="{{ request('search') }}"
                                                 style="box-shadow: none;">
-
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button" id="clear-search" title="Clear search">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

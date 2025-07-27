@@ -94,6 +94,7 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
     public function canUserPay($userId): bool
     {
         $lastPayment = Payment::where('user_id', $userId)
+            ->where('gateway', 'instapay')
             ->orderBy('created_at', 'desc')
             ->first();
 

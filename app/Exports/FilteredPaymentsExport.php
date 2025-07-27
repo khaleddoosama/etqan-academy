@@ -9,9 +9,11 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles, ShouldAutoSize, WithEvents
 {
     protected $filters;
 
@@ -79,6 +81,48 @@ class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, Wi
         return [
             // Style the first row as bold text
             1 => ['font' => ['bold' => true, 'size' => 12]],
+        ];
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                // Get the highest row number (after all data is written)
+                $highestRow = $event->sheet->getHighestRow();
+                $nextRow = $highestRow + 1;
+
+                // Calculate totals from the query
+                $payments = $this->query()->get();
+                $totalOriginalAmount = $payments->sum('amount_before_coupon');
+                $totalConfirmedAmount = $payments->sum('amount_confirmed');
+                $totalCount = $payments->count();
+
+                // Add totals row
+                $event->sheet->setCellValue('A' . $nextRow, 'TOTALS');
+                $event->sheet->setCellValue('B' . $nextRow, "Total Records: {$totalCount}");
+                $event->sheet->setCellValue('H' . $nextRow, $totalOriginalAmount);
+                $event->sheet->setCellValue('I' . $nextRow, $totalConfirmedAmount);
+
+                // Style the totals row
+                $event->sheet->getStyle('A' . $nextRow . ':M' . $nextRow)->applyFromArray([
+                    'font' => [
+                        'bold' => true,
+                        'size' => 12,
+                    ],
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'startColor' => [
+                            'argb' => 'FFF0F0F0',
+                        ],
+                    ],
+                    'borders' => [
+                        'top' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                        ],
+                    ],
+                ]);
+            },
         ];
     }
 

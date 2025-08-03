@@ -257,4 +257,11 @@ return [
     'per_page' => 'عدد العناصر في الصفحة',
     'action_type' => 'نوع الإجراء',
     'timestamps' => 'الطوابع الزمنية',
+    'services' => 'الخدمات',
+    'service' => 'الخدمة',
+    'service_name' => 'اسم الخدمة',
+    'original_amount' => 'المبلغ الأصلي',
+    'confirmed_amount' => 'المبلغ المؤكد',
+    'coupon_type' => 'نوع الكوبون',
+    'coupon_discount' => 'خصم الكوبون',
 ];

@@ -272,4 +272,11 @@ return [
     'Paytm' => 'Paytm',
     'Instamojo' => 'Instamojo',
     'timestamps' => 'Timestamps',
+    'services' => 'Services',
+    'service' => 'Service',
+    'service_name' => 'Service Name',
+    'original_amount' => 'Original Amount',
+    'confirmed_amount' => 'Confirmed Amount',
+    'coupon_type' => 'Coupon Type',
+    'coupon_discount' => 'Coupon Discount',
 ];

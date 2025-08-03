@@ -73,6 +73,18 @@ $(function () {
                 name: 'id',
             },
             {
+                data: 'image',
+                name: 'image',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    if (data && data !== '') {
+                        return '<img src="' + data + '" class="payment-image" alt="Payment Image" title="Click to enlarge">';
+                    }
+                    return '<span class="text-muted">No Image</span>';
+                }
+            },
+            {
                 data: 'user_name',
                 name: 'user.name',
                 orderable: false,
@@ -100,17 +112,54 @@ $(function () {
                 name: 'invoice_key'
             },
             {
-                data: 'coupon_code',
+                data: 'coupon_info',
                 name: 'coupon.code',
                 orderable: false,
+                render: function(data, type, row) {
+                    if (data && data.formatted) {
+                        return '<span>' +
+                               data.formatted + '</span>';
+                    }
+                    return '<span class="text-muted">No Coupon</span>';
+                }
             },
             {
                 data: 'payment_method',
                 name: 'payment_method'
             },
             {
+                data: 'service_titles',
+                name: 'service_titles',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    if (data && data.length > 0) {
+                        const titles = data.join('<br>');
+                        return '<span class="service-titles" title="' + titles + '">' + titles + '</span>';
+                    }
+                    return '<span class="text-muted">No Services</span>';
+                }
+            },
+            {
+                data: 'amount_before_coupon',
+                name: 'amount_before_coupon',
+                render: function(data, type, row) {
+                    return data ? data + ' EGP' : '-';
+                }
+            },
+            {
+                data: 'amount_after_coupon',
+                name: 'amount_after_coupon',
+                render: function(data, type, row) {
+                    return data ? data + ' EGP' : '-';
+                }
+            },
+            {
                 data: 'amount_confirmed',
                 name: 'amount_confirmed',
+                render: function(data, type, row) {
+                    return data ? data + ' EGP' : '-';
+                }
             },
             {
                 data: 'status',
@@ -237,6 +286,98 @@ $(function () {
                         Swal.showLoading();
                     }
                 });
+                form.submit();
+            }
+        });
+    });
+
+    // Update Amount Button Handler
+    $(document).on('click', '.update-amount-btn', function (e) {
+        e.preventDefault();
+        const paymentId = $(this).data('payment-id');
+        const currentAmount = $(this).data('current-amount');
+        const expectedAmount = $(this).data('expected-amount');
+
+        Swal.fire({
+            title: '<i class="fas fa-edit text-warning"></i> Update Amount',
+            html: `
+                <p><strong>Update Confirmed Amount for Payment #${paymentId}</strong></p>
+                <div class="form-group mt-3">
+                    <label for="swal-amount-input" class="form-label">Confirmed Amount (EGP)</label>
+                    <input type="number"
+                           step="0.01"
+                           id="swal-amount-input"
+                           class="swal2-input"
+                           value="${currentAmount}"
+                           placeholder="Enter amount">
+                    <div class="mt-2 text-muted">
+                        <small><strong>Current:</strong> ${currentAmount} EGP | <strong>Expected:</strong> ${expectedAmount} EGP</small>
+                    </div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: '#ffc107',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-save"></i> Update Amount',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            preConfirm: () => {
+                const amount = document.getElementById('swal-amount-input').value;
+                if (!amount || amount <= 0) {
+                    Swal.showValidationMessage('Please enter a valid amount');
+                    return false;
+                }
+                return amount;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newAmount = result.value;
+
+                Swal.fire({
+                    title: 'Updating...',
+                    text: 'Updating payment amount...',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Create a form and submit it
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/en/admin/payment-details/${paymentId}/update-amount`;
+
+                // Add CSRF token
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (csrfToken) {
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = csrfToken.getAttribute('content');
+                    form.appendChild(csrfInput);
+                } else {
+                    console.error('CSRF token not found');
+                    Swal.fire('Error', 'Security token not found. Please refresh the page.', 'error');
+                    return;
+                }
+
+                // Add method field for PUT
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'PUT';
+                form.appendChild(methodInput);
+
+                // Add amount input
+                const amountInput = document.createElement('input');
+                amountInput.type = 'hidden';
+                amountInput.name = 'amount';
+                amountInput.value = newAmount;
+                form.appendChild(amountInput);
+
+                document.body.appendChild(form);
                 form.submit();
             }
         });

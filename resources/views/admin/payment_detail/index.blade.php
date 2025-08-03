@@ -48,6 +48,86 @@
         background-color: #5a6268;
         border-color: #545b62;
     }
+
+    /* Image styles for table */
+    .payment-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .payment-image:hover {
+        transform: scale(1.05);
+    }
+
+    /* Modal styles for image popup */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        cursor: pointer;
+    }
+
+    .image-modal img {
+        display: block;
+        margin: auto;
+        max-width: 90%;
+        max-height: 90%;
+        margin-top: 5%;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .image-modal .close {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .image-modal .close:hover {
+        color: #ccc;
+    }
+
+    /* Service titles styling */
+    .service-titles {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* SweetAlert2 custom styling for amount input */
+    .swal2-input {
+        margin: 10px auto !important;
+        width: 80% !important;
+        border: 1px solid #ddd !important;
+        border-radius: 4px !important;
+        padding: 10px !important;
+        font-size: 16px !important;
+    }
+
+    .swal2-input:focus {
+        border-color: #ffc107 !important;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25) !important;
+    }
+
+    /* Action button spacing */
+    .btn-sm {
+        margin-left: 2px !important;
+    }
 </style>
 @endsection
 @section('content')
@@ -110,6 +190,7 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        <th>{{ __('attributes.image') }}</th>
                                         <th>{{ __('attributes.name') }}</th>
                                         <th>{{ __('attributes.email') }}</th>
                                         <th>{{ __('attributes.phone') }}</th>
@@ -118,7 +199,10 @@
                                         <th>invoice_key</th>
                                         <th>{{ __('attributes.coupon') }}</th>
                                         <th>{{ __('attributes.payment_method') }}</th>
-                                        <th>{{ __('attributes.amount') }}</th>
+                                        <th>{{ __('attributes.services') }}</th>
+                                        <th>{{ __('attributes.amount_before_coupon') }}</th>
+                                        <th>{{ __('attributes.amount_after_coupon') }}</th>
+                                        <th>{{ __('attributes.confirmed_amount') }}</th>
                                         <th>{{ __('attributes.status') }}</th>
                                         <th>{{ __('attributes.created_at') }}</th>
                                         <th>{{ __('main.actions') }}</th>
@@ -142,6 +226,12 @@
     </section>
     <!-- /.content -->
 
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="image-modal">
+    <span class="close">&times;</span>
+    <img id="modalImage" src="" alt="Payment Image">
 </div>
 @endsection
 @section('scripts')
@@ -212,6 +302,27 @@
             setTimeout(function() {
                 $btn.html(originalText).prop('disabled', false);
             }, 2000);
+        });
+
+        // Image modal functionality
+        $(document).on('click', '.payment-image', function() {
+            const imageSrc = $(this).attr('src');
+            $('#modalImage').attr('src', imageSrc);
+            $('#imageModal').fadeIn(300);
+        });
+
+        // Close modal when clicking close button or outside image
+        $('#imageModal .close, #imageModal').on('click', function(e) {
+            if (e.target === this) {
+                $('#imageModal').fadeOut(300);
+            }
+        });
+
+        // Close modal with ESC key
+        $(document).keydown(function(e) {
+            if (e.keyCode === 27) { // ESC key
+                $('#imageModal').fadeOut(300);
+            }
         });
     });
 </script>

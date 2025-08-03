@@ -30,6 +30,11 @@ trait PaymentActionButtons
             $buttons .= $this->getQuickActionButtons($payment);
         }
 
+        // Add update amount button for Instapay payments
+        if ($payment->gateway === 'instapay') {
+            $buttons .= $this->getUpdateAmountButton($payment);
+        }
+
         return $buttons;
     }
 
@@ -52,5 +57,18 @@ trait PaymentActionButtons
                 <i class="fas fa-times"></i>
             </button>
         </form>';
+    }
+
+    private function getUpdateAmountButton($payment): string
+    {
+        return '
+        <button type="button"
+                class="btn btn-sm btn-warning ml-1 update-amount-btn"
+                title="Update Amount"
+                data-payment-id="' . $payment->id . '"
+                data-current-amount="' . $payment->amount_confirmed . '"
+                data-expected-amount="' . $payment->amount_after_coupon . '">
+            <i class="fas fa-edit"></i>
+        </button>';
     }
 }

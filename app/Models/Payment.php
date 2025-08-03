@@ -148,6 +148,11 @@ class Payment extends Model
         return $query->with(['user', 'coupon']);
     }
 
+    public function scopeWithPaymentItems($query)
+    {
+        return $query->with(['paymentItems.course', 'paymentItems.packagePlan', 'paymentItems.courseInstallment']);
+    }
+
     public function scopeInstapayPending($query)
     {
         return $query->where('gateway', 'instapay')->where('status', 'pending');

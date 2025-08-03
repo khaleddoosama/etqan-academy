@@ -26,6 +26,7 @@ class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, Wi
     {
         return Payment::query()
             ->withRelations()
+            ->withPaymentItems()
             ->search($this->filters['search'] ?? null)
             ->filterByUser($this->filters['user_id'] ?? null)
             ->filterByGateway($this->filters['gateway'] ?? null)
@@ -45,6 +46,7 @@ class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, Wi
             'User Name',
             'Email',
             'Phone',
+            'Course/Service',
             'Gateway',
             'Coupon Code',
             'Payment Method',
@@ -64,6 +66,7 @@ class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, Wi
             optional($payment->user)->name,
             optional($payment->user)->email,
             optional($payment->user)->phone,
+            $this->formatCourseOrService($payment),
             $this->formatGateway($payment),
             optional($payment->coupon)->code,
             $payment->payment_method,
@@ -87,7 +90,7 @@ class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, Wi
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 // Get the highest row number (after all data is written)
                 $highestRow = $event->sheet->getHighestRow();
                 $nextRow = $highestRow + 1;
@@ -96,16 +99,14 @@ class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, Wi
                 $payments = $this->query()->get();
                 $totalOriginalAmount = $payments->sum('amount_before_coupon');
                 $totalConfirmedAmount = $payments->sum('amount_confirmed');
-                $totalCount = $payments->count();
-
-                // Add totals row
+                $totalCount = $payments->count();                // Add totals row
                 $event->sheet->setCellValue('A' . $nextRow, 'TOTALS');
                 $event->sheet->setCellValue('B' . $nextRow, "Total Records: {$totalCount}");
-                $event->sheet->setCellValue('H' . $nextRow, $totalOriginalAmount);
-                $event->sheet->setCellValue('I' . $nextRow, $totalConfirmedAmount);
+                $event->sheet->setCellValue('I' . $nextRow, $totalOriginalAmount);
+                $event->sheet->setCellValue('J' . $nextRow, $totalConfirmedAmount);
 
                 // Style the totals row
-                $event->sheet->getStyle('A' . $nextRow . ':M' . $nextRow)->applyFromArray([
+                $event->sheet->getStyle('A' . $nextRow . ':N' . $nextRow)->applyFromArray([
                     'font' => [
                         'bold' => true,
                         'size' => 12,
@@ -141,5 +142,15 @@ class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, Wi
         }
 
         return ucfirst($payment->gateway ?? 'Unknown');
+    }
+
+    private function formatCourseOrService($payment): string
+    {
+        $serviceTitle = '';
+
+        foreach ($payment->paymentItems as $paymentItem) {
+            $serviceTitle .= $paymentItem->getServiceTitleAttribute() . ', ';
+        }
+        return rtrim($serviceTitle, ', ') ?: 'No Service';
     }
 }

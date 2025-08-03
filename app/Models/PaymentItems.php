@@ -47,11 +47,15 @@ class PaymentItems extends Model
     //get serviceTitle
     public function getServiceTitleAttribute()
     {
-        $course = $this->course()->first();
-        if ($course) {
-            return $course->title;
-        }
+        if ($this->relationLoaded('course') && $this->course) {
+        return $this->course->title;
+    }
 
-        return optional($this->packagePlan)->title;
+    if ($this->relationLoaded('packagePlan') && $this->packagePlan) {
+        return $this->packagePlan->title;
+    }
+
+    // Fallback: lazy load once (if not already loaded)
+    return optional($this->course)->title ?? optional($this->packagePlan)->title;
     }
 }

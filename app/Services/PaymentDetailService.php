@@ -166,7 +166,7 @@ class PaymentDetailService
             $payment->paid_at = now();
             $this->handleApproval($payment);
         } elseif ($status == PaymentStatusEnum::Cancelled->value) {
-            $this->handleRejection($payment);
+            // $this->handleRejection($payment);
         }
 
         $payment->status = $status;

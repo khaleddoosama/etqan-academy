@@ -35,6 +35,9 @@ trait PaymentActionButtons
             $buttons .= $this->getUpdateAmountButton($payment);
         }
 
+        // Add update coupon button for all payments
+        $buttons .= $this->getUpdateCouponButton($payment);
+
         return $buttons;
     }
 
@@ -69,6 +72,20 @@ trait PaymentActionButtons
                 data-current-amount="' . $payment->amount_confirmed . '"
                 data-expected-amount="' . $payment->amount_after_coupon . '">
             <i class="fas fa-edit"></i>
+        </button>';
+    }
+
+    private function getUpdateCouponButton($payment): string
+    {
+        return '
+        <button type="button"
+                class="btn btn-sm btn-info ml-1 update-coupon-btn"
+                title="Update Coupon"
+                data-payment-id="' . $payment->id . '"
+                data-current-coupon-id="' . ($payment->coupon_id ?? '') . '"
+                data-current-coupon-code="' . (optional($payment->coupon)->code ?? 'No Coupon') . '"
+                data-amount-before-coupon="' . $payment->amount_before_coupon . '">
+            <i class="fas fa-tag"></i>
         </button>';
     }
 }

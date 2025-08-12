@@ -159,6 +159,52 @@ class PaymentDetailService
         return $payment;
     }
 
+    public function updateCoupon($couponId, $id): Payment
+    {
+        $payment = $this->getPayment($id);
+
+        // Get the old coupon for usage count management
+        $oldCoupon = $payment->coupon;
+
+        if ($couponId) {
+            // Validate the new coupon exists and is active
+            $newCoupon = $this->couponService->find($couponId);
+
+            if (!$newCoupon || !$newCoupon->isValid()) {
+                throw new \Exception('Invalid or inactive coupon selected.');
+            }
+
+            // Calculate new amounts with the coupon
+            $couponData = $this->couponService->apply($newCoupon->code, $payment->amount_before_coupon);
+
+            $payment->coupon_id = $newCoupon->id;
+            $payment->discount = $newCoupon->discount;
+            $payment->type = $newCoupon->type;
+            $payment->amount_after_coupon = $couponData['total'];
+            $payment->amount_confirmed = $couponData['total'];
+        } else {
+            // Remove coupon
+            $payment->coupon_id = null;
+            $payment->discount = null;
+            $payment->type = null;
+            $payment->amount_after_coupon = $payment->amount_before_coupon;
+            $payment->amount_confirmed = $payment->amount_before_coupon;
+        }
+
+        $payment->save();
+
+        // Update usage counts
+        if ($oldCoupon && $oldCoupon->usage_count > 0) {
+            $oldCoupon->decrement('usage_count');
+        }
+
+        if ($couponId && isset($newCoupon)) {
+            $newCoupon->increment('usage_count');
+        }
+
+        return $payment;
+    }
+
     public function changeStatus($status, $id)
     {
         $payment = $this->getPayment($id);

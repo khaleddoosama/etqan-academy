@@ -74,7 +74,7 @@ Route::group(
                 Route::put('/users/{user}/status', 'status')->name('users.status');
 
                 Route::put('/{user}/password', 'updatePassword')->name('users.update.password');
-                Route::get('/{user}/logs', 'logs')->name('users.logs');
+                Route::get('/users/{user}/logs', 'logs')->name('users.logs');
             });
 
             // Instructor Controller
@@ -194,6 +194,7 @@ Route::group(
                 Route::get('/payment-details/{id}', 'show')->name('payment_details.show');
                 Route::put('/payment-details/{id}/status', 'status')->name('payment_details.status');
                 Route::put('/payment-details/{id}/update-amount', 'updateAmountConfirmed')->name('payment_details.update_amount');
+                Route::put('/payment-details/{id}/update-coupon', 'updateCoupon')->name('payment_details.update_coupon');
             });
 
             // Permission controller (resource)

@@ -383,6 +383,109 @@ $(function () {
         });
     });
 
+    // Update Coupon SweetAlert2 handler
+    $(document).on('click', '.update-coupon-btn', function (e) {
+        e.preventDefault();
+        const paymentId = $(this).data('payment-id');
+        const currentCouponId = $(this).data('current-coupon-id');
+        const currentCouponCode = $(this).data('current-coupon-code');
+        const amountBeforeCoupon = $(this).data('amount-before-coupon');
+
+        // Get available coupons (you may need to make an AJAX call to get this data)
+        // For now, I'll use the coupons from the filter dropdown
+        const couponOptions = $('#filter-coupon option').map(function() {
+            return {
+                value: $(this).val(),
+                text: $(this).text()
+            };
+        }).get();
+
+        let couponOptionsHtml = '<option value="">No Coupon</option>';
+        couponOptions.forEach(option => {
+            if (option.value) {
+                const selected = option.value == currentCouponId ? 'selected' : '';
+                couponOptionsHtml += `<option value="${option.value}" ${selected}>${option.text}</option>`;
+            }
+        });
+
+        Swal.fire({
+            title: '<i class="fas fa-tag text-info"></i> Update Coupon',
+            html: `
+                <p><strong>Update Coupon for Payment #${paymentId}</strong></p>
+                <div class="form-group mt-3">
+                    <label for="swal-coupon-select" class="form-label">Select Coupon</label>
+                    <select id="swal-coupon-select" class="swal2-input" style="width: 80%; height: auto; padding: 10px;">
+                        ${couponOptionsHtml}
+                    </select>
+                    <div class="mt-2 text-muted">
+                        <small><strong>Current:</strong> ${currentCouponCode} | <strong>Amount Before Coupon:</strong> ${amountBeforeCoupon} EGP</small>
+                    </div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: '#17a2b8',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-save"></i> Update Coupon',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            preConfirm: () => {
+                const couponId = document.getElementById('swal-coupon-select').value;
+                return couponId;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newCouponId = result.value;
+
+                Swal.fire({
+                    title: 'Updating...',
+                    text: 'Updating payment coupon...',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Create a form and submit it
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/en/admin/payment-details/${paymentId}/update-coupon`;
+
+                // Add CSRF token
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (csrfToken) {
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = csrfToken.getAttribute('content');
+                    form.appendChild(csrfInput);
+                } else {
+                    console.error('CSRF token not found');
+                    Swal.fire('Error', 'Security token not found. Please refresh the page.', 'error');
+                    return;
+                }
+
+                // Add method field for PUT
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'PUT';
+                form.appendChild(methodInput);
+
+                // Add coupon_id input
+                const couponInput = document.createElement('input');
+                couponInput.type = 'hidden';
+                couponInput.name = 'coupon_id';
+                couponInput.value = newCouponId;
+                form.appendChild(couponInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    });
+
     $(document).on('click', '#reset-filters', function (e) {
         e.preventDefault();
 

@@ -128,6 +128,35 @@
     .btn-sm {
         margin-left: 2px !important;
     }
+
+    /* Update coupon button styling */
+    .update-coupon-btn {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .update-coupon-btn:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+        color: white;
+    }
+
+    /* Custom SweetAlert2 styling for coupon select */
+    .swal2-input[id="swal-coupon-select"] {
+        margin: 10px auto !important;
+        width: 80% !important;
+        border: 1px solid #ddd !important;
+        border-radius: 4px !important;
+        padding: 10px !important;
+        font-size: 16px !important;
+        height: auto !important;
+    }
+
+    .swal2-input[id="swal-coupon-select"]:focus {
+        border-color: #17a2b8 !important;
+        box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25) !important;
+    }
 </style>
 @endsection
 @section('content')

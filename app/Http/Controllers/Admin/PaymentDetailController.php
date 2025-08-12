@@ -27,6 +27,7 @@ class PaymentDetailController extends Controller
         $this->middleware('permission:payment_detail.list')->only('index');
         $this->middleware('permission:payment_detail.show')->only('show');
         $this->middleware('permission:payment_detail.status')->only('status');
+        $this->middleware('permission:payment_detail.status')->only('updateCoupon');
         $this->middleware('permission:payment_detail.list')->only('download');
     }
 
@@ -79,6 +80,24 @@ class PaymentDetailController extends Controller
         Toastr::success(__('messages.amount_updated_successfully'), __('status.success'));
 
         return redirect()->back();
+    }
+
+    public function updateCoupon(Request $request, $id)
+    {
+        $data = $request->validate([
+            'coupon_id' => 'nullable|exists:coupons,id',
+        ]);
+
+        try {
+            $this->paymentDetailService->updateCoupon($data['coupon_id'], $id);
+
+            Toastr::success(__('messages.coupon_updated_successfully'), __('status.success'));
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Toastr::error($e->getMessage());
+            return redirect()->back();
+        }
     }
 
     public function status(Request $request, $id)

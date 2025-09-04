@@ -49,6 +49,31 @@
         border-color: #545b62;
     }
 
+    /* Responsive action buttons */
+    .dropdown-item-form {
+        margin: 0;
+        padding: 0;
+    }
+
+    .dropdown-item-form .dropdown-item {
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        padding: 0.25rem 1.5rem;
+        color: #212529;
+        cursor: pointer;
+    }
+
+    .dropdown-item-form .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .dropdown-item-form .dropdown-item:focus {
+        background-color: #e9ecef;
+        outline: none;
+    }
+
     /* Image styles for table */
     .payment-image {
         width: 50px;
@@ -233,7 +258,7 @@
                                         <th>{{ __('attributes.amount_after_coupon') }}</th>
                                         <th>{{ __('attributes.confirmed_amount') }}</th>
                                         <th>{{ __('attributes.status') }}</th>
-                                        <th>{{ __('attributes.created_at') }}</th>
+                                        <th>{{ __('attributes.paid_at') }}</th>
                                         <th>{{ __('main.actions') }}</th>
                                     </tr>
                                 </thead>
@@ -304,8 +329,8 @@
                 gateway: $('#filter-gateway').val(),
                 status: $('#filter-status').val(),
                 coupon_id: $('#filter-coupon').val(),
-                from_created_at: $('#filter-from').val(),
-                to_created_at: $('#filter-to').val()
+                from_paid_at: $('#filter-from').val(),
+                to_paid_at: $('#filter-to').val()
             };
 
             // Build query string

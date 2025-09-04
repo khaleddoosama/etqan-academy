@@ -113,6 +113,7 @@
     'course_offer_not_found' => 'Course Offer Not Found',
     'course_offers_not_found' => 'No Course Offers Found',
     'amount_updated_successfully' => 'Amount Updated Successfully',
+    'paid_at_updated_successfully' => 'Payment Date Updated Successfully',
     'student_work_created' => 'Student Work Created Successfully',
     'student_works_order_updated' => 'Student Works Order Updated Successfully',
     'student_work_deleted' => 'Student Work Deleted Successfully',

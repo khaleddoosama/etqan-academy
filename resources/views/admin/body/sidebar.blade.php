@@ -285,7 +285,7 @@
                           ],
                           'payment_details' => [
                               'route' => 'admin.payment_details.index',
-                              'route_params' => ['from_created_at' => now()->format('Y-m-d')],
+                              'route_params' => ['from_paid_at' => now()->format('Y-m-d')],
                               'icon' => 'cash-outline',
                               'label' => __('attributes.payment_details'),
                               'permission' => 'payment_detail.list',

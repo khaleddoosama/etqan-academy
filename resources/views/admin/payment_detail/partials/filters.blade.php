@@ -51,14 +51,14 @@
             id="filter-from"
             class="form-control"
             placeholder="From date"
-            value="{{ request('from_created_at', now()->format('Y-m-d')) }}">
+            value="{{ request('from_paid_at', now()->format('Y-m-d')) }}">
     </div>
     <div class="col-md-3">
         <input type="date"
             id="filter-to"
             class="form-control"
             placeholder="To date"
-            value="{{ request('to_created_at') }}">
+            value="{{ request('to_paid_at') }}">
     </div>
     <div class="col-md-3">
         <button id="reset-filters" class="btn btn-secondary">

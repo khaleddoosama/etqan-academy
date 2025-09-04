@@ -47,7 +47,7 @@ class PaymentDataTable extends DataTable
             ->addColumn('amount_after_coupon', fn($row) => $row->amount_after_coupon)
             ->addColumn('amount_confirmed', fn($row) => $row->amount_confirmed)
             ->editColumn('status', fn($row) => $row->status->badge())
-            ->editColumn('created_at', fn($row) => $row->created_at->format('Y-m-d H:i'))
+            ->editColumn('paid_at', fn($row) => optional($row->paid_at)?->format('Y-m-d H:i'))
             ->addColumn('action', fn($row) => $this->getActionButtons($row))
             ->rawColumns(['action', 'status', 'gateway', 'image']);
     }
@@ -64,7 +64,6 @@ class PaymentDataTable extends DataTable
             ->filterByGateway(request('gateway'))
             ->filterByStatus(request('status'))
             ->filterByCoupon(request('coupon_id'))
-            ->filterByDateRange(request('from_created_at'), request('to_created_at'));
+            ->filterByDateRange(request('from_paid_at'), request('to_paid_at'));
     }
-
 }

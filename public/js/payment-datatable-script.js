@@ -8,8 +8,8 @@ $(function () {
             gateway: urlParams.get('gateway') || '',
             status: urlParams.get('status') || '',
             coupon_id: urlParams.get('coupon_id') || '',
-            from_created_at: urlParams.get('from_created_at') || '',
-            to_created_at: urlParams.get('to_created_at') || ''
+            from_paid_at: urlParams.get('from_paid_at') || '',
+            to_paid_at: urlParams.get('to_paid_at') || ''
         };
     }
 
@@ -35,8 +35,8 @@ $(function () {
         $('#filter-gateway').val(params.gateway);
         $('#filter-status').val(params.status);
         $('#filter-coupon').val(params.coupon_id);
-        $('#filter-from').val(params.from_created_at);
-        $('#filter-to').val(params.to_created_at);
+        $('#filter-from').val(params.from_paid_at);
+        $('#filter-to').val(params.to_paid_at);
     }
 
     // Initialize filters from URL parameters
@@ -63,8 +63,8 @@ $(function () {
                 d.gateway = $('#filter-gateway').val();
                 d.status = $('#filter-status').val();
                 d.coupon_id = $('#filter-coupon').val();
-                d.from_created_at = $('#filter-from').val();
-                d.to_created_at = $('#filter-to').val();
+                d.from_paid_at = $('#filter-from').val();
+                d.to_paid_at = $('#filter-to').val();
             }
         },
         columns: [
@@ -166,8 +166,8 @@ $(function () {
                 name: 'status'
             },
             {
-                data: 'created_at',
-                name: 'created_at'
+                data: 'paid_at',
+                name: 'paid_at'
             },
             {
                 data: 'action',
@@ -206,8 +206,8 @@ $(function () {
             gateway: $('#filter-gateway').val(),
             status: $('#filter-status').val(),
             coupon_id: $('#filter-coupon').val(),
-            from_created_at: $('#filter-from').val(),
-            to_created_at: $('#filter-to').val()
+            from_paid_at: $('#filter-from').val(),
+            to_paid_at: $('#filter-to').val()
         };
 
         updateUrl(params);
@@ -484,6 +484,137 @@ $(function () {
                 form.submit();
             }
         });
+    });
+
+    // Update Paid At Button Handler
+    $(document).on('click', '.update-paid-at-btn', function (e) {
+        e.preventDefault();
+
+        const button = $(this);
+        const paymentId = button.data('payment-id');
+        const currentPaidAt = button.data('current-paid-at');
+
+        // Convert current paid_at to readable format
+        let currentDisplay = 'Not set';
+        if (currentPaidAt) {
+            const currentDate = new Date(currentPaidAt);
+            currentDisplay = currentDate.toLocaleString();
+        }
+
+        Swal.fire({
+            title: 'Update Payment Date',
+            html: `
+                <div class="form-group text-left">
+                    <label for="swal-paid-at">Payment Date & Time:</label>
+                    <input type="datetime-local"
+                           id="swal-paid-at"
+                           class="swal2-input"
+                           value="${currentPaidAt || ''}"
+                           style="width: 100%;">
+                    <small class="text-muted" style="display: block; margin-top: 5px;">
+                        <strong>Current:</strong> ${currentDisplay}
+                    </small>
+                </div>
+            `,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6c757d',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-calendar-check"></i> Update Date',
+            cancelButtonText: 'Cancel',
+            focusConfirm: false,
+            preConfirm: () => {
+                const paidAtValue = document.getElementById('swal-paid-at').value;
+
+                if (!paidAtValue) {
+                    Swal.showValidationMessage('Please select a valid date and time');
+                    return false;
+                }
+
+                return paidAtValue;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newPaidAt = result.value;
+                const formattedDate = new Date(newPaidAt).toLocaleString();
+
+                Swal.fire({
+                    title: 'Confirm Update',
+                    html: `<p><strong>Update payment date to:</strong></p><p class="text-primary">${formattedDate}</p>`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#6c757d',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Confirm',
+                    cancelButtonText: 'Cancel'
+                }).then((confirmResult) => {
+                    if (confirmResult.isConfirmed) {
+                        Swal.fire({
+                            title: 'Updating...',
+                            text: 'Updating payment date...',
+                            icon: 'info',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        // Create a form and submit it
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = `/en/admin/payment-details/${paymentId}/update-paid-at`;
+
+                        // Add CSRF token
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                        if (csrfToken) {
+                            const csrfInput = document.createElement('input');
+                            csrfInput.type = 'hidden';
+                            csrfInput.name = '_token';
+                            csrfInput.value = csrfToken.getAttribute('content');
+                            form.appendChild(csrfInput);
+                        } else {
+                            console.error('CSRF token not found');
+                            Swal.fire('Error', 'Security token not found. Please refresh the page.', 'error');
+                            return;
+                        }
+
+                        // Add method field for PUT
+                        const methodInput = document.createElement('input');
+                        methodInput.type = 'hidden';
+                        methodInput.name = '_method';
+                        methodInput.value = 'PUT';
+                        form.appendChild(methodInput);
+
+                        // Add paid_at input
+                        const paidAtInput = document.createElement('input');
+                        paidAtInput.type = 'hidden';
+                        paidAtInput.name = 'paid_at';
+                        paidAtInput.value = newPaidAt;
+                        form.appendChild(paidAtInput);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
+            }
+        });
+    });
+
+    // Prevent dropdown from closing when clicking on form elements
+    $(document).on('click', '.dropdown-item-form', function (e) {
+        e.stopPropagation();
+    });
+
+    // Close dropdown after successful action
+    $(document).on('click', '.dropdown-item', function (e) {
+        // Only close dropdown for non-form elements or after action completes
+        const dropdown = $(this).closest('.dropdown');
+        if (dropdown.length) {
+            setTimeout(() => {
+                dropdown.find('.dropdown-toggle').dropdown('hide');
+            }, 100);
+        }
     });
 
     $(document).on('click', '#reset-filters', function (e) {

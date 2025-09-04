@@ -32,8 +32,8 @@ class FilteredPaymentsExport implements FromQuery, WithHeadings, WithMapping, Wi
             ->filterByGateway($this->filters['gateway'] ?? null)
             ->filterByStatus($this->filters['status'] ?? null)
             ->filterByDateRange(
-                $this->filters['from_created_at'] ?? null,
-                $this->filters['to_created_at'] ?? null
+                $this->filters['from_paid_at'] ?? null,
+                $this->filters['to_paid_at'] ?? null
             )
             ->filterByCoupon($this->filters['coupon_id'] ?? null)
             ->orderBy('created_at', 'desc');

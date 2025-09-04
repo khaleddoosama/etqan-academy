@@ -77,12 +77,12 @@ class PaymentDetailService
             $query->where('status', request('status'));
         }
 
-        if (request('from_created_at')) {
-            $query->whereDate('created_at', '>=', request('from_created_at'));
+        if (request('from_paid_at')) {
+            $query->whereDate('paid_at', '>=', request('from_paid_at'));
         }
 
-        if (request('to_created_at')) {
-            $query->whereDate('created_at', '<=', request('to_created_at'));
+        if (request('to_paid_at')) {
+            $query->whereDate('paid_at', '<=', request('to_paid_at'));
         }
 
         return $query;
@@ -154,6 +154,16 @@ class PaymentDetailService
         $payment = $this->getPayment($id);
 
         $payment->amount_confirmed = $amount;
+
+        $payment->save();
+        return $payment;
+    }
+
+    public function updatePaidAt($paidAt, $id): Payment
+    {
+        $payment = $this->getPayment($id);
+
+        $payment->paid_at = $paidAt;
 
         $payment->save();
         return $payment;

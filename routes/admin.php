@@ -195,6 +195,7 @@ Route::group(
                 Route::put('/payment-details/{id}/status', 'status')->name('payment_details.status');
                 Route::put('/payment-details/{id}/update-amount', 'updateAmountConfirmed')->name('payment_details.update_amount');
                 Route::put('/payment-details/{id}/update-coupon', 'updateCoupon')->name('payment_details.update_coupon');
+                Route::put('/payment-details/{id}/update-paid-at', 'updatePaidAt')->name('payment_details.update_paid_at');
             });
 
             // Permission controller (resource)

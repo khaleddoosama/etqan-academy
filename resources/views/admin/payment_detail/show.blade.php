@@ -149,6 +149,42 @@
                             <x-custom.status :model="$payment" routeName="admin.payment_details.status" />
                             @endcan
 
+                            {{-- Universal Payment Date Update --}}
+                            @can('payment_detail.status')
+                            <hr>
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="fas fa-calendar-alt"></i> Update Payment Date</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form action="{{ route('admin.payment_details.update_paid_at', $payment->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label for="paid_at">{{ __('attributes.paid_at') }}</label>
+                                                    <input type="datetime-local"
+                                                           class="form-control"
+                                                           name="paid_at"
+                                                           value="{{ $payment->paid_at ? $payment->paid_at->format('Y-m-d\TH:i') : '' }}"
+                                                           required>
+                                                    <small class="form-text text-muted">
+                                                        <strong>Current:</strong> {{ $payment->paid_at?->format('Y-m-d H:i') ?? 'Not set' }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 d-flex align-items-end">
+                                                <button type="button" class="btn btn-secondary btn-sm update-paid-at-btn">
+                                                    <i class="fas fa-calendar-check"></i> Update Date
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            @endcan
+
                             <hr>
 
 
@@ -240,7 +276,7 @@
 
                             {{-- Timestamps --}}
                             <h5><strong>{{ __('attributes.timestamps') }}</strong></h5>
-                            <p><strong>{{ __('attributes.created_at') }}:</strong> {{ $payment->created_at }}</p>
+                            <p><strong>{{ __('attributes.paid_at') }}:</strong> {{ $payment->paid_at }}</p>
                             <p><strong>{{ __('attributes.updated_at') }}:</strong> {{ $payment->updated_at }}</p>
                         </div>
 
@@ -269,11 +305,13 @@
         const approveButtons = document.querySelectorAll('.approve-btn');
         const rejectButtons = document.querySelectorAll('.reject-btn');
         const updateButtons = document.querySelectorAll('.update-amount-btn');
+        const updatePaidAtButtons = document.querySelectorAll('.update-paid-at-btn');
 
         console.log('Found buttons:', {
             approve: approveButtons.length,
             reject: rejectButtons.length,
-            update: updateButtons.length
+            update: updateButtons.length,
+            updatePaidAt: updatePaidAtButtons.length
         });
 
         // Approve Payment Handler
@@ -368,6 +406,56 @@
                         Swal.fire({
                             title: 'Updating...',
                             text: 'Updating amount...',
+                            icon: 'info',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        // Update Paid At Handler
+        updatePaidAtButtons.forEach(function(button, index) {
+            console.log('✅ Attaching update paid_at handler to button', index);
+            button.addEventListener('click', function(e) {
+                console.log('🗓️ Update paid_at button clicked!');
+                e.preventDefault();
+                const form = this.closest('form');
+                const paidAtInput = form.querySelector('input[name="paid_at"]');
+                const newPaidAt = paidAtInput.value;
+
+                if (!newPaidAt) {
+                    Swal.fire({
+                        title: 'Invalid Date',
+                        text: 'Please select a valid date and time',
+                        icon: 'error'
+                    });
+                    return;
+                }
+
+                // Format date for display
+                const dateObj = new Date(newPaidAt);
+                const formattedDate = dateObj.toLocaleString();
+
+                Swal.fire({
+                    title: 'Update Payment Date',
+                    html: `<p><strong>Confirm payment date update to:</strong></p><p class="text-primary">${formattedDate}</p>`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#6c757d',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Update Date',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Updating...',
+                            text: 'Updating payment date...',
                             icon: 'info',
                             allowOutsideClick: false,
                             showConfirmButton: false,

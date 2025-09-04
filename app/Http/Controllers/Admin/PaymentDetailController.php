@@ -28,6 +28,7 @@ class PaymentDetailController extends Controller
         $this->middleware('permission:payment_detail.show')->only('show');
         $this->middleware('permission:payment_detail.status')->only('status');
         $this->middleware('permission:payment_detail.status')->only('updateCoupon');
+        $this->middleware('permission:payment_detail.status')->only('updatePaidAt');
         $this->middleware('permission:payment_detail.list')->only('download');
     }
 
@@ -119,6 +120,19 @@ class PaymentDetailController extends Controller
         }
     }
 
+    public function updatePaidAt(Request $request, $id)
+    {
+        $data = $request->validate([
+            'paid_at' => 'required|date',
+        ]);
+
+        $this->paymentDetailService->updatePaidAt($data['paid_at'], $id);
+
+        Toastr::success(__('messages.paid_at_updated_successfully'), __('status.success'));
+
+        return redirect()->back();
+    }
+
     // export
     public function export()
     {
@@ -138,8 +152,8 @@ class PaymentDetailController extends Controller
                 'gateway',
                 'status',
                 'coupon_id',
-                'from_created_at',
-                'to_created_at'
+                'from_paid_at',
+                'to_paid_at'
             ]);
 
             $filename = 'payments_' . now()->format('Y_m_d_H_i_s') . '.xlsx';

@@ -136,6 +136,15 @@ class Payment extends Model
         });
     }
 
+        public function scopeFilterByDateRangeCreatedAt($query, $fromDate, $toDate)
+    {
+        return $query->when($fromDate, function ($query, $fromDate) {
+            return $query->whereDate('created_at', '>=', $fromDate);
+        })->when($toDate, function ($query, $toDate) {
+            return $query->whereDate('created_at', '<=', $toDate);
+        });
+    }
+
     public function scopeFilterByCoupon($query, $couponId)
     {
         return $query->when($couponId, function ($query, $couponId) {

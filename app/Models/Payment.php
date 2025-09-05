@@ -127,12 +127,12 @@ class Payment extends Model
         });
     }
 
-    public function scopeFilterByDateRange($query, $fromDate, $toDate)
+    public function scopeFilterByDateRangePaidAt($query, $fromDate, $toDate)
     {
         return $query->when($fromDate, function ($query, $fromDate) {
-            return $query->whereDate('created_at', '>=', $fromDate);
+            return $query->whereDate('paid_at', '>=', $fromDate);
         })->when($toDate, function ($query, $toDate) {
-            return $query->whereDate('created_at', '<=', $toDate);
+            return $query->whereDate('paid_at', '<=', $toDate);
         });
     }
 

@@ -32,6 +32,8 @@
                                 <x-custom.form-group class="col-md-4" type="number" name="discount" :value="$coupon->discount" />
                                 <x-custom.form-group class="col-md-4" type="number" name="usage_limit" :value="$coupon->usage_limit" title="If you leave it blank it will be unlimited." data-bs-toggle="tooltip" />
 
+                                <x-custom.form-group class="col-md-4" type="number" name="access_duration_days" :value="$coupon->access_duration_days" title="Days of access when using this coupon (leave empty for unlimited)." data-bs-toggle="tooltip" />
+
                                 @php
                                 $types = collect([
                                 ['id' => 'percentage', 'title' => __('attributes.percentage'), 'name' => ''],

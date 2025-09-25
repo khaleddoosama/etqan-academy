@@ -24,3 +24,7 @@ yarn-error.log
 /.vscode
 
 /bootstrap/cache/*
+
+
+#Ignore insiders AI rules
+.github\instructions\codacy.instructions.md

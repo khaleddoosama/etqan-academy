@@ -30,6 +30,7 @@ class CouponRequest extends FormRequest
             'expires_at' => 'nullable|date|after_or_equal:start_at',
             'usage_limit' => 'nullable|integer|min:1',
             'status' => 'boolean',
+            'access_duration_days' => 'nullable|integer|min:1',
         ];
     }
 }

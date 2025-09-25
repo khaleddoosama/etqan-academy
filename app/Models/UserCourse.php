@@ -24,6 +24,10 @@ class UserCourse extends Model
     ];
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+
     public function student()
     {
         return $this->belongsTo(User::class, 'student_id');

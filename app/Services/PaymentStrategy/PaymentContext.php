@@ -4,6 +4,7 @@ namespace App\Services\PaymentStrategy;
 
 use App\Models\Payment;
 use App\Models\PaymentItems;
+use Carbon\Carbon;
 
 class PaymentContext
 {
@@ -14,9 +15,9 @@ class PaymentContext
         $this->strategy = $strategy;
     }
 
-    public function handlePayment(PaymentItems $paymentItem, $user_id): bool
+    public function handlePayment(PaymentItems $paymentItem, $user_id, Carbon|null $expiresAt): bool
     {
-        return $this->strategy->handlePayment($paymentItem, $user_id);
+        return $this->strategy->handlePayment($paymentItem, $user_id, $expiresAt);
     }
 
     public function handleRejectPayment(PaymentItems $paymentItem, $user_id): bool

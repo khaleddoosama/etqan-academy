@@ -279,4 +279,5 @@ return [
     'confirmed_amount' => 'Confirmed Amount',
     'coupon_type' => 'Coupon Type',
     'coupon_discount' => 'Coupon Discount',
+    'access_duration_days' => 'Access Duration (days)',
 ];

@@ -24,7 +24,8 @@ class PaymentDetailService
         protected StudentInstallmentService $studentInstallmentService,
         protected CouponService $couponService,
         protected PaymentRepositoryInterface $paymentRepository,
-        protected CartService $cartService
+        protected CartService $cartService,
+        protected UserCoursesService $userCoursesService
     ) {}
 
     // public function store(array $data): Payment
@@ -240,9 +241,15 @@ class PaymentDetailService
             $this->handleInstapayApproval($payment);
         } else {
             // Original logic for other payment types
+            $payment->load('coupon', 'paymentItems');
+
             foreach ($payment->paymentItems as $item) {
                 $this->setPaymentStrategy($item->payment_type);
-                $this->paymentContext->handlePayment($item, $payment->user_id);
+
+                $expiresAt = $this->applyCouponAccessForItem($payment, $item);
+
+                $this->paymentContext->handlePayment($item, $payment->user_id, $expiresAt);
+
             }
         }
     }
@@ -260,7 +267,9 @@ class PaymentDetailService
                 $item->load(['course', 'courseInstallment', 'packagePlan']);
                 $this->setPaymentStrategy($item->payment_type);
 
-                $this->paymentContext->handlePayment($item, $payment->user_id);
+                $expiresAt = $this->applyCouponAccessForItem($payment, $item);
+
+                $this->paymentContext->handlePayment($item, $payment->user_id, $expiresAt);
             }
         }
         try {
@@ -326,5 +335,21 @@ class PaymentDetailService
         };
 
         $this->paymentContext->setPaymentStrategy($strategy);
+    }
+
+    // Apply coupon-based access window per course item
+    private function applyCouponAccessForItem(Payment $payment, \App\Models\PaymentItems $item): Carbon|null
+    {
+        $coupon = $payment->coupon;
+        if (!$item->course_id) {
+            return null;
+        }
+
+        $expiresAt = null;
+        if ($coupon && !empty($coupon->access_duration_days) && $coupon->access_duration_days > 0) {
+            $expiresAt = now()->addDays((int)$coupon->access_duration_days);
+        }
+        return $expiresAt;
+        // $this->userCoursesService->setCourseExpiry($payment->user_id, $item->course_id, $expiresAt);
     }
 }

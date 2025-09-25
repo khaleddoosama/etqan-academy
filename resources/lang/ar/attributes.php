@@ -264,4 +264,5 @@ return [
     'confirmed_amount' => 'المبلغ المؤكد',
     'coupon_type' => 'نوع الكوبون',
     'coupon_discount' => 'خصم الكوبون',
+    'access_duration_days' => 'مدة الوصول (بالأيام)',
 ];

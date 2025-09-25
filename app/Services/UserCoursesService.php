@@ -9,9 +9,12 @@ use App\Models\UserCourse;
 class UserCoursesService
 {
     //create user course
-    public function createUserCourse($student_id, $course_id)
+    public function createUserCourse($student_id, $course_id, $expires_at = null)
     {
-        return UserCourse::updateOrCreate(['student_id' => $student_id, 'course_id' => $course_id], ['status' => 1]);
+        return UserCourse::updateOrCreate(
+            ['student_id' => $student_id, 'course_id' => $course_id],
+            ['status' => 1, 'expires_at' => $expires_at]
+        );
     }
 
 
@@ -33,5 +36,19 @@ class UserCoursesService
         $is_purchased = UserCourse::purchased($course_id, $student_id)->exists();
 
         return $is_purchased;
+    }
+
+    // set or clear expiry for a user course
+    public function setCourseExpiry(int $student_id, int $course_id, ?\Carbon\Carbon $expires_at): bool
+    {
+        $record = UserCourse::where('student_id', $student_id)->where('course_id', $course_id)->first();
+        if (!$record) {
+            return false;
+        }
+
+        return $record->update([
+            'expires_at' => $expires_at,
+            'status' => 1,
+        ]);
     }
 }

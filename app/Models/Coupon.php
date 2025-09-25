@@ -18,11 +18,13 @@ class Coupon extends Model
         'usage_limit',
         'usage_count',
         'status',
+        'access_duration_days',
     ];
 
     protected $casts = [
         'start_at' => 'datetime',
         'expires_at' => 'datetime',
+        'access_duration_days' => 'integer',
     ];
 
     public function isValid(): bool

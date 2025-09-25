@@ -13,6 +13,7 @@ use App\Services\PaymentStrategy\PaymentContext;
 use App\Services\StudentInstallmentService;
 use App\Services\UserCoursesService;
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
@@ -23,7 +24,8 @@ class FawaterakWebhookService
     public function __construct(
         protected PaymentRepositoryInterface $paymentRepository,
         protected PaymentContext $paymentContext,
-        protected StudentInstallmentService $studentInstallmentService
+        protected StudentInstallmentService $studentInstallmentService,
+        protected UserCoursesService $userCoursesService,
     ) {
         $this->secretKey = config('fawaterak.api_key');
     }
@@ -55,14 +57,14 @@ class FawaterakWebhookService
 
         // Handle different webhook data structures
         $payment = null;
-        
+
         if (isset($data['invoice_id']) && isset($data['invoice_key'])) {
             // Standard webhook with invoice_id and invoice_key
             $payment = $this->paymentRepository->where([
                 'invoice_id' => $data['invoice_id'],
                 'invoice_key' => $data['invoice_key']
             ])->first();
-            
+
             if (!$payment) {
                 Log::error("Payment not found for invoice: {$data['invoice_id']}");
                 return null;
@@ -70,7 +72,7 @@ class FawaterakWebhookService
         } elseif (isset($data['referenceId'])) {
             // Expired webhook with referenceId - try to find payment by invoice_id
             $payment = $this->paymentRepository->where(['invoice_id' => $data['referenceId']])->first();
-            
+
             if (!$payment) {
                 Log::error("Payment not found for reference: {$data['referenceId']}");
                 return null;
@@ -115,7 +117,9 @@ class FawaterakWebhookService
                 $item->load(['course', 'courseInstallment', 'packagePlan']);
                 $this->setPaymentStrategy($item->payment_type);
 
-                $this->paymentContext->handlePayment($item, $payment->user_id);
+                $expiresAt = $this->applyCouponAccessForItem($payment, $item);
+                $this->paymentContext->handlePayment($item, $payment->user_id, $expiresAt);
+
             }
         }
         try {
@@ -136,6 +140,21 @@ class FawaterakWebhookService
 
         // empty cart for user
         Cart::forUser($payment->user_id)->delete();
+    }
+
+    private function applyCouponAccessForItem($payment, $item): Carbon|null
+    {
+        $coupon = $payment->coupon;
+        if (!$item->course_id) {
+            return null;
+        }
+
+        $expiresAt = null;
+        if ($coupon && !empty($coupon->access_duration_days) && $coupon->access_duration_days > 0) {
+            $expiresAt = now()->addDays((int)$coupon->access_duration_days);
+        }
+        return $expiresAt;
+        // $this->userCoursesService->setCourseExpiry($payment->user_id, $item->course_id, $expiresAt);
     }
     private function setPaymentStrategy(PaymentType $paymentType): void
     {

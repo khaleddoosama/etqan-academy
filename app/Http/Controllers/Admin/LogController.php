@@ -89,6 +89,10 @@ class LogController extends Controller
     {
         $files = glob(storage_path('logs/laravel-*.log'));
         $files = array_map('basename', $files);
+        // sort files by modified time desc
+        usort($files, function ($a, $b) {
+            return filemtime(storage_path('logs/' . $b)) - filemtime(storage_path('logs/' . $a));
+        });
         return view('admin.logs.files', compact('files'));
     }
 

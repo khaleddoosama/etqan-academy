@@ -35,7 +35,7 @@ class RepositoryServiceProvider extends ServiceProvider
 
     protected function bindFolderRepositories()
     {
-        $folders = File::directories(app_path('Repositories\Contracts'));
+        $folders = File::directories(app_path('Repositories/Contracts'));
 
         foreach ($folders as $folder) {
             $folderName = pathinfo($folder, PATHINFO_FILENAME);

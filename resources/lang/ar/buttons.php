@@ -113,4 +113,8 @@
     'download_sheets' => 'تحميل الشيتات',
     'view_details' => 'عرض التفاصيل',
     'downloading' => 'جاري التحميل',
+    'create_entry' => 'إنشاء قيد',
+    'edit_entry' => 'تعديل قيد',
+    'delete_entry' => 'حذف قيد',
+    'yes_delete' => 'نعم، احذف',
 );

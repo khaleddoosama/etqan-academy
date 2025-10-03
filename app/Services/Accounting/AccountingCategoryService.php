@@ -15,9 +15,9 @@ class AccountingCategoryService
         private CategoryRepositoryInterface $categoryRepository
     ) {}
 
-    public function getAllCategories(array $with = []): Collection
+    public function getAllCategories(array $columns = ['*'], array $with = []): Collection
     {
-        return $this->categoryRepository->all(['*'], $with);
+        return $this->categoryRepository->all($columns, $with);
     }
 
     public function getCategoriesByType(AccountingCategoryType $type): Collection

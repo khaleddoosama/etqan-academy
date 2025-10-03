@@ -352,4 +352,20 @@ class PaymentDetailService
         return $expiresAt;
         // $this->userCoursesService->setCourseExpiry($payment->user_id, $item->course_id, $expiresAt);
     }
+
+    // 
+    public function getTotalPayments(?string $from, ?string $to): float
+    {
+        $query = Payment::where('status', PaymentStatusEnum::Paid->value);
+        
+        if ($from) {
+            $query->whereDate('paid_at', '>=', $from);
+        }
+        
+        if ($to) {
+            $query->whereDate('paid_at', '<=', $to);
+        }
+        
+        return $query->sum('amount_confirmed');
+    }
 }

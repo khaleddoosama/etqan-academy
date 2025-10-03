@@ -267,4 +267,11 @@ return [
     'access_duration_days' => 'مدة الوصول (بالأيام)',
     'accounting_type_income' => 'دخل',
     'accounting_type_expense' => 'مصروف',
+    'entries' => 'القيود',
+    'entry' => 'القيد',
+    'income' => 'دخل',
+    'expense' => 'مصروف',
+    'signed_amount' => 'المبلغ الموقع',
+    'source' => 'المصدر',
+    'transaction_date' => 'تاريخ المعاملة',
 ];

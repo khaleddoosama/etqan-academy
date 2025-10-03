@@ -280,4 +280,13 @@ return [
     'coupon_type' => 'Coupon Type',
     'coupon_discount' => 'Coupon Discount',
     'access_duration_days' => 'Access Duration (days)',
+    'accounting_type_income' => 'Accounting Type Income',
+    'accounting_type_expense' => 'Accounting Type Expense',
+    'entries' => 'Entries',
+    'entry' => 'Entry',
+    'income' => 'Income',
+    'expense' => 'Expense',
+    'signed_amount' => 'Signed Amount',
+    'source' => 'Source',
+    'transaction_date' => 'Transaction Date',
 ];

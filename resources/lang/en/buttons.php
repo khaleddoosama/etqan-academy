@@ -113,4 +113,8 @@
     'download_sheets' => 'Download Sheets',
     'view_details' => 'View Details',
     'downloading' => 'Downloading',
+    'create_entry' => 'Create Entry',
+    'edit_entry' => 'Edit Entry',
+    'delete_entry' => 'Delete Entry',
+    'yes_delete' => 'Yes, Delete'
 );

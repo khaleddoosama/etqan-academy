@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Accounting\EntryController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\Accounting\CategoryController as AccountingCategoryController;
@@ -255,8 +256,22 @@ Route::group(
                 Route::resource('categories', AccountingCategoryController::class)->except(['show'])->missing(function () {
                     return redirect()->route('admin.accounting.categories.index');
                 });
-            });
 
+                // accounting Entries
+                // Route::resource('entries', EntryController::class)->except(['show'])->missing(function () {
+                //     return redirect()->route('admin.accounting.entries.index');
+                // });
+                Route::controller(EntryController::class)->group(function () {
+                    Route::get('/entries', 'index')->name('entries.index');
+                    Route::get('entries/data',  'data')->name('entries.data');
+                    Route::get('entries/statistics',  'statistics')->name('entries.statistics');
+                    Route::get('/entries/create', 'create')->name('entries.create');
+                    Route::post('/entries', 'store')->name('entries.store');
+                    Route::get('/entries/{entry}/edit', 'edit')->name('entries.edit');
+                    Route::put('/entries/{entry}', 'update')->name('entries.update');
+                    Route::delete('/entries/{entry}', 'destroy')->name('entries.destroy');
+                });
+            });
         });
     }
 );

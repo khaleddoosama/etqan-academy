@@ -78,4 +78,5 @@
     'descending' => 'تنازلي',
     'last_login' => 'آخر تسجيل دخول',
     'all_coupons' => 'جميع الكوبونات',
+    'all_categories' => 'جميع الفئات',
 );

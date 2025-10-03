@@ -118,6 +118,12 @@ class PermissionSeeder extends Seeder
                 'student_work.edit',
                 'student_work.delete',
             ],
+            'accounting_category' => [
+                'accounting_category.list',
+                'accounting_category.create',
+                'accounting_category.edit',
+                'accounting_category.delete',
+            ],
         ];
 
         // Insert permissions

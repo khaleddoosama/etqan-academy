@@ -265,4 +265,6 @@ return [
     'coupon_type' => 'نوع الكوبون',
     'coupon_discount' => 'خصم الكوبون',
     'access_duration_days' => 'مدة الوصول (بالأيام)',
+    'accounting_type_income' => 'دخل',
+    'accounting_type_expense' => 'مصروف',
 ];

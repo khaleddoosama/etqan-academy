@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\Accounting\CategoryController as AccountingCategoryController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\CourseInstallmentController;
@@ -247,6 +248,15 @@ Route::group(
             Route::resource('packages', PackageController::class)->except(['show'])->missing(function () {
                 return redirect()->route('admin.packages.index');
             });
+
+            // accounting
+            Route::prefix('accounting')->name('accounting.')->group(function () {
+                // accounting category
+                Route::resource('categories', AccountingCategoryController::class)->except(['show'])->missing(function () {
+                    return redirect()->route('admin.accounting.categories.index');
+                });
+            });
+
         });
     }
 );

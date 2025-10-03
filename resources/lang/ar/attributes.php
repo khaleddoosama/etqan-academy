@@ -274,4 +274,7 @@ return [
     'signed_amount' => 'المبلغ الموقع',
     'source' => 'المصدر',
     'transaction_date' => 'تاريخ المعاملة',
+    'accounting' => 'المحاسبة',
+    'accounting_entries' => 'القيود المحاسبية',
+    'accounting_categories' => 'تصنيفات المحاسبة',
 ];

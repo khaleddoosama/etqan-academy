@@ -257,10 +257,6 @@ Route::group(
                     return redirect()->route('admin.accounting.categories.index');
                 });
 
-                // accounting Entries
-                // Route::resource('entries', EntryController::class)->except(['show'])->missing(function () {
-                //     return redirect()->route('admin.accounting.entries.index');
-                // });
                 Route::controller(EntryController::class)->group(function () {
                     Route::get('/entries', 'index')->name('entries.index');
                     Route::get('entries/data',  'data')->name('entries.data');

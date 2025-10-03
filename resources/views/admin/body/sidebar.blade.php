@@ -341,9 +341,64 @@
                       </li>
                   @endif
 
+                  {{-- Accounting Management --}}
+                  @php
+                      $accountingMenuItems = [
+                          'entries' => [
+                              'route' => 'admin.accounting.entries.index',
+                              'icon' => 'receipt-outline',
+                              'route_params' => ['from_date' => now()->format('Y-m-d')],
+                              'label' => __('attributes.accounting_entries'),
+                              'permission' => 'accounting_entry.list',
+                              'request_patterns' => ['*/admin/accounting/entries', '*/admin/accounting/entries/*'],
+                          ],
+                          'categories' => [
+                              'route' => 'admin.accounting.categories.index',
+                              'icon' => 'folder-outline',
+                              'label' => __('attributes.accounting_categories'),
+                              'permission' => 'accounting_category.list',
+                              'request_patterns' => ['*/admin/accounting/categories', '*/admin/accounting/categories/*'],
+                          ],
+                      ];
 
+                      $isActive = function ($patterns) {
+                          return collect($patterns)->contains(fn($pattern) => Request::is($pattern));
+                      };
 
+                      $hasPermission = collect($accountingMenuItems)->contains(
+                          fn($item) => auth()
+                              ->user()
+                              ->can($item['permission']),
+                      );
+                      $isMenuOpen = collect($accountingMenuItems)->contains(fn($item) => $isActive($item['request_patterns']));
+                  @endphp
 
+                  @if ($hasPermission)
+                      <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                          <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
+                              <span class="icon nav-icon"><ion-icon name="calculator-outline"></ion-icon></span>
+                              <p>
+                                  {{ __('attributes.accounting') }}
+                                  <i class="fas fa-angle-left right"></i>
+                              </p>
+                          </a>
+                          <ul class="nav nav-treeview"
+                              style="background-color: rgba(255, 255, 255, 0.1); {{ $isMenuOpen ? '' : 'display: none;' }}">
+                              @foreach ($accountingMenuItems as $key => $item)
+                                  @can($item['permission'])
+                                      <li class="nav-item">
+                                          <a href="{{ route($item['route'], $item['route_params'] ?? []) }}"
+                                              class="nav-link {{ $isActive($item['request_patterns']) ? 'active' : '' }}">
+                                              <span class="icon nav-icon"><ion-icon
+                                                      name="{{ $item['icon'] }}"></ion-icon></span>
+                                              <p>{{ $item['label'] }}</p>
+                                          </a>
+                                      </li>
+                                  @endcan
+                              @endforeach
+                          </ul>
+                      </li>
+                  @endif
 
                   {{-- Admin Management --}}
                   @php

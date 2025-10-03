@@ -359,6 +359,14 @@
                               'permission' => 'accounting_category.list',
                               'request_patterns' => ['*/admin/accounting/categories', '*/admin/accounting/categories/*'],
                           ],
+                          'reports' => [
+                              'route' => 'admin.accounting.reports.index',
+                              'route_params' => ['from_date' => now()->firstOfMonth()->format('Y-m-d'), 'to_date' => now()->format('Y-m-d')],
+                              'icon' => 'analytics-outline',
+                              'label' => __('attributes.accounting_reports'),
+                              'permission' => 'accounting_report.view',
+                              'request_patterns' => ['*/admin/accounting/reports', '*/admin/accounting/reports/*'],
+                          ],
                       ];
 
                       $isActive = function ($patterns) {

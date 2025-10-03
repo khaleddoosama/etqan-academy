@@ -79,4 +79,6 @@
     'last_login' => 'آخر تسجيل دخول',
     'all_coupons' => 'جميع الكوبونات',
     'all_categories' => 'جميع الفئات',
+    'all_types' => 'جميع الأنواع',
+    'all_durations' => 'جميع المدد',
 );

@@ -116,5 +116,7 @@
     'create_entry' => 'Create Entry',
     'edit_entry' => 'Edit Entry',
     'delete_entry' => 'Delete Entry',
-    'yes_delete' => 'Yes, Delete'
+    'yes_delete' => 'Yes, Delete',
+    'reset_filters' => 'Reset Filters' 
+
 );

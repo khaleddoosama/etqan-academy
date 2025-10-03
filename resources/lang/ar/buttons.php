@@ -117,4 +117,5 @@
     'edit_entry' => 'تعديل قيد',
     'delete_entry' => 'حذف قيد',
     'yes_delete' => 'نعم، احذف',
+    'reset_filters' => 'إعادة تعيين المرشحات'
 );

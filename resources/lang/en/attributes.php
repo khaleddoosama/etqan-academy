@@ -285,6 +285,7 @@ return [
     'accounting' => 'Accounting',
     'accounting_entries' => 'Accounting Entries',
     'accounting_categories' => 'Accounting Categories',
+    'accounting_reports' => 'Accounting Reports',
     'entries' => 'Entries',
     'entry' => 'Entry',
     'income' => 'Income',
@@ -292,4 +293,6 @@ return [
     'signed_amount' => 'Signed Amount',
     'source' => 'Source',
     'transaction_date' => 'Transaction Date',
+    'from_date' => 'From Date',
+    'to_date' => 'To Date',
 ];

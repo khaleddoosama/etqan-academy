@@ -84,4 +84,13 @@ interface EntryRepositoryInterface extends BaseRepositoryInterface
      * Get daily totals for a specific period
      */
     public function getDailyTotals(string $from, string $to): array;
+
+    /**
+     * New methods for reporting
+     */
+    public function getIncomeCountByDateRange(?string $fromDate, ?string $toDate): int;
+    public function getExpenseCountByDateRange(?string $fromDate, ?string $toDate): int;
+    public function getEntriesWithFilters(array $filters): array;
+    public function getCategoryBreakdown(?string $fromDate, ?string $toDate): array;
+    public function getEntriesForExport(?string $fromDate, ?string $toDate): array;
 }

@@ -78,5 +78,6 @@
     'last_login' => 'Last Login',
     'all_coupons' => 'All Coupons',
     'all_categories' => 'All Categories',
+    'all_types' => 'All Types',
 
 );

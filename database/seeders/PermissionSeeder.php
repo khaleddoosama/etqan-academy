@@ -130,6 +130,9 @@ class PermissionSeeder extends Seeder
                 'accounting_entry.edit',
                 'accounting_entry.delete',
             ],
+            'accounting_report' => [
+                'accounting_report.view',
+            ],
         ];
 
         // Insert permissions

@@ -83,7 +83,7 @@ class EntryRepository extends BaseRepository implements EntryRepositoryInterface
             ->orderBy('transaction_date', 'desc')
             ->get();
     }
-    
+
     /**
      * Get entries by date range
      */
@@ -130,7 +130,7 @@ class EntryRepository extends BaseRepository implements EntryRepositoryInterface
         if ($from || $to) {
             $query->dateRange($from, $to);
         }
-        
+
         return (float) $query->sum('amount');
     }
 
@@ -284,5 +284,142 @@ class EntryRepository extends BaseRepository implements EntryRepositoryInterface
         }
 
         return $days;
+    }
+
+    /**
+     * Get income count by date range
+     */
+    public function getIncomeCountByDateRange(?string $fromDate, ?string $toDate): int
+    {
+        $query =  $this->model->income();
+        if ($fromDate) {
+            $query->whereDate('transaction_date', '>=', $fromDate);
+        }
+        if ($toDate) {
+            $query->whereDate('transaction_date', '<=', $toDate);
+        }
+        return $query->count();
+    }
+
+    /**
+     * Get expense count by date range
+     */
+    public function getExpenseCountByDateRange(?string $fromDate, ?string $toDate): int
+    {
+        $query =  $this->model->expense();
+        if ($fromDate) {
+            $query->whereDate('transaction_date', '>=', $fromDate);
+        }
+        if ($toDate) {
+            $query->whereDate('transaction_date', '<=', $toDate);
+        }
+        return $query->count();
+    }
+
+    /**
+     * Get entries with filters (array format for reporting)
+     */
+    public function getEntriesWithFilters(array $filters): array
+    {
+        $query = $this->model->with(['category']);
+
+        if (!empty($filters['type'])) {
+            $query->type($filters['type']);
+        }
+
+        if (!empty($filters['category_id'])) {
+            $query->category($filters['category_id']);
+        }
+
+        if (!empty($filters['from_date']) && !empty($filters['to_date'])) {
+            $query->dateRange($filters['from_date'], $filters['to_date']);
+        }
+
+        if (!empty($filters['search'])) {
+            $query->search($filters['search']);
+        }
+
+        return $query->orderBy('transaction_date', 'desc')
+            ->get()
+            ->map(function ($entry) {
+                return [
+                    'id' => 'E' . $entry->id,
+                    'type' => 'Entry',
+                    'source' => 'Accounting Entry',
+                    'title' => $entry->title,
+                    'description' => $entry->description,
+                    'category' => $entry->category->name ?? '-',
+                    'category_type' => $entry->category->type->value ?? '-',
+                    'amount' => number_format($entry->amount, 2),
+                    'raw_amount' => $entry->amount,
+                    'date' => $entry->transaction_date->format('Y-m-d'),
+                    'created_at' => $entry->created_at->format('Y-m-d H:i:s')
+                ];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Get category breakdown for reporting
+     */
+    public function getCategoryBreakdown(?string $fromDate, ?string $toDate): array
+    {
+        $query = $this->model
+            ->with('category');
+        if ($fromDate) {
+            $query->whereDate('transaction_date', '>=', $fromDate);
+        }
+        if ($toDate) {
+            $query->whereDate('transaction_date', '<=', $toDate);
+        }
+
+        return $query->get()
+            ->groupBy('category.name')
+            ->map(function ($entries, $categoryName) {
+                $incomeAmount = $entries->where('category.type', AccountingCategoryType::INCOME->value)->sum('amount');
+                $expenseAmount = $entries->where('category.type', AccountingCategoryType::EXPENSE->value)->sum('amount');
+
+                return [
+                    'category' => $categoryName ?: 'Uncategorized',
+                    'type' => $entries->first()->category->type->value ?? 'Unknown',
+                    'income' => $incomeAmount,
+                    'expense' => $expenseAmount,
+                    'net' => $incomeAmount - $expenseAmount,
+                    'count' => $entries->count()
+                ];
+            })
+            ->values()
+            ->toArray();
+    }
+
+    /**
+     * Get entries for export
+     */
+    public function getEntriesForExport(?string $fromDate, ?string $toDate): array
+    {
+
+        $query = $this->model->with('category');
+        if ($fromDate) {
+            $query->whereDate('transaction_date', '>=', $fromDate);
+        }
+        if ($toDate) {
+            $query->whereDate('transaction_date', '<=', $toDate);
+        }
+        return $query->orderBy('transaction_date', 'desc')
+            ->get()
+            ->map(function ($entry) {
+                return [
+                    'id' => $entry->id,
+                    'title' => $entry->title,
+                    'description' => $entry->description,
+                    'category' => $entry->category->name ?? '-',
+                    'category_type' => $entry->category->type->value ?? '-',
+                    'amount' => $entry->amount,
+                    'transaction_date' => $entry->transaction_date->format('Y-m-d'),
+                    'source' => $entry->source,
+                    'created_at' => $entry->created_at->format('Y-m-d H:i:s')
+                ];
+            })
+            ->toArray();
     }
 }

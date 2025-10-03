@@ -277,4 +277,7 @@ return [
     'accounting' => 'المحاسبة',
     'accounting_entries' => 'القيود المحاسبية',
     'accounting_categories' => 'تصنيفات المحاسبة',
+    'accounting_reports' => 'تقارير المحاسبة',
+    'from_date' => 'من تاريخ',
+    'to_date' => 'إلى تاريخ',
 ];

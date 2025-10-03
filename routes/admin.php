@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Accounting\EntryController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\Accounting\CategoryController as AccountingCategoryController;
+use App\Http\Controllers\Admin\Accounting\ReportController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\CourseInstallmentController;
@@ -266,6 +267,15 @@ Route::group(
                     Route::get('/entries/{entry}/edit', 'edit')->name('entries.edit');
                     Route::put('/entries/{entry}', 'update')->name('entries.update');
                     Route::delete('/entries/{entry}', 'destroy')->name('entries.destroy');
+                });
+
+                // Reports
+                Route::controller(ReportController::class)->group(function () {
+                    Route::get('/reports', 'index')->name('reports.index');
+                    Route::get('/reports/data', 'data')->name('reports.data');
+                    Route::get('/reports/charts', 'charts')->name('reports.charts');
+                    Route::get('/reports/statistics', 'statistics')->name('reports.statistics');
+                    Route::get('/reports/export', 'export')->name('reports.export');
                 });
             });
         });

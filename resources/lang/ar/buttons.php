@@ -1,6 +1,7 @@
 <?php return array(
     'activate' => 'تفعيل',
     'add' => 'إضافة',
+    'add_item' => 'إضافة عنصر',
     'add_course' => 'إضافة دورة',
     'add_lecture' => 'إضافة محاضرة',
     'add_student' => 'إضافة طالب',

@@ -344,6 +344,13 @@
                   {{-- Accounting Management --}}
                   @php
                       $accountingMenuItems = [
+                          'categories' => [
+                              'route' => 'admin.accounting.categories.index',
+                              'icon' => 'folder-outline',
+                              'label' => __('attributes.accounting_categories'),
+                              'permission' => 'accounting_category.list',
+                              'request_patterns' => ['*/admin/accounting/categories', '*/admin/accounting/categories/*'],
+                          ],
                           'entries' => [
                               'route' => 'admin.accounting.entries.index',
                               'icon' => 'receipt-outline',
@@ -351,13 +358,6 @@
                               'label' => __('attributes.accounting_entries'),
                               'permission' => 'accounting_entry.list',
                               'request_patterns' => ['*/admin/accounting/entries', '*/admin/accounting/entries/*'],
-                          ],
-                          'categories' => [
-                              'route' => 'admin.accounting.categories.index',
-                              'icon' => 'folder-outline',
-                              'label' => __('attributes.accounting_categories'),
-                              'permission' => 'accounting_category.list',
-                              'request_patterns' => ['*/admin/accounting/categories', '*/admin/accounting/categories/*'],
                           ],
                           'reports' => [
                               'route' => 'admin.accounting.reports.index',

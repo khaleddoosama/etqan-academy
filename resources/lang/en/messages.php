@@ -58,6 +58,7 @@
     'program_created' => 'Program created successfully.',
     'program_deleted' => 'Program deleted successfully.',
     'program_updated' => 'Program updated successfully.',
+    'payment_item_helper' => 'Select a payment type and link it to the purchased course, installment, or package. The amount should reflect what was collected for this item.',
     'registered' => 'registered successfully.',
     'requestCourse_changed' => 'Course request status updated successfully.',
     'requestCourse_sent' => 'Course request sent successfully.',

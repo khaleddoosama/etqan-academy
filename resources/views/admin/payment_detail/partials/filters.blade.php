@@ -47,21 +47,42 @@
 
 <div class="row mb-3">
     <div class="col-md-3">
+        <label for="filter-from-created" class="form-label small text-muted mb-1">{{ __('attributes.created_at') }}
+            ({{ __('attributes.from_date') }})</label>
         <input type="date"
-            id="filter-from"
+            id="filter-from-created"
             class="form-control"
-            placeholder="From date"
+            value="{{ request('from_created_at') }}">
+    </div>
+    <div class="col-md-3">
+        <label for="filter-to-created" class="form-label small text-muted mb-1">{{ __('attributes.created_at') }}
+            ({{ __('attributes.to_date') }})</label>
+        <input type="date"
+            id="filter-to-created"
+            class="form-control"
+            value="{{ request('to_created_at') }}">
+    </div>
+    <div class="col-md-3">
+        <label for="filter-from-paid" class="form-label small text-muted mb-1">{{ __('attributes.paid_at') }}
+            ({{ __('attributes.from_date') }})</label>
+        <input type="date"
+            id="filter-from-paid"
+            class="form-control"
             value="{{ request('from_paid_at', now()->format('Y-m-d')) }}">
     </div>
     <div class="col-md-3">
+        <label for="filter-to-paid" class="form-label small text-muted mb-1">{{ __('attributes.paid_at') }}
+            ({{ __('attributes.to_date') }})</label>
         <input type="date"
-            id="filter-to"
+            id="filter-to-paid"
             class="form-control"
-            placeholder="To date"
             value="{{ request('to_paid_at') }}">
     </div>
+</div>
+
+<div class="row mb-3">
     <div class="col-md-3">
-        <button id="reset-filters" class="btn btn-secondary">
+        <button id="reset-filters" class="btn btn-secondary" type="button">
             {{ __('buttons.clear_filters') }}
         </button>
     </div>

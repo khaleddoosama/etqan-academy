@@ -7,6 +7,7 @@ use App\Enums\PaymentStatusEnum;
 use App\Events\PaymentApprovedEvent;
 use App\Models\Cart;
 use App\Models\Payment;
+use App\Models\CourseInstallment;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 use App\Services\PaymentStrategy\CashPayment;
 use App\Services\PaymentStrategy\InstallmentPayment;
@@ -87,6 +88,60 @@ class PaymentDetailService
         }
 
         return $query;
+    }
+
+    public function storeFromAdmin(array $data): Payment
+    {
+        $items = collect($data['items'] ?? [])
+            ->map(function (array $item) {
+                $courseInstallmentId = $item['course_installment_id'] ?? null;
+                $courseId = $item['course_id'] ?? null;
+
+                if ($courseInstallmentId && !$courseId) {
+                    $courseId = CourseInstallment::find($courseInstallmentId)?->course_id;
+                }
+
+                return [
+                    'course_id' => $courseId,
+                    'course_installment_id' => $courseInstallmentId,
+                    'package_plan_id' => $item['package_plan_id'] ?? null,
+                    'payment_type' => $item['payment_type'],
+                    'amount' => $item['amount'],
+                ];
+            })
+            ->toArray();
+
+        unset($data['items']);
+
+        if (!empty($data['coupon_id'])) {
+            $coupon = $this->couponService->find($data['coupon_id']);
+            if ($coupon) {
+                $data['discount'] = $coupon->discount;
+                $data['type'] = $coupon->type;
+            }
+        }
+
+        if (!empty($data['paid_at'])) {
+            $data['paid_at'] = Carbon::parse($data['paid_at']);
+        }
+
+        if (empty($data['amount_confirmed'])) {
+            $data['amount_confirmed'] = $data['amount_after_coupon'] ?? $data['amount_before_coupon'];
+        }
+
+        if (($data['status'] ?? PaymentStatusEnum::Pending->value) === PaymentStatusEnum::Paid->value && empty($data['paid_at'])) {
+            $data['paid_at'] = now();
+        }
+
+        $payment = $this->paymentRepository->createWithItems($data, 'paymentItems', $items);
+        $payment->load('paymentItems', 'coupon');
+
+        if ($payment->status === PaymentStatusEnum::Paid) {
+            // $this->handleApproval($payment);
+            $payment->refresh()->load('paymentItems', 'coupon');
+        }
+
+        return $payment;
     }
 
     public function getPayment($id, $columns = ['*'], $with = []): Payment
@@ -249,7 +304,6 @@ class PaymentDetailService
                 $expiresAt = $this->applyCouponAccessForItem($payment, $item);
 
                 $this->paymentContext->handlePayment($item, $payment->user_id, $expiresAt);
-
             }
         }
     }
@@ -353,19 +407,19 @@ class PaymentDetailService
         // $this->userCoursesService->setCourseExpiry($payment->user_id, $item->course_id, $expiresAt);
     }
 
-    // 
+    //
     public function getTotalPayments(?string $from, ?string $to): float
     {
         $query = Payment::where('status', PaymentStatusEnum::Paid->value);
-        
+
         if ($from) {
             $query->whereDate('paid_at', '>=', $from);
         }
-        
+
         if ($to) {
             $query->whereDate('paid_at', '<=', $to);
         }
-        
+
         return $query->sum('amount_confirmed');
     }
 }

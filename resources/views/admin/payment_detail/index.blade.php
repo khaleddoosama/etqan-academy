@@ -204,6 +204,12 @@
                             <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <div class="d-flex gap-2 flex-wrap">
+                                        @can('payment_detail.update')
+                                        <a href="{{ route('admin.payment_details.create') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-plus mr-1"></i>
+                                            {{ __('buttons.create') }}
+                                        </a>
+                                        @endcan
                                         <a href="#" id="download-filtered" class="btn btn-primary btn-sm">
                                             <i class="fas fa-download mr-1"></i>
                                             {{ __('buttons.download_sheets') }}
@@ -258,6 +264,7 @@
                                         <th>{{ __('attributes.amount_after_coupon') }}</th>
                                         <th>{{ __('attributes.confirmed_amount') }}</th>
                                         <th>{{ __('attributes.status') }}</th>
+                                        <th>{{ __('attributes.created_at') }}</th>
                                         <th>{{ __('attributes.paid_at') }}</th>
                                         <th>{{ __('main.actions') }}</th>
                                     </tr>
@@ -329,8 +336,10 @@
                 gateway: $('#filter-gateway').val(),
                 status: $('#filter-status').val(),
                 coupon_id: $('#filter-coupon').val(),
-                from_paid_at: $('#filter-from').val(),
-                to_paid_at: $('#filter-to').val()
+                from_created_at: $('#filter-from-created').val(),
+                to_created_at: $('#filter-to-created').val(),
+                from_paid_at: $('#filter-from-paid').val(),
+                to_paid_at: $('#filter-to-paid').val()
             };
 
             // Build query string

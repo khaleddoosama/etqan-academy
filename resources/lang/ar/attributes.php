@@ -168,7 +168,9 @@ return [
     'whatsapp' => 'واتساب',
     'transfer_phone' => 'رقم التحويل',
     'transfer_image' => 'صورة التحويل',
+    'transfer_number' => 'رقم التحويل',
     'payment_method' => 'طريقة الدفع',
+    'gateway' => 'بوابة الدفع',
     'payment_type' => 'نوع الدفع',
     'number_of_installments' => 'عدد الأقساط',
     'installment_amount' => 'قيمة القسط',
@@ -235,6 +237,7 @@ return [
     'plans_number_of_downloads' => 'عدد التحميلات',
     'plans_title' => 'عنوان الخطط',
     'payment_items' => 'عناصر الدفع',
+    'payment_item' => 'عنصر الدفع',
     'package_plans' => 'خطط الباقات',
     'payment_info' => 'معلومات الدفع',
     'package_plan' => 'خطة الباقة',
@@ -280,4 +283,7 @@ return [
     'accounting_reports' => 'تقارير المحاسبة',
     'from_date' => 'من تاريخ',
     'to_date' => 'إلى تاريخ',
+    'coupon_id' => 'كود الكوبون',
+    'items_course_id' => 'الدورة', // items.*.course_id
+    'items_amount' => 'المبلغ', // items.*.amount
 ];

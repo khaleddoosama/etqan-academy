@@ -20,11 +20,10 @@ class EntryController extends Controller
 {
 
     public function __construct(
-        protected AccountingEntryService $entryService, 
+        protected AccountingEntryService $entryService,
         protected AccountingCategoryService $accountingCategoryService,
         protected PaymentDetailService $paymentDetailService
-        )
-    {
+    ) {
         // accounting_entry.list accounting_entry.create accounting_entry.edit accounting_entry.delete
         $this->middleware('permission:accounting_entry.list')->only('index', 'data');
         $this->middleware('permission:accounting_entry.create')->only('create', 'store');
@@ -49,25 +48,25 @@ class EntryController extends Controller
         // If filtering by category or type, we need to adjust the income entries calculation
         if ($categoryId || $type) {
             $filteredQuery = Entry::query();
-            
+
             if ($categoryId) {
                 $filteredQuery->where('category_id', $categoryId);
             }
-            
+
             if ($type) {
-                $filteredQuery->whereHas('category', function($q) use ($type) {
+                $filteredQuery->whereHas('category', function ($q) use ($type) {
                     $q->where('type', $type);
                 });
             }
-            
+
             if ($fromDate) {
                 $filteredQuery->whereDate('transaction_date', '>=', $fromDate);
             }
-            
+
             if ($toDate) {
                 $filteredQuery->whereDate('transaction_date', '<=', $toDate);
             }
-            
+
             // Recalculate based on filtered entries
             $filteredEntries = $filteredQuery->with('category')->get();
             $totalIncomeEntries = $filteredEntries->where('category.type', AccountingCategoryType::INCOME->value)->sum('amount');
@@ -158,29 +157,29 @@ class EntryController extends Controller
             $totalPayments = $this->paymentDetailService->getTotalPayments($fromDate, $toDate);
             $totalExpenses = $this->entryService->getTotalExpenses($fromDate, $toDate);
             $netProfit = $this->entryService->getNetTotal($fromDate, $toDate);
-            
+
             // If filtering by category or type, we need to adjust the calculation
             if ($categoryId || $type) {
                 $filteredQuery = Entry::query();
-                
+
                 if ($categoryId) {
                     $filteredQuery->where('category_id', $categoryId);
                 }
-                
+
                 if ($type) {
-                    $filteredQuery->whereHas('category', function($q) use ($type) {
+                    $filteredQuery->whereHas('category', function ($q) use ($type) {
                         $q->where('type', $type);
                     });
                 }
-                
+
                 if ($fromDate) {
                     $filteredQuery->whereDate('transaction_date', '>=', $fromDate);
                 }
-                
+
                 if ($toDate) {
                     $filteredQuery->whereDate('transaction_date', '<=', $toDate);
                 }
-                
+
                 // Recalculate based on filtered entries
                 $filteredEntries = $filteredQuery->with('category')->get();
                 $totalIncomeEntries = $filteredEntries->where('category.type', AccountingCategoryType::INCOME->value)->sum('amount');
@@ -198,7 +197,7 @@ class EntryController extends Controller
 
             return response()->json($statistics);
         }
-        
+
         abort(403, 'Unauthorized access.');
     }
 }

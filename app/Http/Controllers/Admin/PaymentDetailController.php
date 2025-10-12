@@ -5,6 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\DataTables\PaymentDataTable;
 use App\Exports\FilteredPaymentsExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StorePaymentDetailRequest;
+use App\Enums\PaymentType;
+use App\Models\Coupon;
+use App\Models\Course;
+use App\Models\CourseInstallment;
+use App\Models\PackagePlans;
+use App\Models\User;
 use App\Services\PaymentDetailService;
 use App\Services\PaymentStatisticsService;
 use App\Services\PaymentStrategy\PaymentContext;
@@ -30,6 +37,7 @@ class PaymentDetailController extends Controller
         $this->middleware('permission:payment_detail.status')->only('updateCoupon');
         $this->middleware('permission:payment_detail.status')->only('updatePaidAt');
         $this->middleware('permission:payment_detail.list')->only('download');
+        $this->middleware('permission:payment_detail.update')->only(['create', 'store']);
     }
 
     // index
@@ -48,6 +56,39 @@ class PaymentDetailController extends Controller
             'gateways',
             'coupons'
         ));
+    }
+
+    public function create()
+    {
+        $users = User::studentActive()->select('id', 'first_name', 'last_name', 'email')->get();
+
+        $paymentStatuses = $this->paymentStatisticsService->getPaymentStatuses();
+        // $gateways = $this->paymentStatisticsService->getGateways();
+        $coupons = Coupon::active()->select('id', 'code')->orderBy('code')->get();
+
+        $courses = Course::active()->select('id', 'title')->orderBy('title')->get();
+        $packagePlans = PackagePlans::with('package:id,title')->get();
+
+        // $paymentTypes = PaymentType::cases();
+
+        return view('admin.payment_detail.create', compact(
+            'users',
+            'paymentStatuses',
+            // 'gateways',
+            'coupons',
+            'courses',
+            'packagePlans',
+            // 'paymentTypes'
+        ));
+    }
+
+    public function store(StorePaymentDetailRequest $request)
+    {
+        $payment = $this->paymentDetailService->storeFromAdmin($request->validated());
+
+        Toastr::success(__('messages.payment_detail_created'), __('status.success'));
+
+        return redirect()->route('admin.payment_details.show', $payment->id);
     }
 
     public function data(PaymentDataTable $dataTable, Request $request)
@@ -152,6 +193,8 @@ class PaymentDetailController extends Controller
                 'gateway',
                 'status',
                 'coupon_id',
+                'from_created_at',
+                'to_created_at',
                 'from_paid_at',
                 'to_paid_at'
             ]);

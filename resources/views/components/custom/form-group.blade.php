@@ -67,7 +67,7 @@
                 @foreach ($options as $option)
                     <option value="{{ $option->id }}" {{-- check if selected is exist --}}
                         {{ in_array($option->id, $selectedArray) ? 'selected' : '' }}>
-                        {{ $option->name }} {{ $option->title }}
+                        {{ $option->name }} {{ $option->title }} {{ $option->code }}    
 
                     </option>
                 @endforeach

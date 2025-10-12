@@ -34,4 +34,10 @@ class Coupon extends Model
                ($this->expires_at === null || $this->expires_at >= now()->startOfDay()) &&
                ($this->usage_limit === null || $this->used_count < $this->usage_limit);
     }
+
+    // scope active
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 }

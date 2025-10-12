@@ -169,7 +169,9 @@ return [
     'whatsapp' => 'WhatsApp',
     'transfer_phone' => 'Transfer Phone',
     'transfer_image' => 'Transfer Image',
+    'transfer_number' => 'Transfer Number',
     'payment_method' => 'Payment Method',
+    'gateway' => 'Gateway',
     'payment_type' => 'Payment Type',
     'number_of_installments' => 'Number of Installments',
     'installment_amount' => 'Installment Amount',
@@ -237,6 +239,7 @@ return [
     'plans_number_of_downloads' => 'Plans Number Of Downloads',
     'plans_title' => 'Plans Title',
     'payment_items' => 'Payment Items',
+    'payment_item' => 'Payment Item',
     'package_plans' => 'Package Plans',
     'payment_info' => 'Payment Info',
     'package_plan' => 'Package Plan',
@@ -295,4 +298,7 @@ return [
     'transaction_date' => 'Transaction Date',
     'from_date' => 'From Date',
     'to_date' => 'To Date',
+    'coupon_id' => 'Coupon ID',
+    'items_course_id' => 'Course', // items.*.course_id
+    'items_amount' => 'Amount', // items.*.amount
 ];

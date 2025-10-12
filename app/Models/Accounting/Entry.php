@@ -61,11 +61,10 @@ class Entry extends Model
 
         $typeValue = $type instanceof AccountingCategoryType ? $type->value : $type;
 
-        return $query->where('category_id', function ($query) use ($typeValue) {
+        return $query->whereIn('category_id', function ($query) use ($typeValue) {
             $query->select('id')
                   ->from('accounting_categories')
-                  ->where('type', $typeValue)
-                  ->limit(1);
+                  ->where('type', $typeValue);
         });
     }
 
@@ -91,7 +90,7 @@ class Entry extends Model
         if ($to) {
             $query->where('transaction_date', '<=', Carbon::parse($to));
         }
-        
+
         return $query;
     }
 

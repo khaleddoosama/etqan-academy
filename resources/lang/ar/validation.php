@@ -167,6 +167,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'payment_items' => [
+            'single_service' => 'يرجى اختيار خدمة واحدة فقط لكل عنصر دفع.',
+        ],
     ],
 
     /*

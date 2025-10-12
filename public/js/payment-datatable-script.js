@@ -8,6 +8,8 @@ $(function () {
             gateway: urlParams.get('gateway') || '',
             status: urlParams.get('status') || '',
             coupon_id: urlParams.get('coupon_id') || '',
+            from_created_at: urlParams.get('from_created_at') || '',
+            to_created_at: urlParams.get('to_created_at') || '',
             from_paid_at: urlParams.get('from_paid_at') || '',
             to_paid_at: urlParams.get('to_paid_at') || ''
         };
@@ -35,8 +37,10 @@ $(function () {
         $('#filter-gateway').val(params.gateway);
         $('#filter-status').val(params.status);
         $('#filter-coupon').val(params.coupon_id);
-        $('#filter-from').val(params.from_paid_at);
-        $('#filter-to').val(params.to_paid_at);
+        $('#filter-from-created').val(params.from_created_at);
+        $('#filter-to-created').val(params.to_created_at);
+        $('#filter-from-paid').val(params.from_paid_at);
+        $('#filter-to-paid').val(params.to_paid_at);
     }
 
     // Initialize filters from URL parameters
@@ -63,8 +67,10 @@ $(function () {
                 d.gateway = $('#filter-gateway').val();
                 d.status = $('#filter-status').val();
                 d.coupon_id = $('#filter-coupon').val();
-                d.from_paid_at = $('#filter-from').val();
-                d.to_paid_at = $('#filter-to').val();
+                d.from_created_at = $('#filter-from-created').val();
+                d.to_created_at = $('#filter-to-created').val();
+                d.from_paid_at = $('#filter-from-paid').val();
+                d.to_paid_at = $('#filter-to-paid').val();
             }
         },
         columns: [
@@ -166,6 +172,10 @@ $(function () {
                 name: 'status'
             },
             {
+                data: 'created_at',
+                name: 'created_at'
+            },
+            {
                 data: 'paid_at',
                 name: 'paid_at'
             },
@@ -185,7 +195,7 @@ $(function () {
     });
 
     // Filter change handlers
-    $('#filter-user, #filter-gateway, #filter-status, #filter-coupon, #filter-from, #filter-to').on('change', function () {
+    $('#filter-user, #filter-gateway, #filter-status, #filter-coupon, #filter-from-created, #filter-to-created, #filter-from-paid, #filter-to-paid').on('change', function () {
         updateUrlAndRedraw();
     });
 
@@ -206,8 +216,10 @@ $(function () {
             gateway: $('#filter-gateway').val(),
             status: $('#filter-status').val(),
             coupon_id: $('#filter-coupon').val(),
-            from_paid_at: $('#filter-from').val(),
-            to_paid_at: $('#filter-to').val()
+            from_created_at: $('#filter-from-created').val(),
+            to_created_at: $('#filter-to-created').val(),
+            from_paid_at: $('#filter-from-paid').val(),
+            to_paid_at: $('#filter-to-paid').val()
         };
 
         updateUrl(params);
@@ -625,8 +637,10 @@ $(function () {
         $('#filter-gateway').val('');
         $('#filter-status').val('');
         $('#filter-coupon').val('');
-        $('#filter-from').val('');
-        $('#filter-to').val('');
+        $('#filter-from-created').val('');
+        $('#filter-to-created').val('');
+        $('#filter-from-paid').val('');
+        $('#filter-to-paid').val('');
 
         // Clear search input
         $('#search').val('');

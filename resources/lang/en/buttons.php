@@ -1,6 +1,7 @@
 <?php return array(
     'activate' => 'Activate',
     'add' => 'Add',
+    'add_item' => 'Add Item',
     'add_course' => 'Add Course',
     'add_lecture' => 'Add Lecture',
     'add_student' => 'Add Student',

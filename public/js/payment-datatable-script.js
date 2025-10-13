@@ -359,7 +359,7 @@ $(function () {
                 // Create a form and submit it
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = `/en/admin/payment-details/${paymentId}/update-amount`;
+                form.action = `/en/admin/payment_details/${paymentId}/update-amount`;
 
                 // Add CSRF token
                 const csrfToken = document.querySelector('meta[name="csrf-token"]');
@@ -462,7 +462,7 @@ $(function () {
                 // Create a form and submit it
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = `/en/admin/payment-details/${paymentId}/update-coupon`;
+                form.action = `/en/admin/payment_details/${paymentId}/update-coupon`;
 
                 // Add CSRF token
                 const csrfToken = document.querySelector('meta[name="csrf-token"]');
@@ -575,7 +575,7 @@ $(function () {
                         // Create a form and submit it
                         const form = document.createElement('form');
                         form.method = 'POST';
-                        form.action = `/en/admin/payment-details/${paymentId}/update-paid-at`;
+                        form.action = `/en/admin/payment_details/${paymentId}/update-paid-at`;
 
                         // Add CSRF token
                         const csrfToken = document.querySelector('meta[name="csrf-token"]');

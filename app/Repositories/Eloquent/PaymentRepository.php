@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Eloquent;
 
+use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Models\Payment;
@@ -272,5 +273,26 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
                 ];
             })
             ->toArray();
+    }
+
+    public function getPaymentsForDailySalesReport(?string $fromDate, ?string $toDate): Collection
+    {
+        $query = $this->model
+            ->with([
+                'user:id,first_name,last_name,email',
+                'paymentItems.course:id,title',
+            ])
+            ->where('status', PaymentStatusEnum::Paid->value)
+            ->whereNotNull('paid_at');
+
+        if ($fromDate) {
+            $query->whereDate('paid_at', '>=', $fromDate);
+        }
+
+        if ($toDate) {
+            $query->whereDate('paid_at', '<=', $toDate);
+        }
+
+        return $query->orderBy('paid_at')->get();
     }
 }

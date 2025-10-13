@@ -2,12 +2,15 @@
 
 namespace App\Services\Accounting;
 
-use App\Repositories\Contracts\Accounting\EntryRepositoryInterface;
-use App\Repositories\Contracts\PaymentRepositoryInterface;
 use App\Enums\AccountingCategoryType;
 use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentType;
+use App\Exports\DailySalesReportExport;
+use App\Models\Payment;
+use App\Models\PaymentItems;
+use App\Repositories\Contracts\Accounting\EntryRepositoryInterface;
+use App\Repositories\Contracts\PaymentRepositoryInterface;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
 
 class AccountingReportService
 {
@@ -173,13 +176,101 @@ class AccountingReportService
         return $this->categoryService->getAllCategories(['id', 'name', 'type']);
     }
 
-    public function generateExcelFile(array $data, string $filename): string
+    public function makeDailySalesReportExport(?string $fromDate, ?string $toDate): DailySalesReportExport
     {
-        // TODO: Implement Excel generation logic
-        // This would use a service or export class to generate the Excel file
-        // and return the file path
-        return storage_path('app/exports/' . $filename);
+        $reportData = $this->getDailySalesReportData($fromDate, $toDate);
+
+        return new DailySalesReportExport(
+            title: $reportData['title'],
+            rows: $reportData['rows'],
+            totalSubscribers: $reportData['totals']['subscribers'],
+            totalAmount: $reportData['totals']['amount'],
+            fromDate: $reportData['from'],
+            toDate: $reportData['to']
+        );
     }
+
+    public function getDailySalesReportData(?string $fromDate, ?string $toDate): array
+    {
+        [$resolvedFrom, $resolvedTo] = $this->resolveDateRange($fromDate, $toDate);
+
+        $payments = $this->paymentRepository->getPaymentsForDailySalesReport($resolvedFrom, $resolvedTo);
+
+        $groupedRows = [];
+        $totalSubscribers = 0;
+        $totalAmount = 0.0;
+
+        foreach ($payments as $payment) {
+            /** @var PaymentItems $item */
+            $salesEmployee = $this->resolveCouponSalesEmployee($payment);
+            foreach ($payment->paymentItems as $item) {
+                $date = $payment->paid_at ?? $payment->created_at;
+                $dateKey = $date ? Carbon::parse($date)->format('Y-m-d') : 'غير محدد';
+                $courseName = $item->serviceTitle
+                    ?? $item->course?->title
+                    ?? $item->courseInstallment?->course?->title
+                    ?? $item->packagePlan?->title
+                    ?? $item->packagePlan?->package?->title
+                    ?? 'غير محدد';
+
+                $key = $dateKey . '|' . $courseName . '|' . $payment->coupon_id;
+
+                $amount = (float) $payment->amount_confirmed;
+
+                $notes = $this->resolvePaymentNotes($payment, $item->course_id);
+
+                if (!isset($groupedRows[$key])) {
+                    $groupedRows[$key] = [
+                        'date' => Carbon::parse($date),
+                        'course' => $courseName,
+                        'subscribers' => 0,
+                        'sales_employee' => $salesEmployee,
+                        'notes' => $notes,
+                        'amount' => 0,
+                    ];
+                } else {
+                    $groupedRows[$key]['notes'] .= "; $notes";
+                }
+
+                $groupedRows[$key]['subscribers'] += 1;
+                $groupedRows[$key]['amount'] += $amount;
+            }
+        }
+
+        $rows = array_values($groupedRows);
+
+        // حساب الإجماليات
+        foreach ($rows as &$row) {
+            $totalSubscribers += $row['subscribers'];
+            $totalAmount += $row['amount'];
+            // remove last ; from notes if exists
+            $row['notes'] = rtrim(string: $row['notes'], characters: "; ");
+        }
+
+        // ترتيب النتائج
+        usort($rows, function (array $a, array $b) {
+            $timestampA = $a['date'] ? $a['date']->timestamp : 0;
+            $timestampB = $b['date'] ? $b['date']->timestamp : 0;
+
+            if ($timestampA === $timestampB) {
+                return strcmp((string) $a['course'], (string) $b['course']);
+            }
+
+            return $timestampA <=> $timestampB;
+        });
+
+        return [
+            'title' => 'جدول مبيعات يوميه',
+            'from' => $resolvedFrom,
+            'to' => $resolvedTo,
+            'rows' => $rows,
+            'totals' => [
+                'subscribers' => $totalSubscribers,
+                'amount' => round($totalAmount, 2),
+            ],
+        ];
+    }
+
 
     public function getPaginatedCombinedIncomeData(
         ?string $fromDate,
@@ -201,7 +292,7 @@ class AccountingReportService
 
         // Apply search filter if provided
         if (!empty($searchValue)) {
-            $allData = array_filter($allData, function($item) use ($searchValue) {
+            $allData = array_filter($allData, function ($item) use ($searchValue) {
                 $searchFields = [
                     $item['title'] ?? '',
                     $item['description'] ?? '',
@@ -241,7 +332,7 @@ class AccountingReportService
         if (isset($columnMap[$orderColumn])) {
             $sortField = $columnMap[$orderColumn];
 
-            usort($allData, function($a, $b) use ($sortField, $orderDir) {
+            usort($allData, function ($a, $b) use ($sortField, $orderDir) {
                 $valueA = $a[$sortField] ?? '';
                 $valueB = $b[$sortField] ?? '';
 
@@ -273,5 +364,51 @@ class AccountingReportService
             'recordsTotal' => $totalRecords,
             'recordsFiltered' => $totalRecords
         ];
+    }
+
+    private function resolveDateRange(?string $fromDate, ?string $toDate): array
+    {
+        $from = $fromDate ? Carbon::parse($fromDate) : now()->startOfMonth();
+        $to = $toDate ? Carbon::parse($toDate) : now();
+
+        if ($from->greaterThan($to)) {
+            [$from, $to] = [$to->copy(), $from->copy()];
+        }
+
+        return [$from->toDateString(), $to->toDateString()];
+    }
+
+    private function resolveCouponSalesEmployee(Payment $payment): string
+    {
+        $couponMap = [
+            8 => 'قسط',
+            7 => 'كتب',
+            6 => 'عبدالله فتحي',
+            4 => 'محمد وليد',
+            5 => 'منار خالد',
+        ];
+        $couponId = $payment->coupon_id ?? null;
+        $salesEmployee = $couponId && isset($couponMap[$couponId])
+            ? $couponMap[$couponId] : '';
+
+        return $salesEmployee;
+    }
+
+    private function resolvePaymentNotes(Payment $payment, ?int $courseId): string
+    {
+
+        // check if there another payment with the same user_id and course_id before this day
+        $anotherPayment = Payment::where('user_id', $payment->user_id)
+            ->whereHas('paymentItems', function ($query) use ($courseId) {
+                $query->where('course_id', $courseId);
+            })
+            ->whereDate('paid_at', '<', Carbon::parse($payment->paid_at)->toDateString())
+            ->where('status', PaymentStatusEnum::Paid->value)
+            ->where('id', '!=', $payment->id)
+            ->where('coupon_id', '!=', 8) // not قسط
+            ->first();
+
+        return $anotherPayment ? 'باقي قسط' : '';
+
     }
 }

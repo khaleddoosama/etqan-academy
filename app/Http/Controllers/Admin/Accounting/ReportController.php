@@ -13,6 +13,8 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
+use function Pest\Laravel\json;
+
 class ReportController extends Controller
 {
     public function __construct(
@@ -107,22 +109,24 @@ class ReportController extends Controller
 
     public function export(Request $request)
     {
+        // format is required
+        if (!$request->has('format')) {
+            return response()->json('Format parameter is required.', 400);
+        }
         $fromDate = $request->get('from_date');
         $toDate = $request->get('to_date');
-        $format = $request->get('format', 'xlsx');
+        $format = strtolower($request->get('format'));
 
-        // Get export data through service
-        $exportData = $this->reportService->getExportData($fromDate, $toDate);
+        // if ($format === 'json') {
+        //     return response()->json($this->reportService->getExportData($fromDate, $toDate));
+        // }
 
-        $filename = 'accounting_report_' . $fromDate . '_to_' . $toDate . '.' . $format;
-
-        // For now, return JSON data. We can implement Excel export later
-        if ($format === 'json') {
-            return response()->json($exportData);
+        if ($format == 'daily-sales-report') {
+            $export = $this->reportService->makeDailySalesReportExport($fromDate, $toDate);
         }
 
-        // TODO: Implement Excel export using the export data
-        return response()->download($this->reportService->generateExcelFile($exportData, $filename));
+
+        return Excel::download($export, $export->getFilename());
     }
 
     public function statistics(Request $request): JsonResponse

@@ -171,7 +171,10 @@
             ],
             pageLength: 10,
             responsive: true,
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, "All"]
+            ],
             lengthChange: true,
             language: {
                 processing: "Loading data...",
@@ -444,7 +447,12 @@
         });
     }
 
-    function exportReport(format) {
+    async function exportReport(format) {
+        if (format === 'pdf') {
+            toastr.warning('PDF export is not available yet.');
+            return;
+        }
+
         const params = new URLSearchParams({
             format: format,
             from_date: $('#filter-from-date').val(),
@@ -453,16 +461,49 @@
             type: $('#filter-type').val() || ''
         });
 
-        // Create download link
-        const link = document.createElement('a');
-        link.href = window.reportExportUrl + '?' + params.toString();
-        link.download = '';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const url = window.reportExportUrl + '?' + params.toString();
 
-        toastr.success('Report export started...');
+        try {
+            const response = await fetch(url, {
+                method: 'GET'
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                toastr.error(`حدث خطأ أثناء تصدير التقرير: ${errorText || response.statusText}`);
+                return;
+            }
+
+            // ✅ استخراج اسم الملف من الـ headers
+            let filename = 'report.xlsx';
+            const disposition = response.headers.get('Content-Disposition');
+            if (disposition && disposition.includes('filename=')) {
+                filename = disposition
+                    .split('filename=')[1]
+                    .split(';')[0]
+                    .replace(/['"]/g, '')
+                    .trim();
+            }
+
+            // ✅ التحميل الفعلي
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = filename; // ← استخدم الاسم المستخرج هنا
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(downloadUrl);
+
+            toastr.success(`تم بدء تحميل ${filename} بنجاح`);
+        } catch (error) {
+            toastr.error('تعذر الاتصال بالسيرفر. حاول لاحقًا.');
+            console.error(error);
+        }
     }
+
 
     function displayFilterStatus() {
         const params = getUrlParams();

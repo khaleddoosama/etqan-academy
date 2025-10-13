@@ -189,18 +189,18 @@ Route::group(
 
             // Payment Detail Controller
             Route::controller(PaymentDetailController::class)->group(function () {
-                Route::get('/payment-details', 'index')->name('payment_details.index');
-                Route::get('payment-details/data',  'data')->name('payment_details.data');
-                Route::get('/payment-details/create', 'create')->name('payment_details.create');
-                Route::post('/payment-details', 'store')->name('payment_details.store');
+                Route::get('/payment_details', 'index')->name('payment_details.index');
+                Route::get('payment_details/data',  'data')->name('payment_details.data');
+                Route::get('/payment_details/create', 'create')->name('payment_details.create');
+                Route::post('/payment_details', 'store')->name('payment_details.store');
 
-                Route::get('/payment-details/export', 'export')->name('payment_details.export');
-                Route::get('/payment-details/download', 'download')->name('payment_details.download');
-                Route::get('/payment-details/{id}', 'show')->name('payment_details.show');
-                Route::put('/payment-details/{id}/status', 'status')->name('payment_details.status');
-                Route::put('/payment-details/{id}/update-amount', 'updateAmountConfirmed')->name('payment_details.update_amount');
-                Route::put('/payment-details/{id}/update-coupon', 'updateCoupon')->name('payment_details.update_coupon');
-                Route::put('/payment-details/{id}/update-paid-at', 'updatePaidAt')->name('payment_details.update_paid_at');
+                Route::get('/payment_details/export', 'export')->name('payment_details.export');
+                Route::get('/payment_details/download', 'download')->name('payment_details.download');
+                Route::get('/payment_details/{id}', 'show')->name('payment_details.show');
+                Route::put('/payment_details/{id}/status', 'status')->name('payment_details.status');
+                Route::put('/payment_details/{id}/update-amount', 'updateAmountConfirmed')->name('payment_details.update_amount');
+                Route::put('/payment_details/{id}/update-coupon', 'updateCoupon')->name('payment_details.update_coupon');
+                Route::put('/payment_details/{id}/update-paid-at', 'updatePaidAt')->name('payment_details.update_paid_at');
             });
 
             // Permission controller (resource)

@@ -22,4 +22,5 @@ interface PaymentRepositoryInterface extends BaseRepositoryInterface
     public function getPaymentsBreakdown(?string $fromDate, ?string $toDate): array;
     public function getPaymentMethodsBreakdown(?string $fromDate, ?string $toDate): array;
     public function getPaymentsForExport(?string $fromDate, ?string $toDate): array;
+    public function getPaymentsForDailySalesReport(?string $fromDate, ?string $toDate): Collection;
 }

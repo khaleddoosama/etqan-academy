@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin\Accounting;
 
 use App\Http\Controllers\Controller;
+use App\Exports\AccountingDailyReportExport;
 use App\Services\Accounting\AccountingReportService;
 use App\Services\Accounting\AccountingEntryService;
 use App\Services\PaymentDetailService;
 use App\Enums\AccountingCategoryType;
+use App\Reports\DailyReportBuilder;
+use App\Reports\DailyReportQueryService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
@@ -20,7 +23,9 @@ class ReportController extends Controller
     public function __construct(
         protected AccountingReportService $reportService,
         protected AccountingEntryService $entryService,
-        protected PaymentDetailService $paymentService
+        protected PaymentDetailService $paymentService,
+        protected DailyReportQueryService $dailyReportQueryService,
+        protected DailyReportBuilder $dailyReportBuilder,
     ) {
         $this->middleware('permission:accounting_report.view')->only('index', 'data', 'charts');
     }
@@ -123,6 +128,12 @@ class ReportController extends Controller
 
         if ($format == 'daily-sales-report') {
             $export = $this->reportService->makeDailySalesReportExport($fromDate, $toDate);
+        } elseif ($format === 'daily-report') {
+            $queryData = $this->dailyReportQueryService->getData($fromDate, $toDate);
+            $reportData = $this->dailyReportBuilder->build($queryData);
+            $export = new AccountingDailyReportExport($reportData);
+        } else {
+            return response()->json('Unsupported export format.', 422);
         }
 
 

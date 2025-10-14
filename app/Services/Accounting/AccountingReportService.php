@@ -11,6 +11,7 @@ use App\Models\PaymentItems;
 use App\Repositories\Contracts\Accounting\EntryRepositoryInterface;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AccountingReportService
 {
@@ -67,6 +68,7 @@ class AccountingReportService
         $entries = $this->entryRepository->getEntriesWithFilters($filters);
 
         foreach ($entries as $entry) {
+            Log::info('Processing entry', ['entry' => $entry['amount']]);
             $combinedData[] = [
                 'id' => 'E' . $entry['id'],
                 'type' => 'Entry',
@@ -75,7 +77,7 @@ class AccountingReportService
                 'description' => $entry['description'],
                 'category' => $entry['category'] . ' (' . $entry['category_type'] . ')' ?? '-',
                 'category_type' => $entry['category_type'] ?? '-',
-                'amount' => number_format($entry['amount'], 2),
+                'amount' => $entry['amount'],
                 'raw_amount' => $entry['amount'],
                 'date' => $entry['date'],
                 'created_at' => $entry['created_at']

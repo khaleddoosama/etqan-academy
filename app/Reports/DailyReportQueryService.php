@@ -172,7 +172,7 @@ final class DailyReportQueryService
 
         $to = $toDate
             ? CarbonImmutable::parse($toDate)->endOfDay()
-            : $from->copy()->endOfDay();
+            : $today->copy()->endOfDay();
 
         if ($from->greaterThan($to)) {
             [$from, $to] = [$to->startOfDay(), $from->endOfDay()];

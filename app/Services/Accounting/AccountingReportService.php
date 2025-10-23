@@ -4,14 +4,14 @@ namespace App\Services\Accounting;
 
 use App\Enums\AccountingCategoryType;
 use App\Enums\PaymentStatusEnum;
-use App\Enums\PaymentType;
 use App\Exports\DailySalesReportExport;
+use App\Models\IncomeUnionView;
 use App\Models\Payment;
 use App\Models\PaymentItems;
 use App\Repositories\Contracts\Accounting\EntryRepositoryInterface;
+use App\Repositories\Contracts\IncomeUnionViewRepositoryInterface;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class AccountingReportService
 {
@@ -19,25 +19,38 @@ class AccountingReportService
         private EntryRepositoryInterface $entryRepository,
         private PaymentRepositoryInterface $paymentRepository,
         private AccountingEntryService $entryService,
-        private AccountingCategoryService $categoryService
+        private AccountingCategoryService $categoryService,
+        private IncomeUnionViewRepositoryInterface $incomeUnionRepository
     ) {}
 
     public function getSummaryData(?string $fromDate, ?string $toDate, ?string $categoryId, ?string $type): array
     {
-        // Get income entries through repository
-        $incomeEntries = $this->entryRepository->getTotalIncome($fromDate, $toDate);
+        $manualFilters = [
+            'from_date' => $fromDate,
+            'to_date' => $toDate,
+            'type' => 'manual',
+        ];
 
-        // Get payments through repository
-        $totalPayments = $this->paymentRepository->getTotalPayments($fromDate, $toDate);
+        if ($categoryId) {
+            $manualFilters['category_id'] = (int) $categoryId;
+        }
 
-        // Get expenses through repository
+        $autoFilters = [
+            'from_date' => $fromDate,
+            'to_date' => $toDate,
+            'type' => 'auto',
+        ];
+
+        $incomeEntries = $this->incomeUnionRepository->getTotalAmount($manualFilters);
+        $totalPayments = $this->incomeUnionRepository->getTotalAmount($autoFilters);
+
         $totalExpenses = $this->entryRepository->getTotalExpenses($fromDate, $toDate);
 
         // Calculate totals
         $totalIncome = $incomeEntries + $totalPayments;
         $netProfit = $totalIncome - $totalExpenses;        // Get counts through repositories
-        $incomeEntriesCount = $this->entryRepository->getIncomeCountByDateRange($fromDate, $toDate);
-        $paymentsCount = $this->paymentRepository->getPaidCountByDateRange($fromDate, $toDate);
+        $incomeEntriesCount = $this->incomeUnionRepository->getCount($manualFilters);
+        $paymentsCount = $this->incomeUnionRepository->getCount($autoFilters);
         $expensesCount = $this->entryRepository->getExpenseCountByDateRange($fromDate, $toDate);
 
         return [
@@ -55,67 +68,32 @@ class AccountingReportService
 
     public function getCombinedIncomeData(?string $fromDate, ?string $toDate, ?string $categoryId = null, ?string $type = null): array
     {
-        $combinedData = [];
+        if ($type === AccountingCategoryType::EXPENSE->value) {
+            $entryFilters = [
+                'from_date' => $fromDate,
+                'to_date' => $toDate,
+                'category_id' => $categoryId,
+                'type' => $type,
+            ];
 
-        // Get entries through repository
+            return $this->entryRepository->getEntriesWithFilters($entryFilters);
+        }
+
         $filters = [
             'from_date' => $fromDate,
             'to_date' => $toDate,
             'category_id' => $categoryId,
-            'type' => $type
         ];
 
-        $entries = $this->entryRepository->getEntriesWithFilters($filters);
-
-        foreach ($entries as $entry) {
-            Log::info('Processing entry', ['entry' => $entry['amount']]);
-            $combinedData[] = [
-                'id' => 'E' . $entry['id'],
-                'type' => 'Entry',
-                'source' => 'Accounting Entry',
-                'title' => $entry['title'],
-                'description' => $entry['description'],
-                'category' => $entry['category'] . ' (' . $entry['category_type'] . ')' ?? '-',
-                'category_type' => $entry['category_type'] ?? '-',
-                'amount' => $entry['amount'],
-                'raw_amount' => $entry['amount'],
-                'date' => $entry['date'],
-                'created_at' => $entry['created_at']
-            ];
+        if ($type && in_array($type, ['auto', 'manual'], true)) {
+            $filters['type'] = $type;
         }
 
-        // Get payments through repository (only include if type is income or no type filter)
-        if (!$type || $type === 'income') {
-            $paymentFilters = [
-                'from_date' => $fromDate,
-                'to_date' => $toDate,
-                'status' => PaymentStatusEnum::Paid->value
-            ];
+        $incomes = $this->incomeUnionRepository->getIncomes($filters);
 
-            $payments = $this->paymentRepository->getPaymentsWithFilters($paymentFilters);
-            foreach ($payments as $payment) {
-                $combinedData[] = [
-                    'id' => 'P' . ($payment['id'] ?? ''),
-                    'type' => 'Payment',
-                    'source' => ucfirst($payment['gateway'] ?? 'Unknown'),
-                    'title' => 'Payment #' . ($payment['id'] ?? ''),
-                    'description' => $payment['services'] ?? 'Payment received',
-                    'category' => 'Payment' . ' (income)',
-                    'category_type' => 'income',
-                    'amount' => number_format($payment['amount_confirmed'] ?? 0, 2),
-                    'raw_amount' => $payment['amount_confirmed'] ?? 0,
-                    'date' => ($payment['paid_at'] ?? null) ? Carbon::parse($payment['paid_at'])->format('Y-m-d') : '-',
-                    'created_at' => $payment['created_at'] ?? '-'
-                ];
-            }
-        }
-
-        // Sort by date (newest first)
-        usort($combinedData, function ($a, $b) {
-            return strtotime($b['date']) - strtotime($a['date']);
-        });
-
-        return $combinedData;
+        return $incomes
+            ->map(fn (IncomeUnionView $income) => $this->formatIncomeRecord($income))
+            ->all();
     }
 
     public function getMonthlyTrends(?string $fromDate, ?string $toDate): array
@@ -128,8 +106,10 @@ class AccountingReportService
             $monthStart = $start->format('Y-m-d');
             $monthEnd = $start->endOfMonth()->format('Y-m-d');
 
-            $income = $this->entryRepository->getTotalIncome($monthStart, $monthEnd) +
-                $this->paymentRepository->getTotalPayments($monthStart, $monthEnd);
+            $income = $this->incomeUnionRepository->getTotalAmount([
+                'from_date' => $monthStart,
+                'to_date' => $monthEnd,
+            ]);
             $expenses = $this->entryRepository->getTotalExpenses($monthStart, $monthEnd);
 
             $trends[] = [
@@ -147,8 +127,10 @@ class AccountingReportService
 
     public function getIncomeVsExpenses(?string $fromDate, ?string $toDate): array
     {
-        $income = $this->entryRepository->getTotalIncome($fromDate, $toDate) +
-            $this->paymentRepository->getTotalPayments($fromDate, $toDate);
+        $income = $this->incomeUnionRepository->getTotalAmount([
+            'from_date' => $fromDate,
+            'to_date' => $toDate,
+        ]);
         $expenses = $this->entryRepository->getTotalExpenses($fromDate, $toDate);
 
         return [
@@ -289,83 +271,140 @@ class AccountingReportService
         $fromDate = $fromDate ?: now()->startOfMonth()->format('Y-m-d');
         $toDate = $toDate ?: now()->format('Y-m-d');
 
-        // Get all combined data first
-        $allData = $this->getCombinedIncomeData($fromDate, $toDate, $categoryId, $type);
+        if ($type === AccountingCategoryType::EXPENSE->value) {
+            $allData = $this->getCombinedIncomeData($fromDate, $toDate, $categoryId, $type);
 
-        // Apply search filter if provided
-        if (!empty($searchValue)) {
-            $allData = array_filter($allData, function ($item) use ($searchValue) {
-                $searchFields = [
-                    $item['title'] ?? '',
-                    $item['description'] ?? '',
-                    $item['category'] ?? '',
-                    $item['source'] ?? '',
-                    $item['type'] ?? '',
-                    $item['amount'] ?? ''
-                ];
+            if (!empty($searchValue)) {
+                $allData = array_filter($allData, function ($item) use ($searchValue) {
+                    $searchFields = [
+                        $item['title'] ?? '',
+                        $item['description'] ?? '',
+                        $item['category'] ?? '',
+                        $item['source'] ?? '',
+                        $item['type'] ?? '',
+                        $item['amount'] ?? ''
+                    ];
 
-                foreach ($searchFields as $field) {
-                    if (stripos((string)$field, $searchValue) !== false) {
-                        return true;
+                    foreach ($searchFields as $field) {
+                        if (stripos((string) $field, $searchValue) !== false) {
+                            return true;
+                        }
                     }
-                }
 
-                return false;
-            });
+                    return false;
+                });
 
-            // Reindex the array after filtering
-            $allData = array_values($allData);
+                $allData = array_values($allData);
+            }
+
+            $totalRecords = count($allData);
+
+            $columnMap = [
+                0 => 'id',
+                1 => 'type',
+                2 => 'title',
+                3 => 'description',
+                4 => 'category',
+                5 => 'raw_amount',
+                6 => 'date'
+            ];
+
+            if (isset($columnMap[$orderColumn])) {
+                $sortField = $columnMap[$orderColumn];
+
+                usort($allData, function ($a, $b) use ($sortField, $orderDir) {
+                    $valueA = $a[$sortField] ?? '';
+                    $valueB = $b[$sortField] ?? '';
+
+                    if ($sortField === 'raw_amount') {
+                        $valueA = (float) $valueA;
+                        $valueB = (float) $valueB;
+                    }
+
+                    if ($sortField === 'date') {
+                        $valueA = strtotime($valueA);
+                        $valueB = strtotime($valueB);
+                    }
+
+                    $result = $valueA <=> $valueB;
+                    return $orderDir === 'desc' ? -$result : $result;
+                });
+            }
+
+            $paginatedData = array_slice($allData, $start, $length);
+            $paginatedData = array_values($paginatedData);
+
+            return [
+                'data' => $paginatedData,
+                'recordsTotal' => $totalRecords,
+                'recordsFiltered' => $totalRecords
+            ];
         }
 
-        $totalRecords = count($allData);
-
-        // Define column mapping for sorting
-        $columnMap = [
-            0 => 'id',
-            1 => 'type',
-            2 => 'title',
-            3 => 'description',
-            4 => 'category',
-            5 => 'raw_amount',
-            6 => 'date'
+        $filters = [
+            'from_date' => $fromDate,
+            'to_date' => $toDate,
+            'category_id' => $categoryId,
         ];
 
-        // Apply sorting
-        if (isset($columnMap[$orderColumn])) {
-            $sortField = $columnMap[$orderColumn];
-
-            usort($allData, function ($a, $b) use ($sortField, $orderDir) {
-                $valueA = $a[$sortField] ?? '';
-                $valueB = $b[$sortField] ?? '';
-
-                // Handle numeric values
-                if ($sortField === 'raw_amount') {
-                    $valueA = (float) $valueA;
-                    $valueB = (float) $valueB;
-                }
-
-                // Handle date values
-                if ($sortField === 'date') {
-                    $valueA = strtotime($valueA);
-                    $valueB = strtotime($valueB);
-                }
-
-                $result = $valueA <=> $valueB;
-                return $orderDir === 'desc' ? -$result : $result;
-            });
+        if ($type && in_array($type, ['auto', 'manual'], true)) {
+            $filters['type'] = $type;
         }
 
-        // Apply pagination
-        $paginatedData = array_slice($allData, $start, $length);
+        $result = $this->incomeUnionRepository->getPaginatedIncomes(
+            $filters,
+            $start,
+            $length,
+            $searchValue,
+            $orderColumn,
+            $orderDir
+        );
 
-        // Reset array keys to ensure proper JSON encoding
-        $paginatedData = array_values($paginatedData);
+        $data = $result['data']
+            ->map(fn (IncomeUnionView $income) => $this->formatIncomeRecord($income))
+            ->toArray();
 
         return [
-            'data' => $paginatedData,
-            'recordsTotal' => $totalRecords,
-            'recordsFiltered' => $totalRecords
+            'data' => $data,
+            'recordsTotal' => $result['recordsTotal'],
+            'recordsFiltered' => $result['recordsFiltered']
         ];
+    }
+
+    private function formatIncomeRecord(IncomeUnionView $income): array
+    {
+        $isAuto = $income->type === 'auto';
+
+        $paidAt = $income->paid_at ? Carbon::parse($income->paid_at) : null;
+        $createdAt = $income->created_at ? Carbon::parse($income->created_at) : null;
+
+        return [
+            'id' => ($isAuto ? 'P' : 'E') . $income->id,
+            'type' => $isAuto ? 'Payment' : 'Entry',
+            'source' => $income->source ?? ($isAuto ? 'Payment' : 'Accounting Entry'),
+            'title' => $income->title ?? ($isAuto ? 'Payment #' . $income->id : ($income->category ?? 'Entry')),
+            'description' => $income->details ?? '-',
+            'category' => $this->formatIncomeCategory($income),
+            'category_type' => 'income',
+            'amount' => number_format((float) $income->amount, 2),
+            'raw_amount' => (float) $income->amount,
+            'date' => $paidAt?->format('Y-m-d') ?? '-',
+            'created_at' => $createdAt?->format('Y-m-d H:i:s') ?? '-'
+        ];
+    }
+
+    private function formatIncomeCategory(IncomeUnionView $income): string
+    {
+        if ($income->type === 'manual') {
+            $category = $income->category ?: 'Accounting';
+            return $category . ' (income)';
+        }
+
+        $label = $income->category
+            ? ucwords(str_replace('_', ' ', $income->category))
+            : 'Payment';
+
+        return $label . ' (auto)';
     }
 
     private function resolveDateRange(?string $fromDate, ?string $toDate): array

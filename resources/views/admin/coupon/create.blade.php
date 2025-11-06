@@ -40,11 +40,13 @@
                                 'id' => 'percentage',
                                 'title' => __('attributes.percentage'),
                                 'name' => '',
+                                'code' => ''
                                 ],
                                 [
                                 'id' => 'fixed',
                                 'title' => __('attributes.fixed'),
                                 'name' => '',
+                                'code' => ''
                                 ],
                                 ])->map(function ($item) {
                                 return (object) $item;

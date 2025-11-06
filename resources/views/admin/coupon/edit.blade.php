@@ -36,8 +36,8 @@
 
                                 @php
                                 $types = collect([
-                                ['id' => 'percentage', 'title' => __('attributes.percentage'), 'name' => ''],
-                                ['id' => 'fixed', 'title' => __('attributes.fixed'), 'name' => ''],
+                                ['id' => 'percentage', 'title' => __('attributes.percentage'), 'name' => '','code' => ''],
+                                ['id' => 'fixed', 'title' => __('attributes.fixed'), 'name' => '','code' => ''],
                                 ])->map(fn($item) => (object) $item);
                                 @endphp
 
